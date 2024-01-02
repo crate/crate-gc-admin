@@ -1159,6 +1159,17 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@crate/crate-ui-components@0.1.9":
+  version "0.1.9"
+  resolved "https://npm.pkg.github.com/download/@crate/crate-ui-components/0.1.9/e86936e44e7de066ddd235052dfe1d1bdbfab5b8#e86936e44e7de066ddd235052dfe1d1bdbfab5b8"
+  integrity sha512-H0twbRJzhmUDIKMDl+sfcVu4kUmy+3CvK7OsUMV9Qi66qxOuqf4yO3G7ybQ39+d0j5kCPnrSOZEsXDDEvVIgEw==
+  dependencies:
+    classnames "^2.5.1"
+    react "^18.2.0"
+    react-dom "^18.2.0"
+    react-scripts "5.0.1"
+    web-vitals "^2.1.4"
+
 "@csstools/normalize.css@*":
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.1.1.tgz#f0ad221b7280f3fc814689786fd9ee092776ef8f"
@@ -3244,6 +3255,11 @@ cjs-module-lexer@^1.0.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-1.2.3.tgz#6c370ab19f8a3394e318fe682686ec0ac684d107"
   integrity sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==
+
+classnames@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.npmjs.org/classnames/-/classnames-2.5.1.tgz#ba774c614be0f016da105c858e7159eae8e7687b"
+  integrity sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==
 
 clean-css@^5.2.2:
   version "5.3.3"
@@ -9307,7 +9323,7 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-vitals@^2.1.0:
+web-vitals@^2.1.0, web-vitals@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.4.tgz#76563175a475a5e835264d373704f9dde718290c"
   integrity sha512-sVWcwhU5mX6crfI5Vd2dC4qchyTqxV8URinzt25XqVh+bHEPGH4C3NPrNionCP7Obx59wrYEbNlw4Z8sjALzZg==
