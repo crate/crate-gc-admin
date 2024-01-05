@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200..900&family=Poppins:wght@700&display=swap");
+@import '@crate.io/crate-ui-components/style.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200..900&family=Poppins:wght@700&display=swap');
 
 @tailwind base;
 @tailwind components;
