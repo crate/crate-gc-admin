@@ -31,3 +31,44 @@ via HTTP(S) Cross-Origin requests (the URL is configurable).
 
 GC Admin authenticates to Grand Central via a JWT token, which must be obtained from
 CrateDB Cloud.
+
+## Using @crate.io/crate-ui-components as a local library
+
+Sometimes you need to be able to develop using the local version instead of using a version published on npm.
+
+To be able to do this you need to have cloned the repositories in a structure like this:
+
+    your-work-directory/
+    ├── ...
+    ├── crate-gc-admin/          # Crate GC Admin
+    ├── crate-ui-components/     # Crate UI Components Library
+    ├── ...
+
+Then you need to follow these steps:
+
+1. In the `crate-ui-components` run `yarn link-local`
+2. In `crate-gc-admin` run `yarn link-local-lib`
+
+In `crate-gc-admin` `package.json` you should see this under dependencies:
+
+```
+    ...
+    "dependencies": {
+        ...,
+        "@crate.io/crate-ui-components": "link:../crate-ui-components",
+        ...
+    },
+    ...
+```
+
+This means that `crate-gc-admin` is using the local build of the `crate-ui-components` library, instead of the one on NPM registry.
+
+Everytime you are updating some components in `crate-ui-components` library, you have to:
+
+1. Run `yarn build` of the `crate-ui-components` library
+2. Hit a refresh in `crate-gc-admin` browser page (there is no hot-reload)
+
+When you have finished local development you have to:
+
+1. Run `yarn unlink-local-lib` in `crate-gc-admin`. Pay attention that this is installing the latest version of the `crate-ui-components` published on NPM, so check the version.
+2. Run `yarn unlink-local` in `crate-ui-components`.
