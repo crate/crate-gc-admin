@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@crate.io/crate-ui-components": "^0.1.18",
+    "@crate.io/crate-ui-components": "^0.1.23",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -20,7 +20,9 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint --ext=.ts --ext=.tsx src/"
+    "lint": "eslint --ext=.ts --ext=.tsx src/",
+    "link-local-lib": "yarn link @crate.io/crate-ui-components && yarn link react && yarn unlink react-dom && yarn add link:../crate-ui-components",
+    "unlink-local-lib": "yarn remove @crate.io/crate-ui-components && yarn unlink @crate.io/crate-ui-components && yarn unlink react && yarn unlink react-dom && yarn add @crate.io/crate-ui-components"
   },
   "eslintConfig": {
     "extends": [
