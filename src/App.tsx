@@ -1,45 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@crate.io/crate-ui-components';
+import { Route, Routes } from 'react-router-dom';
+import Burger from './components/Burger';
+import Navigation from './components/Navigation';
+import routes from './constants/routes';
 
 function App() {
-  const [status, setStatus] = useState(false);
-  const [cluster, setCluster] = useState(null);
-
-  useEffect(() => {
-    const doFetch = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_GRAND_CENTRAL_URL}/api/`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
-      );
-      if (response.status === 200) {
-        setStatus(true);
-      }
-      const json = await response.json();
-      setCluster(json.cluster_id);
-    };
-
-    doFetch();
-  }, []);
-
   return (
-    <div className="p-4 flex gap-4">
-      <p>Are we logged in: {status ? 'Yes' : 'No'}</p>
-      <p>Cluster: {cluster}</p>
-      <p>
-        Grand Central Backend at:{' '}
-        <b>
-          {process.env.REACT_APP_GRAND_CENTRAL_URL
-            ? process.env.REACT_APP_GRAND_CENTRAL_URL
-            : 'Please set env REACT_APP_GRAND_CENTRAL_URL'}
-        </b>
-      </p>
-      <Button kind="primary">Primary Button</Button>
-      <Button kind="secondary">Secondary Button</Button>
-      <Button kind="tertiary">Tertiary Button</Button>
-      <Button loading>Loading Button</Button>
+    <div className="bg-white flex h-screen">
+      <div className="bg-crate-blue hidden md:block">
+        <Navigation routes={routes} />
+      </div>
+      <div className="basis-full">
+        <div className="flex justify-end p-4 md:hidden">
+          <Burger routes={routes} />
+        </div>
+        <div className="p-4">
+          <Routes>
+            {routes.map(route => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 }
