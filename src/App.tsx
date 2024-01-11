@@ -13,6 +13,21 @@ function App() {
     isGcConnected(process.env.REACT_APP_GRAND_CENTRAL_URL).then(setGCStatus);
   }, []);
 
+  const gcUrl = process.env.REACT_APP_GRAND_CENTRAL_URL;
+  const crateUrl = 'http://localhost:4200';
+
+  const getSQLUrl = () => {
+    switch (gcStatus) {
+      case ConnectionStatus.CONNECTED:
+        return `${gcUrl}/api/_sql?multi=true`;
+      case ConnectionStatus.NOT_CONFIGURED:
+      case ConnectionStatus.NOT_LOGGED_IN:
+        return `${crateUrl}/_sql`;
+      default:
+        return;
+    }
+  };
+
   return (
     <div className="bg-white flex h-dvh max-h-screen">
       <div className="bg-crate-blue hidden md:block">
@@ -26,8 +41,9 @@ function App() {
           <GCContext.Provider
             value={{
               gcStatus,
-              gcUrl: process.env.REACT_APP_GRAND_CENTRAL_URL,
-              crateUrl: 'http://localhost:4200',
+              gcUrl: gcUrl,
+              crateUrl: crateUrl,
+              sqlUrl: getSQLUrl(),
             }}
           >
             <Routes>

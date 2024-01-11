@@ -3,3 +3,5 @@
 ## Unreleased
 
 - Initial release
+- SQL Page
+- Users Page
