@@ -9,6 +9,5 @@ repos:
     rev: 'v8.44.0' # Use the sha / tag you want to point at
     hooks:
       - id: eslint
-        files: \.jsx?$ # *.js, *.jsx
+        files: \.tsx?$ # *.js, *.jsx
         types: [file]
-
