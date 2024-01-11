@@ -13,7 +13,12 @@ type QueryResults = {
   error: Error | undefined;
 };
 
-async function execSql(url: string | undefined, sql: string) {
+type ExecResult = {
+  data: QueryResults;
+  status: number;
+};
+
+async function execSql(url: string | undefined, sql: string): Promise<ExecResult> {
   if (!url) {
     throw 'URL Not specified';
   }
@@ -30,5 +35,5 @@ async function execSql(url: string | undefined, sql: string) {
   return { data: await response.json(), status: response.status };
 }
 
-export type { Error, QueryResults };
+export type { Error, QueryResults, ExecResult };
 export default execSql;

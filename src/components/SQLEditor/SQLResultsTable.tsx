@@ -54,7 +54,7 @@ const renderTable = (result: QueryResults) => {
   if (result.error) {
     return renderErrorTable(result);
   }
-  const columns = result?.cols.map(col => {
+  let columns = result?.cols.map(col => {
     return {
       title: col,
       key: col,
@@ -63,7 +63,7 @@ const renderTable = (result: QueryResults) => {
       ellipsis: true,
     };
   });
-  const data = result?.rows.map(row => {
+  let data = result?.rows.map(row => {
     const res = {};
     _.zip(result.cols, row).forEach(arr => {
       const [k, v] = arr;
@@ -76,6 +76,22 @@ const renderTable = (result: QueryResults) => {
     });
     return res;
   });
+  if (columns?.length == 0) {
+    columns = [
+      {
+        title: 'result',
+        key: 'result',
+        dataIndex: 'result',
+        width: '100%',
+        ellipsis: true,
+      },
+    ];
+    data = [
+      {
+        result: 'OK',
+      },
+    ];
+  }
 
   return (
     <div>

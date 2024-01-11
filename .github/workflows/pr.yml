@@ -60,6 +60,10 @@ jobs:
       - name: Run linter
         run: yarn lint
 
+      # We don't actually use the output, but it is useful to know if vite works.
+      - name: Build
+        run: yarn build
+
 # No tests yet
 #      - name: Run component tests
 #        run: yarn test
