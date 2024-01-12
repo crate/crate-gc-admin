@@ -4,9 +4,12 @@ import execSql, { QueryResults } from '../../utilities/gc/execSql';
 import SQLResultsTable from '../../components/SQLEditor/SQLResultsTable';
 import { GCContext } from '../../utilities/context';
 import { Spin } from 'antd';
+import { Heading } from '@crate.io/crate-ui-components';
 
 function SQLConsole() {
   const { sqlUrl } = useContext(GCContext);
+
+  const specifiedQuery = new URLSearchParams(location.search).get('q');
 
   const [results, setResults] = useState<QueryResults | QueryResults[] | undefined>(
     undefined,
@@ -34,7 +37,10 @@ function SQLConsole() {
 
   return (
     <>
-      <SQLEditor execCallback={execute} results={results} />
+      <Heading level="h1" className="mb-2">
+        Console
+      </Heading>
+      <SQLEditor execCallback={execute} results={results} value={specifiedQuery} />
       <div className="mt-4">{renderResults()}</div>
     </>
   );
