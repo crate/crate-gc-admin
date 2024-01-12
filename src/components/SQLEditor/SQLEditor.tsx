@@ -14,9 +14,13 @@ type Params = {
   results: QueryResults | QueryResults[] | undefined;
 };
 
+const SQL_EDITOR_CONTENT_KEY = 'crate.gc.admin.sql-editor';
+const SQL_HISTORY_CONTENT_KEY = 'crate.gc.admin.sql-editor-history';
+const SQL_HISTORY_TEMP_CONTENT_KEY = 'crate.gc.admin.sql-editor-history-temp';
+
 function SQLEditor({ execCallback, value, results }: Params) {
   const [editorContents, setEditorContents] = useState(
-    value || localStorage.getItem('sql-editor'),
+    value || localStorage.getItem(SQL_EDITOR_CONTENT_KEY),
   );
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
 
@@ -48,9 +52,54 @@ function SQLEditor({ execCallback, value, results }: Params) {
     if (!sql) {
       return;
     }
-    localStorage.setItem('sql-editor', sql);
+    localStorage.setItem(SQL_EDITOR_CONTENT_KEY, sql);
+    pushHistory(sql);
     execCallback(sql);
     ace?.focus();
+  };
+
+  /*
+  This keeps track of two states in local storage - the entire history and the
+  currently navigating one. When we execute code, two things happen:
+  1. We push it to the history
+  2. We clear the currently navigating history
+
+  As the user navigates (Ctrl+Up/Ctrl+Down) we keep updating the temporary history.
+  Note that due to this being execute from within Ace, it suffers from the issue with
+  stale closures. As a result, we cannot use useState() - until someone figures out a
+  way to do that.
+   */
+  const pushHistory = (sql: string) => {
+    let strHistory = localStorage.getItem(SQL_HISTORY_CONTENT_KEY);
+    if (!strHistory) {
+      strHistory = '[]';
+    }
+    let historyArray: string[] = JSON.parse(strHistory);
+    historyArray.push(sql);
+    if (historyArray.length > 100) {
+      historyArray = historyArray.slice(1); // remove the head
+    }
+    localStorage.setItem(SQL_HISTORY_CONTENT_KEY, JSON.stringify(historyArray));
+    localStorage.removeItem(SQL_HISTORY_TEMP_CONTENT_KEY);
+  };
+
+  const popHistory = (reverse: boolean = false): string | undefined => {
+    const history: string[] = JSON.parse(
+      localStorage.getItem(SQL_HISTORY_CONTENT_KEY) || '[]',
+    );
+    const tempHistory: string[] = JSON.parse(
+      localStorage.getItem(SQL_HISTORY_TEMP_CONTENT_KEY) || '[]',
+    );
+    let historyToUse = history;
+    if (tempHistory.length > 0) {
+      historyToUse = tempHistory;
+    }
+    if (reverse) {
+      historyToUse = history.slice(0, tempHistory.length + 2);
+    }
+    const ret = historyToUse.pop();
+    localStorage.setItem(SQL_HISTORY_TEMP_CONTENT_KEY, JSON.stringify(historyToUse));
+    return ret;
   };
 
   const formatEditorContents = () => {
@@ -141,6 +190,36 @@ function SQLEditor({ execCallback, value, results }: Params) {
               },
               exec: editor => exec(editor.getValue()),
             },
+            {
+              name: 'gcPrev',
+              bindKey: {
+                win: 'Ctrl-Up',
+                mac: 'Command-Up',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Up',
+              },
+              exec: editor => {
+                const val = popHistory();
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
+            {
+              name: 'gcNext',
+              bindKey: {
+                win: 'Ctrl-Down',
+                mac: 'Command-Down',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Down',
+              },
+              exec: editor => {
+                const val = popHistory(true);
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
           ]}
           setOptions={{
             showLineNumbers: true,
@@ -160,6 +239,9 @@ function SQLEditor({ execCallback, value, results }: Params) {
         <Button className="ml-2" kind="secondary" onClick={formatEditorContents}>
           Format SQL
         </Button>
+        <div className="ml-2 text-xs inline-flex">
+          Ctrl(Cmd)+Enter to execute. Ctrl(Cmd)+Up/Down to navigate history.
+        </div>
       </div>
     </div>
   );
