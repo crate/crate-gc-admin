@@ -3,19 +3,20 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
+import { format as formatSQL } from 'sql-formatter';
 import { Button } from '@crate.io/crate-ui-components';
 import { Ace } from 'ace-builds';
 import { QueryResults } from '../../utilities/gc/execSql';
 
 type Params = {
   execCallback: (editorContents: string) => void;
-  value?: string | undefined;
+  value?: string | undefined | null;
   results: QueryResults | QueryResults[] | undefined;
 };
 
 function SQLEditor({ execCallback, value, results }: Params) {
   const [editorContents, setEditorContents] = useState(
-    localStorage.getItem('sql-editor'),
+    value || localStorage.getItem('sql-editor'),
   );
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
 
@@ -38,6 +39,8 @@ function SQLEditor({ execCallback, value, results }: Params) {
     const ann = annotate();
     if (ann) {
       ace.getSession().setAnnotations(ann);
+    } else {
+      ace.getSession().clearAnnotations();
     }
   }, [results]);
 
@@ -47,6 +50,15 @@ function SQLEditor({ execCallback, value, results }: Params) {
     }
     localStorage.setItem('sql-editor', sql);
     execCallback(sql);
+    ace?.focus();
+  };
+
+  const formatEditorContents = () => {
+    if (editorContents && ace) {
+      const formatted = formatSQL(editorContents, { language: 'postgresql' });
+      ace.getSession().setValue(formatted);
+      ace.focus();
+    }
   };
 
   const annotate = (): Ace.Annotation[] | undefined => {
@@ -109,7 +121,7 @@ function SQLEditor({ execCallback, value, results }: Params) {
     <div className="max-w-screen-xl">
       <div className="border-2 rounded">
         <AceEditor
-          height="150px"
+          height="300px"
           width="100%"
           mode="sql"
           theme="github"
@@ -144,6 +156,9 @@ function SQLEditor({ execCallback, value, results }: Params) {
       <div className="mt-2">
         <Button kind="primary" onClick={() => exec(editorContents)}>
           Run
+        </Button>
+        <Button className="ml-2" kind="secondary" onClick={formatEditorContents}>
+          Format SQL
         </Button>
       </div>
     </div>

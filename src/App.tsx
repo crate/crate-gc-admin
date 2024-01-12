@@ -38,7 +38,7 @@ function App() {
         sqlUrl: getSQLUrl(),
       }}
     >
-      <div className="bg-white flex h-dvh max-h-screen">
+      <div className="bg-white flex min-h-dvh">
         <div className="bg-crate-blue hidden md:block">
           <Navigation routes={routes} />
           <div className="mt-4 border-dashed border-t pt-4 border-slate-600">

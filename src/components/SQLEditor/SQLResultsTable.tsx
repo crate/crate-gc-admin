@@ -1,3 +1,4 @@
+import React from 'react';
 import { Table, Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';
 import _ from 'lodash';
@@ -71,6 +72,9 @@ const renderTable = (result: QueryResults) => {
       if (typeof v === 'object') {
         actualValue = JSON.stringify(v);
       }
+      if (typeof v === 'boolean') {
+        actualValue = v.toString();
+      }
       // @ts-expect-error typing is hard
       res[k] = actualValue;
     });
@@ -106,7 +110,11 @@ const renderTable = (result: QueryResults) => {
         scroll={{
           x: 'max-content',
         }}
-        footer={() => <div className="text-xs font-bold">{result.duration} ms</div>}
+        footer={() => (
+          <div className="text-xs font-bold">
+            {`${result.rowcount} rows, ${result.duration} ms`}
+          </div>
+        )}
       />
     </div>
   );
