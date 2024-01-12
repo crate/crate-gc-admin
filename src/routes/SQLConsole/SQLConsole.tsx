@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
 import SQLEditor from '../../components/SQLEditor/SQLEditor';
-import GCStatusIndicator from '../../components/GCStatusIndicator/GCStatusIndicator';
 import execSql, { QueryResults } from '../../utilities/gc/execSql';
 import SQLResultsTable from '../../components/SQLEditor/SQLResultsTable';
 import { GCContext } from '../../utilities/context';
@@ -35,7 +34,6 @@ function SQLConsole() {
 
   return (
     <>
-      <GCStatusIndicator />
       <SQLEditor execCallback={execute} results={results} />
       <div className="mt-4">{renderResults()}</div>
     </>

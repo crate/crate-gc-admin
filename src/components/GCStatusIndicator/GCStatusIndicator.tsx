@@ -3,7 +3,7 @@ import { ConnectionStatus } from '../../utilities/gc/connectivity';
 import { GCContext } from '../../utilities/context';
 
 function renderStatus(status: ConnectionStatus) {
-  const prefix = 'Grand Central';
+  const prefix = 'GC';
   let actual = <b>Checking ..."</b>;
   switch (status) {
     case ConnectionStatus.CONNECTED:
@@ -22,7 +22,7 @@ function renderStatus(status: ConnectionStatus) {
       break;
   }
   return (
-    <div>
+    <div className="block max-w-96 mx-auto px-4 py-2 border-crate-border-dark bg-slate-600">
       {prefix}: {actual}
     </div>
   );

@@ -5,6 +5,7 @@ import routes from './constants/routes';
 import React, { useMemo, useState } from 'react';
 import { ConnectionStatus, isGcConnected } from './utilities/gc/connectivity';
 import { GCContext } from './utilities/context';
+import GCStatusIndicator from './components/GCStatusIndicator/GCStatusIndicator';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
@@ -29,32 +30,35 @@ function App() {
   };
 
   return (
-    <div className="bg-white flex h-dvh max-h-screen">
-      <div className="bg-crate-blue hidden md:block">
-        <Navigation routes={routes} />
-      </div>
-      <div className="basis-full">
-        <div className="flex justify-end p-4 md:hidden">
-          <Burger routes={routes} />
+    <GCContext.Provider
+      value={{
+        gcStatus,
+        gcUrl: gcUrl,
+        crateUrl: crateUrl,
+        sqlUrl: getSQLUrl(),
+      }}
+    >
+      <div className="bg-white flex h-dvh max-h-screen">
+        <div className="bg-crate-blue hidden md:block">
+          <Navigation routes={routes} />
+          <div className="mt-4 border-dashed border-t pt-4 border-slate-600">
+            <GCStatusIndicator />
+          </div>
         </div>
-        <div className="p-4">
-          <GCContext.Provider
-            value={{
-              gcStatus,
-              gcUrl: gcUrl,
-              crateUrl: crateUrl,
-              sqlUrl: getSQLUrl(),
-            }}
-          >
+        <div className="basis-full">
+          <div className="flex justify-end p-4 md:hidden">
+            <Burger routes={routes} />
+          </div>
+          <div className="p-4">
             <Routes>
               {routes.map(route => (
                 <Route key={route.path} path={route.path} element={route.element} />
               ))}
             </Routes>
-          </GCContext.Provider>
+          </div>
         </div>
       </div>
-    </div>
+    </GCContext.Provider>
   );
 }
 
