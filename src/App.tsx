@@ -21,10 +21,10 @@ function App() {
   const getSQLUrl = () => {
     switch (gcStatus) {
       case ConnectionStatus.CONNECTED:
-        return `${gcUrl}/api/_sql?multi=true`;
+        return `${gcUrl}/api/_sql?multi=true&types`;
       case ConnectionStatus.NOT_CONFIGURED:
       case ConnectionStatus.NOT_LOGGED_IN:
-        return `${crateUrl}/_sql`;
+        return `${crateUrl}/_sql?types`;
       default:
         return;
     }

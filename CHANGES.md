@@ -9,3 +9,4 @@
 - Tables Page
 - Implemented navigation (Ctrl+Up/Ctrl+Down) in the SQL Editor
 - Implemented SQL Scheduler UI
+- Added support for displaying certain types differently in the SQLResultsTable.

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';
 import _ from 'lodash';
-import { QueryResult, QueryResults } from '../../utils/gc/executeSql';
+import { ColumnType, QueryResult, QueryResults } from '../../utils/gc/executeSql';
 
 type Params = {
   results: QueryResults | undefined;
@@ -51,6 +51,26 @@ const renderErrorTable = (result: QueryResult) => {
   );
 };
 
+const nicelyHandleTypes = (type: ColumnType, value: unknown) => {
+  let ret = value;
+  if (typeof value === 'object') {
+    ret = JSON.stringify(value);
+  } else if (typeof value === 'boolean') {
+    ret = value.toString();
+  } else if (
+    [ColumnType.TIMESTAMP_WITH_TZ, ColumnType.TIMESTAMP_WITHOUT_TZ].includes(type)
+  ) {
+    const isoDate = new Date(Number(value)).toISOString();
+    ret = (
+      <div>
+        <span>{`${value}`}</span>
+        <span>{` (${isoDate})`}</span>
+      </div>
+    );
+  }
+  return ret;
+};
+
 const renderTable = (result: QueryResult) => {
   if (result.error) {
     return renderErrorTable(result);
@@ -66,17 +86,11 @@ const renderTable = (result: QueryResult) => {
   });
   let data = result?.rows.map(row => {
     const res = {};
-    _.zip(result.cols, row).forEach(arr => {
-      const [k, v] = arr;
-      let actualValue = v;
-      if (typeof v === 'object') {
-        actualValue = JSON.stringify(v);
-      }
-      if (typeof v === 'boolean') {
-        actualValue = v.toString();
-      }
+    _.zip(result.col_types, result.cols, row).forEach(arr => {
+      const [t, k, v] = arr;
+      const actualValue = nicelyHandleTypes(t, v);
       // @ts-expect-error typing is hard
-      res[k] = actualValue;
+      res[k] = <div>{actualValue}</div>;
     });
     return res;
   });
