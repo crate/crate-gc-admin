@@ -31,16 +31,18 @@ export const useGCGetScheduledJobLastLogs = (url: string, jobs: SQLJob[]) => {
     });
 
     Promise.all(promises).then(logResults => {
-      setJobsToReturn(
-        jobs.map((job, jobIndex) => {
-          const lastLog = logResults[jobIndex];
+      const newJobs = jobs.map((job, jobIndex) => {
+        const lastLog = logResults[jobIndex];
 
-          return {
-            ...job,
-            last_execution: lastLog && lastLog.end,
-          };
-        }),
-      );
+        return {
+          ...job,
+          last_execution: lastLog && lastLog.end,
+        };
+      });
+
+      if (JSON.stringify(newJobs) !== JSON.stringify(jobsToReturn)) {
+        setJobsToReturn(newJobs);
+      }
     });
   }, [jobs]);
 
