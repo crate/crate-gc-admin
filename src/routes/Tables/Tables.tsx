@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Heading } from '@crate.io/crate-ui-components';
 import { Collapse, List, Table, Tabs, Tag } from 'antd';
-import { GCContext } from '../../utilities/context';
+import { GCContext } from '../../utils/context';
 import { format as formatSQL } from 'sql-formatter';
 import {
   getSchemas,
@@ -12,7 +12,7 @@ import {
   showCreateTable,
   TableInfo,
   TableListEntry,
-} from '../../utilities/queries';
+} from '../../utils/queries';
 import { Link } from 'react-router-dom';
 import routes from '../../constants/routes';
 import prettyBytes from 'pretty-bytes';
@@ -146,10 +146,15 @@ function Tables() {
     });
 
     return (
-      <Collapse
-        items={items}
-        defaultActiveKey={activeTable?.table_schema || 'doc'}
-      />
+      <Collapse defaultActiveKey={activeTable?.table_schema || 'doc'}>
+        {items?.map(item => {
+          return (
+            <Collapse.Panel header={item.label} key={item.key}>
+              {item.children}
+            </Collapse.Panel>
+          );
+        })}
+      </Collapse>
     );
   };
 

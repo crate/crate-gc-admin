@@ -8,3 +8,4 @@
 - Enterprise Wrapper for pages which require GC
 - Tables Page
 - Implemented navigation (Ctrl+Up/Ctrl+Down) in the SQL Editor
+- Implemented SQL Scheduler UI

@@ -2,13 +2,13 @@ import React from 'react';
 import { Table, Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';
 import _ from 'lodash';
-import { QueryResults } from '../../utilities/gc/execSql';
+import { QueryResult, QueryResults } from '../../utils/gc/executeSql';
 
 type Params = {
-  results: QueryResults | QueryResults[] | undefined;
+  results: QueryResults | undefined;
 };
 
-const renderErrorTable = (result: QueryResults) => {
+const renderErrorTable = (result: QueryResult) => {
   const columns = [
     {
       title: 'code',
@@ -51,7 +51,7 @@ const renderErrorTable = (result: QueryResults) => {
   );
 };
 
-const renderTable = (result: QueryResults) => {
+const renderTable = (result: QueryResult) => {
   if (result.error) {
     return renderErrorTable(result);
   }
@@ -97,7 +97,7 @@ const renderTable = (result: QueryResults) => {
     ];
   }
 
-  return (
+  return result ? (
     <div>
       <Heading level="h4" children={result.original_query} />
       <Table
@@ -118,15 +118,15 @@ const renderTable = (result: QueryResults) => {
         )}
       />
     </div>
-  );
+  ) : null;
 };
 
-const renderTabs = ({ results }: Params) => {
+const renderTabs = (results: QueryResult[]) => {
   if (!results) {
     return null;
   }
   let idx = 0;
-  const tabs = (results as QueryResults[]).map(o => {
+  const tabs = results.map(o => {
     const i = ++idx;
     return {
       key: `${i}`,
@@ -140,11 +140,11 @@ const renderTabs = ({ results }: Params) => {
 function SQLResultsTable({ results }: Params) {
   let ret = null;
   if (Array.isArray(results)) {
-    ret = renderTabs({ results });
+    ret = renderTabs(results);
   } else if (results) {
     ret = renderTable(results);
   }
-  return <div className="max-w-screen-xl">{ret}</div>;
+  return <div className="w-full">{ret}</div>;
 }
 
 export default SQLResultsTable;

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { GCContext } from '../../utilities/context';
-import { getCurrentUser, getUsers, User } from '../../utilities/queries';
+import { GCContext } from '../../utils/context';
+import { getCurrentUser, getUsers, User } from '../../utils/queries';
 import { Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';
 import UserInfo from './UserInfo';

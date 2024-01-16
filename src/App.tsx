@@ -3,9 +3,10 @@ import Burger from './components/Burger';
 import Navigation from './components/Navigation';
 import routes from './constants/routes';
 import React, { useMemo, useState } from 'react';
-import { ConnectionStatus, isGcConnected } from './utilities/gc/connectivity';
-import { GCContext } from './utilities/context';
+import { ConnectionStatus, isGcConnected } from './utils/gc/connectivity';
+import { GCContext } from './utils/context';
 import GCStatusIndicator from './components/GCStatusIndicator/GCStatusIndicator';
+import NotificationHandler from './components/NotificationHandler';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
@@ -49,7 +50,7 @@ function App() {
           <div className="flex justify-end p-4 md:hidden">
             <Burger routes={routes} />
           </div>
-          <div className="p-4">
+          <div className="p-4 w-full h-full">
             <Routes>
               {routes.map(route => (
                 <Route key={route.path} path={route.path} element={route.element} />
@@ -58,6 +59,7 @@ function App() {
           </div>
         </div>
       </div>
+      <NotificationHandler />
     </GCContext.Provider>
   );
 }

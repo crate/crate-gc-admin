@@ -1,7 +1,7 @@
-import { getUserPermissions, User } from '../../utilities/queries';
+import { getUserPermissions, User } from '../../utils/queries';
 import { useEffect, useState } from 'react';
-import { QueryResults } from '../../utilities/gc/execSql';
-import SQLResultsTable from '../../components/SQLEditor/SQLResultsTable';
+import { QueryResults } from '../../utils/gc/executeSql';
+import SQLResultsTable from '../../components/SQLResultsTable/SQLResultsTable';
 
 type Params = {
   url: string | undefined;
@@ -13,7 +13,9 @@ function UserInfo({ url, user }: Params) {
 
   useEffect(() => {
     getUserPermissions(url, user.name).then(res => {
-      setResult(res.data);
+      if (res.data) {
+        setResult(res.data);
+      }
     });
   }, [user]);
 
