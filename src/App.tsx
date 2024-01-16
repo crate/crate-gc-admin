@@ -6,6 +6,7 @@ import React, { useMemo, useState } from 'react';
 import { ConnectionStatus, isGcConnected } from './utils/gc/connectivity';
 import { GCContext } from './utils/context';
 import GCStatusIndicator from './components/GCStatusIndicator/GCStatusIndicator';
+import StatusBar from './components/StatusBar/StatusBar';
 import NotificationHandler from './components/NotificationHandler';
 
 function App() {
@@ -39,6 +40,9 @@ function App() {
         sqlUrl: getSQLUrl(),
       }}
     >
+      <div className="bg-neutral-800 flex-row w-full px-6 py-3 h-12">
+        <StatusBar />
+      </div>
       <div className="bg-white flex min-h-dvh">
         <div className="bg-crate-blue hidden md:block">
           <Navigation routes={routes} />
