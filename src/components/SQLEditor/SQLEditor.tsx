@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/theme-github';
@@ -6,23 +6,123 @@ import 'ace-builds/src-min-noconflict/ext-language_tools';
 import { format as formatSQL } from 'sql-formatter';
 import { Button } from '@crate.io/crate-ui-components';
 import { Ace } from 'ace-builds';
-import { QueryResults } from '../../utilities/gc/execSql';
+import { QueryResults } from '../../utils/gc/executeSql';
+import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 
-type Params = {
-  execCallback: (editorContents: string) => void;
+type SQLEditorProps = {
   value?: string | undefined | null;
-  results: QueryResults | QueryResults[] | undefined;
+  results: QueryResults;
+  localStorageKey?: string;
+  showRunButton?: boolean;
+  onExecute: (queries: string) => void;
+  onChange?: (queries: string) => void;
 };
 
-const SQL_EDITOR_CONTENT_KEY = 'crate.gc.admin.sql-editor';
-const SQL_HISTORY_CONTENT_KEY = 'crate.gc.admin.sql-editor-history';
-const SQL_HISTORY_TEMP_CONTENT_KEY = 'crate.gc.admin.sql-editor-history-temp';
+const annotate = (
+  ace: Ace.Editor,
+  results: QueryResults,
+  text: string,
+  localStorageKey?: string,
+): Ace.Annotation[] | undefined => {
+  if (!results) {
+    return;
+  }
 
-function SQLEditor({ execCallback, value, results }: Params) {
-  const [editorContents, setEditorContents] = useState(
-    value || localStorage.getItem(SQL_EDITOR_CONTENT_KEY),
+  // Update Local Storage
+  if (localStorageKey) {
+    localStorage.setItem(localStorageKey, text);
+  }
+
+  if (Array.isArray(results)) {
+    const err = results.find(r => r.error);
+    if (!err) {
+      return;
+    }
+    const q = err.original_query;
+    if (!q) {
+      return;
+    }
+    // we take the 1st 100 lines and see if any of them are contained in the
+    // query that failed. A rather naive approach.
+    const lines = ace.getSession().getLines(0, 100);
+    const trimmed = q.trim();
+    const pos = lines
+      .map((v, i) => {
+        const search = v.trim();
+        if (search.length > 0 && trimmed.startsWith(search)) {
+          return i;
+        }
+        return -1;
+      })
+      .find(v => v > 0);
+    if (pos) {
+      return [
+        {
+          row: pos,
+          column: 0,
+          text: err.error?.message || '',
+          type: 'error',
+        },
+      ];
+    }
+    return;
+  }
+
+  if (results.error) {
+    // We always show the 1st line and 1st column as the source of the error.
+    return [
+      {
+        row: 0,
+        column: 0,
+        text: results.error.message,
+        type: 'error',
+      },
+    ];
+  }
+};
+
+const getInitialValue = (
+  value: string | null | undefined,
+  dataFromLocalStorage: string | null | undefined,
+) => {
+  if (typeof value !== 'undefined' && value !== null) {
+    return value;
+  } else return dataFromLocalStorage || '';
+};
+
+function SQLEditor({
+  value,
+  results,
+  localStorageKey,
+  showRunButton = true,
+  onExecute,
+  onChange,
+}: SQLEditorProps) {
+  const SQL_EDITOR_CONTENT_KEY =
+    localStorageKey && `crate.gc.admin.${localStorageKey}`;
+  const SQL_HISTORY_CONTENT_KEY =
+    localStorageKey && `crate.gc.admin.${localStorageKey}-history`;
+  const SQL_HISTORY_TEMP_CONTENT_KEY =
+    localStorageKey && `crate.gc.admin.${localStorageKey}-history-temp`;
+
+  const dataFromLocalStorage = SQL_EDITOR_CONTENT_KEY
+    ? localStorage.getItem(SQL_EDITOR_CONTENT_KEY)
+    : undefined;
+  const [sql, setSql] = useState<string>(
+    getInitialValue(value, dataFromLocalStorage),
   );
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
+  const isLocalStorageUsed = useMemo(() => {
+    return (
+      typeof SQL_EDITOR_CONTENT_KEY !== 'undefined' &&
+      typeof SQL_HISTORY_CONTENT_KEY !== 'undefined' &&
+      typeof SQL_HISTORY_TEMP_CONTENT_KEY !== 'undefined'
+    );
+  }, [
+    SQL_EDITOR_CONTENT_KEY,
+    SQL_HISTORY_CONTENT_KEY,
+    SQL_HISTORY_TEMP_CONTENT_KEY,
+  ]);
 
   useEffect(() => {
     /*
@@ -34,13 +134,15 @@ function SQLEditor({ execCallback, value, results }: Params) {
       return;
     }
     ace.commands.byName.gcExec.exec = editor => exec(editor.getValue());
-  }, [ace, execCallback]);
+  }, [ace, onExecute]);
 
+  // Update annotations when results are ready
   useEffect(() => {
     if (!ace) {
       return;
     }
-    const ann = annotate();
+    // Compute and set Ace Editor annotations
+    const ann = annotate(ace, results, sql, SQL_EDITOR_CONTENT_KEY);
     if (ann) {
       ace.getSession().setAnnotations(ann);
     } else {
@@ -52,9 +154,11 @@ function SQLEditor({ execCallback, value, results }: Params) {
     if (!sql) {
       return;
     }
-    localStorage.setItem(SQL_EDITOR_CONTENT_KEY, sql);
-    pushHistory(sql);
-    execCallback(sql);
+    if (isLocalStorageUsed) {
+      localStorage.setItem(SQL_EDITOR_CONTENT_KEY!, sql);
+      pushHistory(sql);
+    }
+    onExecute(sql);
     ace?.focus();
   };
 
@@ -70,7 +174,10 @@ function SQLEditor({ execCallback, value, results }: Params) {
   way to do that.
    */
   const pushHistory = (sql: string) => {
-    let strHistory = localStorage.getItem(SQL_HISTORY_CONTENT_KEY);
+    if (!isLocalStorageUsed) {
+      return;
+    }
+    let strHistory = localStorage.getItem(SQL_HISTORY_CONTENT_KEY!);
     if (!strHistory) {
       strHistory = '[]';
     }
@@ -79,16 +186,19 @@ function SQLEditor({ execCallback, value, results }: Params) {
     if (historyArray.length > 100) {
       historyArray = historyArray.slice(1); // remove the head
     }
-    localStorage.setItem(SQL_HISTORY_CONTENT_KEY, JSON.stringify(historyArray));
-    localStorage.removeItem(SQL_HISTORY_TEMP_CONTENT_KEY);
+    localStorage.setItem(SQL_HISTORY_CONTENT_KEY!, JSON.stringify(historyArray));
+    localStorage.removeItem(SQL_HISTORY_TEMP_CONTENT_KEY!);
   };
 
   const popHistory = (reverse: boolean = false): string | undefined => {
+    if (!isLocalStorageUsed) {
+      return;
+    }
     const history: string[] = JSON.parse(
-      localStorage.getItem(SQL_HISTORY_CONTENT_KEY) || '[]',
+      localStorage.getItem(SQL_HISTORY_CONTENT_KEY!) || '[]',
     );
     const tempHistory: string[] = JSON.parse(
-      localStorage.getItem(SQL_HISTORY_TEMP_CONTENT_KEY) || '[]',
+      localStorage.getItem(SQL_HISTORY_TEMP_CONTENT_KEY!) || '[]',
     );
     let historyToUse = history;
     if (tempHistory.length > 0) {
@@ -98,77 +208,35 @@ function SQLEditor({ execCallback, value, results }: Params) {
       historyToUse = history.slice(0, tempHistory.length + 2);
     }
     const ret = historyToUse.pop();
-    localStorage.setItem(SQL_HISTORY_TEMP_CONTENT_KEY, JSON.stringify(historyToUse));
+    localStorage.setItem(
+      SQL_HISTORY_TEMP_CONTENT_KEY!,
+      JSON.stringify(historyToUse),
+    );
     return ret;
   };
 
-  const formatEditorContents = () => {
-    if (editorContents && ace) {
-      const formatted = formatSQL(editorContents, { language: 'postgresql' });
+  const formatSql = () => {
+    if (sql && ace) {
+      const formatted = formatSQL(sql, { language: 'postgresql' });
       ace.getSession().setValue(formatted);
       ace.focus();
     }
   };
 
-  const annotate = (): Ace.Annotation[] | undefined => {
-    if (!ace) {
-      return;
-    }
-    if (!results) {
-      return;
-    }
+  // onChange method
+  const onValueChange = (newValue: string) => {
+    // It updates current state and call onChange
+    setSql(newValue);
 
-    if (Array.isArray(results)) {
-      const err = results.find(r => r.error);
-      if (!err) {
-        return;
-      }
-      const q = err.original_query;
-      if (!q) {
-        return;
-      }
-      // we take the 1st 100 lines and see if any of them are contained in the
-      // query that failed. A rather naive approach.
-      const lines = ace.getSession().getLines(0, 100);
-      const trimmed = q.trim();
-      const pos = lines
-        .map((v, i) => {
-          const search = v.trim();
-          if (search.length > 0 && trimmed.startsWith(search)) {
-            return i;
-          }
-          return -1;
-        })
-        .find(v => v > 0);
-      if (pos) {
-        return [
-          {
-            row: pos,
-            column: 0,
-            text: err.error?.message || '',
-            type: 'error',
-          },
-        ];
-      }
-      return;
-    }
-
-    if (results.error) {
-      // We always show the 1st line and 1st column as the source of the error.
-      return [
-        {
-          row: 0,
-          column: 0,
-          text: results.error.message,
-          type: 'error',
-        },
-      ];
+    if (onChange) {
+      onChange(newValue);
     }
   };
 
   return (
-    <div className="max-w-screen-xl">
+    <div className="w-full">
       <div className="border-2 rounded">
+        {/* EDITOR */}
         <AceEditor
           height="300px"
           width="100%"
@@ -178,7 +246,7 @@ function SQLEditor({ execCallback, value, results }: Params) {
           highlightActiveLine
           enableLiveAutocompletion
           editorProps={{ $blockScrolling: true }}
-          defaultValue={value || editorContents || ''}
+          defaultValue={sql}
           commands={[
             {
               name: 'gcExec',
@@ -220,27 +288,65 @@ function SQLEditor({ execCallback, value, results }: Params) {
                 }
               },
             },
+            {
+              name: 'gcPrev',
+              bindKey: {
+                win: 'Ctrl-Up',
+                mac: 'Command-Up',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Up',
+              },
+              exec: editor => {
+                const val = popHistory();
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
+            {
+              name: 'gcNext',
+              bindKey: {
+                win: 'Ctrl-Down',
+                mac: 'Command-Down',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Down',
+              },
+              exec: editor => {
+                const val = popHistory(true);
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
           ]}
           setOptions={{
             showLineNumbers: true,
             tabSize: 2,
             showPrintMargin: false,
           }}
-          onChange={(newValue: string) => setEditorContents(newValue)}
+          onChange={onValueChange}
           onLoad={editor => {
             setAce(editor);
           }}
         />
       </div>
-      <div className="mt-2">
-        <Button kind="primary" onClick={() => exec(editorContents)}>
-          Run
-        </Button>
-        <Button className="ml-2" kind="secondary" onClick={formatEditorContents}>
-          Format SQL
-        </Button>
+
+      <div className="w-full flex items-center justify-between mt-2">
+        <div className="flex gap-2">
+          {showRunButton && (
+            <Button kind="primary" onClick={() => exec(sql)}>
+              <CaretRightOutlined className="mr-2" />
+              Run
+            </Button>
+          )}
+          <Button kind="secondary" onClick={formatSql}>
+            <FormatPainterOutlined className="mr-2" />
+            Format SQL
+          </Button>
+        </div>
         <div className="ml-2 text-xs inline-flex">
-          Ctrl(Cmd)+Enter to execute. Ctrl(Cmd)+Up/Down to navigate history.
+          Ctrl(Cmd)+Enter to execute.{' '}
+          {isLocalStorageUsed ? 'Ctrl(Cmd)+Up/Down to navigate history.' : null}
         </div>
       </div>
     </div>

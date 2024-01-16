@@ -26,6 +26,26 @@ function NavigationLink({ label, path }: NavigationLinkProps) {
 }
 
 function Navigation({ routes }: NavigationProps) {
+  // const location = useLocation();
+
+  // return (
+  //   <SideMenu
+  //     header={{
+  //       href: '/',
+  //       logo: 'https://placehold.co/175x20',
+  //       logoShape: 'https://placehold.co/25x25',
+  //     }}
+  //     links={routes.map(route => {
+  //       return {
+  //         label: <Link to={route.path}>{route.label}</Link>,
+  //         key: route.path,
+  //         icon: <div>I</div>,
+  //       };
+  //     })}
+  //     selectedKeys={[location.pathname]}
+  //   />
+  // );
+
   return (
     <nav className="w-full md:w-48">
       <ul>

@@ -1,4 +1,4 @@
-import execSql from './gc/execSql';
+import executeSql from './gc/executeSql';
 
 type User = {
   name: string;
@@ -35,10 +35,15 @@ type ShardInfo = {
 };
 
 async function getUsers(url: string): Promise<User[]> {
-  const res = await execSql(url, 'SELECT name, superuser FROM sys.users');
+  const res = await executeSql(url, 'SELECT name, superuser FROM sys.users');
+  if (!res.data || Array.isArray(res.data)) {
+    return [];
+  }
+
   if (res.data.error) {
     throw res.data.error;
   }
+
   return res.data.rows.map(row => {
     return {
       name: row[0],
@@ -48,33 +53,46 @@ async function getUsers(url: string): Promise<User[]> {
 }
 
 async function getUserPermissions(url: string | undefined, username: string) {
-  return await execSql(
+  return await executeSql(
     url,
     `SELECT grantee, class, ident, state, type FROM sys.privileges WHERE grantee='${username}'`,
   );
 }
 
 async function getCurrentUser(url: string | undefined): Promise<string> {
-  const res = await execSql(url, 'SELECT CURRENT_USER');
+  const res = await executeSql(url, 'SELECT CURRENT_USER');
+  if (!res.data || Array.isArray(res.data)) {
+    return '';
+  }
   return res.data.rows[0][0];
 }
 
 async function getSchemas(url: string | undefined): Promise<string[]> {
-  const res = await execSql(
+  const res = await executeSql(
     url,
     `SELECT 'doc' AS table_schema
         UNION
         SELECT DISTINCT(table_schema) FROM information_schema.tables
                                       WHERE table_schema NOT IN ('gc') ORDER BY 1;`,
   );
+
+  if (!res.data || Array.isArray(res.data)) {
+    return [];
+  }
+
   return res.data.rows.map(r => r[0]);
 }
 
 async function getTables(url: string | undefined): Promise<TableListEntry[]> {
-  const res = await execSql(
+  const res = await executeSql(
     url,
     `SELECT table_schema, table_name, number_of_shards, number_of_replicas FROM information_schema.tables where table_schema NOT IN ('gc') ORDER BY 1, 2;`,
   );
+
+  if (!res.data || Array.isArray(res.data)) {
+    return [];
+  }
+
   return res.data.rows.map(r => {
     return {
       table_schema: r[0],
@@ -90,7 +108,7 @@ async function getTableInformation(
   schema: string,
   table: string,
 ): Promise<TableInfo[]> {
-  const res = await execSql(
+  const res = await executeSql(
     url,
     `SELECT
           c.ordinal_position,
@@ -114,6 +132,10 @@ async function getTableInformation(
           AND c.table_schema = '${schema}';`,
   );
 
+  if (!res.data || Array.isArray(res.data)) {
+    return [];
+  }
+
   return res.data.rows.map(r => {
     return {
       ordinal_position: r[0],
@@ -126,7 +148,7 @@ async function getTableInformation(
 }
 
 async function getShards(url: string | undefined): Promise<ShardInfo[]> {
-  const res = await execSql(
+  const res = await executeSql(
     url,
     `SELECT
       table_name,
@@ -152,6 +174,10 @@ async function getShards(url: string | undefined): Promise<ShardInfo[]> {
       "primary"`,
   );
 
+  if (!res.data || Array.isArray(res.data)) {
+    return [];
+  }
+
   return res.data.rows.map(r => {
     return {
       table_name: r[0],
@@ -174,11 +200,16 @@ async function showCreateTable(
   schema: string,
   table: string,
 ): Promise<string | undefined> {
-  const res = await execSql(url, `SHOW CREATE TABLE "${schema}"."${table}"`);
-  if (res.data.error) {
+  const res = await executeSql(url, `SHOW CREATE TABLE "${schema}"."${table}"`);
+
+  if (!res.data || Array.isArray(res.data)) {
     return;
   }
-  return res.data.rows[0][0];
+
+  if (res.data && res.data.error) {
+    return;
+  }
+  return res.data && res.data.rows[0][0];
 }
 
 export type { User, TableListEntry, TableInfo, ShardInfo };

@@ -5,15 +5,15 @@ function UILibrary() {
     <>
       <h1 className="mb-2 text-2xl">UI Library</h1>
       <div className="flex flex-wrap gap-4 items-center mb-4">
-        <Button kind="primary">Primary Button</Button>
-        <Button kind="primary">Secondary Button</Button>
-        <Button kind="primary">Tertiary Button</Button>
+        <Button kind={Button.kinds.PRIMARY}>Primary Button</Button>
+        <Button kind={Button.kinds.SECONDARY}>Secondary Button</Button>
+        <Button kind={Button.kinds.TERTIARY}>Tertiary Button</Button>
         <Button loading>Loading Button</Button>
       </div>
       <div className="flex flex-wrap gap-4 items-center mb-4">
-        <Loader color="primary" size="small" />
-        <Loader color="primary" size="medium" />
-        <Loader color="primary" size="large" />
+        <Loader color={Loader.colors.PRIMARY} size={Loader.sizes.SMALL} />
+        <Loader color={Loader.colors.PRIMARY} size={Loader.sizes.MEDIUM} />
+        <Loader color={Loader.colors.PRIMARY} size={Loader.sizes.LARGE} />
       </div>
     </>
   );

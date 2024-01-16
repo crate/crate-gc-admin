@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { ConnectionStatus } from '../../utilities/gc/connectivity';
-import { GCContext } from '../../utilities/context';
+import { ConnectionStatus } from '../../utils/gc/connectivity';
+import { GCContext } from '../../utils/context';
 
 function renderStatus(status: ConnectionStatus) {
   const prefix = 'GC';

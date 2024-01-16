@@ -1,9 +1,9 @@
 import UILibrary from '../routes/UILibrary';
-import SQLScheduler from '../routes/SQLScheduler';
 import SQLConsole from '../routes/SQLConsole/SQLConsole';
 import Users from '../routes/Users/Users';
 import EnterpriseScreen from '../components/EnterpriseScreen/EnterpriseScreen';
 import Tables from '../routes/Tables/Tables';
+import SQLScheduler from '../routes/SQLScheduler/SQLScheduler';
 
 const routes: Route[] = [
   { path: '/', element: <SQLConsole />, label: 'SQL', key: 'sql' },
