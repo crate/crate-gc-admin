@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { GCContext } from '../../utils/context';
+import React, { useEffect, useState } from 'react';
+import { useGCContext } from '../../utils/context';
 import { getCurrentUser, getUsers, User } from '../../utils/queries';
 import { Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';
 import UserInfo from './UserInfo';
 
 function Users() {
-  const { sqlUrl } = useContext(GCContext);
+  const { sqlUrl } = useGCContext();
   const [users, setUsers] = useState<User[] | undefined>();
   const [current, setCurrent] = useState<string | undefined>();
 

@@ -4,8 +4,8 @@ import {
   ConfirmDelete,
   DisplayDate,
 } from '@crate.io/crate-ui-components';
-import { useContext, useState } from 'react';
-import { GCContext } from '../../../utils/context';
+import { useState } from 'react';
+import { useGCContext } from '../../../utils/context';
 import {
   useGCGetScheduledJobLastLogs,
   useGCGetScheduledJobs,
@@ -23,7 +23,7 @@ export default function SQLSchedulerJobsTable({
 }: SQLSchedulerJobsTableProps) {
   const [jobToDelete, setJobToDelete] = useState<SQLJob | null>(null);
   const [showLoaderDelete, setShowLoaderDelete] = useState(false);
-  const { gcUrl } = useContext(GCContext);
+  const { gcUrl } = useGCContext();
   const {
     data: scheduledJobs,
     mutate: mutateScheduledJobs,

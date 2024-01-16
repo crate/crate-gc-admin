@@ -1,6 +1,5 @@
-import { useContext } from 'react';
 import { useGCGetScheduledJobLogs } from '../../../hooks/swrHooks';
-import { GCContext } from '../../../utils/context';
+import { useGCContext } from '../../../utils/context';
 import { CrateTable, DisplayDate, Loader } from '@crate.io/crate-ui-components';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import cn from '../../../utils/cn';
@@ -12,7 +11,7 @@ type SQLSchedulerJobFormProps = {
 export default function SQLSchedulerManageJobLogs({
   job,
 }: SQLSchedulerJobFormProps) {
-  const { gcUrl } = useContext(GCContext);
+  const { gcUrl } = useGCContext();
   const { data: jobLogs, isLoading: isLoadingJobLogs } = useGCGetScheduledJobLogs(
     gcUrl!,
     job,

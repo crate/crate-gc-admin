@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ConnectionStatus } from './gc/connectivity';
 
 type GCContextType = {
@@ -14,3 +14,7 @@ export const GCContext = React.createContext<GCContextType>({
   crateUrl: 'http://localhost:4200',
   sqlUrl: undefined,
 });
+
+export const useGCContext = () => {
+  return useContext(GCContext);
+};
