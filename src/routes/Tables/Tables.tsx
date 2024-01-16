@@ -240,7 +240,9 @@ function Tables() {
     <>
       <Heading level="h1">Tables</Heading>
       <div className="flex">
-        <div className="border w-1/5 p-4 min-w-fit">{getSchemasSection()}</div>
+        <div className="border w-1/5 p-4 min-w-fit h-[87vh] overflow-y-scroll">
+          {getSchemasSection()}
+        </div>
         <div className="border w-4/5 p-4">{getActiveTableSection()}</div>
       </div>
     </>
