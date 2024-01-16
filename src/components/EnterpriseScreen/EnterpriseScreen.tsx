@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { GCContext } from '../../utils/context';
+import React from 'react';
+import { useGCContext } from '../../utils/context';
 import { ConnectionStatus } from '../../utils/gc/connectivity';
 import { Result } from 'antd';
 import { Button } from '@crate.io/crate-ui-components';
@@ -9,7 +9,7 @@ type EnterpriseScreenProps = {
 };
 
 function EnterpriseScreen({ children }: EnterpriseScreenProps) {
-  const { gcStatus } = useContext(GCContext);
+  const { gcStatus } = useGCContext();
   if (gcStatus == ConnectionStatus.CONNECTED) {
     return children;
   }

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Heading } from '@crate.io/crate-ui-components';
 import { Collapse, List, Table, Tabs, Tag } from 'antd';
-import { GCContext } from '../../utils/context';
+import { useGCContext } from '../../utils/context';
 import { format as formatSQL } from 'sql-formatter';
 import {
   getSchemas,
@@ -19,7 +19,7 @@ import prettyBytes from 'pretty-bytes';
 
 function Tables() {
   const systemSchemas = ['information_schema', 'sys', 'pg_catalog'];
-  const { sqlUrl } = useContext(GCContext);
+  const { sqlUrl } = useGCContext();
 
   const [schemas, setSchemas] = useState<string[] | undefined>();
   const [tables, setTables] = useState<TableListEntry[] | undefined>();

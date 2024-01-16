@@ -1,12 +1,12 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import SQLEditor from '../../components/SQLEditor/SQLEditor';
 import executeSql, { QueryResults } from '../../utils/gc/executeSql';
 import SQLResultsTable from '../../components/SQLResultsTable/SQLResultsTable';
-import { GCContext } from '../../utils/context';
+import { useGCContext } from '../../utils/context';
 import { Heading, Loader } from '@crate.io/crate-ui-components';
 
 function SQLConsole() {
-  const { sqlUrl } = useContext(GCContext);
+  const { sqlUrl } = useGCContext();
   const specifiedQuery = new URLSearchParams(location.search).get('q');
   const [results, setResults] = useState<QueryResults | undefined>(undefined);
   const [running, setRunning] = useState(false);

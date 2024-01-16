@@ -4,8 +4,8 @@ import { Button, Text, Loader } from '@crate.io/crate-ui-components';
 import Checkbox from '../../../components/Checkbox';
 import SQLEditor from '../../../components/SQLEditor/SQLEditor';
 import { apiPost, apiPut } from '../../../hooks/api';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { GCContext } from '../../../utils/context';
+import { useCallback, useEffect, useState } from 'react';
+import { useGCContext } from '../../../utils/context';
 import executeSql, { QueryResults } from '../../../utils/gc/executeSql';
 import SQLResultsTable from '../../../components/SQLResultsTable/SQLResultsTable';
 import { cronParser } from '../../../utils/cron';
@@ -26,7 +26,7 @@ type SQLSchedulerJobFormProps = {
 
 export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
   const { backToClusterView, type } = props;
-  const { gcUrl, sqlUrl } = useContext(GCContext);
+  const { gcUrl, sqlUrl } = useGCContext();
   const [showLoader, setShowLoader] = useState(false);
   const [queryResults, setQueryResults] = useState<QueryResults>(undefined);
   const [queryRunning, setQueryRunning] = useState(false);
