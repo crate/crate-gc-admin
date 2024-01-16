@@ -40,26 +40,32 @@ function App() {
         sqlUrl: getSQLUrl(),
       }}
     >
-      <div className="bg-neutral-800 flex-row w-full px-6 py-3 h-12">
-        <StatusBar />
-      </div>
-      <div className="bg-white flex min-h-dvh">
-        <div className="bg-crate-blue hidden md:block">
-          <Navigation routes={routes} />
-          <div className="mt-4 border-dashed border-t pt-4 border-slate-600">
-            <GCStatusIndicator />
-          </div>
+      <div className="bg-white min-h-dvh">
+        <div className="bg-neutral-800 flex w-full px-6 py-3 h-[5vh]">
+          <StatusBar />
         </div>
-        <div className="basis-full">
-          <div className="flex justify-end p-4 md:hidden">
-            <Burger routes={routes} />
+        <div className="flex min-h-[95vh]">
+          <div className="bg-crate-blue hidden md:block">
+            <Navigation routes={routes} />
+            <div className="mt-4 border-dashed border-t pt-4 border-slate-600">
+              <GCStatusIndicator />
+            </div>
           </div>
-          <div className="p-4 w-full h-full">
-            <Routes>
-              {routes.map(route => (
-                <Route key={route.path} path={route.path} element={route.element} />
-              ))}
-            </Routes>
+          <div className="basis-full">
+            <div className="flex justify-end p-4 md:hidden">
+              <Burger routes={routes} />
+            </div>
+            <div className="p-4 w-full h-full">
+              <Routes>
+                {routes.map(route => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={route.element}
+                  />
+                ))}
+              </Routes>
+            </div>
           </div>
         </div>
       </div>
