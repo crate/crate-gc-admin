@@ -32,7 +32,27 @@ via HTTP(S) Cross-Origin requests (the URL is configurable).
 GC Admin authenticates to Grand Central via a JWT token, which must be obtained from
 CrateDB Cloud.
 
-## Publish a newer version
+## Install
+
+To install this library you have to run the following command:
+
+    yarn add @crate.io/crate-gc-admin
+
+Then, if you are using tailwind, edit your `tailwind.config` file and
+add the following:
+
+    ...
+    content: [
+      ...
+      './node_modules/@crate.io/crate-gc-admin/**/*.{js,jsx,ts,tsx}'
+    ]
+    ...
+
+and edit your index.css to import library style:
+
+    @import '@crate.io/crate-gc-admin/style.css';
+
+## Publish a new version
 
 To publish a new version of the `crate-gc-admin` on NPM you need to
 
