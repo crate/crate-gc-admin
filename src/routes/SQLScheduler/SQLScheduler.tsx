@@ -26,7 +26,7 @@ function SQLScheduler() {
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      {!headings && (
+      {headings && (
         <>
           <h1 className="text-2xl">SQL Scheduler</h1>
           <Text>Run SQL queries at regular intervals.</Text>
