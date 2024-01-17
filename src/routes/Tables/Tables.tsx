@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Heading } from '@crate.io/crate-ui-components';
-import { Collapse, List, Table, Tabs, Tag } from 'antd';
+import { Button, colors, Heading, StatusLight } from '@crate.io/crate-ui-components';
+import { Collapse, Input, List, Spin, Table, Tabs, Tag } from 'antd';
 import { useGCContext } from '../../contexts';
 import { format as formatSQL } from 'sql-formatter';
 import {
-  getSchemas,
-  getShards,
   getTableInformation,
-  getTables,
-  ShardInfo,
   showCreateTable,
   TableInfo,
   TableListEntry,
@@ -16,28 +12,39 @@ import {
 import { Link } from 'react-router-dom';
 import routes from '../../constants/routes';
 import prettyBytes from 'pretty-bytes';
+import {
+  useGetShards,
+  useGetTables,
+  useGetAllocations,
+} from '../../hooks/swrHooks.ts';
+import {
+  tablesWithMissingPrimaryReplicas,
+  unassignedShards,
+} from '../../utils/statusChecks.ts';
 
 function Tables() {
-  const systemSchemas = ['information_schema', 'sys', 'pg_catalog'];
+  const systemSchemas = ['information_schema', 'sys', 'pg_catalog', 'gc'];
   const { sqlUrl } = useGCContext();
 
   const [schemas, setSchemas] = useState<string[] | undefined>();
-  const [tables, setTables] = useState<TableListEntry[] | undefined>();
-  const [shards, setShards] = useState<ShardInfo[] | undefined>();
   const [activeTable, setActiveTable] = useState<TableListEntry | undefined>();
   const [activeTableInfo, setActiveTableInfo] = useState<TableInfo[] | undefined>();
   const [createTableSQL, setCreateTableSQL] = useState<string | undefined>();
+  const [filter, setFilter] = useState<string>('');
 
-  // TODO: SWR / Re-fetch
+  const { data: tables } = useGetTables(sqlUrl);
+  const { data: shards } = useGetShards(sqlUrl);
+  const { data: allocations } = useGetAllocations(sqlUrl);
+  const missingReplicasTables = tablesWithMissingPrimaryReplicas(allocations);
+  const unassignedShardTables = unassignedShards(allocations);
+
   useEffect(() => {
-    if (!sqlUrl) {
+    if (!tables) {
       return;
     }
 
-    getSchemas(sqlUrl).then(setSchemas);
-    getTables(sqlUrl).then(setTables);
-    getShards(sqlUrl).then(setShards);
-  }, [sqlUrl]);
+    setSchemas(Array.from(new Set(tables?.map(t => t.table_schema))));
+  }, [tables]);
 
   useEffect(() => {
     if (!activeTable) {
@@ -80,8 +87,44 @@ function Tables() {
       });
   };
 
+  const tableBadge = (table: TableListEntry) => {
+    if (
+      missingReplicasTables.filter(
+        t => t.schema_name == table.table_schema && t.table_name == table.table_name,
+      ).length > 0
+    ) {
+      return (
+        <StatusLight
+          color={StatusLight.colors.RED}
+          message=""
+          tooltip="Table has missing data"
+        />
+      );
+    }
+    if (
+      unassignedShardTables.filter(
+        s => s.schema_name == table.table_schema && s.table_name == table.table_name,
+      ).length > 0
+    ) {
+      return (
+        <StatusLight
+          color={StatusLight.colors.YELLOW}
+          message=""
+          tooltip="Table is underreplicated"
+        />
+      );
+    }
+    return <StatusLight color={StatusLight.colors.GREEN} message="" />;
+  };
+
   const getTableList = (schema: string) => {
-    const schemaTables = tables?.filter(t => t.table_schema == schema);
+    const schemaTables = tables
+      ?.filter(t => t.table_schema == schema)
+      .filter(t => t.table_name.match(filter));
+
+    if (!schemaTables || schemaTables.length == 0) {
+      return null;
+    }
 
     return (
       <List
@@ -93,21 +136,27 @@ function Tables() {
           return (
             <List.Item
               className="cursor-pointer"
-              onClick={() => setActiveTable(item)}
+              onClick={() => {
+                setActiveTableInfo([]);
+                setActiveTable(item);
+              }}
             >
-              <div className="grid grid-cols-1">
-                <div className="font-bold">{item.table_name}</div>
-                {size && (
-                  <div className="text-xs">
-                    {size.records} Records ({prettyBytes(size.bytes)})
-                  </div>
-                )}
-                {item.number_of_replicas && (
-                  <div className="text-xs">
-                    {item.number_of_shards} Shards / {item.number_of_replicas}{' '}
-                    Replicas
-                  </div>
-                )}
+              <div className="flex flex-row justify-between w-60">
+                <div className="grid grid-cols-1">
+                  <div className="font-bold break-words">{item.table_name}</div>
+                  {size && (
+                    <div className="text-xs">
+                      {size.records} Records ({prettyBytes(size.bytes)})
+                    </div>
+                  )}
+                  {item.number_of_replicas && (
+                    <div className="text-xs">
+                      {item.number_of_shards} Shards / {item.number_of_replicas}{' '}
+                      Replicas
+                    </div>
+                  )}
+                </div>
+                <div className="ml-8">{tableBadge(item)}</div>
               </div>
             </List.Item>
           );
@@ -116,45 +165,68 @@ function Tables() {
     );
   };
 
-  const systemBadge = (schema: string) => {
+  const schemaBadge = (schema: string) => {
     if (systemSchemas.includes(schema)) {
-      // FIXME: use constant from crate-ui-components
-      return <Tag color="#00A6D1">system</Tag>;
+      return <Tag color={colors.crateBlue}>system</Tag>;
     }
-    return null;
+    if (missingReplicasTables.filter(t => t.schema_name == schema).length > 0) {
+      return (
+        <StatusLight
+          color={StatusLight.colors.RED}
+          message=""
+          tooltip="Has tables with missing data"
+        />
+      );
+    }
+    if (unassignedShardTables.filter(s => s.schema_name == schema).length > 0) {
+      return (
+        <StatusLight
+          color={StatusLight.colors.YELLOW}
+          message=""
+          tooltip="Has underreplicated tables"
+        />
+      );
+    }
+    return <StatusLight color={StatusLight.colors.GREEN} message="" />;
   };
 
   const constraintBadge = (constraint: string | null) => {
     if (constraint) {
-      // FIXME: use constant from crate-ui-components
-      return <Tag color="#00A6D1">{constraint}</Tag>;
+      return <Tag color={colors.crateBlue}>{constraint}</Tag>;
     }
     return null;
   };
 
   const getSchemasSection = () => {
-    const items = schemas?.map(s => {
-      return {
-        key: s,
-        label: (
-          <span>
-            {s} {systemBadge(s)}
-          </span>
-        ),
-        children: getTableList(s),
-      };
-    });
+    const items = schemas
+      ?.map(s => {
+        return {
+          key: s,
+          label: (
+            <div className="flex flex-row justify-between">
+              <div>{s}</div>
+              <div className="ml-4">{schemaBadge(s)}</div>
+            </div>
+          ),
+          children: getTableList(s),
+        };
+      })
+      .filter(i => i);
 
-    return (
-      <Collapse defaultActiveKey={activeTable?.table_schema || 'doc'}>
-        {items?.map(item => {
-          return (
-            <Collapse.Panel header={item.label} key={item.key}>
-              {item.children}
-            </Collapse.Panel>
-          );
-        })}
+    return tables ? (
+      <Collapse defaultActiveKey={tables[0].table_schema}>
+        {items
+          ?.filter(i => i.children)
+          .map(item => {
+            return (
+              <Collapse.Panel header={item.label} key={item.key}>
+                {item.children}
+              </Collapse.Panel>
+            );
+          })}
       </Collapse>
+    ) : (
+      <Spin />
     );
   };
 
@@ -187,6 +259,9 @@ function Tables() {
         key: 'data_type',
         dataIndex: 'data_type',
         width: '70%',
+        render: (_: string, record: TableInfo) => {
+          return <span>{record.data_type.toUpperCase()}</span>;
+        },
       },
     ];
 
@@ -240,7 +315,10 @@ function Tables() {
     <>
       <Heading level="h1">Tables</Heading>
       <div className="flex">
-        <div className="border w-1/5 p-4 min-w-fit h-[87vh] overflow-y-scroll">
+        <div className="border w-1/5 p-4 min-w-80 h-[87vh] overflow-y-scroll">
+          <div className="mb-4">
+            <Input placeholder="Filter" onChange={v => setFilter(v.target.value)} />
+          </div>
           {getSchemasSection()}
         </div>
         <div className="border w-4/5 p-4">{getActiveTableSection()}</div>

@@ -116,7 +116,6 @@ const renderTable = (result: QueryResult) => {
       <Table
         columns={columns}
         dataSource={data}
-        rowKey={columns[0].key}
         pagination={{ defaultPageSize: 20 }}
         showHeader
         bordered

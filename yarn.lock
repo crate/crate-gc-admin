@@ -372,10 +372,10 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@crate.io/crate-ui-components@^0.1.29":
-  version "0.1.29"
-  resolved "https://registry.npmjs.org/@crate.io/crate-ui-components/-/crate-ui-components-0.1.29.tgz#593d56f4a27f7231d0290a07def1b4b481e838c5"
-  integrity sha512-4sY8yoApk6X70Wc3Y238a7a4UC1/GjoXRy2FzFd5smzXl90/8JTe2cuEUgYDzTe6GcGFz+0hC8LMkvE72sWQcA==
+"@crate.io/crate-ui-components@^0.1.30":
+  version "0.1.30"
+  resolved "https://registry.yarnpkg.com/@crate.io/crate-ui-components/-/crate-ui-components-0.1.30.tgz#092e9b84bacd17931072a3393fcdcbe1fef42e1a"
+  integrity sha512-CmR2njm7v529BC5jERVz0k9ZF1Z9qkdYVqKp6E6L7Bo4oVPJksjWYvwAv6Z0Q3N9qx3tVCL0VebigjHSB5eIbQ==
   dependencies:
     antd "^4.24.14"
     classnames "^2.5.1"

@@ -10,10 +10,15 @@ async function isGcConnected(gc_url: string | undefined) {
   if (!gc_url) {
     return ConnectionStatus.NOT_CONFIGURED;
   }
-  const response = await fetch(`${gc_url}/api/`, {
-    method: 'GET',
-    credentials: 'include',
-  });
+  let response;
+  try {
+    response = await fetch(`${gc_url}/api/`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+  } catch (e) {
+    return ConnectionStatus.ERROR;
+  }
   if (response.status == 200) {
     return ConnectionStatus.CONNECTED;
   } else if (response.status == 401) {

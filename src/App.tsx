@@ -17,17 +17,14 @@ function App() {
   }, []);
 
   const gcUrl = process.env.REACT_APP_GRAND_CENTRAL_URL;
-  const crateUrl = 'http://localhost:4200';
+  const crateUrl = process.env.REACT_APP_CRATE_URL;
 
   const getSQLUrl = () => {
     switch (gcStatus) {
       case ConnectionStatus.CONNECTED:
         return `${gcUrl}/api/_sql?multi=true&types`;
-      case ConnectionStatus.NOT_CONFIGURED:
-      case ConnectionStatus.NOT_LOGGED_IN:
-        return `${crateUrl}/_sql?types`;
       default:
-        return;
+        return `${crateUrl}/_sql?types`;
     }
   };
 

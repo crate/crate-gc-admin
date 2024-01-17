@@ -3,7 +3,7 @@ import { useGCContext } from '../../contexts';
 
 function renderStatus(status: ConnectionStatus) {
   const prefix = 'GC';
-  let actual = <b>Checking ..."</b>;
+  let actual = <b>Checking ...</b>;
   switch (status) {
     case ConnectionStatus.CONNECTED:
       actual = <span className="text-green-500">Connected</span>;
