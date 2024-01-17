@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@crate.io/crate-ui-components": "^0.1.29",
+    "@crate.io/crate-ui-components": "^0.1.30",
     "ace-builds": "^1.32.2",
     "antd": "^4.24.14",
     "clsx": "^2.1.0",

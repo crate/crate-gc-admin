@@ -1,38 +1,13 @@
+import {
+  Allocation,
+  ClusterInfo,
+  NodeStatusInfo,
+  ShardInfo,
+  TableInfo,
+  TableListEntry,
+  User,
+} from '../types/cratedb';
 import executeSql from './gc/executeSql';
-
-type User = {
-  name: string;
-  superuser: boolean;
-};
-
-type TableListEntry = {
-  table_schema: string;
-  table_name: string;
-  number_of_shards: number;
-  number_of_replicas: string;
-};
-
-type TableInfo = {
-  ordinal_position: number;
-  column_name: string;
-  data_type: string;
-  column_default: string | null;
-  constraint_type: string | null;
-};
-
-type ShardInfo = {
-  table_name: string;
-  schema_name: string;
-  node_id: string;
-  state: string;
-  routing_state: string;
-  relocating_node: string;
-  number_of_shards: number;
-  primary: boolean;
-  total_docs: number;
-  avg_docs: number;
-  size_bytes: number;
-};
 
 async function getUsers(url: string): Promise<User[]> {
   const res = await executeSql(url, 'SELECT name, superuser FROM sys.users');
@@ -67,6 +42,20 @@ async function getCurrentUser(url: string | undefined): Promise<string> {
   return res.data.rows[0][0];
 }
 
+async function getClusterInfo(
+  url: string | undefined,
+): Promise<ClusterInfo | undefined> {
+  const res = await executeSql(url, 'SELECT id, name FROM sys.cluster');
+  if (!res.data || Array.isArray(res.data)) {
+    return;
+  }
+  const row = res.data.rows[0];
+  return {
+    id: row[0],
+    name: row[1],
+  };
+}
+
 async function getSchemas(url: string | undefined): Promise<string[]> {
   const res = await executeSql(
     url,
@@ -86,7 +75,32 @@ async function getSchemas(url: string | undefined): Promise<string[]> {
 async function getTables(url: string | undefined): Promise<TableListEntry[]> {
   const res = await executeSql(
     url,
-    `SELECT table_schema, table_name, number_of_shards, number_of_replicas FROM information_schema.tables where table_schema NOT IN ('gc') ORDER BY 1, 2;`,
+    `SELECT
+            *
+          FROM
+            (
+              SELECT
+                t.table_schema,
+                t.table_name,
+                t.number_of_shards,
+                t.number_of_replicas,
+                IF (
+                  (
+                    t.table_schema IN ('sys', 'pg_catalog', 'information_schema', 'gc')
+                  ),
+                  true,
+                  false
+                ) as system
+              FROM
+                information_schema.tables t
+              ORDER BY
+                system,
+                t.table_schema,
+                t.table_name
+            ) tables
+          WHERE
+            tables.number_of_shards IS NOT NULL
+            or tables.system`,
   );
 
   if (!res.data || Array.isArray(res.data)) {
@@ -99,6 +113,34 @@ async function getTables(url: string | undefined): Promise<TableListEntry[]> {
       table_name: r[1],
       number_of_shards: r[2],
       number_of_replicas: r[3],
+      system: r[5],
+    };
+  });
+}
+
+async function getNodes(url: string | undefined): Promise<NodeStatusInfo[]> {
+  const res = await executeSql(
+    url,
+    "SELECT id, name, hostname, heap, fs, os['cpu'] as cpu, load, version, process['cpu'] as cpu_usage, " +
+      "os_info['available_processors'] as available_processors FROM sys.nodes ORDER BY id",
+  );
+
+  if (!res.data || Array.isArray(res.data)) {
+    return [];
+  }
+
+  return res.data.rows.map(r => {
+    return {
+      id: r[0],
+      name: r[1],
+      hostname: r[2],
+      heap: r[3],
+      fs: r[4],
+      cpu: r[5],
+      load: r[6],
+      version: r[7],
+      cpu_usage: r[8],
+      available_processors: r[9],
     };
   });
 }
@@ -212,14 +254,55 @@ async function showCreateTable(
   return res.data && res.data.rows[0][0];
 }
 
+async function getAllocations(
+  url: string | undefined,
+): Promise<Allocation[] | undefined> {
+  const res = await executeSql(
+    url,
+    `SELECT
+          table_schema,
+          table_name,
+          partition_ident,
+          COUNT(*) FILTER (WHERE "primary") cnt_primaries,
+          COUNT(*) FILTER (WHERE "primary" AND (current_state='STARTED' OR current_state = 'RELOCATING')) cnt_primaries_started,
+          COUNT(*) FILTER (WHERE NOT "primary") cnt_replicas,
+          COUNT(*) FILTER (WHERE NOT "primary" AND (current_state='STARTED' OR current_state = 'RELOCATING')) cnt_replicas_started
+        FROM sys.allocations
+        GROUP BY 1,2,3`,
+  );
+
+  if (!res.data || Array.isArray(res.data)) {
+    return;
+  }
+
+  if (res.data && res.data.error) {
+    return;
+  }
+
+  return res.data.rows.map(row => {
+    return {
+      schema_name: row[0],
+      table_name: row[1],
+      partition_ident: row[2],
+      num_primaries: row[3],
+      num_started_primaries: row[4],
+      num_replicas: row[5],
+      num_started_replicas: row[6],
+    };
+  });
+}
+
 export type { User, TableListEntry, TableInfo, ShardInfo };
 export {
   getUsers,
   getUserPermissions,
   getCurrentUser,
+  getClusterInfo,
   getSchemas,
   getTables,
   getShards,
+  getNodes,
   getTableInformation,
   showCreateTable,
+  getAllocations,
 };
