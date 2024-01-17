@@ -76,7 +76,7 @@ const renderTable = (result: QueryResult) => {
   }
   let columns = result?.cols.map(col => {
     return {
-      title: col,
+      title: () => <span className="font-bold">{col}</span>,
       key: col,
       dataIndex: col,
       width: '10%',
@@ -96,7 +96,7 @@ const renderTable = (result: QueryResult) => {
   if (columns?.length == 0) {
     columns = [
       {
-        title: 'result',
+        title: () => <span className="font-bold">result</span>,
         key: 'result',
         dataIndex: 'result',
         width: '100%',

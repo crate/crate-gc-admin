@@ -33,7 +33,7 @@ function SQLConsole() {
   };
 
   return (
-    <>
+    <div className="max-w-[88dvw]">
       <Heading level="h1" className="mb-2">
         Console
       </Heading>
@@ -44,7 +44,7 @@ function SQLConsole() {
         value={specifiedQuery}
       />
       <div className="mt-4">{renderResults()}</div>
-    </>
+    </div>
   );
 }
 
