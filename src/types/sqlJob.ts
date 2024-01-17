@@ -1,4 +1,4 @@
-type SQLJob = {
+export type SQLJob = {
   id: string;
   name: string;
   cron: string;
@@ -8,7 +8,7 @@ type SQLJob = {
   last_execution?: string;
 };
 
-type SQLJobLog = {
+export type SQLJobLog = {
   job_id: string;
   start: string;
   end: string;

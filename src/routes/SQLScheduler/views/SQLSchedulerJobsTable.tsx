@@ -5,7 +5,7 @@ import {
   DisplayDate,
 } from '@crate.io/crate-ui-components';
 import { useState } from 'react';
-import { useGCContext } from '../../../utils/context';
+import { useGCContext } from '../../../contexts';
 import {
   useGCGetScheduledJobLastLogs,
   useGCGetScheduledJobs,
@@ -13,6 +13,7 @@ import {
 import { apiDelete } from '../../../hooks/api';
 import { Loader } from '@crate.io/crate-ui-components';
 import { cronParser } from '../../../utils/cron';
+import { SQLJob } from '../../../types';
 
 type SQLSchedulerJobsTableProps = {
   onManage: (job: SQLJob) => void;
@@ -102,7 +103,7 @@ export default function SQLSchedulerJobsTable({
             render: (lastExecution?: string) => {
               if (lastExecution) {
                 return <DisplayDate isoDate={lastExecution} />;
-              } else return 'Cancelled';
+              } else return 'n/a';
             },
           },
           {

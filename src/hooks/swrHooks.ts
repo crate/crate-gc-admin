@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import swrCORSFetch from '../utils/swrCORSFetch';
 import { useEffect, useState } from 'react';
 import { apiGet } from './api';
+import { SQLJob, SQLJobLog } from '../types';
 
 export const useGCGetScheduledJobs = (url: string) => {
   return useSWR<SQLJob[]>(`${url}/api/scheduled-jobs/`, swrCORSFetch);

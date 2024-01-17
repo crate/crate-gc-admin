@@ -7,20 +7,34 @@ type InputProps = React.DetailedHTMLProps<
   HTMLInputElement
 > & {
   label?: string;
+  error?: React.ReactElement;
+  required?: boolean;
 };
 
 const Input = React.forwardRef(
-  (props: InputProps, ref: React.ForwardedRef<HTMLInputElement>) => {
-    const { label, ...buttonProps } = props;
-
+  (
+    { label, error = undefined, required = false, ...inputProps }: InputProps,
+    ref: React.ForwardedRef<HTMLInputElement>,
+  ) => {
     return (
       <>
-        {label && <Text className="font-bold">{label}</Text>}
+        {label && (
+          <Text className={cn('font-bold', { 'text-red-500': error })}>
+            {label} {required && '*'}
+          </Text>
+        )}
         <input
           ref={ref}
-          {...buttonProps}
-          className={cn('border', 'p-2', 'rounded-sm', props.className)}
+          {...inputProps}
+          className={cn(
+            'border-2',
+            'p-2',
+            'rounded-sm',
+            { 'border-red-500': error },
+            inputProps.className,
+          )}
         />
+        {error}
       </>
     );
   },

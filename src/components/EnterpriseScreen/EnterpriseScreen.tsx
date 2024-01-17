@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGCContext } from '../../utils/context';
+import { useGCContext } from '../../contexts';
 import { ConnectionStatus } from '../../utils/gc/connectivity';
 import { Result } from 'antd';
 import { Button } from '@crate.io/crate-ui-components';

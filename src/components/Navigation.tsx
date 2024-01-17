@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { Route } from '../types';
 
 interface NavigationProps {
   routes: Route[];

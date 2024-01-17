@@ -2,9 +2,9 @@ import { Route, Routes } from 'react-router-dom';
 import Burger from './components/Burger';
 import Navigation from './components/Navigation';
 import routes from './constants/routes';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ConnectionStatus, isGcConnected } from './utils/gc/connectivity';
-import { GCContext } from './utils/context';
+import { GCContextProvider } from './contexts';
 import GCStatusIndicator from './components/GCStatusIndicator/GCStatusIndicator';
 import StatusBar from './components/StatusBar/StatusBar';
 import NotificationHandler from './components/NotificationHandler';
@@ -32,13 +32,12 @@ function App() {
   };
 
   return (
-    <GCContext.Provider
-      value={{
-        gcStatus,
-        gcUrl: gcUrl,
-        crateUrl: crateUrl,
-        sqlUrl: getSQLUrl(),
-      }}
+    <GCContextProvider
+      gcStatus={gcStatus}
+      gcUrl={gcUrl}
+      crateUrl={crateUrl}
+      sqlUrl={getSQLUrl()}
+      headings={false}
     >
       <div className="bg-white min-h-dvh">
         <div className="bg-neutral-800 flex w-full px-6 py-3 h-[5vh]">
@@ -70,7 +69,7 @@ function App() {
         </div>
       </div>
       <NotificationHandler />
-    </GCContext.Provider>
+    </GCContextProvider>
   );
 }
 

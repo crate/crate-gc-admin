@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useGCContext } from '../../utils/context';
+import { useEffect, useState } from 'react';
+import { useGCContext } from '../../contexts';
 import { getCurrentUser, getUsers, User } from '../../utils/queries';
 import { Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';

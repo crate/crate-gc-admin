@@ -1,8 +1,9 @@
 import { useGCGetScheduledJobLogs } from '../../../hooks/swrHooks';
-import { useGCContext } from '../../../utils/context';
+import { useGCContext } from '../../../contexts';
 import { CrateTable, DisplayDate, Loader } from '@crate.io/crate-ui-components';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import cn from '../../../utils/cn';
+import { SQLJob, SQLJobLog } from '../../../types';
 
 type SQLSchedulerJobFormProps = {
   job: SQLJob;

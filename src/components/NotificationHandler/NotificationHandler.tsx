@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import NotificationDescription from './NotificationDescription';
 import useSessionStore, { NotificationType } from '../../state/session';
 import { LONG_MESSAGE_NOTIFICATION_DURATION } from '../../constants/defaults';

@@ -1,8 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import SQLEditor from '../../components/SQLEditor/SQLEditor';
 import executeSql, { QueryResults } from '../../utils/gc/executeSql';
 import SQLResultsTable from '../../components/SQLResultsTable/SQLResultsTable';
-import { useGCContext } from '../../utils/context';
+import { useGCContext } from '../../contexts';
 import { Heading, Loader } from '@crate.io/crate-ui-components';
 
 function SQLConsole() {
