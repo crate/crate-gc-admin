@@ -16,6 +16,9 @@
     },
     "./style.css": "./dist/style.css"
   },
+  "files": [
+    "./dist"
+  ],
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@crate.io/crate-ui-components": "^0.1.29",
@@ -97,5 +100,10 @@
     "vite": "^5.0.11",
     "vite-plugin-dts": "^3.7.1",
     "vite-tsconfig-paths": "^4.2.3"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1"
   }
 }
