@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Heading } from '@crate.io/crate-ui-components';
 import { Collapse, List, Table, Tabs, Tag } from 'antd';
-import { useGCContext } from '../../utils/context';
+import { useGCContext } from '../../contexts';
 import { format as formatSQL } from 'sql-formatter';
 import {
   getSchemas,

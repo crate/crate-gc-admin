@@ -32,6 +32,16 @@ via HTTP(S) Cross-Origin requests (the URL is configurable).
 GC Admin authenticates to Grand Central via a JWT token, which must be obtained from
 CrateDB Cloud.
 
+## Publish a newer version
+
+To publish a new version of the `crate-gc-admin` on NPM you need to
+
+1.  be part of `@crate.io` organization on npm
+2.  run `yarn publish` and type the new version number
+3.  push `package.json` file (version update)
+
+This process can also be automated with a GitHub action.
+
 ## Using @crate.io/crate-ui-components as a local library
 
 Sometimes you need to be able to develop using the local version instead of using a version published on npm.

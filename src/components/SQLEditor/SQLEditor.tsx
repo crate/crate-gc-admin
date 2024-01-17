@@ -8,77 +8,18 @@ import { Button } from '@crate.io/crate-ui-components';
 import { Ace } from 'ace-builds';
 import { QueryResults } from '../../utils/gc/executeSql';
 import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
+import cn from '../../utils/cn';
+import { annotate } from './annotationUtils';
 
 type SQLEditorProps = {
   value?: string | undefined | null;
   results: QueryResults;
   localStorageKey?: string;
   showRunButton?: boolean;
+  runButtonLabel?: string;
+  error?: React.ReactElement;
   onExecute: (queries: string) => void;
   onChange?: (queries: string) => void;
-};
-
-const annotate = (
-  ace: Ace.Editor,
-  results: QueryResults,
-  text: string,
-  localStorageKey?: string,
-): Ace.Annotation[] | undefined => {
-  if (!results) {
-    return;
-  }
-
-  // Update Local Storage
-  if (localStorageKey) {
-    localStorage.setItem(localStorageKey, text);
-  }
-
-  if (Array.isArray(results)) {
-    const err = results.find(r => r.error);
-    if (!err) {
-      return;
-    }
-    const q = err.original_query;
-    if (!q) {
-      return;
-    }
-    // we take the 1st 100 lines and see if any of them are contained in the
-    // query that failed. A rather naive approach.
-    const lines = ace.getSession().getLines(0, 100);
-    const trimmed = q.trim();
-    const pos = lines
-      .map((v, i) => {
-        const search = v.trim();
-        if (search.length > 0 && trimmed.startsWith(search)) {
-          return i;
-        }
-        return -1;
-      })
-      .find(v => v > 0);
-    if (pos) {
-      return [
-        {
-          row: pos,
-          column: 0,
-          text: err.error?.message || '',
-          type: 'error',
-        },
-      ];
-    }
-    return;
-  }
-
-  if (results.error) {
-    // We always show the 1st line and 1st column as the source of the error.
-    return [
-      {
-        row: 0,
-        column: 0,
-        text: results.error.message,
-        type: 'error',
-      },
-    ];
-  }
 };
 
 const getInitialValue = (
@@ -95,6 +36,8 @@ function SQLEditor({
   results,
   localStorageKey,
   showRunButton = true,
+  error = undefined,
+  runButtonLabel = 'Run',
   onExecute,
   onChange,
 }: SQLEditorProps) {
@@ -234,8 +177,8 @@ function SQLEditor({
   };
 
   return (
-    <div className="w-full">
-      <div className="border-2 rounded">
+    <div className="w-full flex flex-col gap-2">
+      <div className={cn('border-2 rounded', { 'border-red-500': error })}>
         {/* EDITOR */}
         <AceEditor
           height="300px"
@@ -331,12 +274,14 @@ function SQLEditor({
         />
       </div>
 
-      <div className="w-full flex items-center justify-between mt-2">
+      {error}
+
+      <div className="w-full flex items-center justify-between">
         <div className="flex gap-2">
           {showRunButton && (
             <Button kind="primary" onClick={() => exec(sql)}>
               <CaretRightOutlined className="mr-2" />
-              Run
+              {runButtonLabel}
             </Button>
           )}
           <Button kind="secondary" onClick={formatSql}>

@@ -1,7 +1,9 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
+import dts from 'vite-plugin-dts';
 import { colors } from '@crate.io/crate-ui-components';
+import { resolve } from 'path';
+import packageJson from './package.json';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -9,7 +11,12 @@ export default defineConfig(({ mode }) => {
   return {
     // depending on your application, base can also be "/"
     base: '',
-    plugins: [react(), viteTsconfigPaths()],
+    plugins: [
+      react(),
+      dts({
+        tsconfigPath: 'tsconfig.build.json',
+      }),
+    ],
     server: {
       // this ensures that the browser opens upon server start
       open: true,
@@ -19,7 +26,24 @@ export default defineConfig(({ mode }) => {
       'process.env': env,
     },
     build: {
-      outDir: 'build',
+      outDir: 'dist',
+      lib: {
+        entry: resolve(__dirname, 'src/index.ts'),
+        name: packageJson.name,
+        fileName: format => `index.${format}.js`,
+      },
+      rollupOptions: {
+        input: 'src/index.ts',
+        external: ['react', 'react-dom', 'react-router-dom'],
+        output: {
+          globals: {
+            react: 'React',
+            'react-dom': 'ReactDOM',
+          },
+        },
+      },
+      sourcemap: true,
+      emptyOutDir: true,
     },
     css: {
       preprocessorOptions: {

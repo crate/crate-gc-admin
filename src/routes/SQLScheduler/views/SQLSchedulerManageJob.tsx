@@ -1,6 +1,7 @@
 import { CrateTabs } from '@crate.io/crate-ui-components';
 import SQLSchedulerJobForm from './SQLSchedulerJobForm';
 import { SQLSchedulerJobLogs } from '.';
+import { SQLJob } from '../../../types';
 
 type SQLSchedulerJobFormProps = {
   backToClusterView: () => void;

@@ -1,0 +1,9 @@
+/* 
+    This tsconfig file is used only for build 
+    and it extends the standard tsconfig
+    overriding some settings.
+*/
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["test", "**/*.test.{js,ts,jsx,tsx}"]
+}

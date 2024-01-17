@@ -5,10 +5,11 @@ import Checkbox from '../../../components/Checkbox';
 import SQLEditor from '../../../components/SQLEditor/SQLEditor';
 import { apiPost, apiPut } from '../../../hooks/api';
 import { useCallback, useEffect, useState } from 'react';
-import { useGCContext } from '../../../utils/context';
+import { useGCContext } from '../../../contexts';
 import executeSql, { QueryResults } from '../../../utils/gc/executeSql';
 import SQLResultsTable from '../../../components/SQLResultsTable/SQLResultsTable';
 import { cronParser } from '../../../utils/cron';
+import { SQLJob } from '../../../types';
 
 type SQLJobInput = {
   name: string;
@@ -108,72 +109,84 @@ export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <div className="flex gap-4">
-        <div className="flex flex-col grow gap-2">
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-6 flex flex-col gap-2">
           <Input
-            {...register('name', { required: true, maxLength: 99 })}
+            {...register('name', { required: true })}
+            required
             label={'Job Name'}
+            error={
+              errors.name && (
+                <Text className="text-red-500">Job Name is a required field.</Text>
+              )
+            }
           />
-          {errors.name && <span>This field is required</span>}
         </div>
 
-        <div className="flex flex-col grow gap-2">
+        <div className="col-span-5 flex flex-col gap-2">
           <Input
-            {...register('cron', { required: true })}
+            {...register('cron', {
+              required: true,
+            })}
+            required
             label={'Schedule'}
             placeholder="* * * * *"
+            error={
+              errors.cron && (
+                <Text className="text-red-500">Schedule is a required field.</Text>
+              )
+            }
           />
-          {errors.cron && <span>This field is required</span>}
+
+          {cronHumanReadable || !errors.cron ? (
+            // Schedule field is filled, and it's invalid.
+            <Text>
+              {cronHumanReadable ? (
+                <>
+                  This job will run{' '}
+                  <span className="font-bold">
+                    {cronHumanReadable.toLocaleLowerCase()}
+                  </span>
+                  .
+                </>
+              ) : (
+                // Schedule field is filled, but it's invalid.
+                !errors.cron && 'Invalid CRON schedule.'
+              )}
+            </Text>
+          ) : null}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <Checkbox {...register('enabled')} label={'Active'} />
+        <div className="col-span-1 flex flex-col gap-2 pt-8">
+          <Checkbox {...register('enabled')} label={'Active'} id="job_active" />
         </div>
       </div>
 
       <div>
         <SQLEditor
-          onExecute={() => {
-            executeQuery();
-          }}
           results={queryResults}
+          localStorageKey="sql-job-editor"
+          runButtonLabel="Test Queries"
           value={type === 'edit' ? props.job.sql : ''}
           onChange={query => {
             setValue('sql', query, { shouldValidate: true });
           }}
-          localStorageKey="sql-job-editor"
-          showRunButton={false}
+          onExecute={() => {
+            executeQuery();
+          }}
+          error={
+            errors.cron && (
+              <Text className="text-red-500">Schedule is a required field.</Text>
+            )
+          }
         />
-        {errors.sql && <span>This field is required</span>}
       </div>
-
-      <Text>
-        {cronHumanReadable ? (
-          <>
-            This job will run{' '}
-            <span className="font-bold">
-              {cronHumanReadable.toLocaleLowerCase()}
-            </span>
-            .
-          </>
-        ) : (
-          'Invalid CRON schedule.'
-        )}
-      </Text>
 
       <div className="flex justify-between">
         <Button kind={Button.kinds.SECONDARY} onClick={backToClusterView}>
           Cancel
         </Button>
         <div className="flex gap-2">
-          <Button
-            kind={Button.kinds.SECONDARY}
-            onClick={() => {
-              executeQuery();
-            }}
-          >
-            Test Queries
-          </Button>
           <Button kind={Button.kinds.PRIMARY} type={Button.types.SUBMIT}>
             Save
           </Button>

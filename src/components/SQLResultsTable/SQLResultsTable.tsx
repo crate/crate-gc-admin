@@ -1,4 +1,3 @@
-import React from 'react';
 import { Table, Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';
 import _ from 'lodash';

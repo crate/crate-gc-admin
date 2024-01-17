@@ -1,4 +1,3 @@
-import React from 'react';
 import { notification } from 'antd';
 import { disableConsole, render, screen, waitFor } from '../../../test/testUtils';
 import useSessionStore from '../../state/session';
