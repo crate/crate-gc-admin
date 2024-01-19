@@ -40,7 +40,6 @@ const renderErrorTable = (result: QueryResult) => {
         columns={columns}
         // @ts-expect-error error is never null
         dataSource={data}
-        rowKey="error"
         showHeader
         bordered
         size="small"

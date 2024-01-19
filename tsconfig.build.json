@@ -1,5 +1,5 @@
-/* 
-    This tsconfig file is used only for build 
+/*
+    This tsconfig file is used only for build
     and it extends the standard tsconfig
     overriding some settings.
 */
