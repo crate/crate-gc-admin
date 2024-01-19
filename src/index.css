@@ -5,3 +5,169 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  a {
+    @apply text-crate-blue;
+  }
+}
+
+@layer utilities {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+/* overrides for small Antd issues */
+#root .ant-switch {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+#root .ant-switch.ant-switch-checked {
+  background-color: #00a6d1;
+}
+
+.anticon svg {
+  display: block !important;
+}
+
+/* prevent dropdown hover colour appearing on non-clickable items */
+.ant-dropdown-menu-item {
+  padding: 5px 0;
+}
+.ant-dropdown-menu-item:hover {
+  background-color: inherit;
+}
+
+/* hover menu when menu is collapsed */
+.ant-menu-inline-collapsed-tooltip .ant-tooltip-inner .anticon {
+  margin-right: 4px;
+}
+
+.ant-table-placeholder {
+  display: none !important;
+}
+
+.ant-popover-content .ant-btn-primary,
+.ant-modal-content .ant-btn-primary {
+  background-color: #00a6d1;
+}
+
+.ant-popover-content .ant-btn-primary:hover,
+.ant-modal-content .ant-btn-primary:hover {
+  background-color: #23bfde;
+}
+
+.ant-popover-content .ant-btn-primary[disabled]:hover,
+.ant-popover-content .ant-btn-primary[disabled]:hover,
+.ant-popover-content .ant-btn-primary[disabled]:focus,
+.ant-popover-content .ant-btn-primary[disabled]:active,
+.ant-modal-content .ant-btn-primary[disabled]:hover,
+.ant-modal-content .ant-btn-primary[disabled]:hover,
+.ant-modal-content .ant-btn-primary[disabled]:focus,
+.ant-modal-content .ant-btn-primary[disabled]:active {
+  color: rgba(0, 0, 0, 0.25);
+  border-color: #d9d9d9;
+  background: #eeeeee;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+/* chunky forms */
+.ant-form-item-control-input input,
+.ant-form-item-control-input textarea,
+.ant-select-selector {
+  font-size: 16px;
+}
+
+.ant-select-selection-item {
+  line-height: 32px;
+}
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  height: 36px;
+}
+
+.ant-select-single:not(.ant-select-customize-input)
+  .ant-select-selector
+  .ant-select-selection-search-input {
+  height: 36px;
+  position: relative;
+  top: -2px;
+}
+
+.ant-select-single .ant-select-selector .ant-select-selection-input,
+.ant-select-single .ant-select-selector .ant-select-selection-item,
+.ant-select-single .ant-select-selector .ant-select-selection-search,
+.ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  line-height: 32px;
+}
+
+.ant-picker-input input {
+  line-height: 26px;
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-picker,
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: #d4d4d4; /* crate-border-light */
+  border-width: 2px;
+}
+
+.ant-input-feedback-icon {
+  position: relative;
+  top: -3px;
+}
+
+/* deploy cluster "fat" dropdowns */
+.ant-select.crate-fat-dropdown .ant-select-selector {
+  height: auto;
+}
+
+.ant-select.crate-fat-dropdown .ant-select-selection-item {
+  padding-top: 6px;
+  line-height: 6px;
+  white-space: normal;
+}
+
+.crate-fat-dropdown-option .ant-select-item-option-content {
+  white-space: normal;
+}
+
+/* tabs: remove the horizontal border running the whole width underneath the tab row */
+.ant-tabs-top > .ant-tabs-nav::before,
+.ant-tabs-bottom > .ant-tabs-nav::before,
+.ant-tabs-top > div > .ant-tabs-nav::before,
+.ant-tabs-bottom > div > .ant-tabs-nav::before {
+  border-bottom: none;
+}
+
+/* tabs: move the active tab underline up, closer to the tab label */
+.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
+  bottom: 6px;
+}
+
+/* tabs: increase the height of the tab underline */
+.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar {
+  height: 4px;
+}
+
+.ant-table {
+  color: #737373; /* tailwind neutral 500 */
+}
+
+.ant-collapse {
+  border-color: #e5e5e5; /* tailwind neutral 200 */
+  border-radius: 8px;
+  background-color: white;
+}
+
+.ant-collapse > .ant-collapse-item:last-child {
+  border-radius: 0 0 8px 8px;
+}

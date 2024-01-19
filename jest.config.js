@@ -25,6 +25,9 @@ export default {
     'react-syntax-highlighter/dist/esm/styles/hljs': 'identity-obj-proxy',
   },
   testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
   transform: {
     '^.+\\.jsx?$': 'ts-jest',
     '^.+\\.tsx?$': 'ts-jest',

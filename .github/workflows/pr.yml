@@ -64,6 +64,6 @@ jobs:
       - name: Build
         run: yarn build
 
-# No tests yet
-#      - name: Run component tests
-#        run: yarn test
+      # Run tests
+      - name: Run component tests
+        run: yarn test

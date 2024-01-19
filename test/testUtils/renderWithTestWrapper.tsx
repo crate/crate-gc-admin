@@ -1,6 +1,9 @@
 import React, { PropsWithChildren } from 'react';
 import { render as rtlRender } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
+import { GCContextProvider } from '../../src/contexts';
+import { ConnectionStatus } from '../../src/utils/gc/connectivity';
+import { SWRConfig } from 'swr';
 
 type RenderType = {
   user: UserEvent;
@@ -9,7 +12,32 @@ type RenderType = {
 
 const render = (ui: React.ReactElement, { ...options } = {}): RenderType => {
   const TestWrapper = ({ children }: PropsWithChildren) => {
-    return <main>{children}</main>;
+    const gcUrl = '';
+
+    return (
+      <main>
+        <SWRConfig
+          value={{
+            fetcher: (resource, init) =>
+              fetch(resource, init).then(res => res.json()),
+            provider: () => new Map(),
+            isVisible() {
+              return true;
+            },
+          }}
+        >
+          <GCContextProvider
+            gcUrl={gcUrl}
+            sqlUrl={`${gcUrl}/api/_sql?multi=true&types`}
+            crateUrl={undefined}
+            gcStatus={ConnectionStatus.CONNECTED}
+            headings
+          >
+            {children}
+          </GCContextProvider>
+        </SWRConfig>
+      </main>
+    );
   };
 
   const { container } = rtlRender(ui, { wrapper: TestWrapper, ...options });

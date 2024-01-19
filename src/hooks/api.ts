@@ -1,6 +1,6 @@
 import useSessionStore, { NotificationType } from '../state/session';
 
-type HttpMethod = 'DELETE' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'GET';
+export type HttpMethod = 'DELETE' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'GET';
 type HttpBody = unknown;
 type HttpOptions = RequestInit;
 

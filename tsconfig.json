@@ -24,8 +24,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "declaration": true,
-    "declarationDir": "./types"
+    "declarationDir": "./types",
   },
-  "include": ["src", "test"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "test", "__mocks__"],
+  "references": [{ "path": "./tsconfig.node.json" }],
 }

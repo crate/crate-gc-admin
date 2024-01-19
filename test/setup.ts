@@ -1,6 +1,10 @@
 /// <reference types="@types/jest" />;
 import '@testing-library/jest-dom';
 
+// polyfill window.fetch
+import 'whatwg-fetch';
+import server from './msw';
+
 // required for testing Ant Design 4
 global.window.matchMedia = query => ({
   matches: false,
@@ -15,3 +19,7 @@ global.window.matchMedia = query => ({
 
 global.window.open = jest.fn();
 global.window.scrollTo = jest.fn();
+
+beforeEach(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());

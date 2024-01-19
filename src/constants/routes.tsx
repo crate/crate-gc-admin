@@ -3,8 +3,8 @@ import SQLConsole from '../routes/SQLConsole/SQLConsole';
 import Users from '../routes/Users/Users';
 import EnterpriseScreen from '../components/EnterpriseScreen/EnterpriseScreen';
 import Tables from '../routes/Tables/Tables';
-import SQLScheduler from '../routes/SQLScheduler';
 import { Route } from '../types';
+import ScheduledJobs from '../routes/JobScheduler';
 
 const routes: Route[] = [
   { path: '/', element: <SQLConsole />, label: 'SQL', key: 'sql' },
@@ -19,7 +19,7 @@ const routes: Route[] = [
     path: '/sql-scheduler',
     element: (
       <EnterpriseScreen>
-        <SQLScheduler />
+        <ScheduledJobs />
       </EnterpriseScreen>
     ),
     label: 'SQL Scheduler',
