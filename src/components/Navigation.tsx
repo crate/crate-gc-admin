@@ -1,12 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Route } from '../types';
+import React from 'react';
 
 interface NavigationProps {
   routes: Route[];
 }
 
 interface NavigationLinkProps {
-  label: string;
+  label: string | React.JSX.Element;
   path: string;
 }
 

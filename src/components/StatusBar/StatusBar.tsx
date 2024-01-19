@@ -1,21 +1,18 @@
 import logo from '../../assets/logo.png';
 import {
+  useGetAllocations,
   useGetCluster,
   useGetCurrentUser,
   useGetNodeStatus,
   useGetShards,
   useGetTables,
-  useGetAllocations,
 } from '../../hooks/swrHooks.ts';
 import { useGCContext } from '../../contexts';
 import { StatusLight } from '@crate.io/crate-ui-components';
 import { formatNum } from '../../utils/numbers.ts';
-import { Spin } from 'antd';
 import React from 'react';
-import {
-  tablesWithMissingPrimaryReplicas,
-  unassignedShards,
-} from '../../utils/statusChecks.ts';
+import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
+import GCSpin from '../GCSpin/GCSpin.tsx';
 
 function StatusBar() {
   const { sqlUrl } = useGCContext();
@@ -29,7 +26,7 @@ function StatusBar() {
   const spin = (
     elem: React.JSX.Element | string | undefined | number | null = null,
   ) => {
-    return elem ? elem : <Spin />;
+    return <GCSpin spinning={!elem}>{elem}</GCSpin>;
   };
 
   const getVersion = () => {
@@ -44,9 +41,8 @@ function StatusBar() {
     if (!shards || !tables) {
       return <StatusLight color={StatusLight.colors.GRAY} message="Unknown" />;
     }
-    const missing = tablesWithMissingPrimaryReplicas(allocations);
-    const unassigned = unassignedShards(allocations);
-    if (missing.length > 0) {
+    const clusterStatus = getClusterStatus(allocations);
+    if (clusterStatus.color == ClusterStatusColor.RED) {
       // RED if we've got any missing primary shards
       return (
         <StatusLight
@@ -56,7 +52,7 @@ function StatusBar() {
         />
       );
     }
-    if (unassigned.length > 0) {
+    if (clusterStatus.color == ClusterStatusColor.YELLOW) {
       // Yellow if we have any unassigned shards
       return (
         <StatusLight

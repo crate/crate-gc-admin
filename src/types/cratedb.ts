@@ -73,4 +73,6 @@ export type Allocation = {
   num_started_primaries: number;
   num_replicas: number;
   num_started_replicas: number;
+  num_docs_in_primaries: number;
+  estimate_missing_records: number;
 };

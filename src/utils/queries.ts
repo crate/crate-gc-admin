@@ -259,16 +259,25 @@ async function getAllocations(
 ): Promise<Allocation[] | undefined> {
   const res = await executeSql(
     url,
-    `SELECT
-          table_schema,
-          table_name,
-          partition_ident,
-          COUNT(*) FILTER (WHERE "primary") cnt_primaries,
-          COUNT(*) FILTER (WHERE "primary" AND (current_state='STARTED' OR current_state = 'RELOCATING')) cnt_primaries_started,
-          COUNT(*) FILTER (WHERE NOT "primary") cnt_replicas,
-          COUNT(*) FILTER (WHERE NOT "primary" AND (current_state='STARTED' OR current_state = 'RELOCATING')) cnt_replicas_started
-        FROM sys.allocations
-        GROUP BY 1,2,3`,
+    `SELECT *, abs(alloc.sum_num_docs_primary - (alloc.sum_num_docs_primary * alloc.cnt_primaries) / alloc.cnt_primaries_started) as estimated_missing FROM (
+          SELECT
+              a.table_schema,
+              a.table_name,
+              a.partition_ident,
+              COUNT(*) FILTER (WHERE a."primary") cnt_primaries,
+              COUNT(*) FILTER (WHERE a."primary" AND current_state IN ('STARTED','RELOCATING')) cnt_primaries_started,
+              COUNT(*) FILTER (WHERE NOT a."primary") cnt_replicas,
+              COUNT(*) FILTER (WHERE NOT a."primary" AND current_state IN ('STARTED','RELOCATING')) cnt_replicas_started,
+              SUM(num_docs) FILTER (WHERE a."primary") sum_num_docs_primary
+            FROM sys.allocations a
+            LEFT JOIN sys."shards" s
+              ON s.schema_name = a.table_schema
+              AND s.table_name = a.table_name
+              AND s.id = a.shard_id
+              AND s.partition_ident = COALESCE(a.partition_ident,'')
+              AND s."primary" = true
+            GROUP BY 1,2,3) alloc;
+  `,
   );
 
   if (!res.data || Array.isArray(res.data)) {
@@ -288,6 +297,8 @@ async function getAllocations(
       num_started_primaries: row[4],
       num_replicas: row[5],
       num_started_replicas: row[6],
+      num_docs_in_primaries: row[7],
+      estimate_missing_records: row[8],
     };
   });
 }

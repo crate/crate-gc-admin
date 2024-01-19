@@ -1,6 +1,6 @@
 import { default as OriginalAceEditor } from 'react-ace';
 
-/* 
+/*
     This is used to mock all the Ace Editor components.
     This specific component is very difficult to test (set value, get value, ...).
 */

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, colors, Heading, StatusLight } from '@crate.io/crate-ui-components';
+import { Button, Heading, StatusLight } from '@crate.io/crate-ui-components';
 import { Collapse, Input, List, Spin, Table, Tabs, Tag } from 'antd';
 import { useGCContext } from '../../contexts';
 import { format as formatSQL } from 'sql-formatter';
@@ -19,7 +19,7 @@ import {
 } from '../../hooks/swrHooks.ts';
 import {
   tablesWithMissingPrimaryReplicas,
-  unassignedShards,
+  tablesWithUnassignedShards,
 } from '../../utils/statusChecks.ts';
 
 function Tables() {
@@ -36,7 +36,7 @@ function Tables() {
   const { data: shards } = useGetShards(sqlUrl);
   const { data: allocations } = useGetAllocations(sqlUrl);
   const missingReplicasTables = tablesWithMissingPrimaryReplicas(allocations);
-  const unassignedShardTables = unassignedShards(allocations);
+  const unassignedShardTables = tablesWithUnassignedShards(allocations);
 
   useEffect(() => {
     if (!tables) {
@@ -167,7 +167,7 @@ function Tables() {
 
   const schemaBadge = (schema: string) => {
     if (systemSchemas.includes(schema)) {
-      return <Tag color={colors.crateBlue}>system</Tag>;
+      return <Tag>system</Tag>;
     }
     if (missingReplicasTables.filter(t => t.schema_name == schema).length > 0) {
       return (
@@ -192,7 +192,7 @@ function Tables() {
 
   const constraintBadge = (constraint: string | null) => {
     if (constraint) {
-      return <Tag color={colors.crateBlue}>{constraint}</Tag>;
+      return <Tag>{constraint}</Tag>;
     }
     return null;
   };

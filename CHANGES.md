@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added a cluster overview page with overall cluster stats.
+
 ## 2024-01-22 - 0.1.2
 
 - Improved SQL Scheduler UI and add tests

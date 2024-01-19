@@ -15,7 +15,7 @@ function renderStatus(status: ConnectionStatus) {
       actual = <b>Not configured</b>;
       break;
     case ConnectionStatus.ERROR:
-      actual = <b>Error checking status</b>;
+      actual = <b>Unavailable</b>;
       break;
     default:
       break;
