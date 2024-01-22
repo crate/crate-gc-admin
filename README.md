@@ -54,11 +54,16 @@ and edit your index.css to import library style:
 
 ## Publish a new version
 
-To publish a new version of the `crate-gc-admin` on NPM you need to
+To publish a new version of the `crate-gc-admin` you need to
 
 1.  be part of `@crate.io` organization on npm
-2.  run `yarn publish` and type the new version number
-3.  push `package.json` file (version update)
+2.  `git checkout -b prefix/release-x.y.z`
+3.  Update `package.json` with the new version
+4.  Update `CHANGES.md` with a new release section
+5.  Commit, push, get approval, merge
+6.  `git checkout master && git pull`
+7.  run `yarn publish` (keep the version number you typed in previously)
+8.  `./devtools/create_tag.sh`
 
 This process can also be automated with a GitHub action.
 

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 2024-01-22 - 0.1.2
+
+- Improved SQL Scheduler UI and add tests
+
+## 2024-01-22 - 0.1.1
+
 - Initial release
 - SQL Page
 - Users Page
@@ -13,4 +19,3 @@
 - Added a top bar with a logo
 - Added builds for deploying as npm package
 - Added a status bar and calculating cluster data status
-- Improved SQL Scheduler UI and add tests

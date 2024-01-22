@@ -1,5 +1,5 @@
 import scheduledJob from '../../../../test/__mocks__/scheduledJob';
-import { getRequestSpy, render, screen } from '../../../../test/testUtils';
+import { getRequestSpy, render, screen, waitFor } from '../../../../test/testUtils';
 import { Job } from '../../../types';
 import ScheduledJobForm from './ScheduledJobForm';
 
@@ -96,7 +96,10 @@ describe('The "ScheduledJobForm" component', () => {
 
       await user.click(screen.getByText('Save'));
 
-      expect(createJobSpy).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(createJobSpy).toHaveBeenCalled();
+      });
+
       expect(backToJobList).toHaveBeenCalled();
     });
   });
@@ -144,7 +147,10 @@ describe('The "ScheduledJobForm" component', () => {
 
         await user.click(screen.getByText('Save'));
 
-        expect(updateJobSpy).toHaveBeenCalled();
+        await waitFor(() => {
+          expect(updateJobSpy).toHaveBeenCalled();
+        });
+
         expect(backToJobList).toHaveBeenCalled();
       });
     });
