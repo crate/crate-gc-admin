@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import swrCORSFetch from '../utils/swrCORSFetch';
 import { useEffect, useState } from 'react';
 import { apiGet } from './api';
-import { SQLJob, SQLJobLog } from '../types';
+import { Job, JobLog } from '../types';
 import {
   getAllocations,
   getClusterInfo,
@@ -13,23 +13,20 @@ import {
 } from '../utils/queries.ts';
 
 export const useGCGetScheduledJobs = (url: string) => {
-  return useSWR<SQLJob[]>(`${url}/api/scheduled-jobs/`, swrCORSFetch);
+  return useSWR<Job[]>(`${url}/api/scheduled-jobs/`, swrCORSFetch);
 };
 
-export const useGCGetScheduledJobLogs = (url: string, job: SQLJob) => {
-  return useSWR<SQLJobLog[]>(
-    `${url}/api/scheduled-jobs/${job.id}/log`,
-    swrCORSFetch,
-  );
+export const useGCGetScheduledJobLogs = (url: string, job: Job) => {
+  return useSWR<JobLog[]>(`${url}/api/scheduled-jobs/${job.id}/log`, swrCORSFetch);
 };
 
 // NOTE: This Hook will be removed when API will return the last_execution
-export const useGCGetScheduledJobLastLogs = (url: string, jobs: SQLJob[]) => {
-  const [jobsToReturn, setJobsToReturn] = useState<SQLJob[]>([]);
+export const useGCGetScheduledJobLastLogs = (url: string, jobs: Job[]) => {
+  const [jobsToReturn, setJobsToReturn] = useState<Job[]>([]);
 
   useEffect(() => {
-    const promises = jobs.map(async (job: SQLJob) => {
-      const lastLog = await apiGet<SQLJobLog[]>(
+    const promises = jobs.map(async (job: Job) => {
+      const lastLog = await apiGet<JobLog[]>(
         `${url}/api/scheduled-jobs/${job.id}/log?limit=1`,
         null,
         {
@@ -45,7 +42,7 @@ export const useGCGetScheduledJobLastLogs = (url: string, jobs: SQLJob[]) => {
 
         return {
           ...job,
-          last_execution: lastLog && lastLog.end,
+          last_execution: lastLog,
         };
       });
 

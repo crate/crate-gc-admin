@@ -1,3 +1,4 @@
+import { Text } from '@crate.io/crate-ui-components';
 import cn from '../utils/cn';
 import React from 'react';
 
@@ -5,12 +6,14 @@ type CheckboxProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 > & {
-  label?: string;
+  id: string;
+  label: string;
+  required?: boolean;
 };
 
 const Checkbox = React.forwardRef(
   (
-    { label, ...checkboxProps }: CheckboxProps,
+    { label, id, required = false, ...checkboxProps }: CheckboxProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
@@ -23,6 +26,7 @@ const Checkbox = React.forwardRef(
             'rounded-sm mt-1 bg-white cursor-pointer',
           )}
           type="checkbox"
+          id={id}
           ref={ref}
           {...checkboxProps}
         />
@@ -40,11 +44,11 @@ const Checkbox = React.forwardRef(
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
         {/* Label */}
-        {label && (
-          <label htmlFor={checkboxProps.id} className="cursor-pointer pl-2">
-            {label}
-          </label>
-        )}
+        <label htmlFor={id} className="pl-2">
+          <Text className={cn('font-bold')}>
+            {label} {required && '*'}
+          </Text>
+        </label>
       </div>
     );
   },

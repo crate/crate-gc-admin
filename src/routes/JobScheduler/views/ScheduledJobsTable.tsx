@@ -3,6 +3,8 @@ import {
   CrateTable,
   ConfirmDelete,
   DisplayDate,
+  Text,
+  RoundedIcon,
 } from '@crate.io/crate-ui-components';
 import { useState } from 'react';
 import { useGCContext } from '../../../contexts';
@@ -13,16 +15,22 @@ import {
 import { apiDelete } from '../../../hooks/api';
 import { Loader } from '@crate.io/crate-ui-components';
 import { cronParser } from '../../../utils/cron';
-import { SQLJob } from '../../../types';
+import { Job, JobLog } from '../../../types';
+import cn from '../../../utils/cn';
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons';
 
-type SQLSchedulerJobsTableProps = {
-  onManage: (job: SQLJob) => void;
+export const JOBS_TABLE_PAGE_SIZE = 5;
+
+export type ScheduledJobsTableProps = {
+  onManage: (job: Job) => void;
 };
 
-export default function SQLSchedulerJobsTable({
-  onManage,
-}: SQLSchedulerJobsTableProps) {
-  const [jobToDelete, setJobToDelete] = useState<SQLJob | null>(null);
+export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps) {
+  const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
   const [showLoaderDelete, setShowLoaderDelete] = useState(false);
   const { gcUrl } = useGCContext();
   const {
@@ -35,7 +43,7 @@ export default function SQLSchedulerJobsTable({
     scheduledJobs || [],
   );
 
-  const openJobDeleteModal = (job: SQLJob) => {
+  const openJobDeleteModal = (job: Job) => {
     setJobToDelete(job);
   };
 
@@ -68,15 +76,36 @@ export default function SQLSchedulerJobsTable({
 
   return (
     <div>
-      <CrateTable<SQLJob>
+      <CrateTable
         dataSource={scheduledJobsEnriched}
         columns={[
           {
             title: 'Active',
             key: 'enabled',
-            dataIndex: 'enabled',
-            render: (enabled: boolean) => {
-              return enabled ? 'Active' : 'Not Active';
+            render: (job: Job) => {
+              const inError =
+                job.last_execution && job.last_execution.error !== null;
+              const enabled = job.enabled && !inError;
+              const notEnabled = !job.enabled && !inError;
+
+              return (
+                <RoundedIcon
+                  className={cn('text-xl', {
+                    'bg-green-500': enabled,
+                    'bg-red-500': notEnabled,
+                    'bg-gray-500': inError,
+                  })}
+                  testId="active-icon"
+                >
+                  {inError ? (
+                    <ClockCircleOutlined />
+                  ) : enabled ? (
+                    <CheckCircleOutlined />
+                  ) : (
+                    <CloseCircleOutlined />
+                  )}
+                </RoundedIcon>
+              );
             },
           },
           {
@@ -100,26 +129,50 @@ export default function SQLSchedulerJobsTable({
             title: 'Last Execution',
             key: 'last_execution',
             dataIndex: 'last_execution',
-            render: (lastExecution?: string) => {
+            render: (lastExecution?: JobLog) => {
               if (lastExecution) {
-                return <DisplayDate isoDate={lastExecution} />;
+                const inError = lastExecution.error !== null;
+
+                return (
+                  <Text
+                    className={cn('flex gap-2 items-center', {
+                      'text-red-500': inError,
+                      'text-green-500': !inError,
+                    })}
+                    testId="last-execution"
+                  >
+                    <RoundedIcon
+                      className={cn('text-lg', {
+                        'bg-red-500': inError,
+                        'bg-green-500': !inError,
+                      })}
+                      testId="last-execution-icon"
+                    >
+                      {inError ? <CloseCircleOutlined /> : <CheckCircleOutlined />}
+                    </RoundedIcon>
+                    <DisplayDate isoDate={lastExecution.end} />
+                  </Text>
+                );
               } else return 'n/a';
             },
           },
           {
             title: 'Next Due',
             key: 'next_run_time',
-            dataIndex: 'next_run_time',
-            render: (nextRunTime?: string) => {
-              if (nextRunTime) {
-                return <DisplayDate isoDate={nextRunTime} />;
-              } else return 'Cancelled';
+            render: (job: Job) => {
+              const inError =
+                job.last_execution && job.last_execution.error !== null;
+              if (inError) {
+                return <Text className="text-red-500">Cancelled</Text>;
+              } else if (job.next_run_time) {
+                return <DisplayDate isoDate={job.next_run_time} />;
+              } else return <Text>n/a</Text>;
             },
           },
           {
             title: '',
             key: 'actions',
-            render: (job: SQLJob) => {
+            render: (job: Job) => {
               return (
                 <span className="flex gap-2">
                   <Button
@@ -147,7 +200,7 @@ export default function SQLSchedulerJobsTable({
         ]}
         rowKey={'id'}
         pagination={{
-          defaultPageSize: 5,
+          defaultPageSize: JOBS_TABLE_PAGE_SIZE,
         }}
       />
 

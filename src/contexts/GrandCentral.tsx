@@ -6,22 +6,33 @@ type GCContextType = {
   gcUrl: string | undefined;
   crateUrl: string | undefined;
   sqlUrl: string | undefined;
-  headings: boolean;
+  headings?: boolean;
 };
 
-const GCContext = React.createContext<GCContextType>({
+const defaultProps = {
   gcStatus: ConnectionStatus.PENDING,
   gcUrl: process.env.REACT_APP_GRAND_CENTRAL_URL,
   crateUrl: 'http://localhost:4200',
   sqlUrl: undefined,
-  headings: false,
-});
+  headings: true,
+};
+
+const GCContext = React.createContext<GCContextType>(defaultProps);
 
 export const GCContextProvider = ({
   children,
   ...restOfProps
 }: PropsWithChildren<GCContextType>) => {
-  return <GCContext.Provider value={restOfProps}>{children}</GCContext.Provider>;
+  return (
+    <GCContext.Provider
+      value={{
+        ...defaultProps,
+        ...restOfProps,
+      }}
+    >
+      {children}
+    </GCContext.Provider>
+  );
 };
 
 export const useGCContext = () => {

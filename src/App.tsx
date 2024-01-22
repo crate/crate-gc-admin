@@ -34,7 +34,6 @@ function App() {
       gcUrl={gcUrl}
       crateUrl={crateUrl}
       sqlUrl={getSQLUrl()}
-      headings={false}
     >
       <div className="bg-white min-h-dvh">
         <div className="bg-neutral-800 flex w-full px-6 py-3 h-[5vh]">

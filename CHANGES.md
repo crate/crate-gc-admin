@@ -13,3 +13,4 @@
 - Added a top bar with a logo
 - Added builds for deploying as npm package
 - Added a status bar and calculating cluster data status
+- Improved SQL Scheduler UI and add tests

@@ -9,24 +9,17 @@ import { useGCContext } from '../../../contexts';
 import executeSql, { QueryResults } from '../../../utils/gc/executeSql';
 import SQLResultsTable from '../../../components/SQLResultsTable/SQLResultsTable';
 import { cronParser } from '../../../utils/cron';
-import { SQLJob } from '../../../types';
+import { Job, JobInput } from '../../../types';
 
-type SQLJobInput = {
-  name: string;
-  cron: string;
-  enabled: boolean;
-  sql: string;
-};
+type ScheduledJobFormAdd = { type: 'add' };
+type ScheduledJobFormEdit = { type: 'edit'; job: Job };
 
-type SQLSchedulerAddJobFormProps = { type: 'add' };
-type SQLSchedulerEditJobFormProps = { type: 'edit'; job: SQLJob };
+type ScheduledJobFormProps = {
+  backToJobList: () => void;
+} & (ScheduledJobFormAdd | ScheduledJobFormEdit);
 
-type SQLSchedulerJobFormProps = {
-  backToClusterView: () => void;
-} & (SQLSchedulerAddJobFormProps | SQLSchedulerEditJobFormProps);
-
-export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
-  const { backToClusterView, type } = props;
+export default function ScheduledJobForm(props: ScheduledJobFormProps) {
+  const { backToJobList, type } = props;
   const { gcUrl, sqlUrl } = useGCContext();
   const [showLoader, setShowLoader] = useState(false);
   const [queryResults, setQueryResults] = useState<QueryResults>(undefined);
@@ -38,7 +31,7 @@ export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<SQLJobInput>({
+  } = useForm<JobInput>({
     defaultValues:
       type === 'add'
         ? {
@@ -51,7 +44,7 @@ export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
             sql: props.job.sql,
           },
   });
-  const onSubmit: SubmitHandler<SQLJobInput> = async (data: SQLJobInput) => {
+  const onSubmit: SubmitHandler<JobInput> = async (data: JobInput) => {
     let result;
     setShowLoader(true);
     if (type === 'add') {
@@ -69,7 +62,7 @@ export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
 
     setShowLoader(false);
     if (result.success) {
-      backToClusterView();
+      backToJobList();
     }
   };
 
@@ -108,12 +101,17 @@ export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form
+      role="form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4"
+    >
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-6 flex flex-col gap-2">
           <Input
             {...register('name', { required: true })}
             required
+            id="name"
             label={'Job Name'}
             error={
               errors.name && (
@@ -127,32 +125,30 @@ export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
           <Input
             {...register('cron', {
               required: true,
+              validate: (value: string) => {
+                return cronParser(value) !== null;
+              },
             })}
+            id="cron"
             required
             label={'Schedule'}
             placeholder="* * * * *"
             error={
-              errors.cron && (
+              errors.cron && errors.cron.type === 'required' ? (
                 <Text className="text-red-500">Schedule is a required field.</Text>
-              )
+              ) : errors.cron && errors.cron.type === 'validate' ? (
+                <></>
+              ) : undefined
             }
           />
 
-          {cronHumanReadable || !errors.cron ? (
-            // Schedule field is filled, and it's invalid.
+          {cronHumanReadable === null &&
+          !(errors.cron && errors.cron.type === 'required') ? (
+            <Text>Invalid CRON schedule.</Text>
+          ) : cronHumanReadable !== null ? (
             <Text>
-              {cronHumanReadable ? (
-                <>
-                  This job will run{' '}
-                  <span className="font-bold">
-                    {cronHumanReadable.toLocaleLowerCase()}
-                  </span>
-                  .
-                </>
-              ) : (
-                // Schedule field is filled, but it's invalid.
-                !errors.cron && 'Invalid CRON schedule.'
-              )}
+              This job will run{' '}
+              <span className="font-bold">{cronHumanReadable.toLowerCase()}</span>.
             </Text>
           ) : null}
         </div>
@@ -176,14 +172,14 @@ export default function SQLSchedulerJobForm(props: SQLSchedulerJobFormProps) {
           }}
           error={
             errors.cron && (
-              <Text className="text-red-500">Schedule is a required field.</Text>
+              <Text className="text-red-500">SQL is a required field.</Text>
             )
           }
         />
       </div>
 
       <div className="flex justify-between">
-        <Button kind={Button.kinds.SECONDARY} onClick={backToClusterView}>
+        <Button kind={Button.kinds.SECONDARY} onClick={backToJobList}>
           Cancel
         </Button>
         <div className="flex gap-2">

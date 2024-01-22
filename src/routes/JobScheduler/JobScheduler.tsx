@@ -1,18 +1,14 @@
 import { Button, Text } from '@crate.io/crate-ui-components';
 import { useState } from 'react';
-import {
-  SQLSchedulerJobForm,
-  SQLSchedulerJobsTable,
-  SQLSchedulerManageJob,
-} from './views';
-import { SQLJob } from '../../types';
-import { useGCContext } from '../..';
+import { Job } from '../../types';
+import { useGCContext } from '../../contexts';
+import { ScheduledJobForm, ScheduledJobManager, ScheduledJobsTable } from './views';
 
-function SQLScheduler() {
+export default function JobScheduler() {
   const { headings } = useGCContext();
-  const [viewType, setViewType] = useState<null | 'add' | SQLJob>(null);
+  const [viewType, setViewType] = useState<null | 'add' | Job>(null);
 
-  const backToClusterView = () => {
+  const backToJobList = () => {
     setViewType(null);
   };
 
@@ -20,7 +16,7 @@ function SQLScheduler() {
     setViewType('add');
   };
 
-  const manageJob = (job: SQLJob) => {
+  const manageJob = (job: Job) => {
     setViewType(job);
   };
 
@@ -45,17 +41,12 @@ function SQLScheduler() {
       </div>
 
       {viewType === null ? (
-        <SQLSchedulerJobsTable onManage={manageJob} />
+        <ScheduledJobsTable onManage={manageJob} />
       ) : viewType === 'add' ? (
-        <SQLSchedulerJobForm backToClusterView={backToClusterView} type="add" />
+        <ScheduledJobForm backToJobList={backToJobList} type="add" />
       ) : (
-        <SQLSchedulerManageJob
-          job={viewType}
-          backToClusterView={backToClusterView}
-        />
+        <ScheduledJobManager job={viewType} backToJobList={backToJobList} />
       )}
     </div>
   );
 }
-
-export default SQLScheduler;
