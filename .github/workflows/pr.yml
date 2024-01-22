@@ -17,45 +17,10 @@ jobs:
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
-
-      # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-      - name: Get yarn install-state path
-        id: yarn-install-state-path
-        run: echo "dir=$(yarn config get installStatePath)" >> $GITHUB_OUTPUT
-      - name: Get yarn build-state path
-        id: yarn-build-state-path
-        run: echo "dir=$(yarn config get bstatePath)" >> $GITHUB_OUTPUT
-
-      - name: Apply dependency cache (yarn)
-        uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        env:
-          # Increase this value to reset cache even if `yarn.lock` has not changed.
-          CACHE_NUMBER: 1
-        with:
-          path: |
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            ${{ steps.yarn-install-state-path.outputs.dir }}
-            ${{ steps.yarn-build-state-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/yarn.lock') }}
+          cache: 'yarn'
 
       - name: Install dependencies
         run: yarn install
-
-      - name: Apply dependency cache (eslint)
-        uses: actions/cache@v3
-        id: eslint-cache
-        env:
-          CACHE_NUMBER: 2
-        with:
-          path: |
-            .eslintcache
-          key: eslint-${{ env.CACHE_NUMBER }}-${{ hashFiles('src/**/*.js', 'src/**/*.jsx', 'test/**/*.js', 'test/**/*.jsx') }}
-          restore-keys: |
-            eslint-${{ env.CACHE_NUMBER }}
 
       - name: Run linter
         run: yarn lint
