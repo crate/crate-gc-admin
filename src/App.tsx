@@ -8,6 +8,7 @@ import { Layout } from '@crate.io/crate-ui-components';
 import StatusBar from './components/StatusBar/StatusBar';
 import NotificationHandler from './components/NotificationHandler';
 import logo from './assets/logo.svg';
+import StatsUpdater from './components/StatsUpdater/StatsUpdater.tsx';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
@@ -35,6 +36,7 @@ function App() {
       crateUrl={crateUrl}
       sqlUrl={getSQLUrl()}
     >
+      <StatsUpdater />
       <Layout
         topbarLogo={<img alt="CrateDB logo" src={logo} />}
         topbarContent={<StatusBar />}

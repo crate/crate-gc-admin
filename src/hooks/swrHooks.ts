@@ -8,6 +8,7 @@ import {
   getClusterInfo,
   getCurrentUser,
   getNodes,
+  getQueryStats,
   getShards,
   getTables,
 } from '../utils/queries.ts';
@@ -92,6 +93,12 @@ export const useGetShards = (url: string | undefined) => {
 
 export const useGetAllocations = (url: string | undefined) => {
   return useSWR(url ? `swr-fetch-allocations` : null, () => getAllocations(url), {
+    refreshInterval: 5000,
+  });
+};
+
+export const useGetQueryStats = (url: string | undefined) => {
+  return useSWR(url ? `swr-fetch-query-stats` : null, () => getQueryStats(url), {
     refreshInterval: 5000,
   });
 };

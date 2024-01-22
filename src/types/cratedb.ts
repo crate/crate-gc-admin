@@ -6,6 +6,7 @@ export type LoadAverage = {
   1: number;
   5: number;
   15: number;
+  probe_timestamp: number;
 };
 
 export type NodeStatusInfo = {
@@ -75,4 +76,20 @@ export type Allocation = {
   num_started_replicas: number;
   num_docs_in_primaries: number;
   estimate_missing_records: number;
+};
+
+export type QueryStats = {
+  ended_time: number;
+  qps: number;
+  qps_select: number;
+  qps_insert: number;
+  qps_delete: number;
+  qps_update: number;
+  qps_ddl: number;
+  duration: number;
+  dur_select: number;
+  dur_insert: number;
+  dur_delete: number;
+  dur_update: number;
+  dur_ddl: number;
 };

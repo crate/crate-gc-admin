@@ -21,6 +21,7 @@ import {
   tablesWithMissingPrimaryReplicas,
   tablesWithUnassignedShards,
 } from '../../utils/statusChecks.ts';
+import { formatHumanReadable } from '../../utils/numbers.ts';
 
 function Tables() {
   const systemSchemas = ['information_schema', 'sys', 'pg_catalog', 'gc'];
@@ -146,7 +147,8 @@ function Tables() {
                   <div className="font-bold break-words">{item.table_name}</div>
                   {size && (
                     <div className="text-xs">
-                      {size.records} Records ({prettyBytes(size.bytes)})
+                      {formatHumanReadable(size.records)} Records (
+                      {prettyBytes(size.bytes)})
                     </div>
                   )}
                   {item.number_of_replicas && (

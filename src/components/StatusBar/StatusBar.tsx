@@ -14,10 +14,12 @@ import React, { useEffect, useState } from 'react';
 import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
 import GCSpin from '../GCSpin/GCSpin.tsx';
 import logo from '../../assets/logo.svg';
+import useSessionStore from '../../state/session.ts';
 
 function StatusBar() {
   const [mobileVisible, setMobileVisible] = useState(false);
   const { sqlUrl } = useGCContext();
+  const { load } = useSessionStore();
   const { data: nodeStatus } = useGetNodeStatus(sqlUrl);
   const { data: currentUser } = useGetCurrentUser(sqlUrl);
   const { data: cluster } = useGetCluster(sqlUrl);
@@ -82,18 +84,16 @@ function StatusBar() {
   };
 
   const getLoadAverage = () => {
-    if (!nodeStatus) {
+    if (!load || load.length == 0) {
       return spin();
     }
-    const reducer = (prev: number, current: number) => prev + current;
-    const avg1 =
-      nodeStatus.map(s => s.load['1']).reduce(reducer) / nodeStatus.length;
-    const avg5 =
-      nodeStatus.map(s => s.load['5']).reduce(reducer) / nodeStatus.length;
-    const avg15 =
-      nodeStatus.map(s => s.load['15']).reduce(reducer) / nodeStatus.length;
 
-    return `${formatNum(avg1)} / ${formatNum(avg5)} / ${formatNum(avg15)}`;
+    const last = load.slice(-1).pop();
+    if (!last) {
+      return;
+    }
+
+    return `${formatNum(last['1'])} / ${formatNum(last['5'])} / ${formatNum(last['15'])}`;
   };
 
   return (
@@ -124,7 +124,7 @@ function StatusBar() {
           <div>{getNumNodes()}</div>
         </div>
         <div>
-          <div className="opacity-50 text-xs uppercase">Availability</div>
+          <div className="opacity-50 text-xs uppercase">Data</div>
           <div>{getDataStatus()}</div>
         </div>
         <div>
