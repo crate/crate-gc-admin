@@ -4,6 +4,7 @@
 
 - Added a cluster overview page with overall cluster stats.
 - Updated navigation to be fully responsive and branded
+- Added charts to the cluster overview.
 
 ## 2024-01-22 - 0.1.2
 

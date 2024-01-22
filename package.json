@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@crate.io/crate-ui-components": "^0.1.32",
+    "@crate.io/crate-ui-components": "^0.1.33",
     "ace-builds": "^1.32.2",
     "antd": "^4.24.14",
     "clsx": "^2.1.0",
@@ -36,6 +36,7 @@
     "react-hook-form": "^7.49.3",
     "react-intl": "^6.5.5",
     "react-router-dom": "^6.21.1",
+    "recharts": "^2.10.4",
     "sql-formatter": "^15.0.2",
     "swr": "^2.2.4",
     "tailwind-merge": "^2.2.0",

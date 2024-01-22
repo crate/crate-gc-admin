@@ -171,3 +171,8 @@
 .ant-collapse > .ant-collapse-item:last-child {
   border-radius: 0 0 8px 8px;
 }
+
+/* Set the legend pointer to a cursor for all charts (they are clickable) */
+.recharts-legend-wrapper .recharts-default-legend .recharts-legend-item {
+  cursor: pointer;
+}

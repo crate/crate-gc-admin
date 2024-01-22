@@ -125,6 +125,11 @@ function SQLEditor({
       strHistory = '[]';
     }
     let historyArray: string[] = JSON.parse(strHistory);
+    const last = historyArray.slice(-1);
+    if (last.length > 0 && last[0] == sql) {
+      // do not push if same as last
+      return;
+    }
     historyArray.push(sql);
     if (historyArray.length > 100) {
       historyArray = historyArray.slice(1); // remove the head

@@ -2,6 +2,7 @@
 // currently used for API error notifications only
 
 import { create } from 'zustand';
+import { LoadAverage } from '../types/cratedb.ts';
 
 type Notification = {
   type?: NotificationType;
@@ -16,10 +17,12 @@ type SessionStore = {
     message: string,
     description?: string,
   ) => void;
+  load: LoadAverage[];
 };
 
 const initialState = {
   notification: null,
+  load: [],
 };
 
 export type NotificationType = 'error' | 'warn' | 'info';
