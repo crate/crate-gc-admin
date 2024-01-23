@@ -1,4 +1,3 @@
-import logo from '../../assets/logo.png';
 import {
   useGetAllocations,
   useGetCluster,
@@ -9,12 +8,15 @@ import {
 } from '../../hooks/swrHooks.ts';
 import { useGCContext } from '../../contexts';
 import { StatusLight } from '@crate.io/crate-ui-components';
+import { CloseOutlined, DownOutlined } from '@ant-design/icons';
 import { formatNum } from '../../utils/numbers.ts';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
 import GCSpin from '../GCSpin/GCSpin.tsx';
+import logo from '../../assets/logo.svg';
 
 function StatusBar() {
+  const [mobileVisible, setMobileVisible] = useState(false);
   const { sqlUrl } = useGCContext();
   const { data: nodeStatus } = useGetNodeStatus(sqlUrl);
   const { data: currentUser } = useGetCurrentUser(sqlUrl);
@@ -22,6 +24,20 @@ function StatusBar() {
   const { data: tables } = useGetTables(sqlUrl);
   const { data: shards } = useGetShards(sqlUrl);
   const { data: allocations } = useGetAllocations(sqlUrl);
+
+  // hide the mobile overlay on any window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (mobileVisible) {
+        setMobileVisible(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileVisible]);
 
   const spin = (
     elem: React.JSX.Element | string | undefined | number | null = null,
@@ -81,25 +97,87 @@ function StatusBar() {
   };
 
   return (
-    <div className="flex flex-row text-white w-full">
-      <div className="basis-1/8 min-w-fit mr-10">
-        <a href="/">
-          <img src={logo} alt="Crate logo" className="mx-auto h-5" />
-        </a>
-      </div>
-      <div className="basis-1/2"></div>
-      <div className="basis-1/2 grid justify-end grid-flow-col auto-cols-max gap-8 font-bold">
-        <div>Cluster: {spin(cluster?.name)}</div>
-        <div>Version: {getVersion()}</div>
-        <div>Nodes: {getNumNodes()}</div>
-        <div className="flex flex-row min-w-56">
-          <div className="mr-2">Data availability:</div>
-          <div className="mr-2">{getDataStatus()}</div>
+    <>
+      <div
+        className="gap-3 flex leading-tight text-white md:hidden"
+        onClick={() => setMobileVisible(true)}
+      >
+        <div>
+          <div className="opacity-50 text-xs uppercase">Cluster</div>
+          <div>{spin(cluster?.name)}</div>
         </div>
-        <div className="w-56">System load: {getLoadAverage()}</div>
-        <div>User: {spin(currentUser)}</div>
+        <div className="flex">
+          <DownOutlined className="opacity-50 text-xs" />
+        </div>
       </div>
-    </div>
+      <div className="hidden gap-8 leading-snug text-white md:flex">
+        <div>
+          <div className="opacity-50 text-xs uppercase">Cluster</div>
+          <div>{spin(cluster?.name)}</div>
+        </div>
+        <div>
+          <div className="opacity-50 text-xs uppercase">Version</div>
+          <div>{getVersion()}</div>
+        </div>
+        <div>
+          <div className="opacity-50 text-xs uppercase">Nodes</div>
+          <div>{getNumNodes()}</div>
+        </div>
+        <div>
+          <div className="opacity-50 text-xs uppercase">Availability</div>
+          <div>{getDataStatus()}</div>
+        </div>
+        <div>
+          <div className="opacity-50 text-xs uppercase">Load</div>
+          <div>{getLoadAverage()}</div>
+        </div>
+        <div>
+          <div className="opacity-50 text-xs uppercase">User</div>
+          <div>{spin(currentUser)}</div>
+        </div>
+      </div>
+      {mobileVisible && (
+        <div className="absolute bg-crate-navigation-bg bottom-0 flex flex-col left-0 select-none top-0 right-0 z-50">
+          <div className="flex h-12 items-center justify-between px-4">
+            <img alt="CrateDB logo" src={logo} />
+            <CloseOutlined
+              className="cursor-pointer text-2xl text-white"
+              onClick={() => setMobileVisible(false)}
+            />
+          </div>
+          <div className="flex-1 overflow-auto">
+            <div className="p-4 w-full">
+              <div className="flex flex-col gap-8 leading-snug text-white">
+                <div>
+                  <div className="opacity-50 text-xs uppercase">Cluster</div>
+                  <div className="text-xl">{spin(cluster?.name)}</div>
+                </div>
+                <div>
+                  <div className="opacity-50 text-xs uppercase">Version</div>
+                  <div className="text-xl">{getVersion()}</div>
+                </div>
+                <div>
+                  <div className="opacity-50 text-xs uppercase">Nodes</div>
+                  <div className="text-xl">{getNumNodes()}</div>
+                </div>
+                <div>
+                  <div className="opacity-50 text-xs uppercase">Availability</div>
+                  <div className="text-xl">{getDataStatus()}</div>
+                </div>
+                <div>
+                  <div className="opacity-50 text-xs uppercase">Load</div>
+                  <div className="text-xl">{getLoadAverage()}</div>
+                </div>
+                <div>
+                  <div className="opacity-50 text-xs uppercase">User</div>
+                  <div className="text-xl">{spin(currentUser)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

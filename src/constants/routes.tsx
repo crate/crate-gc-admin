@@ -7,20 +7,58 @@ import ScheduledJobs from '../routes/JobScheduler';
 import Overview from '../routes/Overview/Overview.tsx';
 
 const routes: Route[] = [
-  { path: '/', element: <Overview />, label: 'Overview', key: 'overview' },
-  { path: '/sql', element: <SQLConsole />, label: 'SQL', key: 'sql' },
-  { path: '/tables', element: <Tables />, label: 'Tables', key: 'tables' },
+  {
+    path: '/',
+    element: (
+      <div className="p-4">
+        <Overview />
+      </div>
+    ),
+    label: 'Overview',
+    key: 'overview',
+  },
+  {
+    path: '/sql',
+    element: (
+      <div className="p-4">
+        <SQLConsole />
+      </div>
+    ),
+    label: 'SQL',
+    key: 'sql',
+  },
+  {
+    path: '/tables',
+    element: (
+      <div className="p-4">
+        <Tables />
+      </div>
+    ),
+    label: 'Tables',
+    key: 'tables',
+  },
   {
     path: '/sql-scheduler',
     element: (
-      <EnterpriseScreen>
-        <ScheduledJobs />
-      </EnterpriseScreen>
+      <div className="p-4">
+        <EnterpriseScreen>
+          <ScheduledJobs />
+        </EnterpriseScreen>
+      </div>
     ),
     label: 'Scheduler',
     key: 'sql-scheduler',
   },
-  { path: '/users', element: <Users />, label: 'Users', key: 'users' },
+  {
+    path: '/users',
+    element: (
+      <div className="p-4">
+        <Users />
+      </div>
+    ),
+    label: 'Users',
+    key: 'users',
+  },
 ];
 
 export default routes;

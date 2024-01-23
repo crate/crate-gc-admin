@@ -1,13 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
-import Burger from './components/Burger';
-import Navigation from './components/Navigation';
+import { bottomNavigation, topNavigation } from './constants/navigation';
 import routes from './constants/routes';
 import { useMemo, useState } from 'react';
 import { ConnectionStatus, isGcConnected } from './utils/gc/connectivity';
 import { GCContextProvider } from './contexts';
-import GCStatusIndicator from './components/GCStatusIndicator/GCStatusIndicator';
+import { Layout } from '@crate.io/crate-ui-components';
 import StatusBar from './components/StatusBar/StatusBar';
 import NotificationHandler from './components/NotificationHandler';
+import logo from './assets/logo.svg';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
@@ -35,35 +35,19 @@ function App() {
       crateUrl={crateUrl}
       sqlUrl={getSQLUrl()}
     >
-      <div className="bg-white min-h-dvh">
-        <div className="bg-neutral-800 flex w-full px-6 py-3 h-[5vh]">
-          <StatusBar />
-        </div>
-        <div className="flex min-h-[95vh]">
-          <div className="bg-crate-blue hidden md:block">
-            <Navigation routes={routes} />
-            <div className="mt-4 border-dashed border-t pt-4 border-slate-600">
-              <GCStatusIndicator />
-            </div>
-          </div>
-          <div className="basis-full">
-            <div className="flex justify-end p-4 md:hidden">
-              <Burger routes={routes} />
-            </div>
-            <div className="p-4 w-full h-full">
-              <Routes>
-                {routes.map(route => (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    element={route.element}
-                  />
-                ))}
-              </Routes>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Layout
+        topbarLogo={<img alt="CrateDB logo" src={logo} />}
+        topbarContent={<StatusBar />}
+        bottomNavigation={bottomNavigation}
+        topNavigation={topNavigation}
+        gcStatus={gcStatus}
+      >
+        <Routes>
+          {routes.map(route => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+        </Routes>
+      </Layout>
       <NotificationHandler />
     </GCContextProvider>
   );

@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Added a cluster overview page with overall cluster stats.
+- Updated navigation to be fully responsive and branded
 
 ## 2024-01-22 - 0.1.2
 
