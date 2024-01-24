@@ -33,7 +33,7 @@ function SQLConsole() {
   };
 
   return (
-    <div className="max-w-[88dvw]">
+    <div>
       <Heading level="h1" className="mb-2">
         Console
       </Heading>
