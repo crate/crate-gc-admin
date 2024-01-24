@@ -48,6 +48,7 @@ function Tables() {
   }, [tables]);
 
   useEffect(() => {
+    setCreateTableSQL(undefined);
     if (!activeTable) {
       return;
     }
