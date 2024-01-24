@@ -2,6 +2,7 @@ import { Table, Tabs } from 'antd';
 import { Heading } from '@crate.io/crate-ui-components';
 import _ from 'lodash';
 import { ColumnType, QueryResult, QueryResults } from '../../utils/gc/executeSql';
+import wrap from 'word-wrap';
 
 type Params = {
   results: QueryResults | undefined;
@@ -51,20 +52,40 @@ const renderErrorTable = (result: QueryResult) => {
 
 const nicelyHandleTypes = (type: ColumnType, value: unknown) => {
   let ret = value;
-  if (typeof value === 'object') {
-    ret = JSON.stringify(value);
-  } else if (typeof value === 'boolean') {
-    ret = value.toString();
-  } else if (
-    [ColumnType.TIMESTAMP_WITH_TZ, ColumnType.TIMESTAMP_WITHOUT_TZ].includes(type)
-  ) {
-    const isoDate = new Date(Number(value)).toISOString();
-    ret = (
-      <div>
-        <span>{`${value}`}</span>
-        <span>{` (${isoDate})`}</span>
-      </div>
-    );
+  let isoDate;
+  switch (type) {
+    case ColumnType.OBJECT:
+    case ColumnType.ARRAY:
+    case ColumnType.UNCHECKED_OBJECT:
+      ret = JSON.stringify(value);
+      break;
+    case ColumnType.BOOLEAN:
+    case ColumnType.NUMERIC:
+    case ColumnType.INTEGER:
+    case ColumnType.BIGINT:
+    case ColumnType.DOUBLE:
+    case ColumnType.REAL:
+      ret = (
+        <span className="text-crate-blue">{value != null && value.toString()}</span>
+      );
+      break;
+    case ColumnType.TIMESTAMP_WITH_TZ:
+    case ColumnType.TIMESTAMP_WITHOUT_TZ:
+      isoDate = new Date(Number(value)).toISOString();
+      ret = (
+        <div>
+          <span>{`${value}`}</span> (
+          <span className="text-crate-blue">{isoDate}</span>)
+        </div>
+      );
+      break;
+    case ColumnType.TEXT:
+    case ColumnType.CHARACTER:
+    case ColumnType.CHAR:
+      ret = wrap(value as string, { width: 60 });
+  }
+  if (value == null) {
+    ret = <span className="text-crate-blue">null</span>;
   }
   return ret;
 };
@@ -88,7 +109,7 @@ const renderTable = (result: QueryResult) => {
       const [t, k, v] = arr;
       const actualValue = nicelyHandleTypes(t, v);
       // @ts-expect-error typing is hard
-      res[k] = <div>{actualValue}</div>;
+      res[k] = <pre>{actualValue}</pre>;
     });
     return res;
   });
