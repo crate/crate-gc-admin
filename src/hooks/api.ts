@@ -55,16 +55,11 @@ const api = async <T>(
 
   if (!response.ok && notification) {
     if (response.status === 404) {
-      dispatchNotification(
-        'error',
-        'The requested resource was not found. ' +
-          'If the problem persists, please contact customer support.',
-      );
+      dispatchNotification('error', 'The requested resource was not found. ');
     } else if (response.status >= 500) {
       dispatchNotification(
         'error',
-        'An error occurred while accessing the server. ' +
-          'Our team have been notified. Please try again later.',
+        'An error occurred while accessing the server. Please try again later.',
       );
     } else if (
       response.status >= 400 &&

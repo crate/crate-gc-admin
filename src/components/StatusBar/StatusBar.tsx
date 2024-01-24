@@ -48,6 +48,18 @@ function StatusBar() {
   };
 
   const getVersion = () => {
+    const versions = [...new Set(nodeStatus?.map(s => s.version.number).sort())];
+    if (versions.length > 1) {
+      return (
+        <div>
+          <StatusLight
+            color={StatusLight.colors.YELLOW}
+            message={versions.join(', ')}
+            tooltip="CrateDB nodes have different versions"
+          />
+        </div>
+      );
+    }
     return spin(nodeStatus && nodeStatus[0].version.number);
   };
 
