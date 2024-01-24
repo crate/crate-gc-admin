@@ -46,7 +46,7 @@ async function getCurrentUser(url: string | undefined): Promise<string> {
 async function getClusterInfo(
   url: string | undefined,
 ): Promise<ClusterInfo | undefined> {
-  const res = await executeSql(url, 'SELECT id, name FROM sys.cluster');
+  const res = await executeSql(url, 'SELECT id, name, settings FROM sys.cluster');
   if (!res.data || Array.isArray(res.data)) {
     return;
   }
@@ -54,6 +54,7 @@ async function getClusterInfo(
   return {
     id: row[0],
     name: row[1],
+    settings: row[2],
   };
 }
 

@@ -22,13 +22,14 @@ export type NodeStatusInfo = {
   available_processors: number;
 };
 
-export type CurrentUser = {
-  username: string;
+export type ClusterSettings = {
+  gateway: { expected_data_nodes: number };
 };
 
 export type ClusterInfo = {
   id: string;
   name: string;
+  settings: ClusterSettings;
 };
 
 export type User = {

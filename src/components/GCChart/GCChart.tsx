@@ -62,7 +62,7 @@ function GCChart({ title, config, data }: GCChartParams) {
   This is so that the chart can start on the right hand side, and slowly fill up
   as more datapoints are being added.
    */
-  const firstTs = data?.slice(0).pop()?.time;
+  const firstTs = data?.slice(0, 1).pop()?.time;
   const actualData = data ? [...data] : [];
   if (firstTs && config.start_from && config.start_from < firstTs) {
     let ts = config.start_from;

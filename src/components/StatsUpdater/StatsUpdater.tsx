@@ -33,7 +33,7 @@ function StatsUpdater() {
     };
 
     const last = load.slice(-1).pop();
-    const first = load.slice(0).pop();
+    const first = load.slice(0, 1).pop();
 
     // We only keep STATS_PERIOD of data.
     if (first && last) {
