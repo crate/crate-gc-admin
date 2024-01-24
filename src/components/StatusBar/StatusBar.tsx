@@ -52,6 +52,11 @@ function StatusBar() {
   };
 
   const getNumNodes = () => {
+    const expected = cluster?.settings.gateway.expected_data_nodes;
+    const current = nodeStatus?.length;
+    if (expected && current && current < expected) {
+      return `${current} of ${expected}`;
+    }
     return spin(nodeStatus && nodeStatus.length);
   };
 
