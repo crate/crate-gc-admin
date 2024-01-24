@@ -1,8 +1,7 @@
 import { Table, Tabs } from 'antd';
-import { Heading } from '@crate.io/crate-ui-components';
 import _ from 'lodash';
 import { ColumnType, QueryResult, QueryResults } from '../../utils/gc/executeSql';
-import wrap from 'word-wrap';
+import TypeAwareValue from './TypeAwareValue/TypeAwareValue.tsx';
 
 type Params = {
   results: QueryResults | undefined;
@@ -32,14 +31,12 @@ const renderErrorTable = (result: QueryResult) => {
       textWrap: '',
     },
   ];
-  const data = [result.error];
+  const data = [{ ...result.error, key: 'error' }];
 
   return (
     <div>
-      <Heading level="h4" children={result.original_query} />
       <Table
         columns={columns}
-        // @ts-expect-error error is never null
         dataSource={data}
         showHeader
         bordered
@@ -51,43 +48,7 @@ const renderErrorTable = (result: QueryResult) => {
 };
 
 const nicelyHandleTypes = (type: ColumnType, value: unknown) => {
-  let ret = value;
-  let isoDate;
-  switch (type) {
-    case ColumnType.OBJECT:
-    case ColumnType.ARRAY:
-    case ColumnType.UNCHECKED_OBJECT:
-      ret = JSON.stringify(value);
-      break;
-    case ColumnType.BOOLEAN:
-    case ColumnType.NUMERIC:
-    case ColumnType.INTEGER:
-    case ColumnType.BIGINT:
-    case ColumnType.DOUBLE:
-    case ColumnType.REAL:
-      ret = (
-        <span className="text-crate-blue">{value != null && value.toString()}</span>
-      );
-      break;
-    case ColumnType.TIMESTAMP_WITH_TZ:
-    case ColumnType.TIMESTAMP_WITHOUT_TZ:
-      isoDate = new Date(Number(value)).toISOString();
-      ret = (
-        <div>
-          <span>{`${value}`}</span> (
-          <span className="text-crate-blue">{isoDate}</span>)
-        </div>
-      );
-      break;
-    case ColumnType.TEXT:
-    case ColumnType.CHARACTER:
-    case ColumnType.CHAR:
-      ret = wrap(value as string, { width: 60 });
-  }
-  if (value == null) {
-    ret = <span className="text-crate-blue">null</span>;
-  }
-  return ret;
+  return <TypeAwareValue value={value} columnType={type} />;
 };
 
 const renderTable = (result: QueryResult) => {
@@ -101,13 +62,16 @@ const renderTable = (result: QueryResult) => {
       dataIndex: col,
       width: '10%',
       ellipsis: true,
+      className: 'align-top',
     };
   });
-  let data = result?.rows.map(row => {
-    const res = {};
+  let data: object[] = result?.rows.map((row, idx) => {
+    const res = { key: `row-${idx}` };
     _.zip(result.col_types, result.cols, row).forEach(arr => {
       const [t, k, v] = arr;
-      const actualValue = nicelyHandleTypes(t, v);
+      // Array types are noted as [100, X]
+      const actualType = Array.isArray(t) ? t[0] : t;
+      const actualValue = nicelyHandleTypes(actualType, v);
       // @ts-expect-error typing is hard
       res[k] = <pre>{actualValue}</pre>;
     });
@@ -121,10 +85,12 @@ const renderTable = (result: QueryResult) => {
         dataIndex: 'result',
         width: '100%',
         ellipsis: true,
+        className: '',
       },
     ];
     data = [
       {
+        key: 'OK',
         result: 'OK',
       },
     ];
@@ -132,7 +98,6 @@ const renderTable = (result: QueryResult) => {
 
   return result ? (
     <div>
-      <Heading level="h4" children={result.original_query} />
       <Table
         columns={columns}
         dataSource={data}
@@ -162,7 +127,7 @@ const renderTabs = (results: QueryResult[]) => {
     const i = ++idx;
     return {
       key: `${i}`,
-      label: `Query ${i}`,
+      label: `Result ${i}`,
       children: renderTable(o),
     };
   });

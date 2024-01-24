@@ -6,6 +6,7 @@
 - Updated navigation to be fully responsive and branded
 - Added charts to the cluster overview.
 - Improved formatting in the results table.
+- Added formatting of Arrays and Objects in the results table.
 
 ## 2024-01-22 - 0.1.2
 
