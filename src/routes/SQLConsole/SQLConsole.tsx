@@ -6,7 +6,7 @@ import { useGCContext } from '../../contexts';
 import { Heading, Loader } from '@crate.io/crate-ui-components';
 
 function SQLConsole() {
-  const { sqlUrl } = useGCContext();
+  const { sqlUrl, headings } = useGCContext();
   const specifiedQuery = new URLSearchParams(location.search).get('q');
   const [results, setResults] = useState<QueryResults | undefined>(undefined);
   const [running, setRunning] = useState(false);
@@ -34,9 +34,11 @@ function SQLConsole() {
 
   return (
     <div>
-      <Heading level="h1" className="mb-2">
-        Console
-      </Heading>
+      {headings && (
+        <Heading level="h1" className="mb-2">
+          Console
+        </Heading>
+      )}
       <SQLEditor
         onExecute={execute}
         results={results}
