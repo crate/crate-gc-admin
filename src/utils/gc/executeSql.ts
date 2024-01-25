@@ -36,7 +36,7 @@ enum ColumnType {
 }
 
 type QueryResult = object & {
-  col_types: ColumnType[] | undefined;
+  col_types: ColumnType[];
   cols: string[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   rows: any[][];
@@ -64,6 +64,7 @@ async function executeSql(
       },
       credentials: 'include',
     },
+    false,
   );
 
   return {

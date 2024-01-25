@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added type information to the result table.
+
 ## 2024-01-25 - 0.2.0
 
 - Added a cluster overview page with overall cluster stats.

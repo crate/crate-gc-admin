@@ -2,6 +2,7 @@ import { Table, Tabs } from 'antd';
 import _ from 'lodash';
 import { ColumnType, QueryResult, QueryResults } from '../../utils/gc/executeSql';
 import TypeAwareValue from './TypeAwareValue/TypeAwareValue.tsx';
+import { dbTypeToHumanReadable } from './utils.ts';
 
 type Params = {
   results: QueryResults | undefined;
@@ -55,9 +56,15 @@ const renderTable = (result: QueryResult) => {
   if (result.error) {
     return renderErrorTable(result);
   }
-  let columns = result?.cols.map(col => {
+  let columns = _.zip(result.col_types, result.cols).flatMap(arr => {
+    const [type, col] = arr;
     return {
-      title: () => <span className="font-bold">{col}</span>,
+      title: () => (
+        <div>
+          <div className="font-bold">{col}</div>
+          <div className="text-xs opacity-50">{dbTypeToHumanReadable(type)}</div>
+        </div>
+      ),
       key: col,
       dataIndex: col,
       width: '10%',
