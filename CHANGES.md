@@ -7,6 +7,7 @@
 - Added charts to the cluster overview.
 - Improved formatting in the results table.
 - Added formatting of Arrays and Objects in the results table.
+- Dynamically showing the header in the SQL Console.
 
 ## 2024-01-22 - 0.1.2
 
