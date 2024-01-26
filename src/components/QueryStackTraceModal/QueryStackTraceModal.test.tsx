@@ -1,0 +1,49 @@
+import { PropsWithChildren } from 'react';
+import { render, screen } from '../../../test/testUtils';
+import QueryStackTraceModal, {
+  QueryStackTraceModalProps,
+} from './QueryStackTraceModal';
+
+const onCloseSpy = jest.fn();
+
+const defaultProps: QueryStackTraceModalProps = {
+  modalTitle: 'Modal Title',
+  visible: true,
+  onClose: onCloseSpy,
+  query: 'SELECT 1;',
+  queryError: 'ERROR_DETAIL',
+};
+
+const setup = (
+  props: Partial<PropsWithChildren<QueryStackTraceModalProps>> = {},
+) => {
+  const combinedProps = { ...defaultProps, ...props };
+  return render(<QueryStackTraceModal {...combinedProps} />);
+};
+
+describe('The "QueryStackTraceModal" component', () => {
+  afterEach(() => {
+    onCloseSpy.mockReset();
+  });
+
+  it('displays the provided title correctly', () => {
+    setup();
+
+    expect(screen.getByText(defaultProps.modalTitle)).toBeInTheDocument();
+  });
+
+  it('displays the provided content correctly', () => {
+    setup();
+
+    expect(screen.getByText(defaultProps.query)).toBeInTheDocument();
+    expect(screen.getByText(defaultProps.queryError)).toBeInTheDocument();
+  });
+
+  it('closes if the ok button is clicked', async () => {
+    const { user } = setup();
+
+    await user.click(screen.getByText('OK'));
+
+    expect(onCloseSpy).toHaveBeenCalled();
+  });
+});

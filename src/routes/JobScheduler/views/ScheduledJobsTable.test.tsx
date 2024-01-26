@@ -3,13 +3,7 @@ import scheduledJobLogs from '../../../../test/__mocks__/scheduledJobLogs';
 import scheduledJobs from '../../../../test/__mocks__/scheduledJobs';
 import server, { customScheduledJobLogsGetResponse } from '../../../../test/msw';
 import { customScheduledJobGetResponse } from '../../../../test/msw';
-import {
-  getRequestSpy,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '../../../../test/testUtils';
+import { getRequestSpy, render, screen, waitFor } from '../../../../test/testUtils';
 import { Job, JobLog } from '../../../types';
 import { cronParser } from '../../../utils/cron';
 import ScheduledJobsTable, {
@@ -65,7 +59,7 @@ describe('The "ScheduledJobsTable" component', () => {
     });
 
     describe('the "active" cell', () => {
-      it('shows a success icon for active not-in-error jobs', async () => {
+      it('shows a green clock icon for active jobs', async () => {
         // Show only one active job
         const job: Job = {
           ...scheduledJobs[0],
@@ -81,10 +75,14 @@ describe('The "ScheduledJobsTable" component', () => {
         expect(tableRow).toBeInTheDocument();
 
         expect(screen.getByTestId('active-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('active-icon')).toHaveClass('bg-green-500');
+        expect(
+          screen
+            .getByTestId('active-icon')
+            .getElementsByClassName('anticon-clock-circle')[0],
+        ).toHaveClass('text-green-600');
       });
 
-      it('shows a non-active icon for non-active not-in-error jobs', async () => {
+      it('shows a gray pause icon for non-active jobs', async () => {
         // Show only one non-active job
         const job: Job = {
           ...scheduledJobs[0],
@@ -100,28 +98,11 @@ describe('The "ScheduledJobsTable" component', () => {
         expect(tableRow).toBeInTheDocument();
 
         expect(screen.getByTestId('active-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('active-icon')).toHaveClass('bg-red-500');
-      });
-
-      it('shows an error icon for in-error jobs', async () => {
-        // Show only one job with errors
-        const job: Job = scheduledJobs[0];
-        const log: JobLog = {
-          ...scheduledJobLogs[0],
-          error: 'Query error',
-        };
-        server.use(customScheduledJobGetResponse([job]));
-        server.use(customScheduledJobLogsGetResponse([log]));
-
-        const { container } = setup();
-
-        await waitForTableRender();
-
-        const tableRow = container.querySelector(`[data-row-key="${job.id}"]`);
-        expect(tableRow).toBeInTheDocument();
-
-        expect(screen.getByTestId('active-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('active-icon')).toHaveClass('bg-gray-500');
+        expect(
+          screen
+            .getByTestId('active-icon')
+            .getElementsByClassName('anticon-pause-circle')[0],
+        ).toHaveClass('text-gray-600');
       });
     });
 
@@ -179,17 +160,24 @@ describe('The "ScheduledJobsTable" component', () => {
 
         await waitForTableRender();
 
-        expect(screen.getByTestId('last-execution')).toHaveClass('text-green-500');
-        expect(screen.getByTestId('last-execution-icon')).toHaveClass(
-          'bg-green-500',
-        );
+        expect(
+          screen
+            .getByTestId('last-execution-icon')
+            .getElementsByClassName('anticon-check-circle')[0],
+        ).toHaveClass('text-green-600');
       });
 
-      it('displays red text and error icon if last execution has an error', async () => {
+      it('displays red error icon if last execution has an error', async () => {
         // Show only one job with errors
         const log: JobLog = {
           ...scheduledJobLogs[0],
           error: 'Query error',
+          statements: {
+            '0': {
+              error: 'QUERY_ERROR',
+              sql: 'SELECT 1;',
+            },
+          },
         };
         server.use(customScheduledJobLogsGetResponse([log]));
 
@@ -197,8 +185,11 @@ describe('The "ScheduledJobsTable" component', () => {
 
         await waitForTableRender();
 
-        expect(screen.getByTestId('last-execution')).toHaveClass('text-red-500');
-        expect(screen.getByTestId('last-execution-icon')).toHaveClass('bg-red-500');
+        expect(
+          screen
+            .getByTestId('last-execution-icon')
+            .getElementsByClassName('anticon-close-circle')[0],
+        ).toHaveClass('text-red-600');
       });
     });
 
@@ -210,7 +201,7 @@ describe('The "ScheduledJobsTable" component', () => {
         server.use(customScheduledJobGetResponse([job]));
       });
 
-      it('displays the next due date and time for not-in-error jobs', async () => {
+      it('displays the next due timestamp', async () => {
         setup();
 
         await waitForTableRender();
@@ -219,22 +210,6 @@ describe('The "ScheduledJobsTable" component', () => {
           'MMMM Do YYYY, HH:mm',
         );
         expect(screen.getByText(formattedDate)).toBeInTheDocument();
-      });
-
-      it('displays "Cancelled" (in red) for in-error jobs', async () => {
-        // Show only one job with errors
-        const log: JobLog = {
-          ...scheduledJobLogs[0],
-          error: 'Query error',
-        };
-        server.use(customScheduledJobLogsGetResponse([log]));
-
-        setup();
-
-        await waitForTableRender();
-
-        expect(screen.getByText('Cancelled')).toBeInTheDocument();
-        expect(screen.getByText('Cancelled')).toHaveClass('text-red-500');
       });
     });
 
@@ -272,7 +247,9 @@ describe('The "ScheduledJobsTable" component', () => {
 
         await user.click(screen.getByText('Delete'));
 
-        expect(screen.getByRole('dialog')).toBeInTheDocument();
+        expect(
+          screen.getByText('Are you sure to delete this job?'),
+        ).toBeInTheDocument();
       });
 
       it('calls delete API when dialog is submitted', async () => {
@@ -283,14 +260,11 @@ describe('The "ScheduledJobsTable" component', () => {
 
         await user.click(screen.getByText('Delete'));
 
-        expect(screen.getByRole('dialog')).toBeInTheDocument();
+        expect(
+          screen.getByText('Are you sure to delete this job?'),
+        ).toBeInTheDocument();
 
-        await user.type(
-          within(screen.getByRole('dialog')).getByRole('textbox'),
-          job.name,
-        );
-
-        await user.click(within(screen.getByRole('dialog')).getByText('Confirm'));
+        await user.click(screen.getByText('OK'));
 
         expect(deleteJobSpy).toHaveBeenCalled();
       });

@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Added type information to the result table.
+- Add "Cancel" and "Save" buttons into ScheduledJobLogs component
+- SQL Scheduler UI improvements
 
 ## 2024-01-25 - 0.2.0
 

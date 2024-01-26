@@ -1,10 +1,8 @@
 import {
   Button,
   CrateTable,
-  ConfirmDelete,
   DisplayDate,
   Text,
-  RoundedIcon,
 } from '@crate.io/crate-ui-components';
 import { useState } from 'react';
 import { useGCContext } from '../../../contexts';
@@ -15,13 +13,15 @@ import {
 import { apiDelete } from '../../../hooks/api';
 import { Loader } from '@crate.io/crate-ui-components';
 import { cronParser } from '../../../utils/cron';
-import { Job, JobLog } from '../../../types';
-import cn from '../../../utils/cn';
+import { Job, JobLog, TJobLogStatementError } from '../../../types';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
+  PauseCircleOutlined,
 } from '@ant-design/icons';
+import QueryStackTraceModal from '../../../components/QueryStackTraceModal';
+import { Popconfirm } from 'antd';
 
 export const JOBS_TABLE_PAGE_SIZE = 5;
 
@@ -30,7 +30,8 @@ export type ScheduledJobsTableProps = {
 };
 
 export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps) {
-  const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
+  const [errorDialogContent, setErrorDialogContent] =
+    useState<TJobLogStatementError | null>(null);
   const [showLoaderDelete, setShowLoaderDelete] = useState(false);
   const { gcUrl } = useGCContext();
   const {
@@ -43,30 +44,21 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
     scheduledJobs || [],
   );
 
-  const openJobDeleteModal = (job: Job) => {
-    setJobToDelete(job);
+  const closeErrorDialog = () => {
+    setErrorDialogContent(null);
   };
 
-  const closeJobDeleteModal = () => {
-    setJobToDelete(null);
-  };
-
-  const handleDeleteJob = async () => {
-    closeJobDeleteModal();
-
-    if (!jobToDelete) {
-      return;
-    }
+  const handleDeleteJob = async (job: Job) => {
     setShowLoaderDelete(true);
 
-    await apiDelete(`${gcUrl}/api/scheduled-jobs/${jobToDelete?.id}`, null, {
+    await apiDelete(`${gcUrl}/api/scheduled-jobs/${job.id}`, null, {
       credentials: 'include',
     });
     setShowLoaderDelete(false);
     mutateScheduledJobs(undefined, { revalidate: true });
   };
 
-  if (isLoadingJobs || showLoaderDelete) {
+  if (isLoadingJobs) {
     return (
       <div className="flex items-center justify-center w-full h-full">
         <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
@@ -75,46 +67,33 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
   }
 
   return (
-    <div>
+    <div className="w-full overflow-x-a">
       <CrateTable
         dataSource={scheduledJobsEnriched}
         columns={[
           {
-            title: 'Active',
+            title: <span className="font-bold">Active</span>,
             key: 'enabled',
-            render: (job: Job) => {
-              const inError =
-                job.last_execution && job.last_execution.error !== null;
-              const enabled = job.enabled && !inError;
-              const notEnabled = !job.enabled && !inError;
-
+            dataIndex: 'enabled',
+            render: (enabled: boolean) => {
               return (
-                <RoundedIcon
-                  className={cn('text-xl', {
-                    'bg-green-500': enabled,
-                    'bg-red-500': notEnabled,
-                    'bg-gray-500': inError,
-                  })}
-                  testId="active-icon"
-                >
-                  {inError ? (
-                    <ClockCircleOutlined />
-                  ) : enabled ? (
-                    <CheckCircleOutlined />
+                <span className="text-lg" data-testid="active-icon">
+                  {enabled ? (
+                    <ClockCircleOutlined className="text-green-600" />
                   ) : (
-                    <CloseCircleOutlined />
+                    <PauseCircleOutlined className="text-gray-600" />
                   )}
-                </RoundedIcon>
+                </span>
               );
             },
           },
           {
-            title: 'Job Name',
+            title: <span className="font-bold">Job Name</span>,
             key: 'name',
             dataIndex: 'name',
           },
           {
-            title: 'Schedule',
+            title: <span className="font-bold">Schedule</span>,
             key: 'cron',
             dataIndex: 'cron',
             render: (cron: string) => {
@@ -126,7 +105,7 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
             },
           },
           {
-            title: 'Last Execution',
+            title: <span className="font-bold">Last Execution</span>,
             key: 'last_execution',
             dataIndex: 'last_execution',
             render: (lastExecution?: JobLog) => {
@@ -135,42 +114,45 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
 
                 return (
                   <Text
-                    className={cn('flex gap-2 items-center', {
-                      'text-red-500': inError,
-                      'text-green-500': !inError,
-                    })}
+                    className={'flex gap-2 items-center'}
                     testId="last-execution"
                   >
-                    <RoundedIcon
-                      className={cn('text-lg', {
-                        'bg-red-500': inError,
-                        'bg-green-500': !inError,
-                      })}
-                      testId="last-execution-icon"
-                    >
-                      {inError ? <CloseCircleOutlined /> : <CheckCircleOutlined />}
-                    </RoundedIcon>
+                    <span className="text-lg" data-testid="last-execution-icon">
+                      {inError ? (
+                        <CloseCircleOutlined className="text-red-600" />
+                      ) : (
+                        <CheckCircleOutlined className="text-green-600" />
+                      )}
+                    </span>
                     <DisplayDate isoDate={lastExecution.end} />
+                    {inError && (
+                      <Button
+                        kind={Button.kinds.TERTIARY}
+                        onClick={() => {
+                          setErrorDialogContent(lastExecution.statements['0']);
+                        }}
+                      >
+                        Error
+                      </Button>
+                    )}
                   </Text>
                 );
-              } else return 'n/a';
-            },
-          },
-          {
-            title: 'Next Due',
-            key: 'next_run_time',
-            render: (job: Job) => {
-              const inError =
-                job.last_execution && job.last_execution.error !== null;
-              if (inError) {
-                return <Text className="text-red-500">Cancelled</Text>;
-              } else if (job.next_run_time) {
-                return <DisplayDate isoDate={job.next_run_time} />;
               } else return <Text>n/a</Text>;
             },
           },
           {
-            title: '',
+            title: <span className="font-bold">Next Due</span>,
+            key: 'next_run_time',
+            dataIndex: 'next_run_time',
+            render: (nextRunTime?: string) => {
+              return (
+                <Text>
+                  {nextRunTime ? <DisplayDate isoDate={nextRunTime} /> : 'n/a'}
+                </Text>
+              );
+            },
+          },
+          {
             key: 'actions',
             render: (job: Job) => {
               return (
@@ -184,15 +166,18 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
                   >
                     Manage
                   </Button>
-                  <Button
-                    kind={Button.kinds.TERTIARY}
-                    size={Button.sizes.SMALL}
-                    onClick={() => {
-                      openJobDeleteModal(job);
+                  <Popconfirm
+                    title="Are you sure to delete this job?"
+                    placement="topLeft"
+                    okButtonProps={{
+                      loading: showLoaderDelete,
                     }}
+                    onConfirm={() => handleDeleteJob(job)}
                   >
-                    Delete
-                  </Button>
+                    <Button kind={Button.kinds.TERTIARY} size={Button.sizes.SMALL}>
+                      Delete
+                    </Button>
+                  </Popconfirm>
                 </span>
               );
             },
@@ -204,14 +189,15 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
         }}
       />
 
-      <ConfirmDelete
-        title="Are you sure you want to delete the following job?"
-        visible={jobToDelete !== null}
-        prompt="Be aware that this action cannot be reversed. All data will be lost."
-        confirmText={jobToDelete ? jobToDelete.name : ''}
-        onCancel={closeJobDeleteModal}
-        onConfirm={handleDeleteJob}
-      />
+      {errorDialogContent !== null && (
+        <QueryStackTraceModal
+          visible={errorDialogContent !== null}
+          modalTitle="Error Details"
+          onClose={closeErrorDialog}
+          query={errorDialogContent.sql}
+          queryError={errorDialogContent.error}
+        />
+      )}
     </div>
   );
 }

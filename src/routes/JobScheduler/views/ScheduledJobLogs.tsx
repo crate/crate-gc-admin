@@ -6,29 +6,32 @@ import {
   CrateTable,
   DisplayDate,
   Loader,
-  RoundedIcon,
-  InfoModal,
 } from '@crate.io/crate-ui-components';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import cn from '../../../utils/cn';
-import { Job, JobLog } from '../../../types';
+import { Job, JobLog, TJobLogStatementError } from '../../../types';
 import { useState } from 'react';
+import QueryStackTraceModal from '../../../components/QueryStackTraceModal';
 
 export type ScheduledJobLogsProps = {
   job: Job;
+  backToJobList: () => void;
 };
 
 export const JOB_LOG_TABLE_PAGE_SIZE = 5;
 
-export default function ScheduledJobLogs({ job }: ScheduledJobLogsProps) {
+export default function ScheduledJobLogs({
+  job,
+  backToJobList,
+}: ScheduledJobLogsProps) {
   const { gcUrl } = useGCContext();
   const { data: jobLogs, isLoading: isLoadingJobLogs } = useGCGetScheduledJobLogs(
     gcUrl!,
     job,
   );
-  const [errorDialogContent, setErrorDialogContent] = useState<string | null>(null);
+  const [errorDialogContent, setErrorDialogContent] =
+    useState<TJobLogStatementError | null>(null);
 
-  const openErrorDialog = (error: string) => {
+  const openErrorDialog = (error: TJobLogStatementError) => {
     setErrorDialogContent(error);
   };
 
@@ -46,79 +49,95 @@ export default function ScheduledJobLogs({ job }: ScheduledJobLogsProps) {
 
   return (
     <>
-      <CrateTable<JobLog>
-        dataSource={jobLogs || []}
-        columns={[
-          {
-            title: 'Status',
-            key: 'status',
-            width: '10%',
-            render: (log: JobLog) => {
-              const logInError = log.error !== null;
+      <div className="w-full overflow-x-auto">
+        <CrateTable<JobLog>
+          dataSource={jobLogs || []}
+          columns={[
+            {
+              title: <span className="font-bold">Status</span>,
+              key: 'status',
+              width: '20%',
+              render: (log: JobLog) => {
+                const logInError = log.error !== null;
 
-              return (
-                <RoundedIcon
-                  className={cn('text-xl', {
-                    'bg-red-500': logInError,
-                    'bg-green-500': !logInError,
-                  })}
-                  testId="status-icon"
-                >
-                  {logInError ? <CloseCircleOutlined /> : <CheckCircleOutlined />}
-                </RoundedIcon>
-              );
-            },
-          },
-          {
-            title: 'Last Executed',
-            key: 'last_executed',
-            dataIndex: 'end',
-            width: '20%',
-            render: (lastExecuted: string) => {
-              return <DisplayDate isoDate={lastExecuted} />;
-            },
-          },
-          {
-            title: 'Error',
-            key: 'error',
-            dataIndex: 'error',
-            ellipsis: true,
-            width: '50%',
-            render: (error: string | null) => {
-              if (error) {
                 return (
-                  <div className="flex items-center w-full justify-between gap-2">
-                    <Text truncate>{error}</Text>
-                    <Button
-                      kind={Button.kinds.TERTIARY}
-                      className="flex"
-                      onClick={() => {
-                        openErrorDialog(error);
-                      }}
-                    >
-                      See Details
-                    </Button>
-                  </div>
+                  <span className={'text-lg'} data-testid="status-icon">
+                    {logInError ? (
+                      <CloseCircleOutlined className="text-red-600" />
+                    ) : (
+                      <CheckCircleOutlined className="text-green-600" />
+                    )}
+                  </span>
                 );
-              }
-
-              return 'n/a';
+              },
             },
-          },
-        ]}
-        rowKey="start"
-        pagination={{
-          defaultPageSize: JOB_LOG_TABLE_PAGE_SIZE,
-        }}
-      />
+            {
+              title: <span className="font-bold">Last Executed</span>,
+              key: 'last_executed',
+              dataIndex: 'end',
+              width: '30%',
+              render: (lastExecuted: string) => {
+                return <DisplayDate isoDate={lastExecuted} />;
+              },
+            },
+            {
+              title: <span className="font-bold">Error</span>,
+              key: 'error',
+              ellipsis: true,
+              width: '50%',
+              render: (log: JobLog) => {
+                if (log.error) {
+                  return (
+                    <div className="flex items-center w-full justify-between gap-2">
+                      <Text truncate>{log.error}</Text>
+                      <Button
+                        kind={Button.kinds.TERTIARY}
+                        className="flex"
+                        onClick={() => {
+                          openErrorDialog(log.statements['0']);
+                        }}
+                      >
+                        See Details
+                      </Button>
+                    </div>
+                  );
+                }
 
-      <InfoModal
-        visible={errorDialogContent !== null}
-        title="Error Details"
-        onClose={closeErrorDialog}
-      >
-        <div className="max-h-[200px] overflow-auto">{errorDialogContent}</div>
-      </InfoModal>
+                return 'n/a';
+              },
+            },
+          ]}
+          rowKey="start"
+          pagination={{
+            defaultPageSize: JOB_LOG_TABLE_PAGE_SIZE,
+          }}
+        />
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <Button kind={Button.kinds.SECONDARY} onClick={backToJobList}>
+          Cancel
+        </Button>
+        <div className="flex gap-2">
+          <Button
+            kind={Button.kinds.PRIMARY}
+            type={Button.types.SUBMIT}
+            form="job-form"
+          >
+            Save
+          </Button>
+        </div>
+      </div>
+
+      {errorDialogContent !== null && (
+        <QueryStackTraceModal
+          visible={errorDialogContent !== null}
+          modalTitle="Error Details"
+          onClose={closeErrorDialog}
+          query={errorDialogContent.sql}
+          queryError={errorDialogContent.error}
+        />
+      )}
     </>
   );
 }

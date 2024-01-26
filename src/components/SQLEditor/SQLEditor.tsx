@@ -4,7 +4,7 @@ import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import { format as formatSQL } from 'sql-formatter';
-import { Button } from '@crate.io/crate-ui-components';
+import { Button, Text } from '@crate.io/crate-ui-components';
 import { Ace } from 'ace-builds';
 import { QueryResults } from '../../utils/gc/executeSql';
 import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
@@ -17,7 +17,7 @@ type SQLEditorProps = {
   localStorageKey?: string;
   showRunButton?: boolean;
   runButtonLabel?: string;
-  error?: React.ReactElement;
+  error?: React.ReactNode;
   onExecute: (queries: string) => void;
   onChange?: (queries: string) => void;
 };
@@ -37,7 +37,7 @@ function SQLEditor({
   localStorageKey,
   showRunButton = true,
   error = undefined,
-  runButtonLabel = 'Run',
+  runButtonLabel = 'Execute',
   onExecute,
   onChange,
 }: SQLEditorProps) {
@@ -183,7 +183,7 @@ function SQLEditor({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <div className={cn('border-2 rounded', { 'border-red-500': error })}>
+      <div className={cn('border-2 rounded', { 'border-red-600': error })}>
         {/* EDITOR */}
         <AceEditor
           height="300px"
@@ -279,7 +279,7 @@ function SQLEditor({
         />
       </div>
 
-      {error}
+      {error && <Text className="text-red-600">{error}</Text>}
 
       <div className="w-full flex items-center justify-between">
         <div className="flex gap-2">

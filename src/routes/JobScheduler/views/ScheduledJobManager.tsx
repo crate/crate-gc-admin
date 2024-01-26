@@ -16,13 +16,13 @@ export default function ScheduledJobManager({
       items={[
         {
           children: (
-            <ScheduledJobForm backToJobList={backToJobList} type="edit" job={job} />
+            <ScheduledJobForm job={job} type="edit" backToJobList={backToJobList} />
           ),
           label: 'Manage',
           key: 'manage',
         },
         {
-          children: <ScheduledJobLogs job={job} />,
+          children: <ScheduledJobLogs job={job} backToJobList={backToJobList} />,
           label: 'Recent',
           key: 'recent',
         },

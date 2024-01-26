@@ -9,8 +9,10 @@ import server, { customScheduledJobLogsGetResponse } from '../../../../test/msw'
 import moment from 'moment';
 import { JobLog } from '../../../types';
 
+const backToJobList = jest.fn();
 const defualtProps: ScheduledJobLogsProps = {
   job: scheduledJob,
+  backToJobList,
 };
 
 const setup = () => {
@@ -22,6 +24,10 @@ const waitForTableRender = async () => {
 };
 
 describe('The "ScheduledJobLogs" component', () => {
+  afterEach(() => {
+    backToJobList.mockClear();
+  });
+
   it('renders a loader while loading job logs', () => {
     setup();
 
@@ -57,6 +63,12 @@ describe('The "ScheduledJobLogs" component', () => {
         const log: JobLog = {
           ...scheduledJobLogs[0],
           error: null,
+          statements: {
+            '0': {
+              duration: 0.1,
+              sql: 'SELECT 1;',
+            },
+          },
         };
         server.use(customScheduledJobLogsGetResponse([log]));
 
@@ -68,7 +80,11 @@ describe('The "ScheduledJobLogs" component', () => {
         expect(tableRow).toBeInTheDocument();
 
         expect(screen.getByTestId('status-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('status-icon')).toHaveClass('bg-green-500');
+        expect(
+          screen
+            .getByTestId('status-icon')
+            .getElementsByClassName('anticon-check-circle')[0],
+        ).toHaveClass('text-green-600');
       });
 
       it('shows an error icon for failed jobs', async () => {
@@ -76,6 +92,12 @@ describe('The "ScheduledJobLogs" component', () => {
         const log: JobLog = {
           ...scheduledJobLogs[0],
           error: 'Query error',
+          statements: {
+            '0': {
+              error: 'QUERY_ERROR',
+              sql: 'SELECT 1;',
+            },
+          },
         };
         server.use(customScheduledJobLogsGetResponse([log]));
 
@@ -87,7 +109,11 @@ describe('The "ScheduledJobLogs" component', () => {
         expect(tableRow).toBeInTheDocument();
 
         expect(screen.getByTestId('status-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('status-icon')).toHaveClass('bg-red-500');
+        expect(
+          screen
+            .getByTestId('status-icon')
+            .getElementsByClassName('anticon-close-circle')[0],
+        ).toHaveClass('text-red-600');
       });
     });
 
@@ -110,6 +136,12 @@ describe('The "ScheduledJobLogs" component', () => {
         const log: JobLog = {
           ...scheduledJobLogs[0],
           error: null,
+          statements: {
+            '0': {
+              duration: 0.1,
+              sql: 'SELECT 1;',
+            },
+          },
         };
         server.use(customScheduledJobLogsGetResponse([log]));
 
@@ -128,6 +160,12 @@ describe('The "ScheduledJobLogs" component', () => {
         const log: JobLog = {
           ...scheduledJobLogs[0],
           error: 'Query Error',
+          statements: {
+            '0': {
+              error: 'QUERY_ERROR',
+              sql: 'SELECT 1;',
+            },
+          },
         };
         server.use(customScheduledJobLogsGetResponse([log]));
 
@@ -146,6 +184,12 @@ describe('The "ScheduledJobLogs" component', () => {
         const log: JobLog = {
           ...scheduledJobLogs[0],
           error: 'Query Error',
+          statements: {
+            '0': {
+              error: 'QUERY_ERROR',
+              sql: 'SELECT 1;',
+            },
+          },
         };
         server.use(customScheduledJobLogsGetResponse([log]));
 
@@ -163,6 +207,12 @@ describe('The "ScheduledJobLogs" component', () => {
         const log: JobLog = {
           ...scheduledJobLogs[0],
           error: 'Query Error',
+          statements: {
+            '0': {
+              error: 'QUERY_ERROR',
+              sql: 'SELECT 1;',
+            },
+          },
         };
 
         beforeEach(() => {
@@ -183,7 +233,7 @@ describe('The "ScheduledJobLogs" component', () => {
 
           expect(screen.getByRole('dialog')).toBeInTheDocument();
           expect(
-            within(screen.getByRole('dialog')).getByText(log.error!),
+            within(screen.getByRole('dialog')).getByText(log.statements['0'].sql),
           ).toBeInTheDocument();
         });
 
@@ -205,26 +255,39 @@ describe('The "ScheduledJobLogs" component', () => {
 
           expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         });
-
-        it('the "Cancel" button inside the dialog will close it', async () => {
-          const { container, user } = setup();
-
-          await waitForTableRender();
-
-          const tableRow = container.querySelector(`[data-row-key="${log.start}"]`);
-          expect(tableRow).toBeInTheDocument();
-
-          expect(screen.getByText('See Details')).toBeInTheDocument();
-
-          await user.click(screen.getByText('See Details'));
-
-          expect(screen.getByRole('dialog')).toBeInTheDocument();
-
-          await user.click(within(screen.getByRole('dialog')).getByText('Cancel'));
-
-          expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-        });
       });
+    });
+  });
+
+  describe('the "Cancel" button', () => {
+    it('calls "backToJobList" callback', async () => {
+      const { user } = setup();
+
+      await waitForTableRender();
+
+      await user.click(screen.getByText('Cancel'));
+
+      expect(backToJobList).toHaveBeenCalled();
+    });
+  });
+
+  describe('the "Save" button', () => {
+    it('is a submit button', async () => {
+      const { container } = setup();
+
+      await waitForTableRender();
+
+      expect(container.querySelector('button[type="submit"]')).toBeInTheDocument();
+    });
+
+    it('has form = job-form', async () => {
+      const { container } = setup();
+
+      await waitForTableRender();
+
+      expect(
+        container.querySelector('button[type="submit"]')?.getAttribute('form'),
+      ).toBe('job-form');
     });
   });
 });
