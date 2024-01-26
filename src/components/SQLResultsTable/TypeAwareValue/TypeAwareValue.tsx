@@ -7,9 +7,18 @@ export type TypeAwareValueParams = {
   value: unknown;
   columnType?: ColumnType;
   quoteStrings?: boolean;
+  totalNumColumns?: number;
 };
 
-function TypeAwareValue({ value, columnType, quoteStrings }: TypeAwareValueParams) {
+function TypeAwareValue({
+  value,
+  columnType,
+  quoteStrings,
+  totalNumColumns,
+}: TypeAwareValueParams) {
+  if (value == null) {
+    return <span className="text-crate-blue">null</span>;
+  }
   let ret = <span>{value as string}</span>;
   let isoDate;
   let actualType = columnType;
@@ -27,7 +36,7 @@ function TypeAwareValue({ value, columnType, quoteStrings }: TypeAwareValueParam
         actualType = ColumnType.TEXT;
         break;
       case 'object':
-        actualType = value == null ? ColumnType.NULL : ColumnType.OBJECT;
+        actualType = ColumnType.OBJECT;
         break;
       case 'undefined':
         actualType = ColumnType.NULL;
@@ -35,7 +44,7 @@ function TypeAwareValue({ value, columnType, quoteStrings }: TypeAwareValueParam
     }
   }
 
-  if (actualType == ColumnType.TEXT && (value as string).startsWith('http')) {
+  if (actualType == ColumnType.TEXT && (value as string)?.startsWith('http')) {
     try {
       const url = new URL(value as string);
       return (
@@ -78,7 +87,9 @@ function TypeAwareValue({ value, columnType, quoteStrings }: TypeAwareValueParam
     case ColumnType.TEXT:
     case ColumnType.CHARACTER:
     case ColumnType.CHAR:
-      wrapped = wrap(value as string, { width: 60 }).trim();
+      wrapped = wrap(value as string, {
+        width: getWrapSize(totalNumColumns),
+      })?.trim();
       if (quoteStrings) {
         wrapped = `'${wrapped}'`;
       }
@@ -96,5 +107,16 @@ function TypeAwareValue({ value, columnType, quoteStrings }: TypeAwareValueParam
   }
   return ret;
 }
+
+const getWrapSize = (numColumns: number | undefined) => {
+  if (!numColumns || numColumns >= 4) {
+    return 60;
+  } else if (numColumns == 3) {
+    return 80;
+  } else if (numColumns == 2) {
+    return 120;
+  }
+  return 180;
+};
 
 export default TypeAwareValue;
