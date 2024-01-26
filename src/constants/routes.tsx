@@ -1,7 +1,7 @@
 import SQLConsole from '../routes/SQLConsole/SQLConsole';
 import Users from '../routes/Users/Users';
 import EnterpriseScreen from '../components/EnterpriseScreen/EnterpriseScreen';
-import Tables from '../routes/Tables/Tables';
+import Tables from '../routes/Tables';
 import { Route } from '../types';
 import ScheduledJobs from '../routes/JobScheduler';
 import Overview from '../routes/Overview/Overview.tsx';
@@ -29,11 +29,7 @@ const routes: Route[] = [
   },
   {
     path: '/tables',
-    element: (
-      <div className="p-4">
-        <Tables />
-      </div>
-    ),
+    element: <Tables />,
     label: 'Tables',
     key: 'tables',
   },

@@ -2,16 +2,18 @@
 
 ## Unreleased
 
+- Added responsive styling to the tables page.
+
 ## 2024-01-26 - 0.2.1
 
 - Added type information to the result table.
-- Add "Cancel" and "Save" buttons into ScheduledJobLogs component
-- SQL Scheduler UI improvements
+- Add "Cancel" and "Save" buttons into ScheduledJobLogs component.
+- SQL Scheduler UI improvements.
 
 ## 2024-01-25 - 0.2.0
 
 - Added a cluster overview page with overall cluster stats.
-- Updated navigation to be fully responsive and branded
+- Updated navigation to be fully responsive and branded.
 - Added charts to the cluster overview.
 - Improved formatting in the results table.
 - Added formatting of Arrays and Objects in the results table.
@@ -19,18 +21,18 @@
 
 ## 2024-01-22 - 0.1.2
 
-- Improved SQL Scheduler UI and add tests
+- Improved SQL Scheduler UI and add tests.
 
 ## 2024-01-22 - 0.1.1
 
-- Initial release
-- SQL Page
-- Users Page
-- Enterprise Wrapper for pages which require GC
-- Tables Page
-- Implemented navigation (Ctrl+Up/Ctrl+Down) in the SQL Editor
-- Implemented SQL Scheduler UI
+- Initial release.
+- SQL Page.
+- Users Page.
+- Enterprise Wrapper for pages which require GC.
+- Tables Page.
+- Implemented navigation (Ctrl+Up/Ctrl+Down) in the SQL Editor.
+- Implemented SQL Scheduler UI.
 - Added support for displaying certain types differently in the SQLResultsTable.
-- Added a top bar with a logo
-- Added builds for deploying as npm package
-- Added a status bar and calculating cluster data status
+- Added a top bar with a logo.
+- Added builds for deploying as npm package.
+- Added a status bar and calculating cluster data status.
