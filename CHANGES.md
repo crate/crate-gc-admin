@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added raw (unformatted) and CSV/JSON output to results table.
+
 ## 2024-01-29 - 0.3.0
 
 - Added responsive styling to the tables page.
