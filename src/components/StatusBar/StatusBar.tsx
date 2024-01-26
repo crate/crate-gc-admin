@@ -116,7 +116,7 @@ function StatusBar() {
   return (
     <>
       <div
-        className="gap-3 flex leading-tight text-white md:hidden"
+        className="gap-3 flex leading-tight select-none text-white md:hidden"
         onClick={() => setMobileVisible(true)}
       >
         <div>
@@ -127,7 +127,7 @@ function StatusBar() {
           <DownOutlined className="opacity-50 text-xs" />
         </div>
       </div>
-      <div className="hidden gap-8 leading-snug text-white md:flex">
+      <div className="hidden gap-8 leading-snug select-none text-white md:flex">
         <div>
           <div className="opacity-50 text-xs uppercase">Cluster</div>
           <div>{spin(cluster?.name)}</div>
