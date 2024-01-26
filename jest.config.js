@@ -22,7 +22,6 @@ export default {
   moduleNameMapper: {
     '.+\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(svg|png)$': '<rootDir>/test/__mocks__/empty-module.js',
-    'react-syntax-highlighter/dist/esm/styles/hljs': 'identity-obj-proxy',
   },
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {

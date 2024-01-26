@@ -8,7 +8,7 @@ type InputProps = React.DetailedHTMLProps<
 > & {
   id: string;
   label: string;
-  error?: React.ReactElement;
+  error?: React.ReactNode;
   required?: boolean;
 };
 
@@ -20,7 +20,7 @@ const Input = React.forwardRef(
     return (
       <>
         <label htmlFor={id}>
-          <Text className={cn('font-bold', { 'text-red-500': error })}>
+          <Text className={cn('font-bold', { 'text-red-600': error })}>
             {label} {required && '*'}
           </Text>
         </label>
@@ -32,11 +32,11 @@ const Input = React.forwardRef(
             'border-2',
             'p-2',
             'rounded-sm',
-            { 'border-red-500': error },
+            { 'border-red-600': error },
             inputProps.className,
           )}
         />
-        {error}
+        {error && <Text className="text-red-600">{error}</Text>}
       </>
     );
   },

@@ -1,5 +1,5 @@
 ---
-name: CloudUI
+name: crate-gc-admin
 
 on:
   - pull_request

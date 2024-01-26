@@ -8,6 +8,7 @@ export type ApiOutput<T> = {
   success: boolean;
   data: T | null;
   status: number;
+  errors?: Record<string, string[]>;
 };
 
 const dispatchNotification = (type: NotificationType, message: string) => {
@@ -89,7 +90,11 @@ export const apiPost = async <T>(
   options = {},
   notification = true,
 ) => api<T>(url, 'POST', data, options, notification);
-export const apiPut = async <T>(url: string, data: HttpBody, options = {}) =>
-  api<T>(url, 'PUT', data, options);
+export const apiPut = async <T>(
+  url: string,
+  data: HttpBody,
+  options = {},
+  notification = true,
+) => api<T>(url, 'PUT', data, options, notification);
 export const apiGet = async <T>(url: string, data: HttpBody, options = {}) =>
   api<T>(url, 'GET', data, options);

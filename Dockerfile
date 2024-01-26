@@ -23,7 +23,7 @@ ENV PATH=$PATH:/home/nodeuser/app/node_modules/.bin
 
 RUN yarn && yarn build && rm -r /home/nodeuser/app/node_modules
 
-# Serve the cloud-console build.
+# Serve the gc-admin build.
 FROM nginx:1.23
 
 # pick up any security updates

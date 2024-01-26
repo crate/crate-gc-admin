@@ -17,7 +17,7 @@ const Checkbox = React.forwardRef(
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
-      <div className="w-full flex">
+      <div className="w-full flex relative">
         <input
           className={cn(
             'peer relative appearance-none shrink-0 w-4 h-4',

@@ -23,6 +23,7 @@ describe('The "ScheduledJobForm" component', () => {
     setupAdd();
 
     expect(screen.getByRole('form')).toBeInTheDocument();
+    expect(screen.getByRole('form').getAttribute('id')).toBe('job-form');
 
     expect(screen.getByLabelText(/Job Name/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Job Name/)).toHaveValue('');
@@ -56,10 +57,12 @@ describe('The "ScheduledJobForm" component', () => {
       expect(screen.getByText('Schedule is a required field.')).toBeInTheDocument();
     });
 
-    it('gives validation error if filled with invalid CRON schedule format', async () => {
+    it('gives validation error if submitted with invalid CRON schedule format', async () => {
       const { user } = setupAdd();
 
       await user.type(screen.getByLabelText(/Schedule/), '*');
+
+      await user.click(screen.getByText('Save'));
 
       expect(screen.getByText('Invalid CRON schedule.')).toBeInTheDocument();
     });
