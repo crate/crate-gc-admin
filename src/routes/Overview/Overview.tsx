@@ -1,17 +1,17 @@
-import { Heading } from '@crate.io/crate-ui-components';
 import {
   useGetAllocations,
   useGetCluster,
   useGetQueryStats,
 } from '../../hooks/swrHooks.ts';
 import { useGCContext } from '../../contexts';
-import GCSpin from '../../components/GCSpin/GCSpin.tsx';
+import GCSpin from '../../components/GCSpin';
+import Heading from '../../components/Heading';
 import { Statistic, Tag } from 'antd';
 import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
 import { formatHumanReadable, formatNum } from '../../utils/numbers.ts';
 import GCChart from '../../components/GCChart/GCChart.tsx';
 import useSessionStore from '../../state/session.ts';
-import { STATS_PERIOD } from '../../components/StatsUpdater/StatsUpdater.tsx';
+import { STATS_PERIOD } from '../../components/StatsUpdater/StatsUpdater';
 
 function Overview() {
   const { load } = useSessionStore();

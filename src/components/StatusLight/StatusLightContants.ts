@@ -1,0 +1,13 @@
+export const AVAILABLE_LIGHT_COLORS = {
+  GREEN: 'GREEN',
+  YELLOW: 'YELLOW',
+  RED: 'RED',
+  GRAY: 'GRAY',
+};
+
+export const COLOR_STYLES_MAP = {
+  [AVAILABLE_LIGHT_COLORS.GREEN]: 'fill-green-400',
+  [AVAILABLE_LIGHT_COLORS.YELLOW]: 'fill-amber-400',
+  [AVAILABLE_LIGHT_COLORS.RED]: 'fill-red-400',
+  [AVAILABLE_LIGHT_COLORS.GRAY]: 'fill-neutral-400',
+};

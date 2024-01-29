@@ -1,8 +1,10 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
+import Button from '../../../components/Button';
 import Input from '../../../components/Input';
-import { Button, Text, Loader } from '@crate.io/crate-ui-components';
+import Loader from '../../../components/Loader';
 import Checkbox from '../../../components/Checkbox';
 import SQLEditor from '../../../components/SQLEditor/SQLEditor';
+import Text from '../../../components/Text';
 import { ApiOutput, apiPost, apiPut } from '../../../hooks/api';
 import { useCallback, useEffect, useState } from 'react';
 import { useGCContext } from '../../../contexts';

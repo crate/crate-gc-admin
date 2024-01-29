@@ -1,6 +1,6 @@
-import { Text } from '@crate.io/crate-ui-components';
-import cn from '../utils/cn';
 import React from 'react';
+import Text from '../components/Text';
+import cn from '../utils/cn';
 
 type CheckboxProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,

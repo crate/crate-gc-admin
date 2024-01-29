@@ -1,13 +1,12 @@
 /* @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './node_modules/@crate.io/crate-ui-components/**/*.{js,jsx,ts,tsx}',
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
         'crate-blue': '#00A6D1',
+        'crate-navigation-bg': '#262626',
+        'crate-navigation-fg': '#e5e5e5',
         'crate-green-1': '#9BF1AD',
         'crate-body-background': '#F1F1F1',
         'crate-border-dark': '#525252', // tailwind neutral-600

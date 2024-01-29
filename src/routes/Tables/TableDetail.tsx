@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button, Heading } from '@crate.io/crate-ui-components';
 import { Table, Tabs, Tag } from 'antd';
+import Button from '../../components/Button';
+import Heading from '../../components/Heading';
 import { useGCContext } from '../../contexts';
 import routes from '../../constants/routes';
 import { format as formatSQL } from 'sql-formatter';

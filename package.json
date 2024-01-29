@@ -1,6 +1,6 @@
 {
   "name": "@crate.io/crate-gc-admin",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "crate.io",
   "private": false,
   "type": "module",
@@ -21,7 +21,6 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@crate.io/crate-ui-components": "^0.1.33",
     "ace-builds": "^1.32.2",
     "antd": "^4.24.14",
     "clsx": "^2.1.0",
@@ -52,8 +51,6 @@
     "prepack": "yarn run build-lib",
     "test": "jest",
     "lint": "eslint --cache --ext=.ts --ext=.tsx src/",
-    "link-local-lib": "yarn link @crate.io/crate-ui-components && yarn link react && yarn unlink react-dom && yarn add link:../crate-ui-components",
-    "unlink-local-lib": "yarn remove @crate.io/crate-ui-components && yarn unlink @crate.io/crate-ui-components && yarn unlink react && yarn unlink react-dom && yarn add @crate.io/crate-ui-components",
     "link-local": "yarn link && cd node_modules/react && yarn link && cd ../react-dom && yarn link",
     "unlink-local": "yarn unlink && cd node_modules/react && yarn unlink && cd ../react-dom && yarn unlink"
   },

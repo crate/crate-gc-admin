@@ -1,8 +1,8 @@
 import React from 'react';
+import { Result } from 'antd';
+import Button from '../../components/Button';
 import { useGCContext } from '../../contexts';
 import { ConnectionStatus } from '../../utils/gc/connectivity';
-import { Result } from 'antd';
-import { Button } from '@crate.io/crate-ui-components';
 
 type EnterpriseScreenProps = {
   children: React.ReactElement;

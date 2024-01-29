@@ -1,5 +1,6 @@
-import { Button, Text } from '@crate.io/crate-ui-components';
 import { useState } from 'react';
+import Button from '../../components/Button';
+import Text from '../../components/Text';
 import { Job } from '../../types';
 import { useGCContext } from '../../contexts';
 import { ScheduledJobForm, ScheduledJobManager, ScheduledJobsTable } from './views';

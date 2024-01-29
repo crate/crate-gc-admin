@@ -1,4 +1,4 @@
-import { Text } from '@crate.io/crate-ui-components';
+import Text from '../../../components/Text';
 
 type Message = {
   keyName: string;

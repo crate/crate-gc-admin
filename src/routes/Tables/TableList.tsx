@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { StatusLight } from '@crate.io/crate-ui-components';
 import { Spin } from 'antd';
 import {
   CaretDownOutlined,
@@ -8,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import prettyBytes from 'pretty-bytes';
 import { useGCContext } from '../../contexts';
+import StatusLight from '../../components/StatusLight';
 import { TableListEntry } from '../../utils/queries';
 import { formatHumanReadable } from '../../utils/numbers.ts';
 import {

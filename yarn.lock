@@ -372,20 +372,6 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@crate.io/crate-ui-components@^0.1.33":
-  version "0.1.33"
-  resolved "https://registry.yarnpkg.com/@crate.io/crate-ui-components/-/crate-ui-components-0.1.33.tgz#5571b60b9aadb5c0773a1da984ce711e41c3b3a9"
-  integrity sha512-D+RlH7GUCdq1Z3+GXKBBnpnBKVqWSHwZIXeESpzNNUGOjSWK7CdGatb3Agr657bIlg2ETlDx9zUAdFjSO95NnQ==
-  dependencies:
-    antd "^4.24.14"
-    classnames "^2.5.1"
-    clsx "^2.1.0"
-    moment "^2.30.1"
-    react "^18.2.0"
-    react-dom "^18.2.0"
-    react-router-dom "^6.21.1"
-    tailwind-merge "^2.2.0"
-
 "@ctrl/tinycolor@^3.4.0", "@ctrl/tinycolor@^3.6.1":
   version "3.6.1"
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz#b6c75a56a1947cc916ea058772d666a2c8932f31"
@@ -2228,7 +2214,7 @@ cjs-module-lexer@^1.0.0:
   resolved "https://registry.npmjs.org/cjs-module-lexer/-/cjs-module-lexer-1.2.3.tgz#6c370ab19f8a3394e318fe682686ec0ac684d107"
   integrity sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==
 
-classnames@2.x, classnames@^2.2.1, classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6, classnames@^2.3.1, classnames@^2.3.2, classnames@^2.5.1:
+classnames@2.x, classnames@^2.2.1, classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6, classnames@^2.3.1, classnames@^2.3.2:
   version "2.5.1"
   resolved "https://registry.npmjs.org/classnames/-/classnames-2.5.1.tgz#ba774c614be0f016da105c858e7159eae8e7687b"
   integrity sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==

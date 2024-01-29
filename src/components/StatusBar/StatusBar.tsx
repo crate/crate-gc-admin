@@ -7,7 +7,7 @@ import {
   useGetTables,
 } from '../../hooks/swrHooks.ts';
 import { useGCContext } from '../../contexts';
-import { StatusLight } from '@crate.io/crate-ui-components';
+import StatusLight from '../../components/StatusLight';
 import { CloseOutlined, DownOutlined } from '@ant-design/icons';
 import { formatNum } from '../../utils/numbers.ts';
 import React, { useEffect, useState } from 'react';

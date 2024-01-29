@@ -1,8 +1,10 @@
 import React from 'react';
-import { CopyToClipboard, Heading, Text } from '@crate.io/crate-ui-components';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import ReactSyntaxHighlighter from 'react-syntax-highlighter';
 import CustomPreTag from './CustomPreTag';
+import CopyToClipboard from '../../components/CopyToClipboard';
+import Heading from '../../components/Heading';
+import Text from '../../components/Text';
 
 export type SyntaxHighlighterProps = {
   language?: string;
