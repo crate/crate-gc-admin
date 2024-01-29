@@ -63,8 +63,10 @@ export const useGetCurrentUserQuery = () => {
 export const useGetClusterInfoQuery = () => {
   const executeSql = useExecuteSql();
 
-  const getClusterInfo = async (): Promise<ClusterInfo | undefined> => {
-    const res = await executeSql('SELECT id, name, settings FROM sys.cluster');
+  return async (): Promise<ClusterInfo | undefined> => {
+    const res = await executeSql(
+      'SELECT id, name, master_node, settings FROM sys.cluster',
+    );
     if (!res.data || Array.isArray(res.data)) {
       return;
     }
@@ -72,11 +74,10 @@ export const useGetClusterInfoQuery = () => {
     return {
       id: row[0],
       name: row[1],
-      settings: row[2],
+      master: row[2],
+      settings: row[3],
     };
   };
-
-  return getClusterInfo;
 };
 
 export const useGetSchemasQuery = () => {
@@ -156,8 +157,8 @@ export const useGetNodesQuery = () => {
 
   const getNodes = async (): Promise<NodeStatusInfo[]> => {
     const res = await executeSql(
-      "SELECT id, name, hostname, heap, fs, os['cpu'] as cpu, load, version, process['cpu'] as cpu_usage, " +
-        "os_info['available_processors'] as available_processors FROM sys.nodes ORDER BY id",
+      "SELECT id, name, hostname, heap, fs, load, version, process['cpu']['percent'] as cpu_usage, " +
+        "os_info['available_processors'] as available_processors, rest_url, os_info, now(), attributes FROM sys.nodes ORDER BY name",
     );
 
     if (!res.data || Array.isArray(res.data)) {
@@ -171,11 +172,14 @@ export const useGetNodesQuery = () => {
         hostname: r[2],
         heap: r[3],
         fs: r[4],
-        cpu: r[5],
-        load: r[6],
-        version: r[7],
-        cpu_usage: r[8],
-        available_processors: r[9],
+        load: r[5],
+        version: r[6],
+        crate_cpu_usage: r[7],
+        available_processors: r[8],
+        rest_url: r[9],
+        os_info: r[10],
+        timestamp: r[11],
+        attributes: r[12],
       };
     });
   };

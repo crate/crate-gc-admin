@@ -1,6 +1,7 @@
 import { useGetNodeStatus } from '../../hooks/swrHooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useSessionStore from '../../state/session';
+import { NodeStatusInfo } from '../../types/cratedb';
 
 export const STATS_PERIOD = 15 * 60 * 1000;
 
@@ -11,13 +12,11 @@ function StatsUpdater() {
 
   This is so that we keep updating them in the background
    */
-  const { load } = useSessionStore();
+  const { load, fs_stats } = useSessionStore();
   const { data: nodes } = useGetNodeStatus();
+  const [previous, setPrevious] = useState<NodeStatusInfo[] | undefined>();
 
-  useEffect(() => {
-    if (!nodes || nodes.length == 0) {
-      return;
-    }
+  const updateLoad = (nodes: NodeStatusInfo[]) => {
     const max_ts = Math.max(...nodes.map(n => n.load.probe_timestamp));
     const reducer = (prev: number, current: number) => prev + current;
     const avg1 = nodes.map(s => s.load['1']).reduce(reducer) / nodes.length;
@@ -42,6 +41,43 @@ function StatsUpdater() {
     if (!last || nodeLoad.probe_timestamp > last.probe_timestamp) {
       load.push(nodeLoad);
     }
+  };
+
+  const updateFs = (nodes: NodeStatusInfo[]) => {
+    nodes.forEach(n => {
+      let stat = fs_stats[n.id];
+      if (!stat) {
+        stat = {
+          bps_read: 0,
+          bps_write: 0,
+          iops_read: 0,
+          iops_write: 0,
+        };
+      }
+      if (!previous) {
+        return;
+      }
+      const p = previous.find(p => p.id == n.id);
+      if (!p) {
+        return;
+      }
+      const diff_seconds = Math.floor((n.timestamp - p.timestamp) / 1000);
+      stat.iops_write = (n.fs.total.writes - p.fs.total.writes) / diff_seconds;
+      stat.iops_read = (n.fs.total.reads - p.fs.total.reads) / diff_seconds;
+      stat.bps_write =
+        (n.fs.total.bytes_written - p.fs.total.bytes_written) / diff_seconds;
+      stat.bps_read = (n.fs.total.bytes_read - p.fs.total.bytes_read) / diff_seconds;
+      fs_stats[n.id] = stat;
+    });
+  };
+
+  useEffect(() => {
+    if (!nodes || nodes.length == 0) {
+      return;
+    }
+    updateLoad(nodes);
+    updateFs(nodes);
+    setPrevious(nodes);
   }, [nodes]);
 
   return null;

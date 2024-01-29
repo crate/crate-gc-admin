@@ -2,13 +2,14 @@
 // currently used for API error notifications only
 
 import { create } from 'zustand';
-import { LoadAverage } from '../types/cratedb';
+import { FSStats, LoadAverage } from '../types/cratedb';
 
 type Notification = {
   type?: NotificationType;
   message: string;
   description?: string | React.ReactElement;
 };
+
 type SessionStore = {
   notification: Notification | null;
   clearNotification: () => void;
@@ -18,11 +19,13 @@ type SessionStore = {
     description?: string,
   ) => void;
   load: LoadAverage[];
+  fs_stats: { [key: string]: FSStats };
 };
 
 const initialState = {
   notification: null,
   load: [],
+  fs_stats: {},
 };
 
 export type NotificationType = 'error' | 'warn' | 'info';

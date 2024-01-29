@@ -34,6 +34,7 @@ type GCChartParams = {
   title: string;
   config: GCChartConfig;
   data: ValueType[] | undefined;
+  yFormatter?: (value: unknown) => string;
 };
 
 // I made these up completely. Please suggest better colours.
@@ -48,7 +49,7 @@ const colors = [
   'rgb(150 200 80)',
 ];
 
-function GCChart({ title, config, data }: GCChartParams) {
+function GCChart({ title, config, data, yFormatter }: GCChartParams) {
   const [showHide, setShowHide] = useState<object>({});
   let key = 0;
 
@@ -103,7 +104,7 @@ function GCChart({ title, config, data }: GCChartParams) {
         >
           <CartesianGrid strokeDasharray="1 1" />
           <XAxis dataKey={v => new Date(v.time).toLocaleTimeString()} />
-          <YAxis />
+          <YAxis tickFormatter={yFormatter} />
           <Tooltip />
           <Legend onClick={legendSelect} />
           {config?.areas?.map(area => {

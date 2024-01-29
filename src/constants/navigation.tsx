@@ -5,6 +5,7 @@ import {
   QuestionCircleOutlined,
   ToolOutlined,
   UserOutlined,
+  ClusterOutlined,
 } from '@ant-design/icons';
 
 export const topNavigation = [
@@ -24,6 +25,12 @@ export const topNavigation = [
     icon: <DatabaseOutlined />,
     label: <span>Tables</span>,
     path: '/tables',
+    type: 'internal' as const,
+  },
+  {
+    icon: <ClusterOutlined />,
+    label: <span>Nodes</span>,
+    path: '/nodes',
     type: 'internal' as const,
   },
   {
