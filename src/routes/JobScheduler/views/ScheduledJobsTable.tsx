@@ -1,9 +1,3 @@
-import {
-  Button,
-  CrateTable,
-  DisplayDate,
-  Text,
-} from '@crate.io/crate-ui-components';
 import { useState } from 'react';
 import { useGCContext } from '../../../contexts';
 import {
@@ -11,7 +5,11 @@ import {
   useGCGetScheduledJobs,
 } from '../../../hooks/swrHooks';
 import { apiDelete } from '../../../hooks/api';
-import { Loader } from '@crate.io/crate-ui-components';
+import Button from '../../../components/Button';
+import CrateTable from '../../../components/CrateTable';
+import DisplayDate from '../../../components/DisplayDate';
+import Loader from '../../../components/Loader';
+import Text from '../../../components/Text';
 import { cronParser } from '../../../utils/cron';
 import { Job, JobLog, TJobLogStatementError } from '../../../types';
 import {

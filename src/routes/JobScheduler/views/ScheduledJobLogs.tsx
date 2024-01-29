@@ -1,13 +1,11 @@
 import { useGCGetScheduledJobLogs } from '../../../hooks/swrHooks';
 import { useGCContext } from '../../../contexts';
-import {
-  Text,
-  Button,
-  CrateTable,
-  DisplayDate,
-  Loader,
-} from '@crate.io/crate-ui-components';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import Button from '../../../components/Button';
+import CrateTable from '../../../components/CrateTable';
+import DisplayDate from '../../../components/DisplayDate';
+import Loader from '../../../components/Loader';
+import Text from '../../../components/Text';
 import { Job, JobLog, TJobLogStatementError } from '../../../types';
 import { useState } from 'react';
 import QueryStackTraceModal from '../../../components/QueryStackTraceModal';

@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2024-01-29 - 0.3.0
+
 - Added responsive styling to the tables page.
+- Migrated components from crate-ui-components.
 
 ## 2024-01-26 - 0.2.1
 

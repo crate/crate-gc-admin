@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
+import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import { format as formatSQL } from 'sql-formatter';
-import { Button, Text } from '@crate.io/crate-ui-components';
 import { Ace } from 'ace-builds';
+import Button from '../../components/Button';
+import Text from '../../components/Text';
 import { QueryResults } from '../../utils/gc/executeSql';
-import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 import cn from '../../utils/cn';
 import { annotate } from './annotationUtils';
 

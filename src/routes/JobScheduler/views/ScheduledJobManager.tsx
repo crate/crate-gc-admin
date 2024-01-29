@@ -1,4 +1,4 @@
-import { CrateTabs } from '@crate.io/crate-ui-components';
+import CrateTabs from '../../../components/CrateTabs';
 import { Job } from '../../../types';
 import { ScheduledJobForm, ScheduledJobLogs } from '.';
 

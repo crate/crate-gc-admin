@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react';
-import SQLEditor from '../../components/SQLEditor/SQLEditor';
 import executeSql, { QueryResults } from '../../utils/gc/executeSql';
-import SQLResultsTable from '../../components/SQLResultsTable/SQLResultsTable';
+import Heading from '../../components/Heading';
+import Loader from '../../components/Loader';
+import SQLEditor from '../../components/SQLEditor/SQLEditor';
+import SQLResultsTable from '../../components/SQLResultsTable';
 import { useGCContext } from '../../contexts';
-import { Heading, Loader } from '@crate.io/crate-ui-components';
 
 function SQLConsole() {
   const { sqlUrl, headings } = useGCContext();

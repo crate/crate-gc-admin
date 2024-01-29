@@ -9,7 +9,7 @@ import {
   ComposedChart,
   Legend,
 } from 'recharts';
-import { Heading } from '@crate.io/crate-ui-components';
+import Heading from '../../components/Heading';
 import { useState } from 'react';
 import { Payload } from 'recharts/types/component/DefaultLegendContent';
 

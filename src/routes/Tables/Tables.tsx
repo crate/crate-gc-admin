@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Heading } from '@crate.io/crate-ui-components';
+import Heading from '../../components/Heading';
 import TableDetail from './TableDetail';
 import TableList from './TableList';
 import { TAILWIND_BREAKPOINT_MD } from '../../constants/defaults';

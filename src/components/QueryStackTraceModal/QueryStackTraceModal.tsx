@@ -1,6 +1,6 @@
 import { Modal } from 'antd';
+import Button from '../../components/Button';
 import SyntaxHighlighter from '../SyntaxHighlighter';
-import { Button } from '@crate.io/crate-ui-components';
 
 export type QueryStackTraceModalProps = {
   modalTitle: string;
