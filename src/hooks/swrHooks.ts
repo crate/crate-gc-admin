@@ -86,6 +86,9 @@ export const useGetCluster = () => {
     // We do not use the url as the swr key, because we'll have many of these SWR fetches from the same url
     `swr-fetch-cluster-info`,
     () => getClusterInfo(),
+    {
+      refreshInterval: 5000,
+    },
   );
 };
 

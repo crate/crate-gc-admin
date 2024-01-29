@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added a node page.
+
 ## 2024-02-08 - 0.4.6
 
 - Added help page.

@@ -9,17 +9,61 @@ export type LoadAverage = {
   probe_timestamp: number;
 };
 
+export type HeapUsage = {
+  used: number;
+  free: number;
+  max: number;
+  probe_timestamp: number;
+};
+
+export type JVMInfo = {
+  vm_vendor: string;
+  vm_version: string;
+  version: string;
+  vm_name: string;
+};
+
+export type OSInfo = {
+  available_processors: number;
+  name: string;
+  version: string;
+  arch: string;
+  jvm: JVMInfo;
+};
+
+export type FSStats = {
+  iops_read: number;
+  iops_write: number;
+  bps_read: number;
+  bps_write: number;
+};
+
+export type FSInfo = {
+  total: {
+    size: number;
+    available: number;
+    used: number;
+    bytes_written: number;
+    bytes_read: number;
+    reads: number;
+    writes: number;
+  };
+};
+
 export type NodeStatusInfo = {
   id: string;
   name: string;
   hostname: string;
-  heap: object;
-  fs: object;
-  cpu: object;
+  heap: HeapUsage;
+  fs: FSInfo;
   load: LoadAverage;
   version: NodeStatusInfoVersion;
-  cpu_usage: number;
+  crate_cpu_usage: number;
   available_processors: number;
+  rest_url: string;
+  os_info: OSInfo;
+  timestamp: number;
+  attributes: { [key: string]: string };
 };
 
 export type ClusterSettings = {
@@ -29,6 +73,7 @@ export type ClusterSettings = {
 export type ClusterInfo = {
   id: string;
   name: string;
+  master: string;
   settings: ClusterSettings;
 };
 
