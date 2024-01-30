@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-01-30 - 0.4.0
+
 - Added raw (unformatted) and CSV/JSON output to results table.
 - Showing UTC timestamps in Job Scheduler.
 
