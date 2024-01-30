@@ -1,6 +1,6 @@
 import SQLConsole from '../routes/SQLConsole/SQLConsole';
 import Users from '../routes/Users/Users';
-import EnterpriseScreen from '../components/EnterpriseScreen/EnterpriseScreen';
+import EnterpriseScreen from '../components/EnterpriseScreen';
 import Tables from '../routes/Tables';
 import { Route } from '../types';
 import ScheduledJobs from '../routes/JobScheduler';

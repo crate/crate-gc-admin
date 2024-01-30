@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading,react/button-has-type */
 import React, { useMemo } from 'react';
-import Loader from '../Loader/Loader';
+import Loader from '../Loader';
 import useButtonStyles from './useButtonStyles';
 import { BUTTON_INPUT_TYPES, BUTTON_KINDS, BUTTON_SIZES } from './ButtonConstants';
 import { ValueOf } from '../../types/utils';

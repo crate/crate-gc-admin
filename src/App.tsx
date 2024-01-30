@@ -8,7 +8,7 @@ import Layout from './components/Layout';
 import StatusBar from './components/StatusBar';
 import NotificationHandler from './components/NotificationHandler';
 import logo from './assets/logo.svg';
-import StatsUpdater from './components/StatsUpdater/StatsUpdater.tsx';
+import StatsUpdater from './components/StatsUpdater';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);

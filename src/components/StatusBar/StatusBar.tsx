@@ -12,7 +12,7 @@ import { CloseOutlined, DownOutlined } from '@ant-design/icons';
 import { formatNum } from '../../utils/numbers.ts';
 import React, { useEffect, useState } from 'react';
 import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
-import GCSpin from '../GCSpin/GCSpin.tsx';
+import GCSpin from '../GCSpin';
 import logo from '../../assets/logo.svg';
 import useSessionStore from '../../state/session.ts';
 

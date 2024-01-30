@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import executeSql, { QueryResults } from '../../utils/gc/executeSql';
 import Heading from '../../components/Heading';
 import Loader from '../../components/Loader';
-import SQLEditor from '../../components/SQLEditor/SQLEditor';
+import SQLEditor from '../../components/SQLEditor';
 import SQLResultsTable from '../../components/SQLResultsTable';
 import { useGCContext } from '../../contexts';
 

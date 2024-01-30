@@ -1,6 +1,6 @@
 import React from 'react';
-import Text from '../components/Text';
-import cn from '../utils/cn';
+import Text from '../Text';
+import cn from '../../utils/cn';
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,

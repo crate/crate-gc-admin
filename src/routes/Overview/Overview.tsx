@@ -9,7 +9,7 @@ import Heading from '../../components/Heading';
 import { Statistic, Tag } from 'antd';
 import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
 import { formatHumanReadable, formatNum } from '../../utils/numbers.ts';
-import GCChart from '../../components/GCChart/GCChart.tsx';
+import GCChart from '../../components/GCChart';
 import useSessionStore from '../../state/session.ts';
 import { STATS_PERIOD } from '../../components/StatsUpdater/StatsUpdater';
 

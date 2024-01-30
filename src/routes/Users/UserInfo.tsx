@@ -1,7 +1,7 @@
 import { getUserPermissions, User } from '../../utils/queries';
 import { useEffect, useState } from 'react';
 import { QueryResults } from '../../utils/gc/executeSql';
-import SQLResultsTable from '../../components/SQLResultsTable/SQLResultsTable';
+import SQLResultsTable from '../../components/SQLResultsTable';
 
 type Params = {
   url: string | undefined;

@@ -1,7 +1,5 @@
 import './index.css';
 
-// Export all routes
-export * from './routes';
-
-// Export all contexts
+export * from './components';
 export * from './contexts';
+export * from './routes';
