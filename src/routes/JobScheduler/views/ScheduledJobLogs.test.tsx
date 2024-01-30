@@ -125,7 +125,7 @@ describe('The "ScheduledJobLogs" component', () => {
 
         const log: JobLog = scheduledJobLogs[0];
 
-        const formattedDate = moment(log.end).format('MMMM Do YYYY, HH:mm');
+        const formattedDate = moment.utc(log.end).format('MMMM Do YYYY, HH:mm');
         expect(screen.getByText(formattedDate)).toBeInTheDocument();
       });
     });

@@ -149,7 +149,7 @@ describe('The "ScheduledJobsTable" component', () => {
 
         await waitForTableRender();
 
-        const formattedDate = moment(log.end).format('MMMM Do YYYY, HH:mm');
+        const formattedDate = moment.utc(log.end).format('MMMM Do YYYY, HH:mm');
         expect(screen.getByTestId('last-execution')).toHaveTextContent(
           formattedDate,
         );
@@ -206,9 +206,9 @@ describe('The "ScheduledJobsTable" component', () => {
 
         await waitForTableRender();
 
-        const formattedDate = moment(job.next_run_time).format(
-          'MMMM Do YYYY, HH:mm',
-        );
+        const formattedDate = moment
+          .utc(job.next_run_time)
+          .format('MMMM Do YYYY, HH:mm');
         expect(screen.getByText(formattedDate)).toBeInTheDocument();
       });
     });
