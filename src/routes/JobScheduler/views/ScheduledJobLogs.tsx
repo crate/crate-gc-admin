@@ -3,12 +3,12 @@ import { useGCContext } from '../../../contexts';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import Button from '../../../components/Button';
 import CrateTable from '../../../components/CrateTable';
-import DisplayDate from '../../../components/DisplayDate';
 import Loader from '../../../components/Loader';
 import Text from '../../../components/Text';
 import { Job, JobLog, TJobLogStatementError } from '../../../types';
 import { useState } from 'react';
 import QueryStackTraceModal from '../../../components/QueryStackTraceModal';
+import DisplayUTCDate from '../../../components/DisplayUTCDate';
 
 export type ScheduledJobLogsProps = {
   job: Job;
@@ -75,7 +75,7 @@ export default function ScheduledJobLogs({
               dataIndex: 'end',
               width: '30%',
               render: (lastExecuted: string) => {
-                return <DisplayDate isoDate={lastExecuted} />;
+                return <DisplayUTCDate isoDate={lastExecuted} tooltip />;
               },
             },
             {

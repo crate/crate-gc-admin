@@ -7,7 +7,6 @@ import {
 import { apiDelete } from '../../../hooks/api';
 import Button from '../../../components/Button';
 import CrateTable from '../../../components/CrateTable';
-import DisplayDate from '../../../components/DisplayDate';
 import Loader from '../../../components/Loader';
 import Text from '../../../components/Text';
 import { cronParser } from '../../../utils/cron';
@@ -20,6 +19,7 @@ import {
 } from '@ant-design/icons';
 import QueryStackTraceModal from '../../../components/QueryStackTraceModal';
 import { Popconfirm } from 'antd';
+import DisplayUTCDate from '../../../components/DisplayUTCDate';
 
 export const JOBS_TABLE_PAGE_SIZE = 5;
 
@@ -122,7 +122,9 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
                         <CheckCircleOutlined className="text-green-600" />
                       )}
                     </span>
-                    <DisplayDate isoDate={lastExecution.end} />
+
+                    <DisplayUTCDate isoDate={lastExecution.end} tooltip />
+
                     {inError && (
                       <Button
                         kind={Button.kinds.TERTIARY}
@@ -145,7 +147,11 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
             render: (nextRunTime?: string) => {
               return (
                 <Text>
-                  {nextRunTime ? <DisplayDate isoDate={nextRunTime} /> : 'n/a'}
+                  {nextRunTime ? (
+                    <DisplayUTCDate isoDate={nextRunTime} tooltip />
+                  ) : (
+                    'n/a'
+                  )}
                 </Text>
               );
             },
