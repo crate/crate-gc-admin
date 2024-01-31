@@ -46,4 +46,16 @@ describe('The "QueryStackTraceModal" component', () => {
 
     expect(onCloseSpy).toHaveBeenCalled();
   });
+
+  it('closes if the "x" button is clicked', async () => {
+    const { user } = setup();
+
+    await user.click(
+      screen
+        .getAllByRole('button')
+        .find(el => el.classList.contains('ant-modal-close'))!,
+    );
+
+    expect(onCloseSpy).toHaveBeenCalled();
+  });
 });

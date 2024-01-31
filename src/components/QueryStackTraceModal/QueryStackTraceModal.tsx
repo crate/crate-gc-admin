@@ -5,7 +5,7 @@ import SyntaxHighlighter from '../SyntaxHighlighter';
 export type QueryStackTraceModalProps = {
   modalTitle: string;
   visible?: boolean;
-  onClose?: () => void;
+  onClose: () => void;
   query: string;
   queryError: string;
 };
@@ -17,17 +17,12 @@ function QueryStackTraceModal({
   query,
   queryError,
 }: QueryStackTraceModalProps) {
-  const onOk = () => {
-    if (onClose) {
-      onClose();
-    }
-  };
-
   return (
     <Modal
       title={modalTitle}
       open={visible}
-      onOk={onOk}
+      onOk={onClose}
+      onCancel={onClose}
       width="80%"
       footer={
         <div>
