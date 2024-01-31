@@ -1,6 +1,6 @@
 import { render, screen } from '../../../test/testUtils';
 import StatusLight, { StatusLightProps } from './StatusLight';
-import { AVAILABLE_LIGHT_COLORS, COLOR_STYLES_MAP } from './StatusLightContants';
+import { AVAILABLE_LIGHT_COLORS, COLOR_STYLES_MAP } from './StatusLightConstants';
 
 const defaultProps = {
   color: AVAILABLE_LIGHT_COLORS.GREEN,

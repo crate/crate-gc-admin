@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2024-01-31 - 0.4.3
+
 - Fix close button in QueryStackTraceModal
+- Export missing StatusLight components and lookups.
 
 ## 2024-01-31 - 0.4.2
 

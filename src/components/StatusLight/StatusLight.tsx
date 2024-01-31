@@ -1,5 +1,5 @@
 import { Tooltip } from 'antd';
-import { AVAILABLE_LIGHT_COLORS, COLOR_STYLES_MAP } from './StatusLightContants';
+import { AVAILABLE_LIGHT_COLORS, COLOR_STYLES_MAP } from './StatusLightConstants';
 import Text from '../Text';
 import SolidLight from './SolidLight';
 import PulsingLight from './PulsingLight';

@@ -22,7 +22,13 @@ export { default as SQLEditor } from './SQLEditor';
 export { default as SQLResultsTable } from './SQLResultsTable';
 export { default as StatsUpdater } from './StatsUpdater';
 export { default as StatusBar } from './StatusBar';
-export { default as StatusLight } from './StatusLight';
+export {
+  default as StatusLight,
+  AVAILABLE_LIGHT_COLORS,
+  COLOR_STYLES_MAP,
+  PulsingLight,
+  SolidLight,
+} from './StatusLight';
 export { default as SubmitButtonGroup } from './SubmitButtonGroup';
 export { default as SyntaxHighlighter } from './SyntaxHighlighter';
 export { default as Text } from './Text';
