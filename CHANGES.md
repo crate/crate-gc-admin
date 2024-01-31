@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 2024-01-31 - 0.4.2
+
+- Export missing useButtonStyles function.
+
+## 2024-01-31 - 0.4.1
+
 - Export all components from this repo.
 
 ## 2024-01-30 - 0.4.0

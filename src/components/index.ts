@@ -1,4 +1,4 @@
-export { default as Button } from './Button';
+export { default as Button, useButtonStyles } from './Button';
 export { default as Checkbox } from './Checkbox';
 export { default as ConfirmDelete } from './ConfirmDelete';
 export { default as CopyToClipboard } from './CopyToClipboard';
