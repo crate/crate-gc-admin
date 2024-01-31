@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix close button in QueryStackTraceModal
+
 ## 2024-01-31 - 0.4.2
 
 - Export missing useButtonStyles function.
