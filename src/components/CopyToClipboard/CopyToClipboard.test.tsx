@@ -26,6 +26,7 @@ describe('the CopyToClipboard component', () => {
 
     expect(screen.getByTestId('copy-to-clipboard-button')).toBeInTheDocument();
   });
+
   describe('when the user clicks the button', () => {
     it('copies the text to the clipboard', async () => {
       const { user } = setup();

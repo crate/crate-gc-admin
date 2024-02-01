@@ -1,5 +1,6 @@
 export { default as Button, useButtonStyles } from './Button';
 export { default as Checkbox } from './Checkbox';
+export { default as Code } from './Code';
 export { default as ConfirmDelete } from './ConfirmDelete';
 export { default as CopyToClipboard } from './CopyToClipboard';
 export { default as CrateTable } from './CrateTable';
@@ -15,7 +16,7 @@ export { default as InfoModal } from './InfoModal';
 export { default as Layout } from './Layout';
 export { default as Loader } from './Loader';
 export { default as NoDataView } from './NoDataView';
-export { default as NotificationHandler } from './NotificationHandler';
+// export { default as NotificationHandler } from './NotificationHandler';  // do not export, specific to this repo
 export { default as QueryStackTraceModal } from './QueryStackTraceModal';
 export { default as RoundedIcon } from './RoundedIcon';
 export { default as SQLEditor } from './SQLEditor';
