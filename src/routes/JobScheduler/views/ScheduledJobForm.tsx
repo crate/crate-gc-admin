@@ -140,6 +140,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
       id="job-form"
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-4"
+      autoComplete="off"
     >
       <div className="flex flex-col md:grid md:grid-cols-12 gap-2 md:gap-4">
         <div className="col-span-5 flex flex-col gap-2">
@@ -165,6 +166,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
             label={'Schedule'}
             placeholder="* * * * *"
             error={errors.cron && errors.cron.message}
+            info="All jobs are scheduled in UTC time."
           />
 
           <Text

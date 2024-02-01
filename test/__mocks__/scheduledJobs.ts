@@ -49,6 +49,14 @@ const scheduledJobs: Job[] = [
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'select 4;',
   },
-];
+].sort((a: Job, b: Job) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;
+});
 
 export default scheduledJobs;

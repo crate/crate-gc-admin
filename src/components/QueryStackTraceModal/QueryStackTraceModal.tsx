@@ -1,12 +1,14 @@
 import { Modal } from 'antd';
 import Button from '../../components/Button';
 import SyntaxHighlighter from '../SyntaxHighlighter';
+import DisplayUTCDate from '../DisplayUTCDate';
 
 export type QueryStackTraceModalProps = {
   modalTitle: string;
   visible?: boolean;
   onClose: () => void;
   query: string;
+  timestamp: string;
   queryError: string;
 };
 
@@ -16,6 +18,7 @@ function QueryStackTraceModal({
   onClose,
   query,
   queryError,
+  timestamp,
 }: QueryStackTraceModalProps) {
   return (
     <Modal
@@ -31,7 +34,14 @@ function QueryStackTraceModal({
       }
     >
       <div className="max-h-[400px] overflow-auto flex flex-col gap-4">
-        <SyntaxHighlighter language="sql" title="Failed Query Execution">
+        <SyntaxHighlighter
+          language="sql"
+          title={
+            <>
+              Failed Query Execution (<DisplayUTCDate isoDate={timestamp} tooltip />)
+            </>
+          }
+        >
           {query}
         </SyntaxHighlighter>
         <SyntaxHighlighter title="Stack Trace">{queryError}</SyntaxHighlighter>
