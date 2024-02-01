@@ -26,10 +26,11 @@ export default function ScheduledJobLogs({
     gcUrl!,
     job,
   );
-  const [errorDialogContent, setErrorDialogContent] =
-    useState<TJobLogStatementError | null>(null);
+  const [errorDialogContent, setErrorDialogContent] = useState<
+    (TJobLogStatementError & { timestamp: string }) | null
+  >(null);
 
-  const openErrorDialog = (error: TJobLogStatementError) => {
+  const openErrorDialog = (error: TJobLogStatementError & { timestamp: string }) => {
     setErrorDialogContent(error);
   };
 
@@ -54,7 +55,7 @@ export default function ScheduledJobLogs({
             {
               title: <span className="font-bold">Status</span>,
               key: 'status',
-              width: '20%',
+              width: 100,
               render: (log: JobLog) => {
                 const logInError = log.error !== null;
 
@@ -73,7 +74,7 @@ export default function ScheduledJobLogs({
               title: <span className="font-bold">Last Executed</span>,
               key: 'last_executed',
               dataIndex: 'end',
-              width: '30%',
+              width: 250,
               render: (lastExecuted: string) => {
                 return <DisplayUTCDate isoDate={lastExecuted} tooltip />;
               },
@@ -82,7 +83,6 @@ export default function ScheduledJobLogs({
               title: <span className="font-bold">Error</span>,
               key: 'error',
               ellipsis: true,
-              width: '50%',
               render: (log: JobLog) => {
                 if (log.error) {
                   return (
@@ -92,7 +92,14 @@ export default function ScheduledJobLogs({
                         kind={Button.kinds.TERTIARY}
                         className="flex"
                         onClick={() => {
-                          openErrorDialog(log.statements['0']);
+                          const keyInError = Object.keys(log.statements)
+                            .sort()
+                            .slice(-1)
+                            .pop();
+                          openErrorDialog({
+                            ...log.statements[keyInError!],
+                            timestamp: log.start,
+                          });
                         }}
                       >
                         See Details
@@ -132,8 +139,9 @@ export default function ScheduledJobLogs({
           visible={errorDialogContent !== null}
           modalTitle="Error Details"
           onClose={closeErrorDialog}
-          query={errorDialogContent.sql}
-          queryError={errorDialogContent.error}
+          query={errorDialogContent.sql.trim()}
+          queryError={errorDialogContent.error.trim()}
+          timestamp={errorDialogContent.timestamp}
         />
       )}
     </>

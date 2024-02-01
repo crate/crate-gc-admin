@@ -14,11 +14,15 @@ import {
 } from '../utils/queries.ts';
 
 export const useGCGetScheduledJobs = (url: string) => {
-  return useSWR<Job[]>(`${url}/api/scheduled-jobs/`, swrCORSFetch);
+  return useSWR<Job[]>(`${url}/api/scheduled-jobs/`, swrCORSFetch, {
+    refreshInterval: 10 * 1000,
+  });
 };
 
 export const useGCGetScheduledJobLogs = (url: string, job: Job) => {
-  return useSWR<JobLog[]>(`${url}/api/scheduled-jobs/${job.id}/log`, swrCORSFetch);
+  return useSWR<JobLog[]>(`${url}/api/scheduled-jobs/${job.id}/log`, swrCORSFetch, {
+    refreshInterval: 10 * 1000,
+  });
 };
 
 // NOTE: This Hook will be removed when API will return the last_execution

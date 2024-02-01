@@ -28,8 +28,9 @@ export type ScheduledJobsTableProps = {
 };
 
 export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps) {
-  const [errorDialogContent, setErrorDialogContent] =
-    useState<TJobLogStatementError | null>(null);
+  const [errorDialogContent, setErrorDialogContent] = useState<
+    (TJobLogStatementError & { timestamp: string }) | null
+  >(null);
   const [showLoaderDelete, setShowLoaderDelete] = useState(false);
   const { gcUrl } = useGCContext();
   const {
@@ -67,7 +68,15 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
   return (
     <div className="w-full overflow-x-a">
       <CrateTable
-        dataSource={scheduledJobsEnriched}
+        dataSource={scheduledJobsEnriched.sort((a: Job, b: Job) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        })}
         columns={[
           {
             title: <span className="font-bold">Active</span>,
@@ -109,27 +118,44 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
             render: (lastExecution?: JobLog) => {
               if (lastExecution) {
                 const inError = lastExecution.error !== null;
+                const isRunning = lastExecution.end === null;
 
                 return (
                   <Text
                     className={'flex gap-2 items-center'}
                     testId="last-execution"
                   >
-                    <span className="text-lg" data-testid="last-execution-icon">
+                    <span
+                      className="text-lg flex items-center justify-center"
+                      data-testid="last-execution-icon"
+                    >
                       {inError ? (
                         <CloseCircleOutlined className="text-red-600" />
+                      ) : isRunning ? (
+                        <Loader size={Loader.sizes.SMALL} />
                       ) : (
                         <CheckCircleOutlined className="text-green-600" />
                       )}
                     </span>
 
-                    <DisplayUTCDate isoDate={lastExecution.end} tooltip />
+                    {!isRunning ? (
+                      <DisplayUTCDate isoDate={lastExecution.end} tooltip />
+                    ) : (
+                      'Running...'
+                    )}
 
                     {inError && (
                       <Button
                         kind={Button.kinds.TERTIARY}
                         onClick={() => {
-                          setErrorDialogContent(lastExecution.statements['0']);
+                          const keyInError = Object.keys(lastExecution.statements)
+                            .sort()
+                            .slice(-1)
+                            .pop();
+                          setErrorDialogContent({
+                            ...lastExecution.statements[keyInError!],
+                            timestamp: lastExecution.start,
+                          });
                         }}
                       >
                         Error
@@ -144,10 +170,10 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
             title: <span className="font-bold">Next Due</span>,
             key: 'next_run_time',
             dataIndex: 'next_run_time',
-            render: (nextRunTime?: string) => {
+            render: (nextRunTime: string | undefined, job: Job) => {
               return (
                 <Text>
-                  {nextRunTime ? (
+                  {nextRunTime && job.enabled ? (
                     <DisplayUTCDate isoDate={nextRunTime} tooltip />
                   ) : (
                     'n/a'
@@ -198,8 +224,9 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
           visible={errorDialogContent !== null}
           modalTitle="Error Details"
           onClose={closeErrorDialog}
-          query={errorDialogContent.sql}
-          queryError={errorDialogContent.error}
+          query={errorDialogContent.sql.trim()}
+          queryError={errorDialogContent.error.trim()}
+          timestamp={errorDialogContent.timestamp}
         />
       )}
     </div>

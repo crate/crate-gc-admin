@@ -12,6 +12,7 @@ const defaultProps: QueryStackTraceModalProps = {
   onClose: onCloseSpy,
   query: 'SELECT 1;',
   queryError: 'ERROR_DETAIL',
+  timestamp: '2024-01-19T07:58:00.033000+00:00',
 };
 
 const setup = (
