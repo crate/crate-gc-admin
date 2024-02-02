@@ -1,4 +1,4 @@
-import { ColumnType } from '../../utils/gc/executeSql.ts';
+import { ColumnType } from '../../types/query';
 
 export const dbTypeToHumanReadable = (tp: ColumnType | ColumnType[] | undefined) => {
   // Array types are represented as [100, 1]

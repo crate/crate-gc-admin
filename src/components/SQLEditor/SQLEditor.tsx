@@ -8,9 +8,9 @@ import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
 import Button from '../../components/Button';
 import Text from '../../components/Text';
-import { QueryResults } from '../../utils/gc/executeSql';
 import cn from '../../utils/cn';
 import { annotate } from './annotationUtils';
+import { QueryResults } from '../../types/query';
 
 type SQLEditorProps = {
   value?: string | undefined | null;

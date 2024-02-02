@@ -2,25 +2,23 @@ import {
   useGetAllocations,
   useGetCluster,
   useGetQueryStats,
-} from '../../hooks/swrHooks.ts';
-import { useGCContext } from '../../contexts';
+} from '../../hooks/swrHooks';
 import GCSpin from '../../components/GCSpin';
 import Heading from '../../components/Heading';
 import { Statistic, Tag } from 'antd';
-import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
-import { formatHumanReadable, formatNum } from '../../utils/numbers.ts';
+import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks';
+import { formatHumanReadable, formatNum } from '../../utils/numbers';
 import GCChart from '../../components/GCChart';
-import useSessionStore from '../../state/session.ts';
+import useSessionStore from '../../state/session';
 import { STATS_PERIOD } from '../../components/StatsUpdater/StatsUpdater';
 
 function Overview() {
   const { load } = useSessionStore();
 
-  const { sqlUrl } = useGCContext();
-  const { data: cluster } = useGetCluster(sqlUrl);
+  const { data: cluster } = useGetCluster();
 
-  const { data: allocations } = useGetAllocations(sqlUrl);
-  const { data: queryStats } = useGetQueryStats(sqlUrl);
+  const { data: allocations } = useGetAllocations();
+  const { data: queryStats } = useGetQueryStats();
 
   const clusterStatus = getClusterStatus(allocations);
 

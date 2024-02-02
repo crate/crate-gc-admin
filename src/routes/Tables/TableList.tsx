@@ -6,19 +6,14 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 import prettyBytes from 'pretty-bytes';
-import { useGCContext } from '../../contexts';
 import StatusLight from '../../components/StatusLight';
-import { TableListEntry } from '../../utils/queries';
-import { formatHumanReadable } from '../../utils/numbers.ts';
-import {
-  useGetShards,
-  useGetTables,
-  useGetAllocations,
-} from '../../hooks/swrHooks.ts';
+import { formatHumanReadable } from '../../utils/numbers';
+import { useGetShards, useGetTables, useGetAllocations } from '../../hooks/swrHooks';
 import {
   tablesWithMissingPrimaryReplicas,
   tablesWithUnassignedShards,
-} from '../../utils/statusChecks.ts';
+} from '../../utils/statusChecks';
+import { TableListEntry } from '../../types/cratedb';
 
 function TableList({
   setActiveTable,
@@ -27,14 +22,13 @@ function TableList({
   setActiveTable: (table: TableListEntry | undefined) => void;
   systemSchemas: string[];
 }) {
-  const { sqlUrl } = useGCContext();
   const [expandedSchemas, setExpandedSchemas] = useState<string[] | undefined>();
   const [schemas, setSchemas] = useState<string[]>([]);
   const [filter, setFilter] = useState<string>('');
   const [filterFocused, setFilterFocused] = useState<boolean>(false);
-  const { data: tables } = useGetTables(sqlUrl);
-  const { data: shards } = useGetShards(sqlUrl);
-  const { data: allocations } = useGetAllocations(sqlUrl);
+  const { data: tables } = useGetTables();
+  const { data: shards } = useGetShards();
+  const { data: allocations } = useGetAllocations();
   const missingReplicasTables = tablesWithMissingPrimaryReplicas(allocations);
   const unassignedShardTables = tablesWithUnassignedShards(allocations);
 

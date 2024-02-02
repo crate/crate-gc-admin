@@ -1,10 +1,10 @@
 import { Radio, Table, Tabs } from 'antd';
 import _ from 'lodash';
-import { ColumnType, QueryResult, QueryResults } from '../../utils/gc/executeSql';
 import TypeAwareValue from './TypeAwareValue/TypeAwareValue.tsx';
-import { dbTypeToHumanReadable } from './utils.ts';
+import { dbTypeToHumanReadable } from './utils';
 import React, { useState } from 'react';
 import Papa from 'papaparse';
+import { ColumnType, QueryResult, QueryResults } from '../../types/query';
 
 type Params = {
   results: QueryResults | undefined;

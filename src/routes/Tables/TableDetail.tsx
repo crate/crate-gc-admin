@@ -4,15 +4,13 @@ import { LeftOutlined } from '@ant-design/icons';
 import { Table, Tabs, Tag } from 'antd';
 import Button from '../../components/Button';
 import Heading from '../../components/Heading';
-import { useGCContext } from '../../contexts';
 import routes from '../../constants/routes';
 import { format as formatSQL } from 'sql-formatter';
 import {
-  getTableInformation,
-  showCreateTable,
-  TableInfo,
-  TableListEntry,
-} from '../../utils/queries';
+  useGetTableInformationQuery,
+  useShowCreateTableQuery,
+} from '../../hooks/queryHooks';
+import { TableInfo, TableListEntry } from '../../types/cratedb';
 
 function TableDetail({
   activeTable,
@@ -23,7 +21,8 @@ function TableDetail({
   setActiveTable: (table: TableListEntry | undefined) => void;
   systemSchemas: string[];
 }) {
-  const { sqlUrl } = useGCContext();
+  const getTableInformation = useGetTableInformationQuery();
+  const showCreateTable = useShowCreateTableQuery();
   const [activeTableInfo, setActiveTableInfo] = useState<TableInfo[] | undefined>();
   const [createTableSQL, setCreateTableSQL] = useState<string | undefined>();
 
@@ -33,16 +32,14 @@ function TableDetail({
       return;
     }
 
-    getTableInformation(
-      sqlUrl,
-      activeTable.table_schema,
-      activeTable.table_name,
-    ).then(setActiveTableInfo);
+    getTableInformation(activeTable.table_schema, activeTable.table_name).then(
+      setActiveTableInfo,
+    );
 
     setCreateTableSQL(undefined);
     if (!systemSchemas.includes(activeTable.table_schema)) {
-      showCreateTable(sqlUrl, activeTable.table_schema, activeTable.table_name).then(
-        res => setCreateTableSQL(res ? formatSQL(res) : undefined),
+      showCreateTable(activeTable.table_schema, activeTable.table_name).then(res =>
+        setCreateTableSQL(res ? formatSQL(res) : undefined),
       );
     }
   }, [activeTable]);

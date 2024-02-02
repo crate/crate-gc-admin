@@ -1,7 +1,7 @@
-import { ColumnType } from '../../../utils/gc/executeSql.ts';
-import JSONTree from '../JSONTree/JSONTree.tsx';
+import JSONTree from '../JSONTree/JSONTree';
 import wrap from 'word-wrap';
 import { LinkOutlined } from '@ant-design/icons';
+import { ColumnType } from '../../../types/query';
 
 export type TypeAwareValueParams = {
   value: unknown;

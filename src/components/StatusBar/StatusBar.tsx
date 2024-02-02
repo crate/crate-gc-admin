@@ -5,27 +5,25 @@ import {
   useGetNodeStatus,
   useGetShards,
   useGetTables,
-} from '../../hooks/swrHooks.ts';
-import { useGCContext } from '../../contexts';
+} from '../../hooks/swrHooks';
 import StatusLight from '../../components/StatusLight';
 import { CloseOutlined, DownOutlined } from '@ant-design/icons';
-import { formatNum } from '../../utils/numbers.ts';
+import { formatNum } from '../../utils/numbers';
 import React, { useEffect, useState } from 'react';
-import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks.ts';
+import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks';
 import GCSpin from '../GCSpin';
 import logo from '../../assets/logo.svg';
-import useSessionStore from '../../state/session.ts';
+import useSessionStore from '../../state/session';
 
 function StatusBar() {
   const [mobileVisible, setMobileVisible] = useState(false);
-  const { sqlUrl } = useGCContext();
   const { load } = useSessionStore();
-  const { data: nodeStatus } = useGetNodeStatus(sqlUrl);
-  const { data: currentUser } = useGetCurrentUser(sqlUrl);
-  const { data: cluster } = useGetCluster(sqlUrl);
-  const { data: tables } = useGetTables(sqlUrl);
-  const { data: shards } = useGetShards(sqlUrl);
-  const { data: allocations } = useGetAllocations(sqlUrl);
+  const { data: nodeStatus } = useGetNodeStatus();
+  const { data: currentUser } = useGetCurrentUser();
+  const { data: cluster } = useGetCluster();
+  const { data: tables } = useGetTables();
+  const { data: shards } = useGetShards();
+  const { data: allocations } = useGetAllocations();
 
   // hide the mobile overlay on any window resize
   useEffect(() => {

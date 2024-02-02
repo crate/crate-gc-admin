@@ -1,5 +1,4 @@
 import { useGCGetScheduledJobLogs } from '../../../hooks/swrHooks';
-import { useGCContext } from '../../../contexts';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import Button from '../../../components/Button';
 import CrateTable from '../../../components/CrateTable';
@@ -21,11 +20,8 @@ export default function ScheduledJobLogs({
   job,
   backToJobList,
 }: ScheduledJobLogsProps) {
-  const { gcUrl } = useGCContext();
-  const { data: jobLogs, isLoading: isLoadingJobLogs } = useGCGetScheduledJobLogs(
-    gcUrl!,
-    job,
-  );
+  const { data: jobLogs, isLoading: isLoadingJobLogs } =
+    useGCGetScheduledJobLogs(job);
   const [errorDialogContent, setErrorDialogContent] = useState<
     (TJobLogStatementError & { timestamp: string }) | null
   >(null);

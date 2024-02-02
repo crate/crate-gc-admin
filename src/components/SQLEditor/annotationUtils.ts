@@ -1,5 +1,5 @@
 import { Ace } from 'ace-builds';
-import { QueryResults } from '../../utils/gc/executeSql';
+import { QueryResults } from '../../types/query';
 
 export const annotate = (
   ace: Ace.Editor,

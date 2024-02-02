@@ -1,7 +1,6 @@
-import { useGCContext } from '../../contexts';
-import { useGetNodeStatus } from '../../hooks/swrHooks.ts';
+import { useGetNodeStatus } from '../../hooks/swrHooks';
 import { useEffect } from 'react';
-import useSessionStore from '../../state/session.ts';
+import useSessionStore from '../../state/session';
 
 export const STATS_PERIOD = 15 * 60 * 1000;
 
@@ -12,9 +11,8 @@ function StatsUpdater() {
 
   This is so that we keep updating them in the background
    */
-  const { sqlUrl } = useGCContext();
   const { load } = useSessionStore();
-  const { data: nodes } = useGetNodeStatus(sqlUrl);
+  const { data: nodes } = useGetNodeStatus();
 
   useEffect(() => {
     if (!nodes || nodes.length == 0) {

@@ -1,7 +1,10 @@
-export default async (resource: RequestInfo | URL) => {
-  const res = await fetch(resource, {
-    credentials: 'include',
-    mode: 'cors',
-  });
-  return res.json();
+import type { AxiosInstance } from 'axios';
+
+export default (axiosInstance: AxiosInstance) => {
+  return async (url: string) => {
+    const res = await axiosInstance.get(url, {
+      withCredentials: true,
+    });
+    return res.data;
+  };
 };

@@ -13,8 +13,10 @@ describe('The "JobScheduler" component', () => {
     await screen.findByRole('table');
   });
 
-  it('renders an "Add New Job" button', () => {
+  it('renders an "Add New Job" button', async () => {
     setup();
+
+    await screen.findByRole('table');
 
     expect(screen.getByText('Add New Job')).toBeInTheDocument();
   });
@@ -22,6 +24,8 @@ describe('The "JobScheduler" component', () => {
   describe('the "Add New Job" button', () => {
     it('opens the "ScheduledJobForm" form with type = add', async () => {
       const { user } = setup();
+
+      await screen.findByRole('table');
 
       await user.click(screen.getByText('Add New Job'));
 

@@ -1,18 +1,19 @@
-import { getUserPermissions, User } from '../../utils/queries';
 import { useEffect, useState } from 'react';
-import { QueryResults } from '../../utils/gc/executeSql';
 import SQLResultsTable from '../../components/SQLResultsTable';
+import { useGetUserPermissionsQuery } from '../../hooks/queryHooks';
+import { User } from '../../types/cratedb';
+import { QueryResults } from '../../types/query';
 
 type Params = {
-  url: string | undefined;
   user: User;
 };
 
-function UserInfo({ url, user }: Params) {
+function UserInfo({ user }: Params) {
+  const getUserPermissions = useGetUserPermissionsQuery();
   const [result, setResult] = useState<QueryResults>();
 
   useEffect(() => {
-    getUserPermissions(url, user.name).then(res => {
+    getUserPermissions(user.name).then(res => {
       if (res.data) {
         setResult(res.data);
       }

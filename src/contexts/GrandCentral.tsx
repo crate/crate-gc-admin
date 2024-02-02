@@ -3,17 +3,16 @@ import { ConnectionStatus } from '../utils/gc/connectivity';
 
 type GCContextType = {
   gcStatus: ConnectionStatus;
-  gcUrl: string | undefined;
-  crateUrl: string | undefined;
-  sqlUrl: string | undefined;
+  gcUrl?: string;
+  crateUrl?: string;
   headings?: boolean;
+  onGcApiJwtExpire?: () => Promise<void>;
 };
 
-const defaultProps = {
+const defaultProps: GCContextType = {
   gcStatus: ConnectionStatus.PENDING,
   gcUrl: process.env.REACT_APP_GRAND_CENTRAL_URL,
-  crateUrl: 'http://localhost:4200',
-  sqlUrl: undefined,
+  crateUrl: undefined,
   headings: true,
 };
 

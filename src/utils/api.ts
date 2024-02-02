@@ -1,8 +1,9 @@
 import useSessionStore, { NotificationType } from '../state/session';
+import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export type HttpMethod = 'DELETE' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'GET';
 type HttpBody = unknown;
-type HttpOptions = RequestInit;
+type HttpOptions = AxiosRequestConfig;
 
 export type ApiOutput<T> = {
   success: boolean;
@@ -16,15 +17,17 @@ const dispatchNotification = (type: NotificationType, message: string) => {
 };
 
 const api = async <T>(
+  instance: AxiosInstance,
   url: string,
   method: HttpMethod,
   data: HttpBody,
   options: HttpOptions = {},
   notification = true,
 ): Promise<ApiOutput<T>> => {
-  const response = await fetch(url, {
+  const response = await instance<T>({
     method,
-    body: data ? JSON.stringify(data) : null,
+    url,
+    data,
     headers: data
       ? {
           'Content-Type': 'application/json; charset=utf-8',
@@ -33,17 +36,13 @@ const api = async <T>(
     ...options,
   });
 
-  // update the output depending on the result of the fetch()
-  let outputData: T | null = null;
+  const responseOk = response.status >= 200 && response.status < 300;
 
-  try {
-    outputData = (await response.json()) as T;
-  } catch (error) {
-    // API returned an empty response: do nothing
-  }
+  // update the output depending on the result of the fetch()
+  const outputData: T | null = response.data || null;
 
   const output: ApiOutput<T> = {
-    success: response.ok,
+    success: responseOk,
     status: response.status,
     data: outputData,
   };
@@ -54,7 +53,7 @@ const api = async <T>(
     return output;
   }
 
-  if (!response.ok && notification) {
+  if (!responseOk && notification) {
     if (response.status === 404) {
       dispatchNotification('error', 'The requested resource was not found. ');
     } else if (response.status >= 500) {
@@ -78,23 +77,41 @@ const api = async <T>(
 };
 
 // exported functions
-export const apiDelete = async <T>(url: string, data: HttpBody, options = {}) =>
-  api<T>(url, 'DELETE', data, options);
-export const apiHead = async <T>(url: string, data: HttpBody, options = {}) =>
-  api<T>(url, 'HEAD', data, options);
-export const apiPatch = async <T>(url: string, data: HttpBody, options = {}) =>
-  api<T>(url, 'PATCH', data, options);
+export const apiDelete = async <T>(
+  instance: AxiosInstance,
+  url: string,
+  data: HttpBody,
+  options = {},
+) => api<T>(instance, url, 'DELETE', data, options);
+export const apiHead = async <T>(
+  instance: AxiosInstance,
+  url: string,
+  data: HttpBody,
+  options = {},
+) => api<T>(instance, url, 'HEAD', data, options);
+export const apiPatch = async <T>(
+  instance: AxiosInstance,
+  url: string,
+  data: HttpBody,
+  options = {},
+) => api<T>(instance, url, 'PATCH', data, options);
 export const apiPost = async <T>(
+  instance: AxiosInstance,
   url: string,
   data: HttpBody,
   options = {},
   notification = true,
-) => api<T>(url, 'POST', data, options, notification);
+) => api<T>(instance, url, 'POST', data, options, notification);
 export const apiPut = async <T>(
+  instance: AxiosInstance,
   url: string,
   data: HttpBody,
   options = {},
   notification = true,
-) => api<T>(url, 'PUT', data, options, notification);
-export const apiGet = async <T>(url: string, data: HttpBody, options = {}) =>
-  api<T>(url, 'GET', data, options);
+) => api<T>(instance, url, 'PUT', data, options, notification);
+export const apiGet = async <T>(
+  instance: AxiosInstance,
+  url: string,
+  data: HttpBody,
+  options = {},
+) => api<T>(instance, url, 'GET', data, options);

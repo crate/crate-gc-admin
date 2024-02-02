@@ -28,8 +28,7 @@ const render = (ui: React.ReactElement, { ...options } = {}): RenderType => {
         >
           <GCContextProvider
             gcUrl={gcUrl}
-            sqlUrl={`${gcUrl}/api/_sql?multi=true&types`}
-            crateUrl={undefined}
+            crateUrl={'CRATE_URL'}
             gcStatus={ConnectionStatus.CONNECTED}
             headings
           >
