@@ -113,12 +113,14 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
           },
           {
             title: <span className="font-bold">Last Execution</span>,
-            key: 'last_execution',
-            dataIndex: 'last_execution',
-            render: (lastExecution?: JobLog) => {
-              if (lastExecution) {
+            key: 'last_executions',
+            dataIndex: 'last_executions',
+            render: (lastExecutions?: JobLog[]) => {
+              const lastExecution = lastExecutions?.filter(
+                log => log.end !== null,
+              )[0];
+              if (lastExecution && lastExecution.end !== null) {
                 const inError = lastExecution.error !== null;
-                const isRunning = lastExecution.end === null;
 
                 return (
                   <Text
@@ -131,18 +133,12 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
                     >
                       {inError ? (
                         <CloseCircleOutlined className="text-red-600" />
-                      ) : isRunning ? (
-                        <Loader size={Loader.sizes.SMALL} />
                       ) : (
                         <CheckCircleOutlined className="text-green-600" />
                       )}
                     </span>
 
-                    {!isRunning ? (
-                      <DisplayUTCDate isoDate={lastExecution.end} tooltip />
-                    ) : (
-                      'Running...'
-                    )}
+                    <DisplayUTCDate isoDate={lastExecution.end} tooltip />
 
                     {inError && (
                       <Button
@@ -171,9 +167,16 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
             key: 'next_run_time',
             dataIndex: 'next_run_time',
             render: (nextRunTime: string | undefined, job: Job) => {
+              const isRunning =
+                job.last_executions && job.last_executions[0].end === null;
+
               return (
                 <Text>
-                  {nextRunTime && job.enabled ? (
+                  {isRunning ? (
+                    <>
+                      <Loader size={Loader.sizes.SMALL} /> Running...
+                    </>
+                  ) : nextRunTime && job.enabled ? (
                     <DisplayUTCDate isoDate={nextRunTime} tooltip />
                   ) : (
                     'n/a'

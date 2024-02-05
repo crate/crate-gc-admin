@@ -201,7 +201,7 @@ describe('The "ScheduledJobsTable" component', () => {
         server.use(customScheduledJobGetResponse([job]));
       });
 
-      it('displays the next due timestamp', async () => {
+      it('displays the next due timestamp for non-running jobs', async () => {
         setup();
 
         await waitForTableRender();
@@ -210,6 +210,18 @@ describe('The "ScheduledJobsTable" component', () => {
           .utc(job.next_run_time)
           .format('MMMM Do YYYY, HH:mm');
         expect(screen.getByText(formattedDate)).toBeInTheDocument();
+      });
+
+      it('displays "Running" for running jobs', async () => {
+        const log: JobLog = {
+          ...scheduledJobLogs[0],
+          end: null,
+        };
+        server.use(customScheduledJobLogsGetResponse([log]));
+        setup();
+
+        await waitForTableRender();
+        expect(screen.getByText('Running...')).toBeInTheDocument();
       });
     });
 

@@ -32,22 +32,23 @@ export const useGCGetScheduledJobLastLogs = (url: string, jobs: Job[]) => {
   useEffect(() => {
     const promises = jobs.map(async (job: Job) => {
       const lastLog = await apiGet<JobLog[]>(
-        `${url}/api/scheduled-jobs/${job.id}/log?limit=1`,
+        `${url}/api/scheduled-jobs/${job.id}/log?limit=2`,
         null,
         {
           credentials: 'include',
         },
       );
-      return lastLog.data ? lastLog.data[0] : undefined;
+
+      return lastLog.data ? lastLog.data : undefined;
     });
 
     Promise.all(promises).then(logResults => {
-      const newJobs = jobs.map((job, jobIndex) => {
+      const newJobs: Job[] = jobs.map((job, jobIndex) => {
         const lastLog = logResults[jobIndex];
 
         return {
           ...job,
-          last_execution: lastLog,
+          last_executions: lastLog,
         };
       });
 
