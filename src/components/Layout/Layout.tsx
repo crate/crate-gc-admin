@@ -2,11 +2,11 @@ import { useState } from 'react';
 import type { LayoutProps } from './types';
 import Navigation from './Navigation';
 import TopBar from './TopBar';
+import { useGCContext } from '../../contexts';
 
 function Layout({
   bottomNavigation,
   topNavigation,
-  gcStatus,
   topbarLogo,
   topbarContent,
   children,
@@ -16,6 +16,7 @@ function Layout({
   // but it would be just a case of passing the parameter should it be
   // needed in future
   const [navIsExpanded, setNavIsExpanded] = useState(true);
+  const { gcStatus } = useGCContext();
 
   return (
     <div className="absolute bottom-0 flex flex-col min-h-dvh top-0 w-full">

@@ -20,29 +20,14 @@ function App() {
   const gcUrl = process.env.REACT_APP_GRAND_CENTRAL_URL;
   const crateUrl = process.env.REACT_APP_CRATE_URL;
 
-  const getSQLUrl = () => {
-    switch (gcStatus) {
-      case ConnectionStatus.CONNECTED:
-        return `${gcUrl}/api/_sql?multi=true&types`;
-      default:
-        return `${crateUrl}/_sql?types`;
-    }
-  };
-
   return (
-    <GCContextProvider
-      gcStatus={gcStatus}
-      gcUrl={gcUrl}
-      crateUrl={crateUrl}
-      sqlUrl={getSQLUrl()}
-    >
+    <GCContextProvider gcStatus={gcStatus} gcUrl={gcUrl} crateUrl={crateUrl}>
       <StatsUpdater />
       <Layout
         topbarLogo={<img alt="CrateDB logo" src={logo} />}
         topbarContent={<StatusBar />}
         bottomNavigation={bottomNavigation}
         topNavigation={topNavigation}
-        gcStatus={gcStatus}
       >
         <Routes>
           {routes.map(route => (

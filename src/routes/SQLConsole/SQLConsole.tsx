@@ -1,30 +1,29 @@
-import { useCallback, useState } from 'react';
-import executeSql, { QueryResults } from '../../utils/gc/executeSql';
+import { useState } from 'react';
 import Heading from '../../components/Heading';
 import Loader from '../../components/Loader';
 import SQLEditor from '../../components/SQLEditor';
 import SQLResultsTable from '../../components/SQLResultsTable';
 import { useGCContext } from '../../contexts';
+import useExecuteSql from '../../hooks/useExecuteSql';
+import { QueryResults } from '../../types/query';
 
 function SQLConsole() {
-  const { sqlUrl, headings } = useGCContext();
+  const executeSql = useExecuteSql();
+  const { headings } = useGCContext();
   const specifiedQuery = new URLSearchParams(location.search).get('q');
   const [results, setResults] = useState<QueryResults | undefined>(undefined);
   const [running, setRunning] = useState(false);
 
-  const execute = useCallback(
-    (sql: string) => {
-      setRunning(true);
-      setResults(undefined);
-      executeSql(sqlUrl, sql).then(({ data }) => {
-        setRunning(false);
-        if (data) {
-          setResults(data);
-        }
-      });
-    },
-    [sqlUrl],
-  );
+  const execute = (sql: string) => {
+    setRunning(true);
+    setResults(undefined);
+    executeSql(sql).then(({ data }) => {
+      setRunning(false);
+      if (data) {
+        setResults(data);
+      }
+    });
+  };
 
   const renderResults = () => {
     if (running) {

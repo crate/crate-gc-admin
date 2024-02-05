@@ -1,6 +1,6 @@
 import { render, screen } from '../../../../test/testUtils';
-import TypeAwareValue, { TypeAwareValueParams } from './TypeAwareValue.tsx';
-import { ColumnType } from '../../../utils/gc/executeSql.ts';
+import { ColumnType } from '../../../types/query';
+import TypeAwareValue, { TypeAwareValueParams } from './TypeAwareValue';
 
 const setup = (props: TypeAwareValueParams) => render(<TypeAwareValue {...props} />);
 

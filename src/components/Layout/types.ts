@@ -20,7 +20,6 @@ export type LayoutProps = {
   topNavigation: NavigationLinkProps[];
   topbarLogo: JSX.Element;
   topbarContent: JSX.Element;
-  gcStatus?: ConnectionStatus;
   children: JSX.Element;
 };
 

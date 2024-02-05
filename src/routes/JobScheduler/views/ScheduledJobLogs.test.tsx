@@ -28,10 +28,12 @@ describe('The "ScheduledJobLogs" component', () => {
     backToJobList.mockClear();
   });
 
-  it('renders a loader while loading job logs', () => {
+  it('renders a loader while loading job logs', async () => {
     setup();
 
     expect(screen.getByTitle('loading')).toBeInTheDocument();
+
+    await waitForTableRender();
   });
 
   describe('the table', () => {

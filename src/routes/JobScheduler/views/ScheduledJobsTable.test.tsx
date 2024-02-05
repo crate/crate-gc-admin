@@ -29,10 +29,12 @@ const waitForTableRender = async () => {
 };
 
 describe('The "ScheduledJobsTable" component', () => {
-  it('renders a loader while loading scheduled jobs', () => {
+  it('renders a loader while loading scheduled jobs', async () => {
     setup();
 
     expect(screen.getByTitle('loading')).toBeInTheDocument();
+
+    await waitForTableRender();
   });
 
   describe('the table', () => {

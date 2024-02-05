@@ -3,7 +3,7 @@ import Heading from '../../components/Heading';
 import TableDetail from './TableDetail';
 import TableList from './TableList';
 import { TAILWIND_BREAKPOINT_MD } from '../../constants/defaults';
-import { TableListEntry } from '../../utils/queries';
+import { TableListEntry } from '../../types/cratedb';
 
 function Tables() {
   const systemSchemas = ['information_schema', 'sys', 'pg_catalog', 'gc'];
@@ -33,11 +33,13 @@ function Tables() {
           <TableList setActiveTable={setActiveTable} systemSchemas={systemSchemas} />
         </div>
         <div className={activeTable ? 'block pt-4 px-2' : 'hidden'}>
-          <TableDetail
-            activeTable={activeTable}
-            setActiveTable={setActiveTable}
-            systemSchemas={systemSchemas}
-          />
+          {activeTable && (
+            <TableDetail
+              activeTable={activeTable}
+              setActiveTable={setActiveTable}
+              systemSchemas={systemSchemas}
+            />
+          )}
         </div>
       </div>
     );
@@ -52,11 +54,13 @@ function Tables() {
       <div className="basis-full overflow-y-auto p-6">
         <Heading level="h1">Tables</Heading>
         <div>
-          <TableDetail
-            activeTable={activeTable}
-            setActiveTable={setActiveTable}
-            systemSchemas={systemSchemas}
-          />
+          {activeTable && (
+            <TableDetail
+              activeTable={activeTable}
+              setActiveTable={setActiveTable}
+              systemSchemas={systemSchemas}
+            />
+          )}
         </div>
       </div>
     </div>

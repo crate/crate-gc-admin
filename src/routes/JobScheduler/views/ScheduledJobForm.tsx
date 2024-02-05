@@ -5,14 +5,15 @@ import Loader from '../../../components/Loader';
 import Checkbox from '../../../components/Checkbox';
 import SQLEditor from '../../../components/SQLEditor';
 import Text from '../../../components/Text';
-import { ApiOutput, apiPost, apiPut } from '../../../hooks/api';
-import { useCallback, useEffect, useState } from 'react';
-import { useGCContext } from '../../../contexts';
-import executeSql, { QueryResults } from '../../../utils/gc/executeSql';
+import { ApiOutput, apiPost, apiPut } from '../../../utils/api';
+import { useEffect, useState } from 'react';
 import SQLResultsTable from '../../../components/SQLResultsTable';
 import { cronParser } from '../../../utils/cron';
 import { Job, JobInput } from '../../../types';
 import cn from '../../../utils/cn';
+import useGcApi from '../../../hooks/useGcApi';
+import { QueryResults } from '../../../types/query';
+import useExecuteSql from '../../../hooks/useExecuteSql';
 
 type ScheduledJobFormAdd = { type: 'add' };
 type ScheduledJobFormEdit = { type: 'edit'; job: Job };
@@ -30,10 +31,11 @@ type ScheduledJobFormProps = {
 
 export default function ScheduledJobForm(props: ScheduledJobFormProps) {
   const { backToJobList, type } = props;
-  const { gcUrl, sqlUrl } = useGCContext();
+  const executeSql = useExecuteSql();
   const [showLoader, setShowLoader] = useState(false);
   const [queryResults, setQueryResults] = useState<QueryResults>(undefined);
   const [queryRunning, setQueryRunning] = useState(false);
+  const gcApi = useGcApi();
 
   const {
     register,
@@ -61,7 +63,8 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
     if (type === 'add') {
       // CREATE
       result = await apiPost<JobApiError | Job>(
-        `${gcUrl}/api/scheduled-jobs/`,
+        gcApi,
+        `/api/scheduled-jobs/`,
         data,
         {
           credentials: 'include',
@@ -72,7 +75,8 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
       // UPDATE
       const job = props.job;
       result = await apiPut<JobApiError | Job>(
-        `${gcUrl}/api/scheduled-jobs/${job.id}`,
+        gcApi,
+        `/api/scheduled-jobs/${job.id}`,
         data,
         {
           credentials: 'include',
@@ -100,17 +104,17 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
   const sqlValue = watch('sql');
   const cronHumanReadable = cronParser(cron);
 
-  const executeQuery = useCallback(() => {
+  const executeQuery = () => {
     const sql = watch('sql');
     setQueryRunning(true);
     setQueryResults(undefined);
-    executeSql(sqlUrl, sql).then(({ data }) => {
+    executeSql(sql).then(({ data }) => {
       setQueryRunning(false);
       if (data) {
         setQueryResults(data);
       }
     });
-  }, []);
+  };
 
   const renderResults = () => {
     if (queryRunning) {

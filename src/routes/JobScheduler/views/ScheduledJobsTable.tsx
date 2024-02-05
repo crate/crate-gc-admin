@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useGCContext } from '../../../contexts';
 import {
   useGCGetScheduledJobLastLogs,
   useGCGetScheduledJobs,
 } from '../../../hooks/swrHooks';
-import { apiDelete } from '../../../hooks/api';
+import { apiDelete } from '../../../utils/api';
 import Button from '../../../components/Button';
 import CrateTable from '../../../components/CrateTable';
 import Loader from '../../../components/Loader';
@@ -20,6 +19,7 @@ import {
 import QueryStackTraceModal from '../../../components/QueryStackTraceModal';
 import { Popconfirm } from 'antd';
 import DisplayUTCDate from '../../../components/DisplayUTCDate';
+import useGcApi from '../../../hooks/useGcApi';
 
 export const JOBS_TABLE_PAGE_SIZE = 5;
 
@@ -32,16 +32,13 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
     (TJobLogStatementError & { timestamp: string }) | null
   >(null);
   const [showLoaderDelete, setShowLoaderDelete] = useState(false);
-  const { gcUrl } = useGCContext();
   const {
     data: scheduledJobs,
     mutate: mutateScheduledJobs,
     isLoading: isLoadingJobs,
-  } = useGCGetScheduledJobs(gcUrl!);
-  const scheduledJobsEnriched = useGCGetScheduledJobLastLogs(
-    gcUrl!,
-    scheduledJobs || [],
-  );
+  } = useGCGetScheduledJobs();
+  const scheduledJobsEnriched = useGCGetScheduledJobLastLogs(scheduledJobs || []);
+  const gcApi = useGcApi();
 
   const closeErrorDialog = () => {
     setErrorDialogContent(null);
@@ -50,7 +47,7 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
   const handleDeleteJob = async (job: Job) => {
     setShowLoaderDelete(true);
 
-    await apiDelete(`${gcUrl}/api/scheduled-jobs/${job.id}`, null, {
+    await apiDelete(gcApi, `/api/scheduled-jobs/${job.id}`, null, {
       credentials: 'include',
     });
     setShowLoaderDelete(false);

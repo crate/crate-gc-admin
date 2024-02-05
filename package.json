@@ -23,6 +23,7 @@
     "@ant-design/icons": "^5.2.6",
     "ace-builds": "^1.32.2",
     "antd": "^4.24.14",
+    "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "cronstrue": "^2.47.0",
     "less": "^4.2.0",

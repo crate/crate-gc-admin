@@ -1,29 +1,26 @@
 import { useEffect, useState } from 'react';
-import { useGCContext } from '../../contexts';
-import { getCurrentUser, getUsers, User } from '../../utils/queries';
 import { Tabs } from 'antd';
 import Heading from '../../components/Heading';
 import UserInfo from './UserInfo';
+import { useGetCurrentUserQuery, useGetUsersQuery } from '../../hooks/queryHooks';
+import { User } from '../../types/cratedb';
 
 function Users() {
-  const { sqlUrl } = useGCContext();
+  const getCurrentUser = useGetCurrentUserQuery();
+  const getUsers = useGetUsersQuery();
   const [users, setUsers] = useState<User[] | undefined>();
   const [current, setCurrent] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!sqlUrl) {
-      return;
-    }
-
-    getUsers(sqlUrl).then(setUsers);
-    getCurrentUser(sqlUrl).then(setCurrent);
-  }, [sqlUrl]);
+    getUsers().then(setUsers);
+    getCurrentUser().then(setCurrent);
+  }, []);
 
   const tabs = users?.map(u => {
     return {
       key: u.name,
       label: current == u.name ? `${u.name} (me)` : u.name,
-      children: <UserInfo url={sqlUrl} user={u} />,
+      children: <UserInfo user={u} />,
     };
   });
 

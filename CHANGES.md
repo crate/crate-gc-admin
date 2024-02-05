@@ -5,6 +5,7 @@
 - Added help page.
 - [SQL Scheduler] Move "Running..." from "Last Execution" into "Next Due" column.
 - [SQL Scheduler] Fix "Invalid Date" in job logs.
+- Migrate to axios and configured interceptor to handle JWT Expire.
 
 ## 2024-02-01 - 0.4.5
 

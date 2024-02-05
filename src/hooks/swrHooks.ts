@@ -1,38 +1,45 @@
 import useSWR from 'swr';
 import swrCORSFetch from '../utils/swrCORSFetch';
 import { useEffect, useState } from 'react';
-import { apiGet } from './api';
+import { apiGet } from '../utils/api';
 import { Job, JobLog } from '../types';
+import useGcApi from './useGcApi';
 import {
-  getAllocations,
-  getClusterInfo,
-  getCurrentUser,
-  getNodes,
-  getQueryStats,
-  getShards,
-  getTables,
-} from '../utils/queries.ts';
+  useGetClusterInfoQuery,
+  useGetNodesQuery,
+  useGetCurrentUserQuery,
+  useGetTablesQuery,
+  useGetShardsQuery,
+  useGetAllocationsQuery,
+  useGetQueryStatsQuery,
+} from './queryHooks';
 
-export const useGCGetScheduledJobs = (url: string) => {
-  return useSWR<Job[]>(`${url}/api/scheduled-jobs/`, swrCORSFetch, {
+export const useGCGetScheduledJobs = () => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+  return useSWR<Job[]>(`/api/scheduled-jobs/`, swrFetch, {
     refreshInterval: 10 * 1000,
   });
 };
 
-export const useGCGetScheduledJobLogs = (url: string, job: Job) => {
-  return useSWR<JobLog[]>(`${url}/api/scheduled-jobs/${job.id}/log`, swrCORSFetch, {
+export const useGCGetScheduledJobLogs = (job: Job) => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+  return useSWR<JobLog[]>(`/api/scheduled-jobs/${job.id}/log`, swrFetch, {
     refreshInterval: 10 * 1000,
   });
 };
 
 // NOTE: This Hook will be removed when API will return the last_execution
-export const useGCGetScheduledJobLastLogs = (url: string, jobs: Job[]) => {
+export const useGCGetScheduledJobLastLogs = (jobs: Job[]) => {
   const [jobsToReturn, setJobsToReturn] = useState<Job[]>([]);
+  const gcApi = useGcApi();
 
   useEffect(() => {
     const promises = jobs.map(async (job: Job) => {
       const lastLog = await apiGet<JobLog[]>(
-        `${url}/api/scheduled-jobs/${job.id}/log?limit=2`,
+        gcApi,
+        `/api/scheduled-jobs/${job.id}/log?limit=2`,
         null,
         {
           credentials: 'include',
@@ -61,49 +68,56 @@ export const useGCGetScheduledJobLastLogs = (url: string, jobs: Job[]) => {
   return jobsToReturn;
 };
 
-export const useGetNodeStatus = (url: string | undefined) => {
+export const useGetNodeStatus = () => {
+  const getNodes = useGetNodesQuery();
   return useSWR(
     // We do not use the url as the swr key, because we'll have many of these SWR fetches from the same url
-    url ? `swr-fetch-node-info` : null,
-    () => getNodes(url),
+    `swr-fetch-node-info`,
+    () => getNodes(),
     {
       refreshInterval: 5000,
     },
   );
 };
 
-export const useGetCluster = (url: string | undefined) => {
+export const useGetCluster = () => {
+  const getClusterInfo = useGetClusterInfoQuery();
   return useSWR(
     // We do not use the url as the swr key, because we'll have many of these SWR fetches from the same url
-    url ? `swr-fetch-cluster-info` : null,
-    () => getClusterInfo(url),
+    `swr-fetch-cluster-info`,
+    () => getClusterInfo(),
   );
 };
 
-export const useGetCurrentUser = (url: string | undefined) => {
-  return useSWR(url ? `swr-fetch-user` : null, () => getCurrentUser(url));
+export const useGetCurrentUser = () => {
+  const getCurrentUser = useGetCurrentUserQuery();
+  return useSWR(`swr-fetch-user`, () => getCurrentUser());
 };
 
-export const useGetTables = (url: string | undefined) => {
-  return useSWR(url ? `swr-fetch-tables` : null, () => getTables(url), {
+export const useGetTables = () => {
+  const getTables = useGetTablesQuery();
+  return useSWR(`swr-fetch-tables`, () => getTables(), {
     refreshInterval: 5000,
   });
 };
 
-export const useGetShards = (url: string | undefined) => {
-  return useSWR(url ? `swr-fetch-shards` : null, () => getShards(url), {
+export const useGetShards = () => {
+  const getShards = useGetShardsQuery();
+  return useSWR(`swr-fetch-shards`, () => getShards(), {
     refreshInterval: 5000,
   });
 };
 
-export const useGetAllocations = (url: string | undefined) => {
-  return useSWR(url ? `swr-fetch-allocations` : null, () => getAllocations(url), {
+export const useGetAllocations = () => {
+  const getAllocations = useGetAllocationsQuery();
+  return useSWR(`swr-fetch-allocations`, () => getAllocations(), {
     refreshInterval: 5000,
   });
 };
 
-export const useGetQueryStats = (url: string | undefined) => {
-  return useSWR(url ? `swr-fetch-query-stats` : null, () => getQueryStats(url), {
+export const useGetQueryStats = () => {
+  const getQueryStats = useGetQueryStatsQuery();
+  return useSWR(`swr-fetch-query-stats`, () => getQueryStats(), {
     refreshInterval: 5000,
   });
 };
