@@ -75,8 +75,15 @@ export default function ScheduledJobLogs({
               key: 'last_executed',
               dataIndex: 'end',
               width: 250,
-              render: (lastExecuted: string) => {
-                return <DisplayUTCDate isoDate={lastExecuted} tooltip />;
+              render: (lastExecuted: string | null) => {
+                if (lastExecuted) {
+                  return <DisplayUTCDate isoDate={lastExecuted} tooltip />;
+                } else
+                  return (
+                    <>
+                      <Loader size={Loader.sizes.SMALL} /> Running...
+                    </>
+                  );
               },
             },
             {

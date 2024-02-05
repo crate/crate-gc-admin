@@ -8,7 +8,7 @@ const scheduledJob: Job = {
   name: 'JobName',
   next_run_time: '2024-01-18T14:38:00+00:00',
   sql: 'SELECT 1;',
-  last_execution: scheduledJobLogs[0],
+  last_executions: [scheduledJobLogs[0], scheduledJobLogs[1]],
 };
 
 export default scheduledJob;

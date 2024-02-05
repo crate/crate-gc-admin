@@ -5,7 +5,7 @@ export type Job = {
   enabled: boolean;
   sql: string;
   next_run_time?: string;
-  last_execution?: JobLog;
+  last_executions?: JobLog[];
 };
 
 export type TJobLogStatementError = {
@@ -36,7 +36,7 @@ export type SuccessJobLog = {
 export type JobLog = {
   job_id: string;
   start: string;
-  end: string;
+  end: string | null;
 } & (ErrorJobLog | SuccessJobLog);
 
 export type JobInput = {

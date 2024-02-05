@@ -118,7 +118,7 @@ describe('The "ScheduledJobLogs" component', () => {
     });
 
     describe('the "last executed" cell', () => {
-      it('displays the last log date time', async () => {
+      it('displays the last log date time for non-running jobs', async () => {
         setup();
 
         await waitForTableRender();
@@ -127,6 +127,20 @@ describe('The "ScheduledJobLogs" component', () => {
 
         const formattedDate = moment.utc(log.end).format('MMMM Do YYYY, HH:mm');
         expect(screen.getByText(formattedDate)).toBeInTheDocument();
+      });
+
+      it('displays "Running" for running jobs', async () => {
+        const log: JobLog = {
+          ...scheduledJobLogs[0],
+          end: null,
+        };
+        server.use(customScheduledJobLogsGetResponse([log]));
+
+        setup();
+
+        await waitForTableRender();
+
+        expect(screen.getByText('Running...')).toBeInTheDocument();
       });
     });
 
