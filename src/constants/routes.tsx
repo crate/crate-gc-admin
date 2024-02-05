@@ -1,10 +1,7 @@
-import SQLConsole from '../routes/SQLConsole/SQLConsole';
-import Users from '../routes/Users/Users';
+import { Help, Overview, SQLConsole, Tables, Users } from '../routes';
 import EnterpriseScreen from '../components/EnterpriseScreen';
-import Tables from '../routes/Tables';
 import { Route } from '../types';
 import ScheduledJobs from '../routes/JobScheduler';
-import Overview from '../routes/Overview/Overview.tsx';
 
 const routes: Route[] = [
   {
@@ -18,6 +15,16 @@ const routes: Route[] = [
     key: 'overview',
   },
   {
+    path: '/help',
+    element: (
+      <div className="p-4">
+        <Help />
+      </div>
+    ),
+    label: 'Help',
+    key: 'help',
+  },
+  {
     path: '/sql',
     element: (
       <div className="p-4">
@@ -26,12 +33,6 @@ const routes: Route[] = [
     ),
     label: 'SQL',
     key: 'sql',
-  },
-  {
-    path: '/tables',
-    element: <Tables />,
-    label: 'Tables',
-    key: 'tables',
   },
   {
     path: '/sql-scheduler',
@@ -45,6 +46,13 @@ const routes: Route[] = [
     label: 'Scheduler',
     key: 'sql-scheduler',
   },
+  {
+    path: '/tables',
+    element: <Tables />,
+    label: 'Tables',
+    key: 'tables',
+  },
+
   {
     path: '/users',
     element: (

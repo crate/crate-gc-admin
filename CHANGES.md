@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added help page.
+
 ## 2024-02-01 - 0.4.5
 
 - Fix Acceptance Findings.
