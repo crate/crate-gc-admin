@@ -43,8 +43,8 @@ export const topNavigation = [
 export const bottomNavigation = [
   {
     icon: <QuestionCircleOutlined />,
-    label: <span>CrateDB website</span>,
-    path: 'https://www.cratedb.com/',
-    type: 'external' as const,
+    label: <span>Help</span>,
+    path: '/help',
+    type: 'internal' as const,
   },
 ];
