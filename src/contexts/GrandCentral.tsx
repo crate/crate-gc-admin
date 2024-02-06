@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useContext } from 'react';
-import { ConnectionStatus } from '../utils/gc/connectivity';
 
 type GCContextType = {
   gcStatus: ConnectionStatus;
@@ -8,6 +7,14 @@ type GCContextType = {
   headings?: boolean;
   onGcApiJwtExpire?: () => Promise<void>;
 };
+
+export enum ConnectionStatus {
+  CONNECTED,
+  NOT_CONFIGURED,
+  NOT_LOGGED_IN,
+  ERROR,
+  PENDING,
+}
 
 const defaultProps: GCContextType = {
   gcStatus: ConnectionStatus.PENDING,

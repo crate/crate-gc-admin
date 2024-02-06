@@ -6,6 +6,7 @@
 - [SQL Scheduler] Move "Running..." from "Last Execution" into "Next Due" column.
 - [SQL Scheduler] Fix "Invalid Date" in job logs.
 - Migrate to axios and configured interceptor to handle JWT Expire.
+- Replaced the Grand Central cookie-based login mechanism with a bearer token.
 
 ## 2024-02-01 - 0.4.5
 

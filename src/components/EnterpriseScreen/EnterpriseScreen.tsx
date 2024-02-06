@@ -1,8 +1,7 @@
 import React from 'react';
 import { Result } from 'antd';
 import Button from '../../components/Button';
-import { useGCContext } from '../../contexts';
-import { ConnectionStatus } from '../../utils/gc/connectivity';
+import { ConnectionStatus, useGCContext } from '../../contexts';
 
 type EnterpriseScreenProps = {
   children: React.ReactElement;
