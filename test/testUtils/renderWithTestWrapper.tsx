@@ -1,8 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import { render as rtlRender } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
-import { GCContextProvider } from '../../src/contexts';
-import { ConnectionStatus } from '../../src/utils/gc/connectivity';
+import { ConnectionStatus, GCContextProvider } from '../../src/contexts';
 import { SWRConfig } from 'swr';
 
 type RenderType = {

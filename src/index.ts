@@ -1,7 +1,7 @@
 import './index.css';
-import { ConnectionStatus } from './utils/gc/connectivity';
+import useGCLogin from './hooks/useGCLogin';
 
+export { useGCLogin };
 export * from './components';
 export * from './contexts';
 export * from './routes';
-export { ConnectionStatus };

@@ -2,19 +2,33 @@ import { Route, Routes } from 'react-router-dom';
 import { bottomNavigation, topNavigation } from './constants/navigation';
 import routes from './constants/routes';
 import { useMemo, useState } from 'react';
-import { ConnectionStatus, isGcConnected } from './utils/gc/connectivity';
-import { GCContextProvider } from './contexts';
+import { ConnectionStatus, GCContextProvider } from './contexts';
 import Layout from './components/Layout';
 import StatusBar from './components/StatusBar';
 import NotificationHandler from './components/NotificationHandler';
 import logo from './assets/logo.svg';
 import StatsUpdater from './components/StatsUpdater';
+import useGcApi from './hooks/useGcApi.ts';
+import { apiGet } from './utils/api.ts';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
+  const gcApi = useGcApi();
 
   useMemo(() => {
-    isGcConnected(process.env.REACT_APP_GRAND_CENTRAL_URL).then(setGCStatus);
+    apiGet(gcApi, `/api/`, {})
+      .then(res => {
+        if (res.status == 200) {
+          setGCStatus(ConnectionStatus.CONNECTED);
+        } else if (res.status == 401) {
+          setGCStatus(ConnectionStatus.NOT_LOGGED_IN);
+        } else {
+          setGCStatus(ConnectionStatus.ERROR);
+        }
+      })
+      .catch(() => {
+        setGCStatus(ConnectionStatus.ERROR);
+      });
   }, []);
 
   const gcUrl = process.env.REACT_APP_GRAND_CENTRAL_URL;

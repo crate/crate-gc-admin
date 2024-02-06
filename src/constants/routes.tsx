@@ -1,9 +1,13 @@
-import { Help, Overview, SQLConsole, Tables, Users } from '../routes';
+import { Auth, Help, Overview, SQLConsole, Tables, Users } from '../routes';
 import EnterpriseScreen from '../components/EnterpriseScreen';
 import { Route } from '../types';
 import ScheduledJobs from '../routes/JobScheduler';
 
 const routes: Route[] = [
+  {
+    path: '/auth',
+    element: <Auth />,
+  },
   {
     path: '/',
     element: (

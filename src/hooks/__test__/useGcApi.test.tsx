@@ -9,9 +9,6 @@ function MockComponent() {
       <div data-testid="baseUrl">
         {gcApi.defaults.baseURL === '' ? 'BASE_URL' : 'ERROR'}
       </div>
-      <div data-testid="withCredentials">
-        {gcApi.defaults.withCredentials && 'true'}
-      </div>
     </div>
   );
 }
@@ -25,11 +22,5 @@ describe('The useGcApi hook', () => {
     setup();
 
     expect(screen.getByTestId('baseUrl')).toHaveTextContent('BASE_URL');
-  });
-
-  it('uses includes credentials', () => {
-    setup();
-
-    expect(screen.getByTestId('withCredentials')).toHaveTextContent('true');
   });
 });
