@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tree } from 'antd';
+import { Tree, message } from 'antd';
 import { DataNode } from 'antd/lib/tree';
 import TypeAwareValue from '../TypeAwareValue/TypeAwareValue.tsx';
 
@@ -10,6 +10,11 @@ export type JSONTreeParams = {
 const { DirectoryTree } = Tree;
 
 function JSONTree({ json }: JSONTreeParams) {
+  const copyToClipboard = async (value: string) => {
+    message.info({ content: 'Copied!' }, 1);
+    await navigator.clipboard.writeText(value);
+  };
+
   const typeTitle = (
     val: object | object[] | string | number | boolean | undefined,
   ) => {
@@ -56,7 +61,12 @@ function JSONTree({ json }: JSONTreeParams) {
           {k}: <span className="opacity-50">{typeTitle(val)}</span>
         </div>
       ) : (
-        <div key={`${config.path}-${k}-title`}>
+        <div
+          key={`${config.path}-${k}-title`}
+          onDoubleClick={async () => {
+            await copyToClipboard(val);
+          }}
+        >
           {k}: <TypeAwareValue value={val} quoteStrings />
         </div>
       );
