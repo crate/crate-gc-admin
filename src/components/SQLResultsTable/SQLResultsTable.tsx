@@ -1,10 +1,11 @@
 import { Radio, Table, Tabs } from 'antd';
 import _ from 'lodash';
-import TypeAwareValue from './TypeAwareValue/TypeAwareValue.tsx';
+import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
 import { dbTypeToHumanReadable } from './utils';
-import React, { useState } from 'react';
+import React from 'react';
 import Papa from 'papaparse';
 import { ColumnType, QueryResult, QueryResults } from '../../types/query';
+import useSessionStore from '../../state/session';
 
 type Params = {
   results: QueryResults | undefined;
@@ -12,7 +13,10 @@ type Params = {
 };
 
 function SQLResultsTable({ results }: Params) {
-  const [format, setFormat] = useState<string>('pretty');
+  const { tableResultsFormat } = useSessionStore();
+  const setTableResultsFormat = useSessionStore(
+    store => store.setTableResultsFormat,
+  );
 
   const renderErrorTable = (result: QueryResult) => {
     const columns = [
@@ -59,7 +63,7 @@ function SQLResultsTable({ results }: Params) {
     value: unknown,
     numColumns: number,
   ) => {
-    if (format == 'pretty') {
+    if (tableResultsFormat == 'pretty') {
       return (
         <TypeAwareValue
           value={value}
@@ -111,13 +115,18 @@ function SQLResultsTable({ results }: Params) {
           res.json = JSON.stringify(rowValue);
           return res;
         })
-        .reduce((prev, next) => {
-          return {
-            key: 'single',
-            title: 'single',
-            json: prev.json + '\n' + next.json,
-          };
-        }),
+        .reduce(
+          // @ts-expect-error initial value has null
+          (prev, next) => {
+            const concat = prev.json ? prev.json + '\n' + next.json : next.json;
+            return {
+              key: 'single',
+              title: 'single',
+              json: concat,
+            };
+          },
+          { json: null },
+        ),
     ];
 
     return [columns, data];
@@ -157,28 +166,37 @@ function SQLResultsTable({ results }: Params) {
           };
           const rowValue = {};
           _.zip(result.cols, row).forEach(arr => {
-            const [k, v] = arr;
+            const [k] = arr;
+            let [, v] = arr;
+            // If we don't do this, we end up with [object Object]. At least return JSON.
+            if (typeof v == 'object') {
+              v = JSON.stringify(v);
+            }
             // @ts-expect-error k cannot be undefined
             rowValue[k] = v;
           });
           res.row = rowValue;
           return res;
         })
-        .reduce((prev, next) => {
-          const acc: object[] = prev.accumulated || [prev.row];
-          acc.push(next.row);
-          return {
-            key: 'single',
-            row: {},
-            accumulated: acc,
-          };
-        }),
+        .reduce(
+          // @ts-expect-error we're specifying an initial value with nulls. TS unhappy.
+          (prev, next) => {
+            const acc: object[] = prev.accumulated;
+            acc.push(next.row);
+            return {
+              key: 'single',
+              row: {},
+              accumulated: acc,
+            };
+          },
+          { accumulated: [] },
+        ),
     ].map(v => {
       return {
         ...v,
         accumulated:
           Papa.unparse(v?.accumulated) ||
-          'Looks like this data is too complex to display as a CSV. We tried, sorry.',
+          'Looks like this data cannot be displayed as a CSV. We tried, sorry.',
       };
     });
 
@@ -227,9 +245,9 @@ function SQLResultsTable({ results }: Params) {
     let columns;
     let data: object[];
 
-    if (format == 'json') {
+    if (tableResultsFormat == 'json') {
       [columns, data] = asJson(result);
-    } else if (format == 'csv') {
+    } else if (tableResultsFormat == 'csv') {
       [columns, data] = asCSV(result);
     } else {
       [columns, data] = asTable(result);
@@ -279,8 +297,8 @@ function SQLResultsTable({ results }: Params) {
                     { label: 'CSV', value: 'csv' },
                     { label: 'JSON', value: 'json' },
                   ]}
-                  onChange={evt => setFormat(evt.target.value)}
-                  value={format}
+                  onChange={evt => setTableResultsFormat(evt.target.value)}
+                  value={tableResultsFormat}
                   optionType="button"
                   buttonStyle="solid"
                   size="small"

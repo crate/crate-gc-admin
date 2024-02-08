@@ -19,13 +19,16 @@ type SessionStore = {
     description?: string,
   ) => void;
   load: LoadAverage[];
-  fs_stats: { [key: string]: FSStats };
+  fsStats: { [key: string]: FSStats };
+  tableResultsFormat: string;
+  setTableResultsFormat: (format: string) => void;
 };
 
 const initialState = {
   notification: null,
   load: [],
-  fs_stats: {},
+  fsStats: {},
+  tableResultsFormat: 'pretty',
 };
 
 export type NotificationType = 'error' | 'warn' | 'info';
@@ -42,6 +45,9 @@ const useSessionStore = create<SessionStore>(set => ({
     description?: string,
   ) => {
     set({ notification: { type, message, description } });
+  },
+  setTableResultsFormat: (format: string) => {
+    set({ tableResultsFormat: format });
   },
 }));
 export default useSessionStore;

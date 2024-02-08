@@ -12,7 +12,7 @@ function StatsUpdater() {
 
   This is so that we keep updating them in the background
    */
-  const { load, fs_stats } = useSessionStore();
+  const { load, fsStats } = useSessionStore();
   const { data: nodes } = useGetNodeStatus();
   const [previous, setPrevious] = useState<NodeStatusInfo[] | undefined>();
 
@@ -45,7 +45,7 @@ function StatsUpdater() {
 
   const updateFs = (nodes: NodeStatusInfo[]) => {
     nodes.forEach(n => {
-      let stat = fs_stats[n.id];
+      let stat = fsStats[n.id];
       if (!stat) {
         stat = {
           bps_read: 0,
@@ -67,7 +67,7 @@ function StatsUpdater() {
       stat.bps_write =
         (n.fs.total.bytes_written - p.fs.total.bytes_written) / diff_seconds;
       stat.bps_read = (n.fs.total.bytes_read - p.fs.total.bytes_read) / diff_seconds;
-      fs_stats[n.id] = stat;
+      fsStats[n.id] = stat;
     });
   };
 

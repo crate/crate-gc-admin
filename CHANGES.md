@@ -5,6 +5,8 @@
 - Added a node page.
 - Allow copying text from JSON tree results view with a double click.
 - Fixed error handling in SQL Console.
+- Fixed CSV output
+- Remember the choice of the output option in the session.
 
 ## 2024-02-08 - 0.4.6
 
