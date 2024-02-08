@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-02-08 - 0.4.6
+
 - Added help page.
 - [SQL Scheduler] Move "Running..." from "Last Execution" into "Next Due" column.
 - [SQL Scheduler] Fix "Invalid Date" in job logs.
