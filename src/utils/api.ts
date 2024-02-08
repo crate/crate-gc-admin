@@ -1,5 +1,10 @@
 import useSessionStore, { NotificationType } from '../state/session';
-import type { AxiosInstance, AxiosRequestConfig } from 'axios';
+import type {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 
 export type HttpMethod = 'DELETE' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'GET';
 type HttpBody = unknown;
@@ -24,17 +29,23 @@ const api = async <T>(
   options: HttpOptions = {},
   notification = true,
 ): Promise<ApiOutput<T>> => {
-  const response = await instance<T>({
-    method,
-    url,
-    data,
-    headers: data
-      ? {
-          'Content-Type': 'application/json; charset=utf-8',
-        }
-      : {},
-    ...options,
-  });
+  let response: AxiosResponse<T>;
+  try {
+    response = await instance<T>({
+      method,
+      url,
+      data,
+      headers: data
+        ? {
+            'Content-Type': 'application/json; charset=utf-8',
+          }
+        : {},
+      ...options,
+    });
+  } catch (e) {
+    const axiosError = e as AxiosError<T>;
+    response = axiosError.response!;
+  }
 
   const responseOk = response.status >= 200 && response.status < 300;
 
