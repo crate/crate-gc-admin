@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Added a node page.
+- Allow copying text from JSON tree results view with a double click.
 
 ## 2024-02-08 - 0.4.6
 
