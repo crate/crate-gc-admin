@@ -14,7 +14,7 @@ import useSessionStore from '../../state/session.ts';
 import React from 'react';
 
 function Nodes() {
-  const { fs_stats } = useSessionStore();
+  const { fsStats } = useSessionStore();
 
   const { data: nodes } = useGetNodeStatus();
   const { data: cluster } = useGetCluster();
@@ -236,7 +236,7 @@ function Nodes() {
   };
 
   const renderFS = (node: NodeStatusInfo) => {
-    const stats = fs_stats[node.id];
+    const stats = fsStats[node.id];
     if (!stats) {
       return <GCSpin spinning={true} />;
     }
@@ -254,14 +254,14 @@ function Nodes() {
           <div>{formatNum(stats.iops_read, 0)} iops</div>
           <div>{formatNum(stats.iops_write, 0)} iops</div>
           <div>
-            {prettyBytes(fs_stats[node.id].bps_read, {
+            {prettyBytes(fsStats[node.id].bps_read, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
             /s
           </div>
           <div>
-            {prettyBytes(fs_stats[node.id].bps_write, {
+            {prettyBytes(fsStats[node.id].bps_write, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
