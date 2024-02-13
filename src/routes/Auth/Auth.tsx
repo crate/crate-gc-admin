@@ -4,7 +4,7 @@ import useGCLogin from '../../hooks/useGCLogin.ts';
 import { useGCContext } from '../../index.ts';
 
 function Auth() {
-  const { gcUrl } = useGCContext();
+  const { gcUrl, sessionCookieName } = useGCContext();
 
   const gcLogin = useGCLogin();
 
@@ -22,6 +22,7 @@ function Auth() {
       token: specifiedToken,
       refresh: specifiedRefreshToken,
       gcUrl: gcUrl!,
+      sessionCookieName,
     }).then(success => {
       if (success) {
         setStatus(true);

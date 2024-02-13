@@ -1,10 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useGCContext } from '../contexts';
-import { GRAND_CENTRAL_TOKEN_COOKIE } from '../constants/cookie.ts';
 
 export default function useGcApi() {
-  const { gcUrl, onGcApiJwtExpire } = useGCContext();
+  const { gcUrl, onGcApiJwtExpire, sessionCookieName } = useGCContext();
 
   const instance = axios.create({
     baseURL: gcUrl,
@@ -12,9 +11,9 @@ export default function useGcApi() {
   });
 
   instance.interceptors.request.use(config => {
-    const token = Cookies.get(GRAND_CENTRAL_TOKEN_COOKIE);
+    const token = Cookies.get(sessionCookieName);
     if (token) {
-      config.headers.Authorization = `Bearer ${Cookies.get(GRAND_CENTRAL_TOKEN_COOKIE)}`;
+      config.headers.Authorization = `Bearer ${sessionCookieName}`;
     }
     return config;
   });
