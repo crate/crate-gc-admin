@@ -24,7 +24,7 @@ ENV PATH=$PATH:/home/nodeuser/app/node_modules/.bin
 RUN yarn && yarn build && rm -r /home/nodeuser/app/node_modules
 
 # Serve the gc-admin build.
-FROM nginx:1.23
+FROM nginx:1.25.3
 
 # pick up any security updates
 RUN apt-get update && apt-get upgrade -y
