@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-02-13 - 0.5.0
+
 - Added a node page.
 - Allow copying text from JSON tree results view with a double click.
 - Fixed error handling in SQL Console.
