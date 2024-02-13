@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Added cookie name in context.
+- Bumped nginx to 1.25 to fix CVE-2024-0567.
 
 ## 2024-02-13 - 0.5.0
 
