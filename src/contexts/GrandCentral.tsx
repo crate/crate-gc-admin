@@ -1,9 +1,11 @@
 import React, { PropsWithChildren, useContext } from 'react';
+import { GRAND_CENTRAL_TOKEN_COOKIE } from '../constants/cookie';
 
 type GCContextType = {
   gcStatus: ConnectionStatus;
   gcUrl?: string;
   crateUrl?: string;
+  sessionCookieName: string;
   headings?: boolean;
   onGcApiJwtExpire?: () => Promise<void>;
 };
@@ -19,6 +21,7 @@ export enum ConnectionStatus {
 const defaultProps: GCContextType = {
   gcStatus: ConnectionStatus.PENDING,
   gcUrl: process.env.REACT_APP_GRAND_CENTRAL_URL,
+  sessionCookieName: GRAND_CENTRAL_TOKEN_COOKIE,
   crateUrl: undefined,
   headings: true,
 };

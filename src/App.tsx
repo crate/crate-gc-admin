@@ -10,6 +10,7 @@ import logo from './assets/logo.svg';
 import StatsUpdater from './components/StatsUpdater';
 import useGcApi from './hooks/useGcApi.ts';
 import { apiGet } from './utils/api.ts';
+import { GRAND_CENTRAL_TOKEN_COOKIE } from './constants/cookie.ts';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
@@ -35,7 +36,12 @@ function App() {
   const crateUrl = process.env.REACT_APP_CRATE_URL;
 
   return (
-    <GCContextProvider gcStatus={gcStatus} gcUrl={gcUrl} crateUrl={crateUrl}>
+    <GCContextProvider
+      gcStatus={gcStatus}
+      gcUrl={gcUrl}
+      crateUrl={crateUrl}
+      sessionCookieName={GRAND_CENTRAL_TOKEN_COOKIE}
+    >
       <StatsUpdater />
       <Layout
         topbarLogo={<img alt="CrateDB logo" src={logo} />}

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added cookie name in context.
+
 ## 2024-02-13 - 0.5.0
 
 - Added a node page.
