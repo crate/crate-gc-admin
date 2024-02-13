@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-02-13 - 0.5.2
+
+- Fix Authorization header on GC Api.
+
 ## 2024-02-13 - 0.5.1
 
 - Added cookie name in context.

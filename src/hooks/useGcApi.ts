@@ -13,7 +13,7 @@ export default function useGcApi() {
   instance.interceptors.request.use(config => {
     const token = Cookies.get(sessionCookieName);
     if (token) {
-      config.headers.Authorization = `Bearer ${sessionCookieName}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   });
