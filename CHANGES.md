@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-02-13 - 0.5.3
+
+- Fix "Cannot read properties of undefined (reading 'end')" error caused by new jobs.
+
 ## 2024-02-13 - 0.5.2
 
 - Fix Authorization header on GC Api.
