@@ -27,7 +27,7 @@ export default function useGcApi() {
         if (err.response) {
           // Check if Access Token was expired
           if (
-            err.response.status === 401 &&
+            err.response.status >= 400 &&
             !originalConfig._retry &&
             onGcApiJwtExpire
           ) {

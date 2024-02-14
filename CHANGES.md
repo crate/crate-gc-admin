@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Renewing JWT for all 4XX status code.
+
 ## 2024-02-13 - 0.5.3
 
 - Fix "Cannot read properties of undefined (reading 'end')" error caused by new jobs.
