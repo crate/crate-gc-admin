@@ -165,7 +165,9 @@ export default function ScheduledJobsTable({ onManage }: ScheduledJobsTableProps
             dataIndex: 'next_run_time',
             render: (nextRunTime: string | undefined, job: Job) => {
               const isRunning =
-                job.last_executions && job.last_executions[0].end === null;
+                job.last_executions &&
+                job.last_executions.length > 0 &&
+                job.last_executions[0].end === null;
 
               return (
                 <Text>
