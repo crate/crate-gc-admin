@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
 import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
-import 'ace-builds/src-noconflict/mode-sql';
+import './mode-cratedb';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import { format as formatSQL } from 'sql-formatter';
@@ -182,6 +182,24 @@ function SQLEditor({
     }
   };
 
+  const renderIstructions = () => {
+    const isMac = navigator.userAgent.indexOf('Mac OS') != -1;
+    const executeString = isMac ? 'Cmd+Enter to execute.' : 'Ctrl+Enter to execute.';
+    let historyString = null;
+    if (isLocalStorageUsed) {
+      historyString = isMac
+        ? 'Cmd+Up/Down to navigate history.'
+        : 'Ctrl+Up/Down to navigate history.';
+    }
+
+    return (
+      <div className="flex flex-wrap justify-end ml-2 text-sm">
+        <span className="whitespace-nowrap">{executeString}</span>
+        {historyString && <span className="whitespace-nowrap">{historyString}</span>}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full flex flex-col gap-2">
       <div className={cn('border-2 rounded', { 'border-red-600': error })}>
@@ -189,7 +207,7 @@ function SQLEditor({
         <AceEditor
           height="300px"
           width="100%"
-          mode="sql"
+          mode="cratedb"
           theme="github"
           fontSize={16}
           highlightActiveLine
@@ -295,10 +313,7 @@ function SQLEditor({
             Format SQL
           </Button>
         </div>
-        <div className="ml-2 text-xs inline-flex">
-          Ctrl(Cmd)+Enter to execute.{' '}
-          {isLocalStorageUsed ? 'Ctrl(Cmd)+Up/Down to navigate history.' : null}
-        </div>
+        {renderIstructions()}
       </div>
     </div>
   );

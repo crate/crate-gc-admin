@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add CrateDB specific syntax highlighting in the SQL console.
+
 ## 2024-02-15 - 0.5.4
 
 - Renewing JWT for all 4XX status code.
