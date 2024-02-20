@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Change CrateDB SQL Editor Mode ES5 export to ES6.
+
 ## 2024-02-20 - 0.6.0
 
 - Add CrateDB specific syntax highlighting in the SQL console.

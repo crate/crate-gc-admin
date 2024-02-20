@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
 import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
-import './mode-cratedb';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
+import './mode-cratedb';
 import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
 import Button from '../../components/Button';
