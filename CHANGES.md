@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-02-20 - 0.6.0
+
 - Add CrateDB specific syntax highlighting in the SQL console.
 - Implementing SQL Scheduler UI v2.
 
