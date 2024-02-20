@@ -1,51 +1,57 @@
-import { render, screen, waitFor } from '../../../test/testUtils';
-import scheduledJobs from '../../../test/__mocks__/scheduledJobs';
+import { render, screen, waitFor, within } from '../../../test/testUtils';
 import JobScheduler from '.';
+import { useParams } from '__mocks__/react-router-dom';
+import scheduledJobs from 'test/__mocks__/scheduledJobs';
 
 const setup = () => {
   return render(<JobScheduler />);
 };
 
+const waitForRoutesRender = async () => {
+  const indexRoute = screen.getByTestId('index_path');
+  const createRoute = screen.getByTestId('create_path');
+  const editRoute = screen.getByTestId(':jobId_path');
+
+  // Wait for job table in index route
+  await waitFor(async () => {
+    expect(
+      await within(indexRoute).findByText(scheduledJobs[0].name),
+    ).toBeInTheDocument();
+  });
+
+  // Wait for create route
+  await waitFor(async () => {
+    expect(
+      await within(createRoute).findByTestId('mocked-ace-editor'),
+    ).toBeInTheDocument();
+  });
+
+  // Wait for edit route
+  await waitFor(async () => {
+    expect(
+      await within(editRoute).findByTestId('mocked-ace-editor'),
+    ).toBeInTheDocument();
+  });
+};
+
 describe('The "JobScheduler" component', () => {
-  it('renders the jobs table', async () => {
-    setup();
-
-    await screen.findByRole('table');
-  });
-
-  it('renders an "Add New Job" button', async () => {
-    setup();
-
-    await screen.findByRole('table');
-
-    expect(screen.getByText('Add New Job')).toBeInTheDocument();
-  });
-
-  describe('the "Add New Job" button', () => {
-    it('opens the "ScheduledJobForm" form with type = add', async () => {
-      const { user } = setup();
-
-      await screen.findByRole('table');
-
-      await user.click(screen.getByText('Add New Job'));
-
-      expect(screen.getByTestId('mocked-ace-editor')).toBeInTheDocument();
-      expect(screen.getByTestId('mocked-ace-editor')).toHaveValue('');
+  beforeEach(() => {
+    useParams.mockReturnValue({
+      jobId: 'JOB_ID',
     });
   });
 
-  describe('the "Manage" button in the jobs table', () => {
-    it('opens the "ScheduledJobManager"', async () => {
-      const { user } = setup();
+  it('renders the routes', async () => {
+    setup();
 
-      await screen.findByRole('table');
-      await waitFor(async () => {
-        expect(await screen.findByText(scheduledJobs[0].name)).toBeInTheDocument();
-      });
+    await waitForRoutesRender();
+  });
 
-      await user.click(screen.getAllByText('Manage')[0]);
+  it('renders the headings', async () => {
+    setup();
 
-      expect(screen.getByTestId('mocked-ace-editor')).not.toHaveValue('');
-    });
+    await waitForRoutesRender();
+
+    expect(screen.getByText('SQL Scheduler')).toBeInTheDocument();
   });
 });

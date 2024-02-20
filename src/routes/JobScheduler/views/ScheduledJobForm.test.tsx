@@ -1,24 +1,17 @@
+import { navigateMock } from '__mocks__/react-router-dom';
 import scheduledJob from '../../../../test/__mocks__/scheduledJob';
 import { getRequestSpy, render, screen, waitFor } from '../../../../test/testUtils';
 import { Job } from '../../../types';
 import ScheduledJobForm from './ScheduledJobForm';
 
-const backToJobList = jest.fn();
-
 const setupAdd = () => {
-  return render(<ScheduledJobForm type="add" backToJobList={backToJobList} />);
+  return render(<ScheduledJobForm type="add" />);
 };
 const setupEdit = (job: Job) => {
-  return render(
-    <ScheduledJobForm type="edit" job={job} backToJobList={backToJobList} />,
-  );
+  return render(<ScheduledJobForm type="edit" job={job} />);
 };
 
 describe('The "ScheduledJobForm" component', () => {
-  afterEach(() => {
-    backToJobList.mockClear();
-  });
-
   it('displays an empty form', () => {
     setupAdd();
 
@@ -84,7 +77,7 @@ describe('The "ScheduledJobForm" component', () => {
 
       await user.click(screen.getByText('Cancel'));
 
-      expect(backToJobList).toHaveBeenCalled();
+      expect(navigateMock).toHaveBeenCalledWith('..');
     });
   });
 
@@ -103,7 +96,7 @@ describe('The "ScheduledJobForm" component', () => {
         expect(createJobSpy).toHaveBeenCalled();
       });
 
-      expect(backToJobList).toHaveBeenCalled();
+      expect(navigateMock).toHaveBeenCalledWith('..');
     });
   });
 
@@ -154,7 +147,7 @@ describe('The "ScheduledJobForm" component', () => {
           expect(updateJobSpy).toHaveBeenCalled();
         });
 
-        expect(backToJobList).toHaveBeenCalled();
+        expect(navigateMock).toHaveBeenCalledWith('..');
       });
     });
   });

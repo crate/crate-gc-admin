@@ -4,7 +4,6 @@ import disableConsole from './disableConsole';
 import { getRequestSpy } from '../msw/getRequestSpy';
 
 export * from './renderWithTestWrapper';
-export * from './generateRouterMock';
 
 export {
   createLocationTestingUtility,

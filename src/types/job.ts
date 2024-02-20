@@ -5,7 +5,11 @@ export type Job = {
   enabled: boolean;
   sql: string;
   next_run_time?: string;
-  last_executions?: JobLog[];
+};
+
+export type EnrichedJob = Job & {
+  last_execution?: JobLog;
+  running: boolean;
 };
 
 export type TJobLogStatementError = {
@@ -26,11 +30,11 @@ export type TJobLogStatementsSuccess = {
 
 export type ErrorJobLog = {
   error: string;
-  statements: TJobLogStatementsError;
+  statements: TJobLogStatementsError | null;
 };
 export type SuccessJobLog = {
   error: null;
-  statements: TJobLogStatementsSuccess;
+  statements: TJobLogStatementsSuccess | null;
 };
 
 export type JobLog = {
@@ -38,6 +42,10 @@ export type JobLog = {
   start: string;
   end: string | null;
 } & (ErrorJobLog | SuccessJobLog);
+
+export type JobLogWithName = JobLog & {
+  job_name: string;
+};
 
 export type JobInput = {
   name: string;

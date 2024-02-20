@@ -1,38 +1,39 @@
 import React from 'react';
-import Text from '../Text';
-import cn from '../../utils/cn';
+import { cn } from 'utils';
 
 type CheckboxProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 > & {
-  id: string;
-  label: string;
   required?: boolean;
+  indeterminate?: boolean;
 };
 
 const Checkbox = React.forwardRef(
   (
-    { label, id, required = false, ...checkboxProps }: CheckboxProps,
+    { indeterminate, checked, className, ...checkboxProps }: CheckboxProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
-      <div className="w-full flex relative">
+      <div className="flex relative">
         <input
           className={cn(
             'peer relative appearance-none shrink-0 w-4 h-4',
             'border-2 border-blue-200',
             'checked:bg-crate-blue checked:border-0',
-            'rounded-sm mt-1 bg-white cursor-pointer',
+            'rounded-sm bg-white cursor-pointer',
+            className,
           )}
           type="checkbox"
-          id={id}
           ref={ref}
+          checked={
+            typeof indeterminate !== 'undefined' ? checked || indeterminate : checked
+          }
           {...checkboxProps}
         />
         {/* Custom chekmark */}
         <svg
-          className="absolute w-4 h-4 pointer-events-none hidden peer-checked:block stroke-white mt-1 outline-none"
+          className="absolute w-4 h-4 pointer-events-none hidden peer-checked:block stroke-white outline-none"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="-4 -4 32 32"
           fill="none"
@@ -41,14 +42,12 @@ const Checkbox = React.forwardRef(
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <polyline points="20 6 9 17 4 12"></polyline>
+          {indeterminate ? (
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+          ) : (
+            <polyline points="20 6 9 17 4 12"></polyline>
+          )}
         </svg>
-        {/* Label */}
-        <label htmlFor={id} className="pl-2">
-          <Text className={cn('font-bold')}>
-            {label} {required && '*'}
-          </Text>
-        </label>
       </div>
     );
   },

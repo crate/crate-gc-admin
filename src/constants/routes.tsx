@@ -39,7 +39,7 @@ const routes: Route[] = [
     key: 'sql',
   },
   {
-    path: '/sql-scheduler',
+    path: '/sql-scheduler/*',
     element: (
       <div className="p-4">
         <EnterpriseScreen>

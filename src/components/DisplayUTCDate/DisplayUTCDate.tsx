@@ -1,5 +1,6 @@
 import { Tooltip } from 'antd';
 import DisplayDate from '../DisplayDate';
+import { DATE_FORMAT_WITH_TZ } from 'constants/defaults';
 
 export type DisplayUTCDateProps = {
   isoDate: string;
@@ -13,7 +14,7 @@ function DisplayUTCDate({ isoDate, tooltip = false }: DisplayUTCDateProps) {
         tooltip && (
           <span className="text-center flex">
             Local Time:{' '}
-            <DisplayDate isoDate={isoDate} format="MMMM Do YYYY, HH:mm (UTC Z)" />
+            <DisplayDate isoDate={isoDate} format={DATE_FORMAT_WITH_TZ} />
           </span>
         )
       }

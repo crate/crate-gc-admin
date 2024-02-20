@@ -52,13 +52,13 @@ function Button({
   warn = false,
 }: ButtonProps) {
   const buttonClasses = useButtonStyles({
-    className,
     disabled,
     ghost,
     kind,
     loading,
     size,
     warn,
+    className,
   });
 
   const buttonProps = useMemo(

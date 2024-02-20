@@ -1,3 +1,4 @@
+import { DATE_FORMAT } from 'constants/defaults';
 import moment from 'moment';
 
 export type DisplayDateProps = {
@@ -8,7 +9,7 @@ export type DisplayDateProps = {
 
 function DisplayDate({
   isoDate,
-  format = 'MMMM Do YYYY, HH:mm',
+  format = DATE_FORMAT,
   utc = false,
 }: DisplayDateProps) {
   if (utc) {
