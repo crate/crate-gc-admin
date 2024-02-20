@@ -1,9 +1,9 @@
 import useSWR from 'swr';
-import swrCORSFetch from '../utils/swrCORSFetch';
+import swrCORSFetch from 'utils/swrCORSFetch';
 import { useEffect, useState } from 'react';
-import { apiGet } from '../utils/api';
-import { Job, JobLog } from '../types';
-import useGcApi from './useGcApi';
+import { apiGet } from 'utils/api';
+import { EnrichedJob, Job, JobLog, JobLogWithName } from 'types';
+import useGcApi from 'hooks/useGcApi';
 import {
   useGetClusterInfoQuery,
   useGetNodesQuery,
@@ -12,7 +12,7 @@ import {
   useGetShardsQuery,
   useGetAllocationsQuery,
   useGetQueryStatsQuery,
-} from './queryHooks';
+} from 'hooks/queryHooks';
 
 export const useGCGetScheduledJobs = () => {
   const gcApi = useGcApi();
@@ -20,6 +20,13 @@ export const useGCGetScheduledJobs = () => {
   return useSWR<Job[]>(`/api/scheduled-jobs/`, swrFetch, {
     refreshInterval: 10 * 1000,
   });
+};
+
+export const useGCGetScheduledJob = (jobId: string) => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+
+  return useSWR<Job>(`/api/scheduled-jobs/${jobId}`, swrFetch);
 };
 
 export const useGCGetScheduledJobLogs = (job: Job) => {
@@ -30,9 +37,17 @@ export const useGCGetScheduledJobLogs = (job: Job) => {
   });
 };
 
+export const useGCGetScheduledJobsLogs = () => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+  return useSWR<JobLogWithName[]>(`/api/scheduled-jobs/logs`, swrFetch, {
+    refreshInterval: 10 * 1000,
+  });
+};
+
 // NOTE: This Hook will be removed when API will return the last_execution
-export const useGCGetScheduledJobLastLogs = (jobs: Job[]) => {
-  const [jobsToReturn, setJobsToReturn] = useState<Job[]>([]);
+export const useGCGetScheduledJobEnriched = (jobs: Job[]) => {
+  const [jobsToReturn, setJobsToReturn] = useState<EnrichedJob[]>([]);
   const gcApi = useGcApi();
 
   useEffect(() => {
@@ -50,12 +65,14 @@ export const useGCGetScheduledJobLastLogs = (jobs: Job[]) => {
     });
 
     Promise.all(promises).then(logResults => {
-      const newJobs: Job[] = jobs.map((job, jobIndex) => {
-        const lastLog = logResults[jobIndex];
+      const newJobs: EnrichedJob[] = jobs.map((job, jobIndex) => {
+        const logs = logResults[jobIndex];
+        const lastLog = logResults[jobIndex]?.filter(log => log.end !== null)[0];
 
         return {
           ...job,
-          last_executions: lastLog,
+          last_execution: lastLog,
+          running: logs && logs[0] && logs[0].end === null ? true : false,
         };
       });
 
@@ -65,7 +82,7 @@ export const useGCGetScheduledJobLastLogs = (jobs: Job[]) => {
     });
   }, [jobs]);
 
-  return jobsToReturn;
+  return { jobsToReturn, setJobsToReturn };
 };
 
 export const useGetNodeStatus = () => {

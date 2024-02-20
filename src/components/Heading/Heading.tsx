@@ -1,7 +1,7 @@
 import React from 'react';
-import cx from 'classnames';
 import { HEADING_LEVELS } from './HeadingConstants';
 import { ValueOf } from '../../types/utils';
+import { cn } from 'utils';
 
 type HeadingLevel = ValueOf<typeof HEADING_LEVELS>;
 export type HeadingProps = {
@@ -33,7 +33,7 @@ function Heading({
     [HEADING_LEVELS.h5]: 'text-sm',
     [HEADING_LEVELS.h6]: 'text-sm',
   };
-  const headingClasses = cx(
+  const headingClasses = cn(
     { 'font-normal': light, 'font-bold': !light },
     classExtensions[displayLevel],
     className,

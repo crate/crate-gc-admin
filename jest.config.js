@@ -1,3 +1,7 @@
+import { pathsToModuleNameMapper } from 'ts-jest';
+
+import tsconfig from './tsconfig.json' assert { type: 'json' };
+
 export default {
   bail: false,
   preset: 'ts-jest/presets/js-with-ts',
@@ -19,9 +23,13 @@ export default {
     '!src/index.ts',
     '!src/lib.ts',
   ],
+  moduleDirectories: ['node_modules', '<rootDir>'],
   moduleNameMapper: {
+    ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+      prefix: '<rootDir>',
+    }),
     '.+\\.(css|less|sass|scss)$': 'identity-obj-proxy',
-    '\\.(svg|png)$': '<rootDir>/test/__mocks__/empty-module.js',
+    '\\.(svg|png)$': '<rootDir>/test/__mocks__/empty-module.ts',
   },
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {
