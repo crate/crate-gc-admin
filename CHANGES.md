@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-02-21 - 0.6.1
+
 - Change CrateDB SQL Editor Mode ES5 export to ES6.
 
 ## 2024-02-20 - 0.6.0
