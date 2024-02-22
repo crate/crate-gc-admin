@@ -19,21 +19,21 @@ describe('The "ScheduledJobs" component', () => {
     setup();
 
     await waitFor(async () => {
-      expect(await screen.findByText('Jobs')).toBeInTheDocument();
+      expect(await screen.findByText('Overview')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Recent')).toBeInTheDocument();
+    expect(screen.getByText('Logs')).toBeInTheDocument();
   });
 
-  describe('the "Jobs" tab', () => {
+  describe('the "Overview" tab', () => {
     it('renders the job form', async () => {
       const { user } = setup();
 
       await waitFor(async () => {
-        expect(await screen.findByText('Jobs')).toBeInTheDocument();
+        expect(await screen.findByText('Overview')).toBeInTheDocument();
       });
 
-      await user.click(screen.getByText('Jobs'));
+      await user.click(screen.getByText('Overview'));
 
       await waitFor(async () => {
         expect(await screen.findByText(scheduledJobs[0].name)).toBeInTheDocument();
@@ -41,15 +41,15 @@ describe('The "ScheduledJobs" component', () => {
     });
   });
 
-  describe('the "Recent" tab', () => {
+  describe('the "Logs" tab', () => {
     it('renders the logs table', async () => {
       const { user } = setup();
 
       await waitFor(async () => {
-        expect(await screen.findByText('Recent')).toBeInTheDocument();
+        expect(await screen.findByText('Logs')).toBeInTheDocument();
       });
 
-      await user.click(screen.getByText('Recent'));
+      await user.click(screen.getByText('Logs'));
 
       await waitFor(async () => {
         expect(

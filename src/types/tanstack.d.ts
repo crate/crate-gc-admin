@@ -8,6 +8,7 @@ declare module '@tanstack/react-table' {
     filter?: {
       label?: string;
       accessorFn?: AccessorFn<TData, TValue>;
+      searchBar?: boolean;
     };
   }
 

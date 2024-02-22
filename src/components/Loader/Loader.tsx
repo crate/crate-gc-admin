@@ -40,7 +40,10 @@ function Loader({
         })}
         fill="none"
         viewBox="0 0 24 24"
-        style={{ minWidth: 16, minHeight: 16 }}
+        style={{
+          minWidth: LOADER_SIZES.EXTRA_SMALL,
+          minHeight: LOADER_SIZES.EXTRA_SMALL,
+        }}
         width={size}
         height={size}
       >

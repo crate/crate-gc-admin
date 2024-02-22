@@ -13,12 +13,18 @@ import {
   useGetAllocationsQuery,
   useGetQueryStatsQuery,
 } from 'hooks/queryHooks';
+import { useGCContext } from 'contexts';
+
+const gcApiKeyBuilder = (key: string) => {
+  const { gcUrl } = useGCContext();
+  return `${gcUrl}${key}`;
+};
 
 export const useGCGetScheduledJobs = () => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
-  return useSWR<Job[]>(`/api/scheduled-jobs/`, swrFetch, {
-    refreshInterval: 10 * 1000,
+  return useSWR<Job[]>(gcApiKeyBuilder(`/api/scheduled-jobs/`), swrFetch, {
+    refreshInterval: 30 * 1000,
   });
 };
 
@@ -26,23 +32,31 @@ export const useGCGetScheduledJob = (jobId: string) => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
 
-  return useSWR<Job>(`/api/scheduled-jobs/${jobId}`, swrFetch);
+  return useSWR<Job>(gcApiKeyBuilder(`/api/scheduled-jobs/${jobId}`), swrFetch);
 };
 
 export const useGCGetScheduledJobLogs = (job: Job) => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
-  return useSWR<JobLog[]>(`/api/scheduled-jobs/${job.id}/log`, swrFetch, {
-    refreshInterval: 10 * 1000,
-  });
+  return useSWR<JobLog[]>(
+    gcApiKeyBuilder(`/api/scheduled-jobs/${job.id}/log`),
+    swrFetch,
+    {
+      refreshInterval: 30 * 1000,
+    },
+  );
 };
 
 export const useGCGetScheduledJobsLogs = () => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
-  return useSWR<JobLogWithName[]>(`/api/scheduled-jobs/logs`, swrFetch, {
-    refreshInterval: 10 * 1000,
-  });
+  return useSWR<JobLogWithName[]>(
+    gcApiKeyBuilder(`/api/scheduled-jobs/logs?limit=100`),
+    swrFetch,
+    {
+      refreshInterval: 30 * 1000,
+    },
+  );
 };
 
 // NOTE: This Hook will be removed when API will return the last_execution

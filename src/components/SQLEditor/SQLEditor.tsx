@@ -202,11 +202,16 @@ function SQLEditor({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <div className={cn('border-2 rounded', { 'border-red-600': error })}>
+      <div
+        className={cn('border-2 rounded', {
+          'border-red-600': error,
+        })}
+      >
         {/* EDITOR */}
         <AceEditor
-          height="300px"
           width="100%"
+          minLines={14}
+          maxLines={25}
           mode="cratedb"
           theme="github"
           fontSize={16}

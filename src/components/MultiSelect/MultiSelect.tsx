@@ -11,15 +11,20 @@ type MultiSelectProps = {
   elements: MultiSelectItem[];
   value: string[];
   onChange: (value: string[]) => void;
+  searchBar?: boolean;
 };
 
 export default function MultiSelect({
   children,
   elements,
   value,
+  searchBar = false,
   onChange,
 }: PropsWithChildren<MultiSelectProps>) {
   const [searchTerm, setSearchTerm] = useState('');
+  const filteredElements = elements.filter(el =>
+    el.label.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   const triggerCheck = (id: string) => {
     let newSelectedElements = value;
@@ -35,10 +40,10 @@ export default function MultiSelect({
   };
 
   const selectAll = () => {
-    if (value.length === elements.length) {
-      onChange([]);
+    if (value.length === 0) {
+      onChange(filteredElements.map(el => el.label));
     } else {
-      onChange(elements.map(el => el.label));
+      onChange([]);
     }
   };
 
@@ -56,16 +61,21 @@ export default function MultiSelect({
         </span>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="w-64">
-        <DropdownMenu.Label className="font-normal">
-          <Input
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={e => {
-              setSearchTerm(e.target.value);
-            }}
-          />
-        </DropdownMenu.Label>
-        <DropdownMenu.Separator />
+        {searchBar && (
+          <>
+            <DropdownMenu.Label className="font-normal">
+              <Input
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={e => {
+                  setSearchTerm(e.target.value);
+                }}
+              />
+            </DropdownMenu.Label>
+            <DropdownMenu.Separator />
+          </>
+        )}
+
         <DropdownMenu.CheckboxItem
           checked={elements.length === value.length}
           indeterminate={value.length > 0 && value.length < elements.length}
@@ -76,21 +86,19 @@ export default function MultiSelect({
           Select All
         </DropdownMenu.CheckboxItem>
 
-        {elements
-          .filter(el => el.label.toLowerCase().includes(searchTerm.toLowerCase()))
-          .map(el => {
-            return (
-              <DropdownMenu.CheckboxItem
-                key={el.id}
-                checked={value.includes(el.id)}
-                onClick={() => {
-                  triggerCheck(el.id);
-                }}
-              >
-                {el.label}
-              </DropdownMenu.CheckboxItem>
-            );
-          })}
+        {filteredElements.map(el => {
+          return (
+            <DropdownMenu.CheckboxItem
+              key={el.id}
+              checked={value.includes(el.id)}
+              onClick={() => {
+                triggerCheck(el.id);
+              }}
+            >
+              {el.label}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
       </DropdownMenu.Content>
     </DropdownMenu.Menu>
   );

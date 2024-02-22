@@ -1,7 +1,7 @@
 import { useGCGetScheduledJobsLogs } from 'hooks/swrHooks';
 import { JobLogWithName, TJobLogStatementError } from 'types';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Chip,
@@ -14,19 +14,17 @@ import {
 } from 'components';
 import { ColumnDef, Row } from '@tanstack/react-table';
 import moment from 'moment';
-import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { cn, compareDurations, compareIsoDates } from 'utils';
 import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
 import { getLogDuration } from '../utils/logs';
 
-export const JOB_LOG_TABLE_PAGE_SIZE = 50;
+export const JOB_LOG_TABLE_PAGE_SIZE = 10;
 
 const getColumnsDefinition = ({
   setError,
-  editJob,
 }: {
   setError: (error: TJobLogStatementError & { timestamp: string }) => void;
-  editJob: (log: JobLogWithName) => void;
 }) => {
   const columns: ColumnDef<JobLogWithName>[] = [
     {
@@ -39,6 +37,7 @@ const getColumnsDefinition = ({
           accessorFn: log => {
             return log.job_name;
           },
+          searchBar: true,
         },
       },
       accessorFn: (log: JobLogWithName) => {
@@ -54,18 +53,7 @@ const getColumnsDefinition = ({
 
         return (
           <div className="flex flex-col">
-            <Text>
-              {name}{' '}
-              <Button
-                kind={Button.kinds.TERTIARY}
-                onClick={() => {
-                  editJob(log);
-                }}
-                className="!leading-3"
-              >
-                <EditOutlined />
-              </Button>
-            </Text>
+            <Link to={`./${encodeURIComponent(log.job_id)}`}>{name}</Link>
             <span className="text-[8px]">
               {isRunning && (
                 <Chip className="bg-orange-400 text-white">RUNNING</Chip>
@@ -86,15 +74,44 @@ const getColumnsDefinition = ({
         return moment.utc(log.start).format(DATE_FORMAT);
       },
       cell: ({ row }) => {
+        const log = row.original;
+        const logAvailable = log.end !== null;
+        const inError = log.error !== null;
+
         return (
-          <Text>
-            <span data-testid="execution-time">
-              <DisplayUTCDate isoDate={row.original.start} tooltip />
+          <div className="w-full">
+            <span>
+              {!logAvailable ? (
+                <Text className="pl-7">-</Text>
+              ) : (
+                <div className="flex gap-2">
+                  <div>
+                    <span
+                      data-testid="execution-time-icon"
+                      className={cn(
+                        {
+                          'bg-red-600': inError,
+                          'bg-green-600': !inError,
+                        },
+                        'text-white rounded-full p-1 text-[12px] flex',
+                      )}
+                    >
+                      {inError ? <CloseOutlined /> : <CheckOutlined />}
+                    </span>
+                  </div>
+
+                  <div className="w-full flex flex-col">
+                    <div className="flex gap-2" data-testid="execution-time">
+                      <DisplayUTCDate isoDate={log.end!} tooltip />
+                    </div>
+                    <Text pale testId="execution-time-difference">
+                      <DisplayDateDifference to={log.end!} />
+                    </Text>
+                  </div>
+                </div>
+              )}
             </span>
-            <Text pale testId="execution-time-difference">
-              <DisplayDateDifference to={row.original.start} />
-            </Text>
-          </Text>
+          </div>
         );
       },
       sortingFn: (rowA: Row<JobLogWithName>, rowB: Row<JobLogWithName>) => {
@@ -122,7 +139,7 @@ const getColumnsDefinition = ({
         const isRunning = log.end === null;
 
         if (!duration || isRunning) {
-          return 'n/a';
+          return '-';
         }
         return moment.utc(duration * 1000).format(DURATION_FORMAT);
       },
@@ -133,13 +150,14 @@ const getColumnsDefinition = ({
       },
     },
     {
-      header: 'Status',
+      header: 'Error',
       id: 'status',
       accessorFn: log => {
         return log.error ? log.error : 'Success';
       },
       meta: {
         filter: {
+          label: 'Status',
           accessorFn: log => {
             return log.error ? 'Error' : 'Success';
           },
@@ -167,53 +185,36 @@ const getColumnsDefinition = ({
         const isRunning = log.end === null;
 
         return isRunning ? (
-          <Text testId="status-running">n/a</Text>
+          <Text testId="status-running">-</Text>
+        ) : !inError ? (
+          <Text testId="status-success">-</Text>
         ) : (
-          <>
-            <div className="flex gap-2 truncate">
+          <div className="flex truncate">
+            <div className="flex flex-col truncate">
+              <Text truncate>{log.error}</Text>
               <div>
-                <span
-                  data-testid="status-icon"
-                  className={cn(
-                    {
-                      'bg-red-600': inError,
-                      'bg-green-600': !inError,
-                    },
-                    'text-white rounded-full p-1 text-[12px] flex',
-                  )}
+                <Button
+                  kind={Button.kinds.TERTIARY}
+                  size={Button.sizes.SMALL}
+                  className="!leading-3 h-auto"
+                  onClick={() => {
+                    const keyInError = Object.keys(log.statements!)
+                      .sort()
+                      .slice(-1)
+                      .pop();
+                    const statementError = log.statements![keyInError!];
+
+                    setError({
+                      ...statementError,
+                      timestamp: log.start,
+                    });
+                  }}
                 >
-                  {inError ? <CloseOutlined /> : <CheckOutlined />}
-                </span>
-              </div>
-
-              <div className="flex flex-col truncate">
-                <Text truncate>{inError ? log.error : 'Success'}</Text>
-                <div>
-                  {inError && (
-                    <Button
-                      kind={Button.kinds.TERTIARY}
-                      size={Button.sizes.SMALL}
-                      className="!leading-3 h-auto"
-                      onClick={() => {
-                        const keyInError = Object.keys(log.statements!)
-                          .sort()
-                          .slice(-1)
-                          .pop();
-                        const statementError = log.statements![keyInError!];
-
-                        setError({
-                          ...statementError,
-                          timestamp: log.start,
-                        });
-                      }}
-                    >
-                      View Details
-                    </Button>
-                  )}
-                </div>
+                  View Details
+                </Button>
               </div>
             </div>
-          </>
+          </div>
         );
       },
     },
@@ -223,7 +224,6 @@ const getColumnsDefinition = ({
 };
 
 export default function ScheduledJobLogs() {
-  const navigate = useNavigate();
   const { data: jobLogs, isLoading: isLoadingJobLogs } = useGCGetScheduledJobsLogs();
   const [errorDialogContent, setErrorDialogContent] = useState<
     (TJobLogStatementError & { timestamp: string }) | null
@@ -245,10 +245,6 @@ export default function ScheduledJobLogs() {
     );
   }
 
-  const editJob = (log: JobLogWithName) => {
-    navigate(log.job_id);
-  };
-
   return (
     <>
       <div className="w-full overflow-x-auto">
@@ -256,11 +252,11 @@ export default function ScheduledJobLogs() {
           data={jobLogs}
           columns={getColumnsDefinition({
             setError: openErrorDialog,
-            editJob,
           })}
           className="table-fixed"
           enableFilters
           elementsPerPage={JOB_LOG_TABLE_PAGE_SIZE}
+          noResultsLabel="No logs found."
           defaultSorting={[
             {
               id: 'execution_time',

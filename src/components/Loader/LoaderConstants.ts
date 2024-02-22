@@ -9,6 +9,7 @@ export const LOADER_COLORS = {
 } as const;
 
 export const LOADER_SIZES = {
+  EXTRA_SMALL: 8,
   SMALL: 16,
   MEDIUM: 40,
   LARGE: 64,
