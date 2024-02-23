@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-02-23 - 0.6.2
+
 - Fixing UI findings on SQL Scheduler.
 
 ## 2024-02-21 - 0.6.1
