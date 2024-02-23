@@ -8,15 +8,15 @@ export default function ScheduledJobs() {
         {
           children: <ScheduledJobsTable />,
           label: 'Overview',
-          key: 'overview',
+          key: 'scheduled_overview',
         },
         {
           children: <ScheduledJobLogs />,
           label: 'Logs',
-          key: 'logs',
+          key: 'scheduled_logs',
         },
       ]}
-      defaultActiveKey="overview"
+      defaultActiveKey="scheduled_overview"
       destroyInactiveTabPane
     />
   );
