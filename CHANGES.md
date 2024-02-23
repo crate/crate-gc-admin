@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Fixing column width on Job and Logs Table.
+- Add specific tab query param key for GC tabs.
+- UI Improvements on SQL Editor.
+
 ## 2024-02-23 - 0.6.4
 
 - Fixing broken navigation link from Job table to logs table.

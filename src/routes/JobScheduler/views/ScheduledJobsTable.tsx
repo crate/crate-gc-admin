@@ -48,6 +48,9 @@ const getColumnsDefinition = ({
     {
       accessorKey: 'enabled',
       header: 'Active',
+      meta: {
+        columnWidth: '70px',
+      },
       cell: ({ row, table }) => {
         const job = row.original;
         const isActive = job.enabled;
@@ -73,6 +76,9 @@ const getColumnsDefinition = ({
     {
       accessorKey: 'name',
       header: 'Name',
+      meta: {
+        columnWidth: '15%',
+      },
       cell: ({ row }) => {
         const name = row.original.name;
         const running = row.original.running;
@@ -89,6 +95,9 @@ const getColumnsDefinition = ({
     {
       accessorKey: 'cron',
       header: 'Schedule',
+      meta: {
+        columnWidth: '20%',
+      },
       cell: ({ cell }) => {
         const schedule = cell.getValue<string>();
         return (
@@ -133,7 +142,7 @@ const getColumnsDefinition = ({
                   <div className="w-full flex flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
-                        to={`?tab=scheduled_logs&job_name=${encodeURIComponent(job.name)}`}
+                        to={`?schedulerTab=scheduled_logs&job_name=${encodeURIComponent(job.name)}`}
                       >
                         <DisplayUTCDate isoDate={lastExecution.end!} tooltip />
                       </Link>
@@ -197,6 +206,9 @@ const getColumnsDefinition = ({
     },
     {
       header: ' ',
+      meta: {
+        columnWidth: '80px',
+      },
       cell: ({ row }) => {
         const job = row.original;
         return (

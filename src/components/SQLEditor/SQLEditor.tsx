@@ -184,18 +184,20 @@ function SQLEditor({
 
   const renderIstructions = () => {
     const isMac = navigator.userAgent.indexOf('Mac OS') != -1;
-    const executeString = isMac ? 'Cmd+Enter to execute.' : 'Ctrl+Enter to execute.';
-    let historyString = null;
+
+    const cmdChar = isMac ? '⌘' : 'Ctrl';
+
+    const executeString = `${cmdChar} + ↵ to execute`;
+
+    let historyString: string | null = null;
     if (isLocalStorageUsed) {
-      historyString = isMac
-        ? 'Cmd+Up/Down to navigate history.'
-        : 'Ctrl+Up/Down to navigate history.';
+      historyString = `${cmdChar} + ↑/↓ to navigate history`;
     }
 
     return (
-      <div className="flex flex-wrap justify-end ml-2 text-sm">
-        <span className="whitespace-nowrap">{executeString}</span>
+      <div className="flex flex-wrap justify-end ml-2 text-sm flex-col items-end">
         {historyString && <span className="whitespace-nowrap">{historyString}</span>}
+        <span className="whitespace-nowrap">{executeString}</span>
       </div>
     );
   };
@@ -315,7 +317,7 @@ function SQLEditor({
           )}
           <Button kind="secondary" onClick={formatSql}>
             <FormatPainterOutlined className="mr-2" />
-            Format SQL
+            Format
           </Button>
         </div>
         {renderIstructions()}
