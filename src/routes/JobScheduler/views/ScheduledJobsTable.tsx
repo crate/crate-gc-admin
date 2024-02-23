@@ -133,7 +133,7 @@ const getColumnsDefinition = ({
                   <div className="w-full flex flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
-                        to={`?tab=recent&job_name=${encodeURIComponent(job.name)}`}
+                        to={`?tab=scheduled_logs&job_name=${encodeURIComponent(job.name)}`}
                       >
                         <DisplayUTCDate isoDate={lastExecution.end!} tooltip />
                       </Link>

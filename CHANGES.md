@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-02-23 - 0.6.4
+
+- Fixing broken navigation link from Job table to logs table.
+
 ## 2024-02-23 - 0.6.3
 
 - Fixing tab key that conflicts with those used in cloud-ui.

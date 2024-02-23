@@ -176,7 +176,7 @@ describe('The "ScheduledJobsTable" component', () => {
         screen.getByTestId('last-execution').getElementsByTagName('a')[0],
       ).toHaveAttribute(
         'href',
-        `?tab=recent&job_name=${encodeURIComponent(job.name)}`,
+        `?tab=scheduled_logs&job_name=${encodeURIComponent(job.name)}`,
       );
     });
 
