@@ -1,5 +1,6 @@
 import {
   ColumnDef,
+  PaginationState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -24,8 +25,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  noResultsLabel?: string;
   className?: string;
   enableFilters?: boolean;
+  enableSearchBox?: boolean;
   elementsPerPage?: number;
   additionalState?: unknown;
   defaultSorting?: ColumnSort[];
@@ -57,13 +60,19 @@ export function DataTable<TData, TValue>({
   data,
   className,
   defaultSorting,
+  noResultsLabel = 'No results.',
   enableFilters = false,
-  elementsPerPage = 50,
+  enableSearchBox = false,
+  elementsPerPage = 10,
   additionalState,
   getRowId,
 }: DataTableProps<TData, TValue>) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: elementsPerPage,
+  });
   const [sorting, setSorting] = useState<SortingState>(defaultSorting || []);
   const [searchTerm, setSearchTerm] = useState('');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
@@ -78,15 +87,13 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      pagination: {
-        pageSize: elementsPerPage,
-      },
       additionalState,
     },
     state: {
       sorting,
       columnFilters,
       globalFilter: searchTerm,
+      pagination,
     },
     defaultColumn: {
       filterFn: 'arrIncludesSome',
@@ -95,11 +102,13 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setSearchTerm,
+    onPaginationChange: setPagination,
     globalFilterFn: 'includesString',
     getRowId,
   });
 
-  const currentPage = table.getState().pagination.pageIndex;
+  const currentPage = table.getState().pagination.pageIndex + 1;
+  const pageSize = table.getState().pagination.pageSize;
   const pageCount = Math.max(1, table.getPageCount());
 
   const renderHeader = (
@@ -155,6 +164,7 @@ export function DataTable<TData, TValue>({
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           renderHeader={renderHeader}
+          enableSearchBox={enableSearchBox}
         />
       )}
 
@@ -223,8 +233,11 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <Table.Row>
-                <Table.Cell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                <Table.Cell
+                  colSpan={columns.length}
+                  className="h-24 text-center pt-10 leading-5 text-neutral-500 tracking-wide"
+                >
+                  {noResultsLabel}
                 </Table.Cell>
               </Table.Row>
             )}
@@ -233,83 +246,18 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Pagination */}
-      <Pagination className="justify-end">
-        <Pagination.Content>
-          <Pagination.Item>
-            <Pagination.Previous
-              disabled={currentPage === 0}
-              onClick={() => {
-                table.setPageIndex(currentPage - 1);
-              }}
-            />
-          </Pagination.Item>
-          {currentPage !== 0 && (
-            <Pagination.Item>
-              <Pagination.Button
-                onClick={() => {
-                  table.setPageIndex(0);
-                }}
-              >
-                1
-              </Pagination.Button>
-            </Pagination.Item>
-          )}
-          {currentPage > 1 && (
-            <Pagination.Item>
-              <Pagination.Ellipsis />
-            </Pagination.Item>
-          )}
-          {currentPage > 1 && (
-            <Pagination.Item>
-              <Pagination.Button
-                onClick={() => {
-                  table.setPageIndex(currentPage - 1);
-                }}
-              >
-                {currentPage - 1 + 1}
-              </Pagination.Button>
-            </Pagination.Item>
-          )}
-          <Pagination.Item>
-            <Pagination.Button isActive>{currentPage + 1}</Pagination.Button>
-          </Pagination.Item>
-          {currentPage + 2 < pageCount && (
-            <Pagination.Item>
-              <Pagination.Button
-                onClick={() => {
-                  table.setPageIndex(currentPage + 1);
-                }}
-              >
-                {currentPage + 1 + 1}
-              </Pagination.Button>
-            </Pagination.Item>
-          )}
-          {currentPage + 3 < pageCount && (
-            <Pagination.Item>
-              <Pagination.Ellipsis />
-            </Pagination.Item>
-          )}
-          {currentPage !== pageCount - 1 && (
-            <Pagination.Item>
-              <Pagination.Button
-                onClick={() => {
-                  table.setPageIndex(pageCount - 1);
-                }}
-              >
-                {pageCount}
-              </Pagination.Button>
-            </Pagination.Item>
-          )}
-          <Pagination.Item>
-            <Pagination.Next
-              disabled={currentPage === pageCount - 1}
-              onClick={() => {
-                table.setPageIndex(currentPage + 1);
-              }}
-            />
-          </Pagination.Item>
-        </Pagination.Content>
-      </Pagination>
+      <Pagination
+        className="justify-end"
+        pageSize={pageSize}
+        currentPage={currentPage}
+        totalPages={pageCount}
+        onPageChange={(pageNumber: number) => {
+          table.setPageIndex(pageNumber - 1);
+        }}
+        onPageSizeChange={(pageSize: number) => {
+          table.setPageSize(pageSize);
+        }}
+      />
     </div>
   );
 }

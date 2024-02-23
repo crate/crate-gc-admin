@@ -7,16 +7,16 @@ export default function ScheduledJobs() {
       items={[
         {
           children: <ScheduledJobsTable />,
-          label: 'Jobs',
-          key: 'jobs',
+          label: 'Overview',
+          key: 'overview',
         },
         {
           children: <ScheduledJobLogs />,
-          label: 'Recent',
-          key: 'recent',
+          label: 'Logs',
+          key: 'logs',
         },
       ]}
-      defaultActiveKey="jobs"
+      defaultActiveKey="overview"
       destroyInactiveTabPane
     />
   );

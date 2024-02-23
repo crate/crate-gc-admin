@@ -5,7 +5,6 @@ import moment from 'moment';
 import { JobLogWithName } from '../../../types';
 import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
 import { scheduledJobLogsWithName } from 'test/__mocks__/scheduledJobLogs';
-import { navigateMock } from '__mocks__/react-router-dom';
 import { getLogDuration } from '../utils/logs';
 
 const setup = () => {
@@ -99,14 +98,15 @@ describe('The "ScheduledJobLogs" component', () => {
       expect(screen.getByText('RUNNING')).toBeInTheDocument();
     });
 
-    it('displays the edit icon that navigates to edit job page', async () => {
-      const { container, user } = setup();
+    it('clicking on it navigates to edit job page', async () => {
+      setup();
 
       await waitForTableRender();
 
-      expect(screen.getByText(log.job_name)).toBeInTheDocument();
-      await user.click(container.getElementsByClassName('anticon-edit')[0]);
-      expect(navigateMock).toHaveBeenCalledWith(log.job_id);
+      expect(screen.getByText(log.job_name)).toHaveAttribute(
+        'href',
+        `./${encodeURIComponent(log.job_id)}`,
+      );
     });
   });
 
@@ -119,6 +119,32 @@ describe('The "ScheduledJobLogs" component', () => {
       const formattedDate = moment.utc(log.start).format(DATE_FORMAT);
       expect(screen.getByTestId('execution-time')).toHaveTextContent(formattedDate);
       expect(screen.getByTestId('execution-time-difference')).toBeInTheDocument();
+    });
+
+    it('displays green success icon if log has no error', async () => {
+      setup();
+
+      await waitForTableRender();
+
+      const icon = screen.getByTestId('execution-time-icon');
+
+      expect(icon).toHaveClass('bg-green-600');
+      expect(icon.getElementsByClassName('anticon-check')[0]).toBeInTheDocument();
+    });
+
+    it('displays red error icon if last execution has an error', async () => {
+      // Show only one job with errors
+      const log: JobLogWithName = errorLog;
+      server.use(customAllScheduledJobLogsGetResponse([log]));
+
+      setup();
+
+      await waitForTableRender();
+
+      const icon = screen.getByTestId('execution-time-icon');
+
+      expect(icon).toHaveClass('bg-red-600');
+      expect(icon.getElementsByClassName('anticon-close')[0]).toBeInTheDocument();
     });
   });
 
@@ -134,51 +160,35 @@ describe('The "ScheduledJobLogs" component', () => {
       expect(screen.getByText(durationFormatted)).toBeInTheDocument();
     });
 
-    it('displays n/a for running jobs', async () => {
+    it('displays - for running jobs', async () => {
       const log: JobLogWithName = runningJob;
       server.use(customAllScheduledJobLogsGetResponse([log]));
       setup();
 
       await waitForTableRender();
 
-      expect(screen.getByTestId('duration')).toHaveTextContent('n/a');
+      expect(screen.getByTestId('duration')).toHaveTextContent('-');
     });
   });
 
   describe('the "status" cell', () => {
-    describe('for logs without error', () => {
-      it('shows a success icon', async () => {
-        const { container } = setup();
+    it('displays - for logs without errors', async () => {
+      server.use(customAllScheduledJobLogsGetResponse([log]));
+      setup();
 
-        await waitForTableRender();
+      await waitForTableRender();
 
-        const tableRow = container.querySelector(
-          `[data-row-key="${getLogId(log)}"]`,
-        );
-        expect(tableRow).toBeInTheDocument();
+      expect(screen.getByTestId('status-success')).toHaveTextContent('-');
+    });
 
-        const icon = screen.getByTestId('status-icon');
-        expect(icon).toBeInTheDocument();
-        expect(icon).toHaveClass('bg-green-600');
-        expect(
-          screen
-            .getByTestId('status-icon')
-            .getElementsByClassName('anticon-check')[0],
-        ).toBeInTheDocument();
-      });
+    it('displays - for running jobs', async () => {
+      const log: JobLogWithName = runningJob;
+      server.use(customAllScheduledJobLogsGetResponse([log]));
+      setup();
 
-      it('displays "Success"', async () => {
-        const { container } = setup();
+      await waitForTableRender();
 
-        await waitForTableRender();
-
-        const tableRow = container.querySelector(
-          `[data-row-key="${getLogId(log)}"]`,
-        );
-        expect(tableRow).toBeInTheDocument();
-
-        expect(screen.getByText('Success')).toBeInTheDocument();
-      });
+      expect(screen.getByTestId('status-running')).toHaveTextContent('-');
     });
 
     describe('for logs with errors', () => {
@@ -186,26 +196,6 @@ describe('The "ScheduledJobLogs" component', () => {
       const log: JobLogWithName = errorLog;
       beforeEach(() => {
         server.use(customAllScheduledJobLogsGetResponse([log]));
-      });
-
-      it('shows an error icon for failed jobs', async () => {
-        const { container } = setup();
-
-        await waitForTableRender();
-
-        const tableRow = container.querySelector(
-          `[data-row-key="${getLogId(log)}"]`,
-        );
-        expect(tableRow).toBeInTheDocument();
-
-        const icon = screen.getByTestId('status-icon');
-        expect(icon).toBeInTheDocument();
-        expect(icon).toHaveClass('bg-red-600');
-        expect(
-          screen
-            .getByTestId('status-icon')
-            .getElementsByClassName('anticon-close')[0],
-        ).toBeInTheDocument();
       });
 
       it('displays the error message if execution has an error', async () => {
@@ -276,16 +266,6 @@ describe('The "ScheduledJobLogs" component', () => {
           expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         });
       });
-    });
-
-    it('displays n/a for running jobs', async () => {
-      const log: JobLogWithName = runningJob;
-      server.use(customAllScheduledJobLogsGetResponse([log]));
-      setup();
-
-      await waitForTableRender();
-
-      expect(screen.getByTestId('status-running')).toHaveTextContent('n/a');
     });
   });
 });

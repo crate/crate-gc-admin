@@ -215,14 +215,14 @@ describe('The "ScheduledJobsTable" component', () => {
       expect(icon.getElementsByClassName('anticon-close')[0]).toBeInTheDocument();
     });
 
-    it('displays n/a for job that have no executions', async () => {
+    it('displays - for job that have no executions', async () => {
       server.use(customScheduledJobLogsGetResponse([]));
 
       setup();
 
       await waitForTableRender();
 
-      expect(screen.getByText('n/a')).toBeInTheDocument();
+      expect(screen.getByText('-')).toBeInTheDocument();
     });
   });
 
@@ -237,7 +237,7 @@ describe('The "ScheduledJobsTable" component', () => {
       expect(screen.getByTestId('next-execution-difference')).toBeInTheDocument();
     });
 
-    it('displays n/a for disabled jobs', async () => {
+    it('displays - for disabled jobs', async () => {
       // Show only one non-active job
       const job: Job = {
         ...scheduledJobs[0],
@@ -250,7 +250,7 @@ describe('The "ScheduledJobsTable" component', () => {
 
       await waitForTableRender();
 
-      expect(screen.getByText('n/a')).toBeInTheDocument();
+      expect(screen.getByText('-')).toBeInTheDocument();
     });
   });
 

@@ -242,7 +242,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
                   return (
                     <Form.Item className="space-y-1/2 flex gap-2">
                       <Form.Control>
-                        <Switch
+                        <Switch.Root
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           className="mt-1"

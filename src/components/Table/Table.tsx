@@ -3,7 +3,10 @@ import { cn } from 'utils';
 
 const Table = ({ className, ...props }: React.ComponentProps<'table'>) => (
   <div className="relative w-full overflow-auto">
-    <table className={cn('w-full caption-bottom text-sm', className)} {...props} />
+    <table
+      className={cn('w-full caption-bottom text-[14px]', className)}
+      {...props}
+    />
   </div>
 );
 Table.displayName = 'Table';
@@ -35,7 +38,7 @@ const Footer = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      'border-t bg-slate-100/50 font-medium [&>tr]:last:border-b-0 dark:bg-slate-800/50',
+      'border-t bg-slate-100/50 font-medium [&>tr]:last:border-b-0',
       className,
     )}
     {...props}
@@ -62,7 +65,7 @@ const Row = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      'border-b transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800',
+      'border-b transition-colors hover:bg-[#fafafa] data-[state=selected]:bg-slate-100',
       className,
     )}
     {...props}
@@ -73,15 +76,17 @@ Row.displayName = 'TableRow';
 const Head = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      'h-12 px-2 text-left align-middle font-bold text-slate-500 [&:has([role=checkbox])]:pr-0 dark:text-slate-400',
+      'h-12 px-2 text-left align-middle font-medium text-[#737373] [&:has([role=checkbox])]:pr-0 bg-[#fafafa]',
       className,
     )}
     {...props}
-  />
+  >
+    <span className="border-r flex grow">{children}</span>
+  </th>
 ));
 Head.displayName = 'TableHead';
 
@@ -103,7 +108,7 @@ const Caption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn('mt-4 text-sm text-slate-500 dark:text-slate-400', className)}
+    className={cn('mt-4 text-sm text-slate-500', className)}
     {...props}
   />
 ));

@@ -24,7 +24,7 @@ import {
 } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 
-export const JOBS_TABLE_PAGE_SIZE = 5;
+export const JOBS_TABLE_PAGE_SIZE = 10;
 
 type TableAdditionalState = {
   togglingJob: string | null;
@@ -61,7 +61,11 @@ const getColumnsDefinition = ({
               toggleJobActivation(row.original, table);
             }}
           >
-            <Switch defaultChecked={isActive} loading={isSwitching} />
+            <Switch.Root
+              defaultChecked={isActive}
+              loading={isSwitching}
+              size={Switch.sizes.SMALL}
+            />
           </span>
         );
       },
@@ -108,7 +112,7 @@ const getColumnsDefinition = ({
           <div className="w-full">
             <span>
               {!logAvailable ? (
-                <Text className="pl-7">n/a</Text>
+                <Text className="pl-7">-</Text>
               ) : (
                 <div className="flex gap-2">
                   <div>
@@ -178,11 +182,7 @@ const getColumnsDefinition = ({
         return (
           <div className="w-full flex flex-col">
             <Text>
-              {nextRunTime ? (
-                <DisplayUTCDate isoDate={nextRunTime} tooltip />
-              ) : (
-                'n/a'
-              )}
+              {nextRunTime ? <DisplayUTCDate isoDate={nextRunTime} tooltip /> : '-'}
             </Text>
             {nextRunTime && (
               <div>
@@ -326,6 +326,7 @@ export default function ScheduledJobsTable() {
       <div className="w-full overflow-x-a">
         <DataTable
           elementsPerPage={JOBS_TABLE_PAGE_SIZE}
+          noResultsLabel="No jobs found."
           data={scheduledJobsEnriched.sort((a: Job, b: Job) => {
             if (a.name < b.name) {
               return -1;

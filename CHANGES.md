@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fixing UI findings on SQL Scheduler.
+
 ## 2024-02-21 - 0.6.1
 
 - Change CrateDB SQL Editor Mode ES5 export to ES6.

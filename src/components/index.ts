@@ -30,6 +30,7 @@ export { default as NoDataView } from './NoDataView';
 export { default as Pagination } from './Pagination';
 export { default as QueryStackTraceModal } from './QueryStackTraceModal';
 export { default as RoundedIcon } from './RoundedIcon';
+export { default as Select } from './Select';
 export { default as SQLEditor } from './SQLEditor';
 export { default as SQLResultsTable } from './SQLResultsTable';
 export { default as StatsUpdater } from './StatsUpdater';
