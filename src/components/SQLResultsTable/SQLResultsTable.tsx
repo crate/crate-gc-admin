@@ -1,8 +1,10 @@
-import { Radio, Table, Tabs } from 'antd';
+import React from 'react';
+import { Radio, Table } from 'antd';
 import _ from 'lodash';
+import Chip from '../Chip';
+import CrateTabs from '../CrateTabs';
 import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
 import { dbTypeToHumanReadable } from './utils';
-import React from 'react';
 import Papa from 'papaparse';
 import { ColumnType, QueryResult, QueryResults } from '../../types/query';
 import useSessionStore from '../../state/session';
@@ -273,41 +275,40 @@ function SQLResultsTable({ results }: Params) {
     }
 
     return result ? (
-      <div>
-        <Table
-          columns={columns}
-          dataSource={data}
-          pagination={{ defaultPageSize: 20 }}
-          showHeader
-          bordered
-          size="small"
-          scroll={{
-            x: 'max-content',
-          }}
-          title={() => (
-            <div className="flex flex-row gap-2">
-              <div className="text-xs font-bold border-e pr-2 pt-1">
-                {`${result.rowcount} rows, ${result.duration} ms`}
-              </div>
-              <div>
-                <Radio.Group
-                  options={[
-                    { label: 'Pretty', value: 'pretty' },
-                    { label: 'Raw', value: 'raw' },
-                    { label: 'CSV', value: 'csv' },
-                    { label: 'JSON', value: 'json' },
-                  ]}
-                  onChange={evt => setTableResultsFormat(evt.target.value)}
-                  value={tableResultsFormat}
-                  optionType="button"
-                  buttonStyle="solid"
-                  size="small"
-                />
-              </div>
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{ defaultPageSize: 20, position: ['bottomRight'] }}
+        showHeader
+        bordered
+        size="small"
+        scroll={{
+          x: 'max-content',
+        }}
+        title={() => (
+          <div className="flex flex-row gap-2 items-center">
+            <div className="border-e flex font-bold items-center pr-2 pt-1 text-xs">
+              <Chip className="bg-green-600 mr-1.5 text-white">OK</Chip>
+              {`${result.rowcount} rows, ${result.duration} ms`}
             </div>
-          )}
-        />
-      </div>
+            <div>
+              <Radio.Group
+                options={[
+                  { label: 'Pretty', value: 'pretty' },
+                  { label: 'Raw', value: 'raw' },
+                  { label: 'CSV', value: 'csv' },
+                  { label: 'JSON', value: 'json' },
+                ]}
+                onChange={evt => setTableResultsFormat(evt.target.value)}
+                value={tableResultsFormat}
+                optionType="button"
+                buttonStyle="solid"
+                size="small"
+              />
+            </div>
+          </div>
+        )}
+      />
     ) : null;
   };
 
@@ -316,6 +317,7 @@ function SQLResultsTable({ results }: Params) {
       return null;
     }
     let idx = 0;
+
     const tabs = results.map(o => {
       const i = ++idx;
       return {
@@ -324,7 +326,7 @@ function SQLResultsTable({ results }: Params) {
         children: renderTable(o),
       };
     });
-    return <Tabs defaultActiveKey="1" items={tabs} />;
+    return <CrateTabs defaultActiveKey="1" items={tabs} />;
   };
 
   let ret = null;
@@ -333,7 +335,7 @@ function SQLResultsTable({ results }: Params) {
   } else if (results) {
     ret = renderTable(results);
   }
-  return <div className="w-full">{ret}</div>;
+  return <div className="h-full">{ret}</div>;
 }
 
 export default SQLResultsTable;

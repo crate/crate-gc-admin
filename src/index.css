@@ -175,3 +175,8 @@
 .recharts-legend-wrapper .recharts-default-legend .recharts-legend-item {
   cursor: pointer;
 }
+
+/* undo the ant tree background color which looks weird when inside a table */
+.ant-tree {
+  background-color: transparent;
+}

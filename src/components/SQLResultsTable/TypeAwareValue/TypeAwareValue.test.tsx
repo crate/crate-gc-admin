@@ -17,8 +17,8 @@ describe('The TypeAwareValue component', () => {
       setup({ value: 222, columnType: ColumnType.TIMESTAMP_WITH_TZ });
 
       const elem = screen.getByText('222');
-      expect(elem.nextSibling?.nextSibling).toHaveClass('text-crate-blue');
-      expect(elem.nextSibling?.nextSibling).toHaveTextContent(
+      expect(elem.nextSibling?.childNodes[1]).toHaveClass('text-crate-blue');
+      expect(elem.nextSibling?.childNodes[1]).toHaveTextContent(
         '1970-01-01T00:00:00.222Z',
       );
     });
