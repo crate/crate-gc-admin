@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-02-26 - 0.6.7
+
 - Misc tiny tidy-ups.
 
 ## 2024-02-26 - 0.6.6
