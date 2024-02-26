@@ -31,7 +31,7 @@ const getColumnsDefinition = ({
       header: 'Job Name',
       id: 'job_name',
       meta: {
-        columnWidth: '200px',
+        columnWidth: '15%',
         filter: {
           label: 'Jobs',
           accessorFn: log => {
@@ -67,7 +67,7 @@ const getColumnsDefinition = ({
       header: 'Execution Time',
       id: 'execution_time',
       meta: {
-        columnWidth: '250px',
+        columnWidth: '25%',
       },
       enableSorting: true,
       accessorFn: (log: JobLogWithName) => {

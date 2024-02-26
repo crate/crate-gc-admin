@@ -17,6 +17,7 @@ export default function ScheduledJobs() {
         },
       ]}
       defaultActiveKey="scheduled_overview"
+      queryParamKeyActiveTab="schedulerTab"
       destroyInactiveTabPane
     />
   );
