@@ -79,8 +79,10 @@ function TypeAwareValue({
       isoDate = new Date(Number(value)).toISOString();
       ret = (
         <div>
-          <span>{`${value}`}</span> (
-          <span className="text-crate-blue">{isoDate}</span>)
+          <span>{`${value}`}</span>
+          <div className="text-xs">
+            (<span className="text-crate-blue">{isoDate}</span>)
+          </div>
         </div>
       );
       break;

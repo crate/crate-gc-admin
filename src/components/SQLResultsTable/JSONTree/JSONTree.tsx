@@ -75,13 +75,11 @@ function JSONTree({ json }: JSONTreeParams) {
   };
 
   return (
-    <div>
-      <DirectoryTree
-        selectable={false}
-        icon={false}
-        treeData={buildTree(json, { toplevel: true })}
-      />
-    </div>
+    <DirectoryTree
+      selectable={false}
+      icon={false}
+      treeData={buildTree(json, { toplevel: true })}
+    />
   );
 }
 

@@ -25,13 +25,6 @@ function SQLConsole() {
     });
   };
 
-  const renderResults = () => {
-    if (running) {
-      return <Loader />;
-    }
-    return <SQLResultsTable results={results} />;
-  };
-
   return (
     <div>
       {headings && (
@@ -45,7 +38,10 @@ function SQLConsole() {
         localStorageKey="sql-editor"
         value={specifiedQuery}
       />
-      <div className="mt-4">{renderResults()}</div>
+      <div className="mt-4">
+        {running && <Loader />}
+        {!running && <SQLResultsTable results={results} />}
+      </div>
     </div>
   );
 }

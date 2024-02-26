@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Misc tiny tidy-ups.
+
 ## 2024-02-26 - 0.6.6
 
 - Fixing flickering in extra small Switch with loader.
