@@ -14,7 +14,7 @@ import {
   LabelWithTooltip,
   Loader,
   SQLEditor,
-  SQLResultsTable,
+  SQLResults,
   Switch,
   Text,
 } from 'components';
@@ -135,7 +135,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
     if (queryRunning) {
       return <Loader />;
     }
-    return <SQLResultsTable results={queryResults} />;
+    return <SQLResults results={queryResults} />;
   };
 
   if (showLoader) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import SQLResultsTable from '../../components/SQLResultsTable';
+import SQLResults from '../../components/SQLResults';
 import { useGetUserPermissionsQuery } from '../../hooks/queryHooks';
 import { User } from '../../types/cratedb';
 import { QueryResults } from '../../types/query';
@@ -28,7 +28,7 @@ function UserInfo({ user }: Params) {
           perform GRANT, DENY or REVOKE statements on the superuser.
         </div>
       )}
-      {!user.superuser && <SQLResultsTable results={result} />}
+      {!user.superuser && <SQLResults results={result} />}
     </div>
   );
 }
