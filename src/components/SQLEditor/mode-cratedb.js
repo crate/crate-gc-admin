@@ -10,15 +10,32 @@ try {
       var oop = require('../lib/oop');
       var TextHighlightRules = require('./text_highlight_rules').TextHighlightRules;
       var SqlHighlightRules = function () {
+        // select word from pg_get_keywords() order by word;
         var keywords =
-          'add|all|alter|and|any|array|as|asc|between|by|called|case|cast|column|constraint|costs|' +
-          'create|cross|current_date|current_schema|current_time|current_timestamp|current_user|' +
-          'default|delete|deny|desc|describe|directory|distinct|drop|else|end|escape|except|exists|' +
-          'extract|false|first|for|from|full|function|grant|group|having|if|in|index|inner|input|' +
-          'insert|intersect|into|is|join|last|left|like|limit|match|natural|not|null|nulls|object|' +
-          'offset|on|or|order|outer|persistent|recursive|reset|returns|revoke|right|select|' +
-          'session_user|set|some|stratify|table|then|transient|true|try_cast|unbounded|union|update|' +
-          'user|using|when|where|with';
+          'absolute|add|alias|all|allocate|alter|always|analyze|analyzer|and|any|array|artifacts|' +
+          'as|asc|asensitive|at|authorization|backward|begin|bernoulli|between|binary|blob|boolean|' +
+          'both|by|byte|called|cancel|case|cast|catalogs|char_filters|character|characteristics|' +
+          'check|close|cluster|clustered|column|columns|commit|committed|conflict|connection|' +
+          'constraint|copy|costs|create|cross|current|current_date|current_schema|current_time|' +
+          'current_timestamp|current_user|cursor|dangling|day|deallocate|declare|decommission|' +
+          'default|deferrable|delete|deny|desc|describe|directory|disable|discard|distinct|' +
+          'distributed|do|double|drop|duplicate|dynamic|else|enable|end|escape|except|exists|' +
+          'explain|extends|extract|failed|false|fetch|filter|first|float|following|for|format|' +
+          'forward|from|full|fulltext|function|functions|gc|generated|geo_point|geo_shape|global|' +
+          'grant|graphviz|group|having|hold|hour|if|ignore|ignored|ilike|in|index|inner|input|' +
+          'insensitive|insert|int|integer|intersect|interval|into|ip|is|isolation|join|key|kill|' +
+          'language|last|leading|left|level|like|limit|local|logical|long|match|materialized|' +
+          'metadata|minute|month|move|natural|next|no|not|nothing|null|nulls|object|off|offset|' +
+          'on|only|open|optimize|or|order|outer|over|partition|partitioned|partitions|persistent|' +
+          'plain|plans|preceding|precision|prepare|prior|privileges|promote|publication|range|' +
+          'read|recursive|refresh|relative|rename|repeatable|replace|replica|repository|reroute|' +
+          'reset|respect|restore|retry|return|returning|returns|revoke|right|row|rows|schema|' +
+          'schemas|scroll|second|select|sequences|serializable|session|session_user|set|shard|' +
+          'shards|short|show|snapshot|some|start|storage|stratify|strict|string|subscription|' +
+          'substring|summary|swap|system|table|tables|tablesample|temp|temporary|text|then|' +
+          'time|timestamp|to|token_filters|tokenizer|trailing|transaction|transaction_isolation|' +
+          'transient|trim|true|try_cast|type|unbounded|uncommitted|union|update|user|using|' +
+          'values|varying|view|when|where|window|with|without|work|write|year|zone';
         var builtinConstants = 'true|false';
         var builtinFunctions =
           'abs|acos|age|any_value|arbitrary|area|array|array_agg|array_append|array_avg|array_cat|' +
