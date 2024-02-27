@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Avoid JWT renew on 400 HTTP errors.
+
 ## 2024-02-27 - 0.6.8
 
 - Refactored the SQL results output for readability.
