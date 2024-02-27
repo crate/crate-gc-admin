@@ -22,6 +22,8 @@ type SessionStore = {
   fsStats: { [key: string]: FSStats };
   tableResultsFormat: string;
   setTableResultsFormat: (format: string) => void;
+  showErrorTrace: boolean;
+  setShowErrorTrace: (showErrorTrace: boolean) => void;
 };
 
 const initialState = {
@@ -29,6 +31,7 @@ const initialState = {
   load: [],
   fsStats: {},
   tableResultsFormat: 'pretty',
+  showErrorTrace: false,
 };
 
 export type NotificationType = 'error' | 'warn' | 'info';
@@ -45,6 +48,9 @@ const useSessionStore = create<SessionStore>(set => ({
     description?: string,
   ) => {
     set({ notification: { type, message, description } });
+  },
+  setShowErrorTrace: (showErrorTrace: boolean) => {
+    set({ showErrorTrace });
   },
   setTableResultsFormat: (format: string) => {
     set({ tableResultsFormat: format });

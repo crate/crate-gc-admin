@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2024-02-27 - 0.6.8
+
+- Refactored the SQL results output for readability.
+- Display the error trace on failed SQL queries.
+
 ## 2024-02-26 - 0.6.7
 
 - Misc tiny tidy-ups.

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Heading from '../../components/Heading';
 import Loader from '../../components/Loader';
 import SQLEditor from '../../components/SQLEditor';
-import SQLResultsTable from '../../components/SQLResultsTable';
+import SQLResults from '../../components/SQLResults';
 import { useGCContext } from '../../contexts';
 import useExecuteSql from '../../hooks/useExecuteSql';
 import { QueryResults } from '../../types/query';
@@ -40,7 +40,7 @@ function SQLConsole() {
       />
       <div className="mt-4">
         {running && <Loader />}
-        {!running && <SQLResultsTable results={results} />}
+        {!running && <SQLResults results={results} />}
       </div>
     </div>
   );

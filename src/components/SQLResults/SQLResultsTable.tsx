@@ -2,61 +2,61 @@ import React from 'react';
 import { Radio, Table } from 'antd';
 import _ from 'lodash';
 import Chip from '../Chip';
-import CrateTabs from '../CrateTabs';
+import Switch from '../Switch';
 import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
 import { dbTypeToHumanReadable } from './utils';
 import Papa from 'papaparse';
-import { ColumnType, QueryResult, QueryResults } from '../../types/query';
+import { ColumnType, QueryResult } from '../../types/query';
 import useSessionStore from '../../state/session';
 
 type Params = {
-  results: QueryResults | undefined;
+  result: QueryResult | undefined;
   format?: boolean;
 };
 
-function SQLResultsTable({ results }: Params) {
-  const { tableResultsFormat } = useSessionStore();
+function SQLResultsTable({ result }: Params) {
+  const { showErrorTrace, tableResultsFormat } = useSessionStore();
+  const setShowErrorTrace = useSessionStore(store => store.setShowErrorTrace);
   const setTableResultsFormat = useSessionStore(
     store => store.setTableResultsFormat,
   );
 
-  const renderErrorTable = (result: QueryResult) => {
-    const columns = [
-      {
-        title: 'code',
-        key: 'code',
-        dataIndex: 'code',
-        width: '10%',
-        render: (value: string) => (
-          <a
-            href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
-            target="_blank"
-          >
-            {value}
-          </a>
-        ),
-      },
-      {
-        title: 'error',
-        key: 'error',
-        dataIndex: 'message',
-        width: '90%',
-        textWrap: '',
-      },
-    ];
-    const data = [{ ...result.error, key: 'error' }];
+  const toggleErrorTrace = () => {
+    setShowErrorTrace(!showErrorTrace);
+  };
 
+  const renderErrorTable = (result: QueryResult) => {
     return (
-      <div>
-        <Table
-          columns={columns}
-          dataSource={data}
-          showHeader
-          bordered
-          size="small"
-          pagination={false}
-        />
-      </div>
+      <>
+        <div className="border flex flex-row h-12 p-2 items-center justify-between rounded">
+          <div className="flex gap-4 items-center pr-2 text-sm">
+            <Chip className="bg-red-600 text-white uppercase">Error</Chip>
+            <a
+              href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
+              target="_blank"
+            >
+              {result.error?.code}
+            </a>
+            <span>{result.error?.message}</span>
+          </div>
+          <div className="flex gap-2 items-center select-none">
+            <span className="cursor-pointer text-sm" onClick={toggleErrorTrace}>
+              Show error trace
+            </span>
+            <Switch.Root
+              checked={showErrorTrace}
+              onCheckedChange={() => setShowErrorTrace(!showErrorTrace)}
+              size="small"
+            />
+          </div>
+        </div>
+        {showErrorTrace && (
+          <div className="mt-4">
+            <div className="font-bold">Error trace:</div>
+            <pre className="text-xs">{result.error_trace}</pre>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -239,103 +239,78 @@ function SQLResultsTable({ results }: Params) {
     return [columns, data];
   };
 
-  const renderTable = (result: QueryResult) => {
-    if (result.error) {
-      return renderErrorTable(result);
-    }
-
-    let columns;
-    let data: object[];
-
-    if (tableResultsFormat == 'json') {
-      [columns, data] = asJson(result);
-    } else if (tableResultsFormat == 'csv') {
-      [columns, data] = asCSV(result);
-    } else {
-      [columns, data] = asTable(result);
-    }
-
-    if (columns?.length == 0) {
-      columns = [
-        {
-          title: () => <span className="font-bold">result</span>,
-          key: 'result',
-          dataIndex: 'result',
-          width: '100%',
-          ellipsis: true,
-          className: '',
-        },
-      ];
-      data = [
-        {
-          key: 'OK',
-          result: 'OK',
-        },
-      ];
-    }
-
-    return result ? (
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ defaultPageSize: 20, position: ['bottomRight'] }}
-        showHeader
-        bordered
-        size="small"
-        scroll={{
-          x: 'max-content',
-        }}
-        title={() => (
-          <div className="flex flex-row gap-2 items-center">
-            <div className="border-e flex font-bold items-center pr-2 pt-1 text-xs">
-              <Chip className="bg-green-600 mr-1.5 text-white">OK</Chip>
-              {`${result.rowcount} rows, ${result.duration} ms`}
-            </div>
-            <div>
-              <Radio.Group
-                options={[
-                  { label: 'Pretty', value: 'pretty' },
-                  { label: 'Raw', value: 'raw' },
-                  { label: 'CSV', value: 'csv' },
-                  { label: 'JSON', value: 'json' },
-                ]}
-                onChange={evt => setTableResultsFormat(evt.target.value)}
-                value={tableResultsFormat}
-                optionType="button"
-                buttonStyle="solid"
-                size="small"
-              />
-            </div>
-          </div>
-        )}
-      />
-    ) : null;
-  };
-
-  const renderTabs = (results: QueryResult[]) => {
-    if (!results) {
-      return null;
-    }
-    let idx = 0;
-
-    const tabs = results.map(o => {
-      const i = ++idx;
-      return {
-        key: `${i}`,
-        label: `Result ${i}`,
-        children: renderTable(o),
-      };
-    });
-    return <CrateTabs defaultActiveKey="1" items={tabs} />;
-  };
-
-  let ret = null;
-  if (Array.isArray(results)) {
-    ret = renderTabs(results);
-  } else if (results) {
-    ret = renderTable(results);
+  if (!result) {
+    return null;
   }
-  return <div className="h-full">{ret}</div>;
+
+  if (result.error) {
+    return renderErrorTable(result);
+  }
+
+  let columns;
+  let data: object[];
+
+  if (tableResultsFormat == 'json') {
+    [columns, data] = asJson(result);
+  } else if (tableResultsFormat == 'csv') {
+    [columns, data] = asCSV(result);
+  } else {
+    [columns, data] = asTable(result);
+  }
+
+  if (columns?.length == 0) {
+    columns = [
+      {
+        title: () => <span className="font-bold">result</span>,
+        key: 'result',
+        dataIndex: 'result',
+        width: '100%',
+        ellipsis: true,
+        className: '',
+      },
+    ];
+    data = [
+      {
+        key: 'OK',
+        result: 'OK',
+      },
+    ];
+  }
+
+  return (
+    <Table
+      columns={columns}
+      dataSource={data}
+      pagination={{ defaultPageSize: 20, position: ['bottomRight'] }}
+      showHeader
+      bordered
+      size="small"
+      scroll={{
+        x: 'max-content',
+      }}
+      title={() => (
+        <div className="flex flex-row gap-2 h-8 items-center">
+          <div className="border-e flex font-bold items-center gap-2 pr-2 text-xs">
+            <Chip className="bg-green-600 mr-1.5 text-white">OK</Chip>
+            {`${result.rowcount} rows, ${result.duration} ms`}
+          </div>
+          <Radio.Group
+            options={[
+              { label: 'Pretty', value: 'pretty' },
+              { label: 'Raw', value: 'raw' },
+              { label: 'CSV', value: 'csv' },
+              { label: 'JSON', value: 'json' },
+            ]}
+            onChange={evt => setTableResultsFormat(evt.target.value)}
+            value={tableResultsFormat}
+            optionType="button"
+            buttonStyle="solid"
+            size="small"
+          />
+        </div>
+      )}
+    />
+  );
 }
 
 export default SQLResultsTable;

@@ -42,5 +42,6 @@ export type QueryResult = object & {
   duration: number;
   original_query?: string;
   error?: Error;
+  error_trace?: string;
 };
 export type QueryResults = QueryResult | QueryResult[] | undefined;

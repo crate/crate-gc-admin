@@ -17,7 +17,9 @@ export default function useExecuteSql() {
 
   const isGcConnected = gcStatus === ConnectionStatus.CONNECTED;
   const endpoint = isGcConnected ? gcApi : crateApi;
-  const api = isGcConnected ? '/api/_sql?multi=true&types' : '/_sql?types';
+  const api = isGcConnected
+    ? '/api/_sql?multi=true&error_trace&types'
+    : '/_sql?error_trace&types';
 
   const executeSql = async (query: string): Promise<ExecuteSqlResult> => {
     const response = await apiPost<QueryResults>(
