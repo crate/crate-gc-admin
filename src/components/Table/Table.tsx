@@ -52,7 +52,7 @@ const RowHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tr
     ref={ref}
-    className={cn('border-b transition-colors bg-slate-100/50', className)}
+    className={cn('border-b bg-slate-100/50 transition-colors', className)}
     {...props}
   />
 ));
@@ -80,12 +80,12 @@ const Head = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 px-2 text-left align-middle font-medium text-[#737373] [&:has([role=checkbox])]:pr-0 bg-[#fafafa]',
+      'h-12 bg-[#fafafa] px-2 text-left align-middle font-medium text-[#737373] [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}
   >
-    <span className="border-r flex grow">{children}</span>
+    <span className="flex grow border-r">{children}</span>
   </th>
 ));
 Head.displayName = 'TableHead';

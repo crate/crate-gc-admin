@@ -12,7 +12,7 @@ export default function Chip({
   return (
     <span
       className={cn(
-        `uppercase p-1 rounded-md text-[8px] bg-gray-100 text-black inline-flex items-center !leading-3`,
+        `inline-flex items-center rounded-md bg-gray-100 p-1 text-[8px] uppercase !leading-3 text-black`,
         className,
       )}
     >

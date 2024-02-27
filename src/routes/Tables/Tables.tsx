@@ -26,13 +26,13 @@ function Tables() {
   if (isMobile) {
     return (
       <div className="flex flex-col">
-        <Heading level="h1" className="pt-2 px-2">
+        <Heading level="h1" className="px-2 pt-2">
           Tables
         </Heading>
         <div className={activeTable ? 'hidden' : 'block'}>
           <TableList setActiveTable={setActiveTable} systemSchemas={systemSchemas} />
         </div>
-        <div className={activeTable ? 'block pt-4 px-2' : 'hidden'}>
+        <div className={activeTable ? 'block px-2 pt-4' : 'hidden'}>
           {activeTable && (
             <TableDetail
               activeTable={activeTable}
@@ -48,7 +48,7 @@ function Tables() {
   // render for desktop
   return (
     <div className="flex h-full overflow-hidden">
-      <div className="basis-[370px] h-full">
+      <div className="h-full basis-[370px]">
         <TableList setActiveTable={setActiveTable} systemSchemas={systemSchemas} />
       </div>
       <div className="basis-full overflow-y-auto p-6">

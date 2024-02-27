@@ -38,7 +38,7 @@ function StatusLight({
       ) : (
         <LightElement className={COLOR_STYLES_MAP[color]} />
       )}
-      <Text className="inline ml-1">{message}</Text>
+      <Text className="ml-1 inline">{message}</Text>
     </div>
   );
 }

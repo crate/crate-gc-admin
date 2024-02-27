@@ -235,7 +235,7 @@ export function DataTable<TData, TValue>({
               <Table.Row>
                 <Table.Cell
                   colSpan={columns.length}
-                  className="h-24 text-center pt-10 leading-5 text-neutral-500 tracking-wide"
+                  className="h-24 pt-10 text-center leading-5 tracking-wide text-neutral-500"
                 >
                   {noResultsLabel}
                 </Table.Cell>

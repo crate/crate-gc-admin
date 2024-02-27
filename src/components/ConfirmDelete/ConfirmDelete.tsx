@@ -74,10 +74,10 @@ function ConfirmDelete({
       >
         {children && children}
         <Text className="mb-4">{prompt}</Text>
-        <div className="bg-neutral-100 border border-neutral-300 flex mb-4 rounded-md">
+        <div className="mb-4 flex rounded-md border border-neutral-300 bg-neutral-100">
           <code className="flex-grow p-2">{confirmText}</code>
           <CopyToClipboard textToCopy={confirmText}>
-            <div className="px-3 py-2 border-l border-neutral-300 bg-white text-crate-blue hover:text-[#23bfde]">
+            <div className="border-l border-neutral-300 bg-white px-3 py-2 text-crate-blue hover:text-[#23bfde]">
               <CopyOutlined />
             </div>
           </CopyToClipboard>

@@ -204,7 +204,7 @@ const Button = ({
         // Normal state
         '!border-transparent',
         {
-          'hover:!text-[#23bfde] active:!text-[#23bfde] active:!border-[#23bfde]':
+          'hover:!text-[#23bfde] active:!border-[#23bfde] active:!text-[#23bfde]':
             !disabled,
         },
         '!px-[6px]',
@@ -265,15 +265,15 @@ const Ellipsis = ({
   <span
     aria-hidden
     className={cn(
-      'flex h-9 w-9 items-center justify-center text-gray-300 text-[14px] group relative',
+      'group relative flex h-9 w-9 items-center justify-center text-[14px] text-gray-300',
       className,
     )}
     {...props}
   >
-    <span className="group-hover:opacity-0 absolute transition-opacity duration-200">
+    <span className="absolute transition-opacity duration-200 group-hover:opacity-0">
       •••
     </span>
-    <span className="group-hover:opacity-100 opacity-0  absolute transition-opacity duration-200">
+    <span className="absolute opacity-0  transition-opacity duration-200 group-hover:opacity-100">
       <Button kind={CrateButton.kinds.TERTIARY} onClick={onClick}>
         {direction === 'right' ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
       </Button>

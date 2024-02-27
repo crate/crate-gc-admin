@@ -46,7 +46,7 @@ const Root = React.forwardRef<
           <Loader
             size={isMediumSize ? Loader.sizes.SMALL : Loader.sizes.EXTRA_SMALL}
             className={cn(
-              '!block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+              'absolute left-1/2 top-1/2 !block -translate-x-1/2 -translate-y-1/2',
               {
                 'h-[8px] w-[8px]': !isMediumSize,
                 'h-[16px] w-[16px]': isMediumSize,

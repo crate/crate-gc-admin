@@ -44,7 +44,7 @@ function Burger({
         onClick={() => setNavVisible(true)}
       />
       {navVisible && (
-        <div className="absolute bg-crate-navigation-bg bottom-0 flex flex-col left-0 select-none top-0 right-0 z-50">
+        <div className="absolute bottom-0 left-0 right-0 top-0 z-50 flex select-none flex-col bg-crate-navigation-bg">
           <div className="flex h-12 items-center justify-between px-4">
             {logo}
             <CloseOutlined

@@ -37,7 +37,7 @@ export default function DataTableFilters<TData>({
 
   return (
     <div className="flex flex-col rounded-sm">
-      <div className="flex gap-2 flex-row justify-between items-center">
+      <div className="flex flex-row items-center justify-between gap-2">
         <div className="flex gap-2">
           {allColumns.map(header => {
             const colMeta = header.column.columnDef.meta;
@@ -103,7 +103,7 @@ export default function DataTableFilters<TData>({
 
         {enableSearchBox && (
           <span className="relative">
-            <SearchOutlined className="absolute w-8 h-8 top-1/2 left-3 -translate-y-1/2 text-slate-400" />
+            <SearchOutlined className="absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 text-slate-400" />
             <Input
               placeholder="Search..."
               value={searchTerm}
@@ -116,7 +116,7 @@ export default function DataTableFilters<TData>({
               <Button
                 kind={Button.kinds.TERTIARY}
                 size={Button.sizes.SMALL}
-                className="absolute top-1/2 -translate-y-1/2 right-3"
+                className="absolute right-3 top-1/2 -translate-y-1/2"
                 onClick={() => {
                   setSearchTerm('');
                 }}

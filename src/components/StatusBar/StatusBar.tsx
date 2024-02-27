@@ -114,45 +114,45 @@ function StatusBar() {
   return (
     <>
       <div
-        className="gap-3 flex leading-tight select-none text-white md:hidden"
+        className="flex select-none gap-3 leading-tight text-white md:hidden"
         onClick={() => setMobileVisible(true)}
       >
         <div>
-          <div className="opacity-50 text-xs uppercase">Cluster</div>
+          <div className="text-xs uppercase opacity-50">Cluster</div>
           <div>{spin(cluster?.name)}</div>
         </div>
         <div className="flex">
-          <DownOutlined className="opacity-50 text-xs" />
+          <DownOutlined className="text-xs opacity-50" />
         </div>
       </div>
-      <div className="hidden gap-8 leading-snug select-none text-white md:flex">
+      <div className="hidden select-none gap-8 leading-snug text-white md:flex">
         <div>
-          <div className="opacity-50 text-xs uppercase">Cluster</div>
+          <div className="text-xs uppercase opacity-50">Cluster</div>
           <div>{spin(cluster?.name)}</div>
         </div>
         <div>
-          <div className="opacity-50 text-xs uppercase">Version</div>
+          <div className="text-xs uppercase opacity-50">Version</div>
           <div>{getVersion()}</div>
         </div>
         <div>
-          <div className="opacity-50 text-xs uppercase">Nodes</div>
+          <div className="text-xs uppercase opacity-50">Nodes</div>
           <div>{getNumNodes()}</div>
         </div>
         <div>
-          <div className="opacity-50 text-xs uppercase">Data</div>
+          <div className="text-xs uppercase opacity-50">Data</div>
           <div>{getDataStatus()}</div>
         </div>
         <div>
-          <div className="opacity-50 text-xs uppercase">Load</div>
+          <div className="text-xs uppercase opacity-50">Load</div>
           <div>{getLoadAverage()}</div>
         </div>
         <div>
-          <div className="opacity-50 text-xs uppercase">User</div>
+          <div className="text-xs uppercase opacity-50">User</div>
           <div>{spin(currentUser)}</div>
         </div>
       </div>
       {mobileVisible && (
-        <div className="absolute bg-crate-navigation-bg bottom-0 flex flex-col left-0 select-none top-0 right-0 z-50">
+        <div className="absolute bottom-0 left-0 right-0 top-0 z-50 flex select-none flex-col bg-crate-navigation-bg">
           <div className="flex h-12 items-center justify-between px-4">
             <img alt="CrateDB logo" src={logo} />
             <CloseOutlined
@@ -161,30 +161,30 @@ function StatusBar() {
             />
           </div>
           <div className="flex-1 overflow-auto">
-            <div className="p-4 w-full">
+            <div className="w-full p-4">
               <div className="flex flex-col gap-8 leading-snug text-white">
                 <div>
-                  <div className="opacity-50 text-xs uppercase">Cluster</div>
+                  <div className="text-xs uppercase opacity-50">Cluster</div>
                   <div className="text-xl">{spin(cluster?.name)}</div>
                 </div>
                 <div>
-                  <div className="opacity-50 text-xs uppercase">Version</div>
+                  <div className="text-xs uppercase opacity-50">Version</div>
                   <div className="text-xl">{getVersion()}</div>
                 </div>
                 <div>
-                  <div className="opacity-50 text-xs uppercase">Nodes</div>
+                  <div className="text-xs uppercase opacity-50">Nodes</div>
                   <div className="text-xl">{getNumNodes()}</div>
                 </div>
                 <div>
-                  <div className="opacity-50 text-xs uppercase">Availability</div>
+                  <div className="text-xs uppercase opacity-50">Availability</div>
                   <div className="text-xl">{getDataStatus()}</div>
                 </div>
                 <div>
-                  <div className="opacity-50 text-xs uppercase">Load</div>
+                  <div className="text-xs uppercase opacity-50">Load</div>
                   <div className="text-xl">{getLoadAverage()}</div>
                 </div>
                 <div>
-                  <div className="opacity-50 text-xs uppercase">User</div>
+                  <div className="text-xs uppercase opacity-50">User</div>
                   <div className="text-xl">{spin(currentUser)}</div>
                 </div>
               </div>

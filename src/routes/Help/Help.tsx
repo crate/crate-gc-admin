@@ -39,18 +39,18 @@ function Help() {
   return (
     <div>
       <Heading level="h1">Help</Heading>
-      <div className="gap-4 grid grid-cols-1 mt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {panels.map(panel => (
           <a
             href={panel.url}
             target="_blank"
-            className="bg-slate-50 cursor-pointer flex gap-3 group p-4 rounded transition-none hover:bg-crate-blue hover:text-white"
+            className="group flex cursor-pointer gap-3 rounded bg-slate-50 p-4 transition-none hover:bg-crate-blue hover:text-white"
           >
             <div className="text-4xl">{panel.icon}</div>
             <div>
               <Heading
                 level="h4"
-                className="leading-tight pb-1 group-hover:text-white"
+                className="pb-1 leading-tight group-hover:text-white"
               >
                 {panel.title}
               </Heading>

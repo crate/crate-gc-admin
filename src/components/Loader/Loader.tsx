@@ -48,7 +48,7 @@ function Loader({
         height={size}
       >
         <circle
-          className="absolute left-1/2 opacity-25 top-1/2"
+          className="absolute left-1/2 top-1/2 opacity-25"
           cx="12"
           cy="12"
           r="10"

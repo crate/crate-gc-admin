@@ -28,9 +28,9 @@ function SQLResultsTable({ result }: Params) {
   const renderErrorTable = (result: QueryResult) => {
     return (
       <>
-        <div className="border flex flex-row h-12 p-2 items-center justify-between rounded">
-          <div className="flex gap-4 items-center pr-2 text-sm">
-            <Chip className="bg-red-600 text-white uppercase">Error</Chip>
+        <div className="flex h-12 flex-row items-center justify-between rounded border p-2">
+          <div className="flex items-center gap-4 pr-2 text-sm">
+            <Chip className="bg-red-600 uppercase text-white">Error</Chip>
             <a
               href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
               target="_blank"
@@ -39,7 +39,7 @@ function SQLResultsTable({ result }: Params) {
             </a>
             <span>{result.error?.message}</span>
           </div>
-          <div className="flex gap-2 items-center select-none">
+          <div className="flex select-none items-center gap-2">
             <span className="cursor-pointer text-sm" onClick={toggleErrorTrace}>
               Show error trace
             </span>
@@ -289,9 +289,9 @@ function SQLResultsTable({ result }: Params) {
         x: 'max-content',
       }}
       title={() => (
-        <div className="flex flex-row gap-2 h-8 items-center">
-          <div className="border-e flex font-bold items-center gap-2 pr-2 text-xs">
-            <Chip className="bg-green-600 mr-1.5 text-white">OK</Chip>
+        <div className="flex h-8 flex-row items-center gap-2">
+          <div className="flex items-center gap-2 border-e pr-2 text-xs font-bold">
+            <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
             {`${result.rowcount} rows, ${result.duration} ms`}
           </div>
           <Radio.Group

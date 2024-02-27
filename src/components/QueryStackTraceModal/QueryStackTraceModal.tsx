@@ -33,7 +33,7 @@ function QueryStackTraceModal({
         </div>
       }
     >
-      <div className="max-h-[400px] overflow-auto flex flex-col gap-4">
+      <div className="flex max-h-[400px] flex-col gap-4 overflow-auto">
         <SyntaxHighlighter
           language="sql"
           title={

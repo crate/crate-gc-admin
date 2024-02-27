@@ -91,7 +91,7 @@ function TableList({
 
   const renderSchemaBadge = (schema: string) => {
     if (systemSchemas.includes(schema)) {
-      return <span className="text-white text-xs uppercase">system</span>;
+      return <span className="text-xs uppercase text-white">system</span>;
     }
 
     if (missingReplicasTables.filter(t => t.schema_name == schema).length > 0) {
@@ -142,18 +142,18 @@ function TableList({
     return output.map(schema => (
       <div key={schema.name}>
         <div
-          className="border-b border-b-[#0083a3]/50 border-l-4 border-l-[#0083a3] cursor-pointer flex group justify-between px-2 py-2.5 hover:bg-[#0083a3] hover:border-l-[#00728f]"
+          className="group flex cursor-pointer justify-between border-b border-l-4 border-b-[#0083a3]/50 border-l-[#0083a3] px-2 py-2.5 hover:border-l-[#00728f] hover:bg-[#0083a3]"
           onClick={() => expandCollapseSingle(schema.name)}
         >
-          <div className="flex gap-2 items-center text-white">
+          <div className="flex items-center gap-2 text-white">
             {expandedSchemas?.includes(schema.name) ? (
-              <CaretDownOutlined className="opacity-40 h-3 w-3 group-hover:opacity-100" />
+              <CaretDownOutlined className="h-3 w-3 opacity-40 group-hover:opacity-100" />
             ) : (
-              <CaretRightOutlined className="opacity-40 h-3 w-3 group-hover:opacity-100" />
+              <CaretRightOutlined className="h-3 w-3 opacity-40 group-hover:opacity-100" />
             )}
             <div className="flex gap-1">
               <span>{schema.name}</span>
-              <span className="bg-[#00627a] min-w-6 ml-1 opacity-60 px-1 py-0.5 rounded-xl text-center text-xs group-hover:opacity-100">
+              <span className="ml-1 min-w-6 rounded-xl bg-[#00627a] px-1 py-0.5 text-center text-xs opacity-60 group-hover:opacity-100">
                 {schema.tables?.length}
               </span>
             </div>
@@ -176,7 +176,7 @@ function TableList({
 
     return (
       <div
-        className="border-b border-b-white/10 border-l-4 border-l-[#004152] cursor-pointer group pl-8 pr-2 py-2 hover:bg-[#004152] hover:border-b-white/20 hover:border-l-[#00313d]"
+        className="group cursor-pointer border-b border-l-4 border-b-white/10 border-l-[#004152] py-2 pl-8 pr-2 hover:border-b-white/20 hover:border-l-[#00313d] hover:bg-[#004152]"
         onClick={() => setActiveTable(table)}
         key={table.table_name}
       >
@@ -235,11 +235,11 @@ function TableList({
     return <Spin />;
   }
   return (
-    <div className="bg-[#d3d3d3] flex flex-col h-full select-none">
-      <div className="bg-white flex h-14 md:border-r md:border-r-neutral-200">
+    <div className="flex h-full select-none flex-col bg-[#d3d3d3]">
+      <div className="flex h-14 bg-white md:border-r md:border-r-neutral-200">
         <div className="basis-full border-r border-r-neutral-200 p-2">
           <div
-            className={`border-2 flex gap-2 h-full items-center px-2 rounded-lg ${filterFocused ? 'border-crate-blue' : 'border-neutral-200'}`}
+            className={`flex h-full items-center gap-2 rounded-lg border-2 px-2 ${filterFocused ? 'border-crate-blue' : 'border-neutral-200'}`}
           >
             <input
               placeholder="Filter tables"
@@ -251,7 +251,7 @@ function TableList({
               value={filter}
             />
             <button
-              className="aspect-square bg-neutral-300 h-5 outline-none rounded-full text-xs text-white w-5 hover:bg-crate-blue"
+              className="aspect-square h-5 w-5 rounded-full bg-neutral-300 text-xs text-white outline-none hover:bg-crate-blue"
               onClick={() => setFilter('')}
             >
               <CloseOutlined />
@@ -259,7 +259,7 @@ function TableList({
           </div>
         </div>
         <div
-          className="basis-[40px] cursor-pointer flex group justify-center px-2 hover:bg-[#f8f8f8]"
+          className="group flex basis-[40px] cursor-pointer justify-center px-2 hover:bg-[#f8f8f8]"
           onClick={() => expandCollapseAll()}
         >
           {(expandedSchemas?.length || 0) < schemas.length ? (

@@ -23,7 +23,7 @@ function SyntaxHighlighter({
     <div className="flex flex-col gap-2">
       {title && <Heading level={Heading.levels.h4}>{title}</Heading>}
 
-      <div className="bg-neutral-100 py-1 pl-2 pr-4 rounded-lg">
+      <div className="rounded-lg bg-neutral-100 py-1 pl-2 pr-4">
         <div className="flex items-start justify-between">
           <ReactSyntaxHighlighter
             language={language}
@@ -35,12 +35,12 @@ function SyntaxHighlighter({
           </ReactSyntaxHighlighter>
 
           <CopyToClipboard textToCopy={children}>
-            <Text className="py-2 text-crate-blue text-sm">Copy</Text>
+            <Text className="py-2 text-sm text-crate-blue">Copy</Text>
           </CopyToClipboard>
         </div>
       </div>
       {helpText && (
-        <div className="flex items-start justify-between mt-1 px-1">
+        <div className="mt-1 flex items-start justify-between px-1">
           <div className="mr-2 text-base text-neutral-500">{helpText}</div>
         </div>
       )}

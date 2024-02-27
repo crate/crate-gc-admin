@@ -195,7 +195,7 @@ function SQLEditor({
     }
 
     return (
-      <div className="flex flex-wrap justify-end ml-2 text-sm flex-col items-end">
+      <div className="ml-2 flex flex-col flex-wrap items-end justify-end text-sm">
         {historyString && <span className="whitespace-nowrap">{historyString}</span>}
         <span className="whitespace-nowrap">{executeString}</span>
       </div>
@@ -203,9 +203,9 @@ function SQLEditor({
   };
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       <div
-        className={cn('border-2 rounded', {
+        className={cn('rounded border-2', {
           'border-red-600': error,
         })}
       >
@@ -307,7 +307,7 @@ function SQLEditor({
 
       {error && <Text className="text-red-600">{error}</Text>}
 
-      <div className="w-full flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         <div className="flex gap-2">
           {showRunButton && (
             <Button kind="primary" onClick={() => exec(sql)}>

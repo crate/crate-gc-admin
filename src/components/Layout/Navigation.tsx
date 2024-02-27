@@ -31,12 +31,12 @@ function Navigation({
     isExternalLink: boolean = false,
   ): JSX.Element => {
     return (
-      <div className="flex flex-nowrap gap-2 align-center max-w-[300px] mx-auto w-full whitespace-nowrap">
-        <div className="text-center text-sm h-6 w-6">{icon}</div>
+      <div className="align-center mx-auto flex w-full max-w-[300px] flex-nowrap gap-2 whitespace-nowrap">
+        <div className="h-6 w-6 text-center text-sm">{icon}</div>
         {navIsExpanded && (
-          <div className="flex flex-nowrap gap-1 items-start overflow-hidden">
+          <div className="flex flex-nowrap items-start gap-1 overflow-hidden">
             {label}
-            {isExternalLink && <ArrowUpOutlined className="opacity-50 rotate-45" />}
+            {isExternalLink && <ArrowUpOutlined className="rotate-45 opacity-50" />}
           </div>
         )}
       </div>
@@ -100,7 +100,7 @@ function Navigation({
         {drawLinkInner(
           icon,
           <div>
-            <div className="leading-tight opacity-60 text-xs uppercase">
+            <div className="text-xs uppercase leading-tight opacity-60">
               Grand Central
             </div>
             <div className="leading-tight">{label}</div>
@@ -142,7 +142,7 @@ function Navigation({
 
   return (
     <div
-      className={`flex flex-col h-full justify-between pb-2 select-none transition-[width] duration-250 ${
+      className={`duration-250 flex h-full select-none flex-col justify-between pb-2 transition-[width] ${
         navIsExpanded ? 'md:w-56' : 'md:w-20'
       }`}
     >

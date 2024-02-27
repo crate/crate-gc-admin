@@ -10,10 +10,10 @@ function VerticalProgress({ max, current }: VerticalProgressProps) {
   return (
     <div className="h-full">
       {missing.map(() => {
-        return <div className="w-full bg-gray-300 h-[4px] mb-0.5"></div>;
+        return <div className="mb-0.5 h-[4px] w-full bg-gray-300"></div>;
       })}
       {filled.map(() => {
-        return <div className="w-full bg-crate-blue h-[4px] mb-0.5"></div>;
+        return <div className="mb-0.5 h-[4px] w-full bg-crate-blue"></div>;
       })}
     </div>
   );

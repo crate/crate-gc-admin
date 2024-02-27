@@ -11,11 +11,11 @@ function TopBar({
   gcStatus,
 }: TopBarProps) {
   return (
-    <div className="bg-crate-navigation-bg flex items-center justify-between h-12 px-4 text-white md:px-6">
+    <div className="flex h-12 items-center justify-between bg-crate-navigation-bg px-4 text-white md:px-6">
       {logo}
       <div className="flex h-full items-center">
         {content}
-        <div className="border-l border-neutral-600 ml-3 pl-3 md:hidden">
+        <div className="ml-3 border-l border-neutral-600 pl-3 md:hidden">
           <Burger
             navIsExpanded={navIsExpanded}
             setNavIsExpanded={setNavIsExpanded}
