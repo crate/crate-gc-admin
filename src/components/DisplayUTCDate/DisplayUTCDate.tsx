@@ -12,7 +12,7 @@ function DisplayUTCDate({ isoDate, tooltip = false }: DisplayUTCDateProps) {
     <Tooltip
       title={
         tooltip && (
-          <span className="text-center flex">
+          <span className="flex text-center">
             Local Time:{' '}
             <DisplayDate isoDate={isoDate} format={DATE_FORMAT_WITH_TZ} />
           </span>

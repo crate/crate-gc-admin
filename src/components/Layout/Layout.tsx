@@ -19,7 +19,7 @@ function Layout({
   const { gcStatus } = useGCContext();
 
   return (
-    <div className="absolute bottom-0 flex flex-col min-h-dvh top-0 w-full">
+    <div className="absolute bottom-0 top-0 flex min-h-dvh w-full flex-col">
       <TopBar
         logo={topbarLogo}
         content={topbarContent}
@@ -29,8 +29,8 @@ function Layout({
         topNavigation={topNavigation}
         gcStatus={gcStatus}
       />
-      <div className="bg-white flex flex-1 overflow-hidden">
-        <div className="bg-crate-navigation-bg hidden md:block">
+      <div className="flex flex-1 overflow-hidden bg-white">
+        <div className="hidden bg-crate-navigation-bg md:block">
           <Navigation
             navIsExpanded={navIsExpanded}
             setNavIsExpanded={setNavIsExpanded}

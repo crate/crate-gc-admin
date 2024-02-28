@@ -140,7 +140,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
 
   if (showLoader) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex h-full w-full items-center justify-center">
         <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
       </div>
     );
@@ -155,7 +155,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
         className="flex flex-col gap-4"
         autoComplete="off"
       >
-        <div className="flex flex-col md:grid md:grid-cols-12 gap-2 md:gap-4">
+        <div className="flex flex-col gap-2 md:grid md:grid-cols-12 md:gap-4">
           <div className="col-span-5 flex flex-col gap-2">
             <Form.Field
               control={form.control}
@@ -293,7 +293,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
           />
         </div>
 
-        <div className="w-full flex flex-col md:flex-row justify-end gap-2">
+        <div className="flex w-full flex-col justify-end gap-2 md:flex-row">
           <Button kind={Button.kinds.SECONDARY} onClick={backToJobList}>
             Cancel
           </Button>

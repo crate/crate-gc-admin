@@ -52,15 +52,15 @@ function Overview() {
     <GCSpin spinning={!cluster || !allocations}>
       <div>
         <Heading level={Heading.levels.h1}>Cluster: {cluster?.name}</Heading>
-        <div className="w-full grid grid-cols-4 mt-4 p-2 gap-6 bg-gray-100">
-          <div className="bg-white rounded p-2">
+        <div className="mt-4 grid w-full grid-cols-4 gap-6 bg-gray-100 p-2">
+          <div className="rounded bg-white p-2">
             <Statistic
               title="Health"
               valueRender={() => clusterStatusTag()}
               value={0}
             />
           </div>
-          <div className="bg-white rounded p-2">
+          <div className="rounded bg-white p-2">
             <Statistic
               title="Available records"
               value={formatHumanReadable(clusterStatus.totalDocsInPrimaryShards)}
@@ -73,7 +73,7 @@ function Overview() {
               }
             />
           </div>
-          <div className="bg-white rounded p-2 text-red-400">
+          <div className="rounded bg-white p-2 text-red-400">
             <Statistic
               title="Started primary shards"
               value={clusterStatus.totalPrimaries - clusterStatus.missingPrimaries}
@@ -86,7 +86,7 @@ function Overview() {
               }
             />
           </div>
-          <div className="bg-white rounded p-2">
+          <div className="rounded bg-white p-2">
             <Statistic
               title="Started replica shards"
               value={clusterStatus.totalReplicas - clusterStatus.missingReplicas}
@@ -100,7 +100,7 @@ function Overview() {
             />
           </div>
         </div>
-        <div className="w-full grid grid-cols-2 mt-4 p-2 gap-6 bg-gray-100">
+        <div className="mt-4 grid w-full grid-cols-2 gap-6 bg-gray-100 p-2">
           <div className="col-span-2">
             <GCChart
               title="Cluster Load"

@@ -5,7 +5,7 @@ export type SolidLightProps = {
 function SolidLight({ className }: SolidLightProps) {
   return (
     <svg
-      className="align-sub inline"
+      className="inline align-sub"
       width="16"
       height="16"
       viewBox="0 0 16 16"

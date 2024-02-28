@@ -73,7 +73,7 @@ function CrateTable<RecordType extends object>({
   }) => {
     return (
       <button
-        className="cursor-pointer duration-200 h-[17px] mr-2.5 p-0 text-neutral-400 transition w-[17px] hover:border-crate-blue hover:text-crate-blue"
+        className="mr-2.5 h-[17px] w-[17px] cursor-pointer p-0 text-neutral-400 transition duration-200 hover:border-crate-blue hover:text-crate-blue"
         onClick={event => onExpand(record, event)}
         type={Button.types.BUTTON}
       >

@@ -136,7 +136,7 @@ const CheckboxItem = React.forwardRef<
 >(({ className, children, checked, indeterminate, ...props }, ref) => (
   <Label
     ref={ref}
-    className={cn(`flex items-center cursor-pointer font-normal`, className)}
+    className={cn(`flex cursor-pointer items-center font-normal`, className)}
     {...props}
   >
     <Checkbox

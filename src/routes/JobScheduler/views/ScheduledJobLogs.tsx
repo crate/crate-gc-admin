@@ -93,14 +93,14 @@ const getColumnsDefinition = ({
                           'bg-red-600': inError,
                           'bg-green-600': !inError,
                         },
-                        'text-white rounded-full p-1 text-[12px] flex',
+                        'flex rounded-full p-1 text-[12px] text-white',
                       )}
                     >
                       {inError ? <CloseOutlined /> : <CheckOutlined />}
                     </span>
                   </div>
 
-                  <div className="w-full flex flex-col">
+                  <div className="flex w-full flex-col">
                     <div className="flex gap-2" data-testid="execution-time">
                       <DisplayUTCDate isoDate={log.end!} tooltip />
                     </div>
@@ -196,7 +196,7 @@ const getColumnsDefinition = ({
                 <Button
                   kind={Button.kinds.TERTIARY}
                   size={Button.sizes.SMALL}
-                  className="!leading-3 h-auto"
+                  className="h-auto !leading-3"
                   onClick={() => {
                     const keyInError = Object.keys(log.statements!)
                       .sort()
@@ -239,7 +239,7 @@ export default function ScheduledJobLogs() {
 
   if (isLoadingJobLogs || !jobLogs) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex h-full w-full items-center justify-center">
         <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
       </div>
     );

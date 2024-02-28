@@ -1,6 +1,7 @@
-trailingComma: "all"
+trailingComma: 'all'
 tabWidth: 2
 bracketSpacing: true
 singleQuote: true
 printWidth: 85
-arrowParens: "avoid"
+arrowParens: 'avoid'
+plugins: ['prettier-plugin-tailwindcss']

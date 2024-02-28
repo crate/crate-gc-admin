@@ -11,7 +11,7 @@ export default function JobScheduler() {
   const { headings } = useGCContext();
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       {headings && (
         <>
           <Heading level={Heading.levels.h1}>SQL Scheduler</Heading>

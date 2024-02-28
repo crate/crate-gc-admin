@@ -175,7 +175,7 @@ function Nodes() {
   const renderHeap = (node: NodeStatusInfo) => {
     return (
       <div className="flex grid-cols-6 gap-2">
-        <div className="p-0.5 min-w-5">
+        <div className="min-w-5 p-0.5">
           <VerticalProgress max={node.heap.max} current={node.heap.used} />
         </div>
         <div className="col-span-2 font-bold">
@@ -195,7 +195,7 @@ function Nodes() {
   const renderLoad = (node: NodeStatusInfo) => {
     return (
       <div className="flex grid-cols-6 gap-2">
-        <div className="p-0.5 min-w-5">
+        <div className="min-w-5 p-0.5">
           <VerticalProgress
             max={node.os_info.available_processors}
             current={node.load['1']}
@@ -218,7 +218,7 @@ function Nodes() {
   const renderDisk = (node: NodeStatusInfo) => {
     return (
       <div className="flex grid-cols-6 gap-2">
-        <div className="p-0.5 min-w-5">
+        <div className="min-w-5 p-0.5">
           <VerticalProgress max={node.fs.total.size} current={node.fs.total.used} />
         </div>
         <div className="col-span-2 font-bold">

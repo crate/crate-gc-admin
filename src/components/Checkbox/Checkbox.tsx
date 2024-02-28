@@ -15,13 +15,13 @@ const Checkbox = React.forwardRef(
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
-      <div className="flex relative">
+      <div className="relative flex">
         <input
           className={cn(
-            'peer relative appearance-none shrink-0 w-4 h-4',
+            'peer relative h-4 w-4 shrink-0 appearance-none',
             'border-2 border-blue-200',
-            'checked:bg-crate-blue checked:border-0',
-            'rounded-sm bg-white cursor-pointer',
+            'checked:border-0 checked:bg-crate-blue',
+            'cursor-pointer rounded-sm bg-white',
             className,
           )}
           type="checkbox"
@@ -33,7 +33,7 @@ const Checkbox = React.forwardRef(
         />
         {/* Custom chekmark */}
         <svg
-          className="absolute w-4 h-4 pointer-events-none hidden peer-checked:block stroke-white outline-none"
+          className="pointer-events-none absolute hidden h-4 w-4 stroke-white outline-none peer-checked:block"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="-4 -4 32 32"
           fill="none"

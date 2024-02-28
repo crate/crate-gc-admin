@@ -132,14 +132,14 @@ const getColumnsDefinition = ({
                           'bg-red-600': inError,
                           'bg-green-600': !inError,
                         },
-                        'text-white rounded-full p-1 text-[12px] flex',
+                        'flex rounded-full p-1 text-[12px] text-white',
                       )}
                     >
                       {inError ? <CloseOutlined /> : <CheckOutlined />}
                     </span>
                   </div>
 
-                  <div className="w-full flex flex-col">
+                  <div className="flex w-full flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
                         to={`?schedulerTab=scheduled_logs&job_name=${encodeURIComponent(job.name)}`}
@@ -151,7 +151,7 @@ const getColumnsDefinition = ({
                         <Button
                           kind={Button.kinds.TERTIARY}
                           size={Button.sizes.SMALL}
-                          className="!leading-3 h-auto"
+                          className="h-auto !leading-3"
                           onClick={() => {
                             const keyInError = Object.keys(lastExecution.statements!)
                               .sort()
@@ -189,7 +189,7 @@ const getColumnsDefinition = ({
         const nextRunTime = job.next_run_time;
 
         return (
-          <div className="w-full flex flex-col">
+          <div className="flex w-full flex-col">
             <Text>
               {nextRunTime ? <DisplayUTCDate isoDate={nextRunTime} tooltip /> : '-'}
             </Text>
@@ -316,7 +316,7 @@ export default function ScheduledJobsTable() {
 
   if (isLoadingJobs) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex h-full w-full items-center justify-center">
         <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
       </div>
     );
@@ -324,7 +324,7 @@ export default function ScheduledJobsTable() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="w-full flex justify-end">
+      <div className="flex w-full justify-end">
         <Button
           onClick={() => {
             navigate('./create');
@@ -335,7 +335,7 @@ export default function ScheduledJobsTable() {
         </Button>
       </div>
 
-      <div className="w-full overflow-x-a">
+      <div className="overflow-x-a w-full">
         <DataTable
           elementsPerPage={JOBS_TABLE_PAGE_SIZE}
           noResultsLabel="No jobs found."

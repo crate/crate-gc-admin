@@ -20,7 +20,7 @@ function renderStatus(status: ConnectionStatus) {
       break;
   }
   return (
-    <div className="block max-w-96 mx-auto px-4 py-2 border-crate-border-dark bg-slate-600 text-white">
+    <div className="mx-auto block max-w-96 border-crate-border-dark bg-slate-600 px-4 py-2 text-white">
       {prefix}: {actual}
     </div>
   );
