@@ -21,6 +21,7 @@ type SQLEditorProps = {
   error?: React.ReactNode;
   onExecute: (queries: string) => void;
   onChange?: (queries: string) => void;
+  setShowHistory?: (show: boolean) => void;
 };
 
 const getInitialValue = (
@@ -41,6 +42,7 @@ function SQLEditor({
   runButtonLabel = 'Execute',
   onExecute,
   onChange,
+  setShowHistory,
 }: SQLEditorProps) {
   const SQL_EDITOR_CONTENT_KEY =
     localStorageKey && `crate.gc.admin.${localStorageKey}`;
@@ -94,6 +96,10 @@ function SQLEditor({
     }
   }, [results]);
 
+  useEffect(() => {
+    ace?.getSession().setValue(value || '');
+  }, [value]);
+
   const exec = (sql: string | null) => {
     if (!sql) {
       return;
@@ -121,10 +127,7 @@ function SQLEditor({
     if (!isLocalStorageUsed) {
       return;
     }
-    let strHistory = localStorage.getItem(SQL_HISTORY_CONTENT_KEY!);
-    if (!strHistory) {
-      strHistory = '[]';
-    }
+    const strHistory = localStorage.getItem(SQL_HISTORY_CONTENT_KEY!) || '[]';
     let historyArray: string[] = JSON.parse(strHistory);
     const last = historyArray.slice(-1);
     if (last.length > 0 && last[0] == sql) {
@@ -182,7 +185,7 @@ function SQLEditor({
     }
   };
 
-  const renderIstructions = () => {
+  const renderInstructions = () => {
     const isMac = navigator.userAgent.indexOf('Mac OS') != -1;
 
     const cmdChar = isMac ? '⌘' : 'Ctrl';
@@ -308,7 +311,7 @@ function SQLEditor({
       {error && <Text className="text-red-600">{error}</Text>}
 
       <div className="flex w-full items-center justify-between">
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           {showRunButton && (
             <Button kind="primary" onClick={() => exec(sql)}>
               <CaretRightOutlined className="mr-2" />
@@ -319,8 +322,17 @@ function SQLEditor({
             <FormatPainterOutlined className="mr-2" />
             Format
           </Button>
+          {setShowHistory && (
+            <Button
+              onClick={() => setShowHistory(true)}
+              kind="tertiary"
+              size="small"
+            >
+              Show history
+            </Button>
+          )}
         </div>
-        {renderIstructions()}
+        {renderInstructions()}
       </div>
     </div>
   );

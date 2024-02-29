@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Heading from '../../components/Heading';
 import Loader from '../../components/Loader';
 import SQLEditor from '../../components/SQLEditor';
+import SQLHistory from '../../components/SQLHistory';
 import SQLResults from '../../components/SQLResults';
 import { useGCContext } from '../../contexts';
 import useExecuteSql from '../../hooks/useExecuteSql';
@@ -13,6 +14,16 @@ function SQLConsole() {
   const specifiedQuery = new URLSearchParams(location.search).get('q');
   const [results, setResults] = useState<QueryResults | undefined>(undefined);
   const [running, setRunning] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [currentQuery, setCurrentQuery] = useState<string | null>(null);
+  const [rerender, setRerender] = useState(false);
+
+  // if a query is specified in the URL, place it in the editor
+  useEffect(() => {
+    if (specifiedQuery && !currentQuery) {
+      setCurrentQuery(specifiedQuery);
+    }
+  }, [specifiedQuery]);
 
   const execute = (sql: string) => {
     setRunning(true);
@@ -25,6 +36,27 @@ function SQLConsole() {
     });
   };
 
+  const LOCAL_STORAGE_KEY = 'sql-editor';
+  const SQL_HISTORY_CONTENT_KEY = `crate.gc.admin.${LOCAL_STORAGE_KEY}-history`;
+  const history = JSON.parse(localStorage.getItem(SQL_HISTORY_CONTENT_KEY) || '[]');
+
+  const clearHistory = () => {
+    localStorage.removeItem(SQL_HISTORY_CONTENT_KEY);
+    setRerender(!rerender); // force re-render
+  };
+
+  const removeHistoryItem = (index: number) => {
+    history.splice(index, 1);
+    localStorage.setItem(SQL_HISTORY_CONTENT_KEY, JSON.stringify(history));
+    setRerender(!rerender); // force re-render
+  };
+
+  const displayHistoryItem = (query: string) => {
+    setCurrentQuery(query);
+    setResults(undefined);
+    setShowHistory(false);
+  };
+
   return (
     <div>
       {headings && (
@@ -35,13 +67,22 @@ function SQLConsole() {
       <SQLEditor
         onExecute={execute}
         results={results}
-        localStorageKey="sql-editor"
-        value={specifiedQuery}
+        localStorageKey={LOCAL_STORAGE_KEY}
+        value={currentQuery}
+        setShowHistory={setShowHistory}
       />
       <div className="mt-4">
         {running && <Loader />}
         {!running && <SQLResults results={results} />}
       </div>
+      <SQLHistory
+        history={history}
+        showHistory={showHistory}
+        clearHistory={clearHistory}
+        removeHistoryItem={removeHistoryItem}
+        displayHistoryItem={displayHistoryItem}
+        setShowHistory={setShowHistory}
+      />
     </div>
   );
 }

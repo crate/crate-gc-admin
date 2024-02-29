@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Display and manage SQL console history.
+
 ## 2024-02-29 - 0.6.9
 
 - Avoid JWT renew on 400 HTTP errors.
