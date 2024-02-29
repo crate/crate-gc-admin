@@ -26,8 +26,13 @@ jobs:
         run: yarn lint
 
       # We don't actually use the output, but it is useful to know if vite works.
-      - name: Build
+      # App build (useful for future needs)
+      - name: Build App
         run: yarn build
+      
+      # Component Library build
+      - name: Build Lib
+        run: yarn build-lib
 
       # Run tests
       - name: Run component tests
