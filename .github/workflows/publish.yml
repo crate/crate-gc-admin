@@ -28,12 +28,12 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         run: yarn build-lib
 
+      - name: Create tag
+        if: steps.check.outputs.changed == 'true'
+        run: echo y | ./devtools/create_tag.sh
+
       - name: Publish to npm
         if: steps.check.outputs.changed == 'true'
         run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create tag
-        if: steps.check.outputs.changed == 'true'
-        run: echo y | ./devtools/create_tag.sh
