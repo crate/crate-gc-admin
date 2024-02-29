@@ -1,3 +1,6 @@
+---
+name: Publish to NPM
+
 on:
   push:
     branches: master
@@ -33,4 +36,4 @@ jobs:
 
       - name: Create tag
         if: steps.check.outputs.changed == 'true'
-        run: ./devtools/create_tag.sh
+        run: echo y | ./devtools/create_tag.sh

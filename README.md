@@ -56,9 +56,8 @@ and edit your index.css to import library style:
 
 To publish a new version of the `crate-gc-admin` you need to
 
-1.  be part of `@crate.io` organization on npm
-2.  `git checkout -b prefix/release-x.y.z`
-3.  Update `package.json` with the new version
-4.  Update `CHANGES.md` with a new release section
-5.  Commit, push, get approval, merge
-6.  Wait for the GitHub Action to automatically publish the new version on NPM.
+1.  `git checkout -b prefix/release-x.y.z`
+2.  Update `package.json` with the new version
+3.  Update `CHANGES.md` with a new release section
+4.  Commit, push, get approval, merge
+5.  Wait for the GitHub Action to automatically publish the new version on NPM.
