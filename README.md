@@ -61,8 +61,4 @@ To publish a new version of the `crate-gc-admin` you need to
 3.  Update `package.json` with the new version
 4.  Update `CHANGES.md` with a new release section
 5.  Commit, push, get approval, merge
-6.  `git checkout master && git pull`
-7.  run `yarn publish` (keep the version number you typed in previously)
-8.  `./devtools/create_tag.sh`
-
-This process can also be automated with a GitHub action.
+6.  Wait for the GitHub Action to automatically publish the new version on NPM.
