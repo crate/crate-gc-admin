@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-02-29 - 0.6.9
+
 - Avoid JWT renew on 400 HTTP errors.
 - Tailwind prettier plugin added.
 - Publish to NPM using a GitHub Action.
