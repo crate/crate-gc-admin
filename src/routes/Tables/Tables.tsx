@@ -3,10 +3,10 @@ import Heading from '../../components/Heading';
 import TableDetail from './TableDetail';
 import TableList from './TableList';
 import { TAILWIND_BREAKPOINT_MD } from '../../constants/defaults';
+import { SYSTEM_SCHEMAS } from 'constants/database';
 import { TableListEntry } from '../../types/cratedb';
 
 function Tables() {
-  const systemSchemas = ['information_schema', 'sys', 'pg_catalog', 'gc'];
   const [isMobile, setIsMobile] = useState(false);
   const [activeTable, setActiveTable] = useState<TableListEntry | undefined>();
 
@@ -30,14 +30,17 @@ function Tables() {
           Tables
         </Heading>
         <div className={activeTable ? 'hidden' : 'block'}>
-          <TableList setActiveTable={setActiveTable} systemSchemas={systemSchemas} />
+          <TableList
+            setActiveTable={setActiveTable}
+            systemSchemas={SYSTEM_SCHEMAS}
+          />
         </div>
         <div className={activeTable ? 'block px-2 pt-4' : 'hidden'}>
           {activeTable && (
             <TableDetail
               activeTable={activeTable}
               setActiveTable={setActiveTable}
-              systemSchemas={systemSchemas}
+              systemSchemas={SYSTEM_SCHEMAS}
             />
           )}
         </div>
@@ -49,7 +52,7 @@ function Tables() {
   return (
     <div className="flex h-full overflow-hidden">
       <div className="h-full basis-[370px]">
-        <TableList setActiveTable={setActiveTable} systemSchemas={systemSchemas} />
+        <TableList setActiveTable={setActiveTable} systemSchemas={SYSTEM_SCHEMAS} />
       </div>
       <div className="basis-full overflow-y-auto p-6">
         <Heading level="h1">Tables</Heading>
@@ -58,7 +61,7 @@ function Tables() {
             <TableDetail
               activeTable={activeTable}
               setActiveTable={setActiveTable}
-              systemSchemas={systemSchemas}
+              systemSchemas={SYSTEM_SCHEMAS}
             />
           )}
         </div>

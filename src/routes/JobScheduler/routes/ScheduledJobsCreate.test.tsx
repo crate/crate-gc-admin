@@ -6,9 +6,9 @@ const setup = () => {
 };
 
 describe('The "ScheduledJobsCreate" component', () => {
-  it('renders the create job form', () => {
+  it('renders the create job form', async () => {
     setup();
 
-    expect(screen.getByTestId('mocked-ace-editor')).toBeInTheDocument();
+    expect(await screen.findByTestId('mocked-ace-editor')).toBeInTheDocument();
   });
 });

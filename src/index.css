@@ -180,3 +180,18 @@
 .ant-tree {
   background-color: transparent;
 }
+
+/* ant-tree-tiny is a custom class, not from antd, to make a smaller version of the tree */
+.ant-tree-tiny .ant-tree-treenode {
+  padding: 0;
+}
+.ant-tree-tiny .ant-tree-node-content-wrapper {
+  font-size: 13px;
+  line-height: 12px;
+  transition: none !important;
+}
+.ant-tree-tiny .ant-tree-switcher,
+.ant-tree-tiny .ant-tree-indent-unit {
+  line-height: 12px;
+  width: 12px;
+}

@@ -23,6 +23,6 @@ describe('The "ScheduledJobsEdit" component', () => {
       expect(await screen.findByTestId('mocked-ace-editor')).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId('mocked-ace-editor')).toHaveValue(job.sql);
+    expect(await screen.findByTestId('mocked-ace-editor')).toHaveValue(job.sql);
   });
 });
