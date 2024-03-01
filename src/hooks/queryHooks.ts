@@ -3,12 +3,14 @@ import {
   ClusterInfo,
   NodeStatusInfo,
   QueryStats,
+  SchemaTableColumn,
   ShardInfo,
   TableInfo,
   TableListEntry,
   User,
 } from '../types/cratedb';
 import useExecuteSql from './useExecuteSql';
+import { SYSTEM_SCHEMAS } from 'constants/database';
 
 export const useGetUsersQuery = () => {
   const executeSql = useExecuteSql();
@@ -150,6 +152,41 @@ export const useGetTablesQuery = () => {
   };
 
   return getTables;
+};
+
+export const useGetTableColumnsQuery = () => {
+  const executeSql = useExecuteSql();
+
+  const getTableColumns = async (): Promise<SchemaTableColumn[]> => {
+    const res = await executeSql(
+      `SELECT
+         table_schema,
+         table_name,
+         column_name,
+         data_type
+       FROM
+        "information_schema"."columns"
+       WHERE
+         table_schema NOT IN (${SYSTEM_SCHEMAS.map(s => `'${s}'`).join(',')})
+       ORDER BY
+         table_schema,
+         table_name,
+         ordinal_position`,
+    );
+
+    if (!res.data || Array.isArray(res.data)) {
+      return [];
+    }
+
+    return res.data.rows.map(r => ({
+      table_schema: r[0],
+      table_name: r[1],
+      column_name: r[2],
+      data_type: r[3],
+    }));
+  };
+
+  return getTableColumns;
 };
 
 export const useGetNodesQuery = () => {

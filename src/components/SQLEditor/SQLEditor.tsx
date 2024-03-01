@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
+import { Tree } from 'antd';
 import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
@@ -11,6 +12,8 @@ import Text from '../../components/Text';
 import cn from '../../utils/cn';
 import { annotate } from './annotationUtils';
 import { QueryResults } from '../../types/query';
+import { SchemaTableColumn } from 'types/cratedb';
+import { useGetTableColumnsQuery } from '../../hooks/queryHooks';
 
 type SQLEditorProps = {
   value?: string | undefined | null;
@@ -22,6 +25,12 @@ type SQLEditorProps = {
   onExecute: (queries: string) => void;
   onChange?: (queries: string) => void;
   setShowHistory?: (show: boolean) => void;
+};
+
+type AntDesignTreeItem = {
+  title: string;
+  key: string;
+  children?: AntDesignTreeItem[];
 };
 
 const getInitialValue = (
@@ -51,6 +60,7 @@ function SQLEditor({
   const SQL_HISTORY_TEMP_CONTENT_KEY =
     localStorageKey && `crate.gc.admin.${localStorageKey}-history-temp`;
 
+  const getTableColumns = useGetTableColumnsQuery();
   const dataFromLocalStorage = SQL_EDITOR_CONTENT_KEY
     ? localStorage.getItem(SQL_EDITOR_CONTENT_KEY)
     : undefined;
@@ -58,6 +68,10 @@ function SQLEditor({
     getInitialValue(value, dataFromLocalStorage),
   );
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
+  const [tablesTree, setTableTree] = useState<AntDesignTreeItem[] | undefined>(
+    undefined,
+  );
+
   const isLocalStorageUsed = useMemo(() => {
     return (
       typeof SQL_EDITOR_CONTENT_KEY !== 'undefined' &&
@@ -69,6 +83,46 @@ function SQLEditor({
     SQL_HISTORY_CONTENT_KEY,
     SQL_HISTORY_TEMP_CONTENT_KEY,
   ]);
+
+  const constructTableTree = (input: SchemaTableColumn[]) => {
+    const getColumns = (schema: string, table: string) => {
+      return input
+        .filter(i => i.table_schema === schema)
+        .filter(i => i.table_name === table)
+        .filter(column => !column.column_name?.endsWith(']'))
+        .map(column => ({
+          title: column.column_name,
+          key: `${schema}.${table}.${column.column_name}`,
+        }));
+    };
+
+    const getTables = (schema: string) => {
+      const tables: string[] = [
+        ...new Set(
+          input.filter(i => (i.table_schema = schema)).map(i => i.table_name),
+        ),
+      ];
+
+      return tables.map(table => ({
+        title: table,
+        key: `${schema}.${table}`,
+        children: getColumns(schema, table),
+      }));
+    };
+
+    const schemas: string[] = [...new Set(input.map(i => i?.table_schema))];
+    setTableTree(
+      schemas.map(schema => ({
+        title: schema,
+        key: schema,
+        children: getTables(schema),
+      })),
+    );
+  };
+
+  useEffect(() => {
+    getTableColumns().then(constructTableTree);
+  }, []);
 
   useEffect(() => {
     /*
@@ -207,105 +261,117 @@ function SQLEditor({
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div
-        className={cn('rounded border-2', {
-          'border-red-600': error,
-        })}
-      >
-        {/* EDITOR */}
-        <AceEditor
-          width="100%"
-          minLines={14}
-          maxLines={25}
-          mode="cratedb"
-          theme="github"
-          fontSize={16}
-          highlightActiveLine
-          enableLiveAutocompletion
-          editorProps={{ $blockScrolling: true }}
-          defaultValue={sql}
-          commands={[
-            {
-              name: 'gcExec',
-              bindKey: {
-                win: 'Ctrl-Enter',
-                mac: 'Command-Enter',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Enter',
+      <div className="flex gap-2">
+        <div className="flex-0 ant-tree-tiny">
+          {/* wait for tablesTree to be ready else defaultExpandedKeys won't work */}
+          {tablesTree && tablesTree.length > 0 && (
+            <Tree
+              defaultExpandedKeys={tablesTree.map(t => t.key)}
+              selectable={false}
+              treeData={tablesTree}
+            />
+          )}
+        </div>
+        <div
+          className={cn('flex-auto rounded border-2', {
+            'border-red-600': error,
+          })}
+        >
+          {/* EDITOR */}
+          <AceEditor
+            width="100%"
+            minLines={14}
+            maxLines={25}
+            mode="cratedb"
+            theme="github"
+            fontSize={16}
+            highlightActiveLine
+            enableLiveAutocompletion
+            editorProps={{ $blockScrolling: true }}
+            defaultValue={sql}
+            commands={[
+              {
+                name: 'gcExec',
+                bindKey: {
+                  win: 'Ctrl-Enter',
+                  mac: 'Command-Enter',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Enter',
+                },
+                exec: editor => exec(editor.getValue()),
               },
-              exec: editor => exec(editor.getValue()),
-            },
-            {
-              name: 'gcPrev',
-              bindKey: {
-                win: 'Ctrl-Up',
-                mac: 'Command-Up',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Up',
+              {
+                name: 'gcPrev',
+                bindKey: {
+                  win: 'Ctrl-Up',
+                  mac: 'Command-Up',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Up',
+                },
+                exec: editor => {
+                  const val = popHistory();
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-              exec: editor => {
-                const val = popHistory();
-                if (val) {
-                  editor.setValue(val);
-                }
+              {
+                name: 'gcNext',
+                bindKey: {
+                  win: 'Ctrl-Down',
+                  mac: 'Command-Down',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Down',
+                },
+                exec: editor => {
+                  const val = popHistory(true);
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-            },
-            {
-              name: 'gcNext',
-              bindKey: {
-                win: 'Ctrl-Down',
-                mac: 'Command-Down',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Down',
+              {
+                name: 'gcPrev',
+                bindKey: {
+                  win: 'Ctrl-Up',
+                  mac: 'Command-Up',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Up',
+                },
+                exec: editor => {
+                  const val = popHistory();
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-              exec: editor => {
-                const val = popHistory(true);
-                if (val) {
-                  editor.setValue(val);
-                }
+              {
+                name: 'gcNext',
+                bindKey: {
+                  win: 'Ctrl-Down',
+                  mac: 'Command-Down',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Down',
+                },
+                exec: editor => {
+                  const val = popHistory(true);
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-            },
-            {
-              name: 'gcPrev',
-              bindKey: {
-                win: 'Ctrl-Up',
-                mac: 'Command-Up',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Up',
-              },
-              exec: editor => {
-                const val = popHistory();
-                if (val) {
-                  editor.setValue(val);
-                }
-              },
-            },
-            {
-              name: 'gcNext',
-              bindKey: {
-                win: 'Ctrl-Down',
-                mac: 'Command-Down',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Down',
-              },
-              exec: editor => {
-                const val = popHistory(true);
-                if (val) {
-                  editor.setValue(val);
-                }
-              },
-            },
-          ]}
-          setOptions={{
-            showLineNumbers: true,
-            tabSize: 2,
-            showPrintMargin: false,
-          }}
-          onChange={onValueChange}
-          onLoad={editor => {
-            setAce(editor);
-          }}
-        />
+            ]}
+            setOptions={{
+              showLineNumbers: true,
+              tabSize: 2,
+              showPrintMargin: false,
+            }}
+            onChange={onValueChange}
+            onLoad={editor => {
+              setAce(editor);
+            }}
+          />
+        </div>
       </div>
 
       {error && <Text className="text-red-600">{error}</Text>}
