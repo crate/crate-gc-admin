@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-03-01 - 0.6.11
+
 - Added schema/table/column tree view to SQL editor.
 
 ## 2024-02-29 - 0.6.10
