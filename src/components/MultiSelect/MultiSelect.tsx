@@ -12,6 +12,7 @@ type MultiSelectProps = {
   value: string[];
   onChange: (value: string[]) => void;
   searchBar?: boolean;
+  testId?: string;
 };
 
 export default function MultiSelect({
@@ -19,6 +20,7 @@ export default function MultiSelect({
   elements,
   value,
   searchBar = false,
+  testId,
   onChange,
 }: PropsWithChildren<MultiSelectProps>) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,6 +57,7 @@ export default function MultiSelect({
             kind={Button.kinds.SECONDARY}
             className="bg-white"
             size={Button.sizes.SMALL}
+            id={testId}
           >
             {children} <CaretDownOutlined />
           </Button>
@@ -67,6 +70,7 @@ export default function MultiSelect({
               <Input
                 placeholder="Search..."
                 value={searchTerm}
+                data-testid={testId && `${testId}-search`}
                 onChange={e => {
                   setSearchTerm(e.target.value);
                 }}
@@ -82,6 +86,7 @@ export default function MultiSelect({
           onClick={() => {
             selectAll();
           }}
+          data-testid={testId && `${testId}-select-all`}
         >
           Select All
         </DropdownMenu.CheckboxItem>
@@ -94,6 +99,7 @@ export default function MultiSelect({
               onClick={() => {
                 triggerCheck(el.id);
               }}
+              data-testid={testId && `${testId}-select-${el.id}`}
             >
               {el.label}
             </DropdownMenu.CheckboxItem>

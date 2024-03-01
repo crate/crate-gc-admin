@@ -2,7 +2,6 @@ export { default as Button, useButtonStyles } from './Button';
 export { default as Checkbox } from './Checkbox';
 export { default as Chip } from './Chip';
 export { default as Code } from './Code';
-export { default as Collapsible } from './Collapsible';
 export { default as ConfirmDelete } from './ConfirmDelete';
 export { default as CopyToClipboard } from './CopyToClipboard';
 export { default as CrateTable } from './CrateTable';

@@ -1,14 +1,11 @@
 import { PropsWithChildren } from 'react';
 import { cn } from 'utils';
 
-export type ChipProps = {
+export type ChipProps = PropsWithChildren<{
   className?: string;
-};
+}>;
 
-export default function Chip({
-  children,
-  className = '',
-}: PropsWithChildren<ChipProps>) {
+export default function Chip({ children, className = '' }: ChipProps) {
   return (
     <span
       className={cn(

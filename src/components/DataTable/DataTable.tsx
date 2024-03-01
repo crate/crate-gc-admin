@@ -22,7 +22,9 @@ import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { cn } from 'utils';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-type DataTableProps<TData, TValue> = {
+export const DEFAULT_ELEMENTS_PER_PAGE = 10;
+
+export type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   noResultsLabel?: string;
@@ -63,7 +65,7 @@ export function DataTable<TData, TValue>({
   noResultsLabel = 'No results.',
   enableFilters = false,
   enableSearchBox = false,
-  elementsPerPage = 10,
+  elementsPerPage = DEFAULT_ELEMENTS_PER_PAGE,
   additionalState,
   getRowId,
 }: DataTableProps<TData, TValue>) {
@@ -183,6 +185,8 @@ export function DataTable<TData, TValue>({
                           ? header.column.columnDef.meta.columnWidth
                           : undefined,
                       }}
+                      data-testid={`head_col_${header.id}`}
+                      data-sorting={header.column.getIsSorted() || 'false'}
                     >
                       {renderHeader(header)}
 
@@ -202,6 +206,7 @@ export function DataTable<TData, TValue>({
                               header.column.getIsSorted() !== 'desc',
                             );
                           }}
+                          id={`sorting_button_${header.id}`}
                         >
                           {header.column.getIsSorted() === 'asc' ? (
                             <ArrowUpOutlined className="ml-2 h-4 w-4" />
@@ -247,6 +252,7 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination */}
       <Pagination
+        testId="datatable-pagination"
         className="justify-end"
         pageSize={pageSize}
         currentPage={currentPage}

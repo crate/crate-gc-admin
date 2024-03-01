@@ -1,7 +1,7 @@
 import moment, { Moment } from 'moment';
 import { capitalizeFirstLetter } from 'utils/strings';
 
-type DisplayDateDifferenceProps = {
+export type DisplayDateDifferenceProps = {
   from?: string;
   to: string;
 };
@@ -47,15 +47,14 @@ export default function DisplayDateDifference({
   const end = moment(to);
 
   const difference = timeBetweenDates(start, end);
-
   if (difference) {
+    console.log(difference);
     const unit = difference.unit;
     const rawValue = difference.value;
     const roundedValue = Math.round(rawValue);
-
     const niceString = end.isAfter(start) ? ['In'] : [];
     niceString.push(
-      roundedValue > rawValue || roundedValue <= 1 ? 'less then' : 'more than',
+      roundedValue > rawValue || roundedValue < 1 ? 'less than' : 'more than',
     );
     niceString.push(Math.max(1, roundedValue).toString());
     niceString.push(roundedValue <= 1 ? singleUnits[unit] : unit);
