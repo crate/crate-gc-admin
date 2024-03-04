@@ -16,6 +16,7 @@ export type PaginationProps = {
   totalPages: number;
   pageToShow?: number;
   className?: string;
+  testId?: string;
   onPageChange: (pageNumber: number) => void;
   onPageSizeChange: (pageSize: number) => void;
 };
@@ -28,6 +29,7 @@ const Pagination = ({
   onPageChange,
   onPageSizeChange,
   className = '',
+  testId,
 }: PaginationProps) => {
   let minPageIndex = currentPage - Math.floor(pageToShow / 2);
   let maxPageIndex = currentPage + Math.ceil(pageToShow / 2);
@@ -52,6 +54,7 @@ const Pagination = ({
 
   return (
     <nav
+      data-testid={testId}
       role="navigation"
       aria-label="pagination"
       className={cn('mx-auto flex w-full justify-center', className)}
@@ -60,6 +63,7 @@ const Pagination = ({
         {/* Prev Button */}
         <Item>
           <Previous
+            id="pagination-prev-arrow"
             disabled={currentPage === 1}
             onClick={() => {
               onPageChange(currentPage - 1);
@@ -70,6 +74,7 @@ const Pagination = ({
         {!pagesIndex.includes(1) && (
           <Item>
             <Button
+              id="pagination-first"
               onClick={() => {
                 onPageChange(0);
               }}
@@ -96,6 +101,7 @@ const Pagination = ({
           return (
             <Item key={pageIndex}>
               <Button
+                id={`pagination-page-${pageIndex}`}
                 onClick={() => {
                   onPageChange(pageIndex);
                 }}
@@ -121,6 +127,7 @@ const Pagination = ({
         {!pagesIndex.includes(totalPages) && (
           <Item>
             <Button
+              id="pagination-last"
               onClick={() => {
                 onPageChange(totalPages);
               }}
@@ -134,6 +141,7 @@ const Pagination = ({
         {/* Next button */}
         <Item>
           <Next
+            id="pagination-next-arrow"
             disabled={currentPage === totalPages}
             onClick={() => {
               onPageChange(currentPage + 1);
@@ -196,7 +204,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <CrateButton
-      aria-current={isActive ? 'page' : undefined}
+      ariaCurrent={isActive ? 'page' : undefined}
       size={CrateButton.sizes.SMALL}
       kind={CrateButton.kinds.SECONDARY}
       disabled={disabled}

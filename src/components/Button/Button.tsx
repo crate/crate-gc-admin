@@ -16,6 +16,8 @@ export type ButtonProps = {
   ariaExpanded?: React.AriaAttributes['aria-expanded'];
   /** Aria for a button popup */
   ariaHasPopup?: React.AriaAttributes['aria-haspopup'];
+  /** Aria Current for pagination */
+  ariaCurrent?: React.AriaAttributes['aria-current'];
   /** Element id to describe the button control */
   ariaLabelledBy?: React.AriaAttributes['aria-labelledby'];
   children: React.ReactNode;
@@ -38,6 +40,7 @@ function Button({
   ariaExpanded,
   ariaHasPopup,
   ariaLabelledBy,
+  ariaCurrent,
   className = '',
   children,
   disabled = false,
@@ -69,6 +72,7 @@ function Button({
       'aria-expanded': ariaExpanded,
       'aria-haspopup': ariaHasPopup,
       'aria-labelledby': ariaLabelledBy,
+      'aria-current': ariaCurrent,
       className: buttonClasses,
       'data-testid': id,
       disabled: disabled || loading,
@@ -82,6 +86,7 @@ function Button({
       ariaHasPopup,
       ariaExpanded,
       ariaControls,
+      ariaCurrent,
       buttonClasses,
       disabled,
       form,

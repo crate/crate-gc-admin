@@ -36,7 +36,7 @@ export default function DataTableFilters<TData>({
   const activeFilters = table.getState().columnFilters;
 
   return (
-    <div className="flex flex-col rounded-sm">
+    <div className="flex flex-col rounded-sm" data-testid="datatable-filters">
       <div className="flex flex-row items-center justify-between gap-2">
         <div className="flex gap-2">
           {allColumns.map(header => {
@@ -76,6 +76,7 @@ export default function DataTableFilters<TData>({
             return (
               <MultiSelect
                 key={header.id}
+                testId={`datatable-filter-${header.id}`}
                 value={colFilter ? (colFilter.value as string[]) : []}
                 searchBar={searchBarEnabled}
                 onChange={updateFilter}
@@ -105,6 +106,7 @@ export default function DataTableFilters<TData>({
           <span className="relative">
             <SearchOutlined className="absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 text-slate-400" />
             <Input
+              data-testid="datatable-searchbox"
               placeholder="Search..."
               value={searchTerm}
               onChange={e => {

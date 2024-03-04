@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from 'utils';
 
-type CheckboxProps = React.DetailedHTMLProps<
+export type CheckboxProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 > & {
@@ -43,9 +43,15 @@ const Checkbox = React.forwardRef(
           strokeLinejoin="round"
         >
           {indeterminate ? (
-            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line
+              x1="4"
+              y1="12"
+              x2="20"
+              y2="12"
+              data-testid="check-intederminate"
+            ></line>
           ) : (
-            <polyline points="20 6 9 17 4 12"></polyline>
+            <polyline points="20 6 9 17 4 12" data-testid="check-normal"></polyline>
           )}
         </svg>
       </div>
