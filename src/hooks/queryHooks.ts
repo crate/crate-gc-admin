@@ -10,8 +10,6 @@ import {
   User,
 } from '../types/cratedb';
 import useExecuteSql from './useExecuteSql';
-import { SYSTEM_SCHEMAS } from 'constants/database';
-
 export const useGetUsersQuery = () => {
   const executeSql = useExecuteSql();
 
@@ -166,8 +164,6 @@ export const useGetTableColumnsQuery = () => {
          data_type
        FROM
         "information_schema"."columns"
-       WHERE
-         table_schema NOT IN (${SYSTEM_SCHEMAS.map(s => `'${s}'`).join(',')})
        ORDER BY
          table_schema,
          table_name,

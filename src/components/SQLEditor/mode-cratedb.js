@@ -82,7 +82,7 @@ try {
               end: '\\*/',
             },
             {
-              token: 'string', // " string
+              token: 'identifier', // " string
               regex: '".*?"',
             },
             {
