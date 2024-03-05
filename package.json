@@ -1,6 +1,6 @@
 {
   "name": "@crate.io/crate-gc-admin",
-  "version": "0.6.12",
+  "version": "0.6.13",
   "author": "crate.io",
   "private": false,
   "type": "module",

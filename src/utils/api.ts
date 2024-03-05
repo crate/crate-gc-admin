@@ -47,33 +47,33 @@ const api = async <T>(
     response = axiosError.response!;
   }
 
-  const responseOk = response.status >= 200 && response.status < 300;
+  const responseOk = response && response.status >= 200 && response.status < 300;
 
   // update the output depending on the result of the fetch()
-  const outputData: T | null = response.data || null;
+  const outputData: T | null = response?.data || null;
 
   const output: ApiOutput<T> = {
     success: responseOk,
-    status: response.status,
+    status: response?.status,
     data: outputData,
   };
 
   // do not show a 404 error for invalid invitation tokens
-  if (response.status === 404 && url.includes('/accept-invite/')) {
+  if (response?.status === 404 && url.includes('/accept-invite/')) {
     output.success = false;
     return output;
   }
 
   if (!responseOk && notification) {
-    if (response.status === 404) {
+    if (response?.status === 404) {
       dispatchNotification('error', 'The requested resource was not found. ');
-    } else if (response.status >= 500) {
+    } else if (response?.status >= 500) {
       dispatchNotification(
         'error',
         'An error occurred while accessing the server. Please try again later.',
       );
     } else if (
-      response.status >= 400 &&
+      response?.status >= 400 &&
       output.data &&
       typeof output.data === 'object' &&
       'message' in output.data

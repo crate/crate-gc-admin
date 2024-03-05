@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-03-05 - 0.6.13
+
+- Handle case when API requests are rejected by the server.
+
 ## 2024-03-05 - 0.6.12
 
 - Tidied layout issues with the SQL editor.
