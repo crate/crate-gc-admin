@@ -53,6 +53,11 @@ function SQLEditor({
   onChange,
   setShowHistory,
 }: SQLEditorProps) {
+  const MIN_LINES = 14;
+  const MAX_LINES = 25;
+  const STANDARD_EDITOR_LINEHEIGHT = 16;
+  const TABLETREE_PADDING = 4;
+
   const SQL_EDITOR_CONTENT_KEY =
     localStorageKey && `crate.gc.admin.${localStorageKey}`;
   const SQL_HISTORY_CONTENT_KEY =
@@ -70,6 +75,9 @@ function SQLEditor({
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
   const [tablesTree, setTableTree] = useState<AntDesignTreeItem[] | undefined>(
     undefined,
+  );
+  const [tablesTreeHeight, setTablesTreeHeight] = useState<number>(
+    MIN_LINES * STANDARD_EDITOR_LINEHEIGHT + TABLETREE_PADDING,
   );
 
   const isLocalStorageUsed = useMemo(() => {
@@ -99,7 +107,7 @@ function SQLEditor({
     const getTables = (schema: string) => {
       const tables: string[] = [
         ...new Set(
-          input.filter(i => (i.table_schema = schema)).map(i => i.table_name),
+          input.filter(i => i.table_schema === schema).map(i => i.table_name),
         ),
       ];
 
@@ -134,6 +142,7 @@ function SQLEditor({
       return;
     }
     ace.commands.byName.gcExec.exec = editor => exec(editor.getValue());
+    setTableTreeHeight(); // editor is loaded, ensure table tree is the same height
   }, [ace, onExecute]);
 
   // Update annotations when results are ready
@@ -148,6 +157,8 @@ function SQLEditor({
     } else {
       ace.getSession().clearAnnotations();
     }
+
+    getTableColumns().then(constructTableTree);
   }, [results]);
 
   useEffect(() => {
@@ -225,7 +236,24 @@ function SQLEditor({
     if (sql && ace) {
       const formatted = formatSQL(sql, { language: 'postgresql' });
       ace.getSession().setValue(formatted);
+      setTableTreeHeight();
       ace.focus();
+    }
+  };
+
+  const setTableTreeHeight = () => {
+    if (!ace) {
+      return;
+    }
+
+    const lineHeight = ace.renderer.lineHeight;
+    const editorInnerHeight = ace.getSession().getScreenLength() * lineHeight;
+    const minHeight = MIN_LINES * lineHeight;
+    const maxHeight = MAX_LINES * lineHeight;
+
+    const treeHeight = Math.max(Math.min(editorInnerHeight, maxHeight), minHeight);
+    if (treeHeight != tablesTreeHeight - TABLETREE_PADDING) {
+      setTablesTreeHeight(treeHeight + TABLETREE_PADDING);
     }
   };
 
@@ -237,6 +265,8 @@ function SQLEditor({
     if (onChange) {
       onChange(newValue);
     }
+
+    setTableTreeHeight();
   };
 
   const renderInstructions = () => {
@@ -260,145 +290,146 @@ function SQLEditor({
   };
 
   return (
-    <div className="flex w-full flex-col gap-2">
-      <div className="flex gap-2">
-        <div className="flex-0 ant-tree-tiny">
+    <div className="grid grid-cols-[1fr_10fr] gap-2">
+      <div>
+        {/* important: keep the outer div so the grid expands correctly */}
+        <div
+          className="ant-tree-tiny h-full min-w-[100px] max-w-[360px] overflow-auto rounded border-2 p-1.5"
+          style={{ maxHeight: tablesTreeHeight + 'px' }}
+        >
           {/* wait for tablesTree to be ready else defaultExpandedKeys won't work */}
           {tablesTree && tablesTree.length > 0 && (
-            <Tree
-              defaultExpandedKeys={tablesTree.map(t => t.key)}
-              selectable={false}
-              treeData={tablesTree}
-            />
+            <Tree selectable={false} treeData={tablesTree} />
           )}
-        </div>
-        <div
-          className={cn('flex-auto rounded border-2', {
-            'border-red-600': error,
-          })}
-        >
-          {/* EDITOR */}
-          <AceEditor
-            width="100%"
-            minLines={14}
-            maxLines={25}
-            mode="cratedb"
-            theme="github"
-            fontSize={16}
-            highlightActiveLine
-            enableLiveAutocompletion
-            editorProps={{ $blockScrolling: true }}
-            defaultValue={sql}
-            commands={[
-              {
-                name: 'gcExec',
-                bindKey: {
-                  win: 'Ctrl-Enter',
-                  mac: 'Command-Enter',
-                  // @ts-expect-error type problem
-                  linux: 'Ctrl-Enter',
-                },
-                exec: editor => exec(editor.getValue()),
-              },
-              {
-                name: 'gcPrev',
-                bindKey: {
-                  win: 'Ctrl-Up',
-                  mac: 'Command-Up',
-                  // @ts-expect-error type problem
-                  linux: 'Ctrl-Up',
-                },
-                exec: editor => {
-                  const val = popHistory();
-                  if (val) {
-                    editor.setValue(val);
-                  }
-                },
-              },
-              {
-                name: 'gcNext',
-                bindKey: {
-                  win: 'Ctrl-Down',
-                  mac: 'Command-Down',
-                  // @ts-expect-error type problem
-                  linux: 'Ctrl-Down',
-                },
-                exec: editor => {
-                  const val = popHistory(true);
-                  if (val) {
-                    editor.setValue(val);
-                  }
-                },
-              },
-              {
-                name: 'gcPrev',
-                bindKey: {
-                  win: 'Ctrl-Up',
-                  mac: 'Command-Up',
-                  // @ts-expect-error type problem
-                  linux: 'Ctrl-Up',
-                },
-                exec: editor => {
-                  const val = popHistory();
-                  if (val) {
-                    editor.setValue(val);
-                  }
-                },
-              },
-              {
-                name: 'gcNext',
-                bindKey: {
-                  win: 'Ctrl-Down',
-                  mac: 'Command-Down',
-                  // @ts-expect-error type problem
-                  linux: 'Ctrl-Down',
-                },
-                exec: editor => {
-                  const val = popHistory(true);
-                  if (val) {
-                    editor.setValue(val);
-                  }
-                },
-              },
-            ]}
-            setOptions={{
-              showLineNumbers: true,
-              tabSize: 2,
-              showPrintMargin: false,
-            }}
-            onChange={onValueChange}
-            onLoad={editor => {
-              setAce(editor);
-            }}
-          />
         </div>
       </div>
+      <div
+        className={cn('flex-auto rounded border-2', {
+          'border-red-600': error,
+        })}
+      >
+        <AceEditor
+          width="100%"
+          minLines={MIN_LINES}
+          maxLines={MAX_LINES}
+          mode="cratedb"
+          theme="github"
+          fontSize={16}
+          highlightActiveLine
+          enableLiveAutocompletion
+          editorProps={{ $blockScrolling: true }}
+          defaultValue={sql}
+          commands={[
+            {
+              name: 'gcExec',
+              bindKey: {
+                win: 'Ctrl-Enter',
+                mac: 'Command-Enter',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Enter',
+              },
+              exec: editor => exec(editor.getValue()),
+            },
+            {
+              name: 'gcPrev',
+              bindKey: {
+                win: 'Ctrl-Up',
+                mac: 'Command-Up',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Up',
+              },
+              exec: editor => {
+                const val = popHistory();
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
+            {
+              name: 'gcNext',
+              bindKey: {
+                win: 'Ctrl-Down',
+                mac: 'Command-Down',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Down',
+              },
+              exec: editor => {
+                const val = popHistory(true);
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
+            {
+              name: 'gcPrev',
+              bindKey: {
+                win: 'Ctrl-Up',
+                mac: 'Command-Up',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Up',
+              },
+              exec: editor => {
+                const val = popHistory();
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
+            {
+              name: 'gcNext',
+              bindKey: {
+                win: 'Ctrl-Down',
+                mac: 'Command-Down',
+                // @ts-expect-error type problem
+                linux: 'Ctrl-Down',
+              },
+              exec: editor => {
+                const val = popHistory(true);
+                if (val) {
+                  editor.setValue(val);
+                }
+              },
+            },
+          ]}
+          setOptions={{
+            showLineNumbers: true,
+            tabSize: 2,
+            showPrintMargin: false,
+          }}
+          onChange={onValueChange}
+          onLoad={editor => {
+            setAce(editor);
+          }}
+        />
+      </div>
 
-      {error && <Text className="text-red-600">{error}</Text>}
-
-      <div className="flex w-full items-center justify-between">
-        <div className="flex items-center gap-2">
-          {showRunButton && (
-            <Button kind="primary" onClick={() => exec(sql)}>
-              <CaretRightOutlined className="mr-2" />
-              {runButtonLabel}
+      <div>{/* purposefully empty */}</div>
+      <div>
+        {error && <Text className="w-full text-red-600">{error}</Text>}
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-2">
+            {showRunButton && (
+              <Button kind="primary" onClick={() => exec(sql)}>
+                <CaretRightOutlined className="mr-2" />
+                {runButtonLabel}
+              </Button>
+            )}
+            <Button kind="secondary" onClick={formatSql}>
+              <FormatPainterOutlined className="mr-2" />
+              Format
             </Button>
-          )}
-          <Button kind="secondary" onClick={formatSql}>
-            <FormatPainterOutlined className="mr-2" />
-            Format
-          </Button>
-          {setShowHistory && (
-            <Button
-              onClick={() => setShowHistory(true)}
-              kind="tertiary"
-              size="small"
-            >
-              Show history
-            </Button>
-          )}
+            {setShowHistory && (
+              <Button
+                onClick={() => setShowHistory(true)}
+                kind="tertiary"
+                size="small"
+              >
+                Show history
+              </Button>
+            )}
+          </div>
+          {renderInstructions()}
         </div>
-        {renderInstructions()}
       </div>
     </div>
   );

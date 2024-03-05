@@ -28,8 +28,8 @@ function SQLResultsTable({ result }: Params) {
   const renderErrorTable = (result: QueryResult) => {
     return (
       <>
-        <div className="flex h-12 flex-row items-center justify-between rounded border p-2">
-          <div className="flex items-center gap-4 pr-2 text-sm">
+        <div className="flex min-h-12 flex-row items-start justify-between rounded border p-2">
+          <div className="flex items-start gap-4 pr-2 text-sm">
             <Chip className="bg-red-600 uppercase text-white">Error</Chip>
             <a
               href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
@@ -37,10 +37,13 @@ function SQLResultsTable({ result }: Params) {
             >
               {result.error?.code}
             </a>
-            <span>{result.error?.message}</span>
+            <span className="font-xs font-mono">{result.error?.message}</span>
           </div>
           <div className="flex select-none items-center gap-2">
-            <span className="cursor-pointer text-sm" onClick={toggleErrorTrace}>
+            <span
+              className="cursor-pointer whitespace-nowrap text-sm"
+              onClick={toggleErrorTrace}
+            >
               Show error trace
             </span>
             <Switch.Root
