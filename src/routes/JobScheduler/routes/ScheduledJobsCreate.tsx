@@ -1,5 +1,5 @@
 import { ScheduledJobForm } from '../views';
 
-export default function ScheduledJosCreate() {
+export default function ScheduledJobsCreate() {
   return <ScheduledJobForm type="add" />;
 }

@@ -48,7 +48,6 @@ export default function DisplayDateDifference({
 
   const difference = timeBetweenDates(start, end);
   if (difference) {
-    console.log(difference);
     const unit = difference.unit;
     const rawValue = difference.value;
     const roundedValue = Math.round(rawValue);

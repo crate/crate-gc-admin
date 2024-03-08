@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-03-08 - 0.6.14
+
+- Misc minor fixes to Job Scheduler components.
+
 ## 2024-03-05 - 0.6.13
 
 - Handle case when API requests are rejected by the server.

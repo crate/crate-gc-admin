@@ -162,7 +162,9 @@ function SQLEditor({
   }, [results]);
 
   useEffect(() => {
-    ace?.getSession().setValue(value || '');
+    if (setShowHistory) {
+      ace?.getSession().setValue(value || '');
+    }
   }, [value]);
 
   const exec = (sql: string | null) => {

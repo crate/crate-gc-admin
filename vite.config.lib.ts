@@ -41,6 +41,7 @@ export default defineConfig(({ mode }) => {
           globals: {
             react: 'React',
             'react-dom': 'ReactDOM',
+            'react-router-dom': 'ReactRouterDOM',
           },
         },
       },
