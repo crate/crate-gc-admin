@@ -3,7 +3,7 @@ import { ScheduledJobForm } from '../views';
 import { useGCGetScheduledJob } from 'hooks/swrHooks';
 import { Loader } from 'components';
 
-export default function ScheduledJosCreate() {
+export default function ScheduledJobsEdit() {
   const { jobId } = useParams();
   const { data: job, isLoading, isValidating } = useGCGetScheduledJob(jobId!);
 

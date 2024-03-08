@@ -70,7 +70,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
   const errors = form.formState.errors;
 
   const backToJobList = () => {
-    navigate('..');
+    navigate('..', { relative: 'path' });
   };
 
   const onSubmit: SubmitHandler<TForm> = async (data: JobInput) => {
@@ -281,9 +281,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
                       onChange={query => {
                         form.setValue('sql', query, { shouldValidate: true });
                       }}
-                      onExecute={() => {
-                        executeQuery();
-                      }}
+                      onExecute={executeQuery}
                       error={errors.sql && errors.sql.message}
                     />
                   </Form.Control>

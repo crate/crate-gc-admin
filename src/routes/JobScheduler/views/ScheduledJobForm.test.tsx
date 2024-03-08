@@ -77,7 +77,7 @@ describe('The "ScheduledJobForm" component', () => {
 
       await user.click(screen.getByText('Cancel'));
 
-      expect(navigateMock).toHaveBeenCalledWith('..');
+      expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
     });
   });
 
@@ -96,7 +96,7 @@ describe('The "ScheduledJobForm" component', () => {
         expect(createJobSpy).toHaveBeenCalled();
       });
 
-      expect(navigateMock).toHaveBeenCalledWith('..');
+      expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
     });
   });
 
@@ -147,7 +147,7 @@ describe('The "ScheduledJobForm" component', () => {
           expect(updateJobSpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith('..');
+        expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
       });
     });
   });
