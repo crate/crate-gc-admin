@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-03-11 - 0.6.15
+
+- Added icons to the SQL editor table tree.
+
 ## 2024-03-08 - 0.6.14
 
 - Misc minor fixes to Job Scheduler components.

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
 import { Tree } from 'antd';
+import { ApartmentOutlined, TableOutlined } from '@ant-design/icons';
 import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
@@ -113,6 +114,7 @@ function SQLEditor({
 
       return tables.map(table => ({
         title: table,
+        icon: <TableOutlined className="relative -top-1.5 h-3 w-3 opacity-50" />,
         key: `${schema}.${table}`,
         children: getColumns(schema, table),
       }));
@@ -123,6 +125,7 @@ function SQLEditor({
       schemas.map(schema => ({
         title: schema,
         key: schema,
+        icon: <ApartmentOutlined className="relative -top-1.5 h-3 w-3 opacity-50" />,
         children: getTables(schema),
       })),
     );
@@ -301,7 +304,7 @@ function SQLEditor({
         >
           {/* wait for tablesTree to be ready else defaultExpandedKeys won't work */}
           {tablesTree && tablesTree.length > 0 && (
-            <Tree selectable={false} treeData={tablesTree} />
+            <Tree selectable={false} showIcon treeData={tablesTree} />
           )}
         </div>
       </div>
