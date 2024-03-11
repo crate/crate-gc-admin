@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2024-03-11 - 0.6.15
+## 2024-03-11 - 0.6.17
 
 - Added icons to the SQL editor table tree.
 
