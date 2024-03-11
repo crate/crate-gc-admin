@@ -184,6 +184,7 @@
 /* ant-tree-tiny is a custom class, not from antd, to make a smaller version of the tree */
 .ant-tree-tiny .ant-tree-treenode {
   padding: 0;
+  white-space: nowrap;
 }
 .ant-tree-tiny .ant-tree-node-content-wrapper {
   font-size: 13px;
