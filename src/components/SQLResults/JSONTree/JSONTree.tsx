@@ -31,19 +31,27 @@ function JSONTree({ json }: JSONTreeParams) {
     return;
   };
 
+  // the parentIsArray is used to determine if the key is an array index
+  // CrateDB uses 1-based indexing, not 0-based as in JavaScript
   const buildTree = (
     obj: object | object[] | string | number | boolean,
     config: { toplevel?: boolean; path?: string } = { toplevel: false, path: '' },
+    parentIsArray: boolean = false,
   ): DataNode[] | undefined => {
     if (!obj) {
       return;
     }
+
     if (config.toplevel) {
       return [
         {
           key: `TLObject`,
           title: typeTitle(obj),
-          children: buildTree(obj),
+          children: buildTree(
+            obj,
+            { toplevel: false, path: '' },
+            Array.isArray(obj),
+          ),
         },
       ];
     }
@@ -54,7 +62,7 @@ function JSONTree({ json }: JSONTreeParams) {
       let children;
       const isArray = Array.isArray(val);
       if (isArray || typeof val === 'object') {
-        children = buildTree(val, { path: `${config.path}-${k}` });
+        children = buildTree(val, { path: `${config.path}-${k}` }, true);
       }
       const title: string | React.JSX.Element = children ? (
         <div key={`${config.path}-${k}-title`}>
@@ -67,7 +75,8 @@ function JSONTree({ json }: JSONTreeParams) {
             await copyToClipboard(val);
           }}
         >
-          {k}: <TypeAwareValue value={val} quoteStrings />
+          {parentIsArray ? parseInt(k) + 1 : k}:{' '}
+          <TypeAwareValue value={val} quoteStrings />
         </div>
       );
       return { key: `${config.path}-${k}`, title: title, children: children };

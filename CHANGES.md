@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-03-12 - 0.6.18
+
+- Display SQL results arrays with 1-based indexing.
+
 ## 2024-03-11 - 0.6.17
 
 - Added icons to the SQL editor table tree.
