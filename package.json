@@ -1,12 +1,19 @@
 {
   "name": "@crate.io/crate-gc-admin",
-  "version": "0.6.18",
+  "version": "0.6.23",
   "author": "crate.io",
   "private": false,
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/crate/crate-gc-admin"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.es.js",

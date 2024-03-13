@@ -4,7 +4,7 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 import { colors } from './src/constants/colors';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, process.cwd(), 'REACT_APP_');
 
   return {
     // depending on your application, base can also be "/"
