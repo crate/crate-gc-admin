@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fixing undefined error on getting job last execution.
+
 ## 2024-03-12 - 0.6.18
 
 - Display SQL results arrays with 1-based indexing.

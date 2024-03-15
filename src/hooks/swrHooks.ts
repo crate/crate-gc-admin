@@ -80,13 +80,21 @@ export const useGCGetScheduledJobEnriched = (jobs: Job[]) => {
 
     Promise.all(promises).then(logResults => {
       const newJobs: EnrichedJob[] = jobs.map((job, jobIndex) => {
-        const logs = logResults[jobIndex];
-        const lastLog = logResults[jobIndex]?.filter(log => log.end !== null)[0];
+        const jobLogs = logResults[jobIndex];
+        if (typeof jobLogs === 'undefined') {
+          return {
+            ...job,
+            last_execution: undefined,
+            running: false,
+          };
+        }
+
+        const lastLog = jobLogs.filter(log => log.end !== null)[0];
 
         return {
           ...job,
           last_execution: lastLog,
-          running: logs && logs[0] && logs[0].end === null ? true : false,
+          running: jobLogs && jobLogs[0] && jobLogs[0].end === null ? true : false,
         };
       });
 
