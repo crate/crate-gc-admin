@@ -33,6 +33,8 @@ jobs:
       - name: Create tag
         if: steps.check.outputs.changed == 'true'
         run: echo y | ./devtools/create_tag.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to npm
         if: steps.check.outputs.changed == 'true'
