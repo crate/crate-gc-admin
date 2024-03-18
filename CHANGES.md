@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-03-18 - 0.6.27
+
 - Fixing undefined error on getting job last execution.
 
 ## 2024-03-12 - 0.6.18
