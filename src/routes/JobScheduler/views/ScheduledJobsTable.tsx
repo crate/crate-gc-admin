@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useGCGetScheduledJobEnriched, useGCGetScheduledJobs } from 'hooks/swrHooks';
-import { EnrichedJob, Job, TJobLogStatementError } from 'types';
+import { EnrichedJob, TJobLogStatementError } from 'types';
 import useGcApi from 'hooks/useGcApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { ColumnDef, Table } from '@tanstack/react-table';
@@ -15,7 +15,7 @@ import {
   DisplayUTCDate,
   DisplayDateDifference,
 } from 'components';
-import { cronParser, cn, apiDelete, apiPut } from 'utils';
+import { cronParser, cn, apiDelete, apiPut, sortByString } from 'utils';
 import {
   CheckOutlined,
   CloseOutlined,
@@ -61,7 +61,7 @@ const getColumnsDefinition = ({
         return (
           <span
             onClick={() => {
-              toggleJobActivation(row.original, table);
+              toggleJobActivation(job, table);
             }}
           >
             <Switch.Root
@@ -121,7 +121,7 @@ const getColumnsDefinition = ({
           <div className="w-full">
             <span>
               {!logAvailable ? (
-                <Text className="pl-7">-</Text>
+                <Text>-</Text>
               ) : (
                 <div className="flex gap-2">
                   <div>
@@ -142,7 +142,7 @@ const getColumnsDefinition = ({
                   <div className="flex w-full flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
-                        to={`?schedulerTab=scheduled_logs&job_name=${encodeURIComponent(job.name)}`}
+                        to={`?schedulerTab=scheduled_logs&name=${encodeURIComponent(job.name)}`}
                       >
                         <DisplayUTCDate isoDate={lastExecution.end!} tooltip />
                       </Link>
@@ -285,7 +285,7 @@ export default function ScheduledJobsTable() {
         ...old,
         additionalState: {
           togglingJob: job.id,
-        },
+        } satisfies TableAdditionalState,
       };
     });
     await apiPut(gcApi, `/api/scheduled-jobs/${job.id}`, {
@@ -309,14 +309,14 @@ export default function ScheduledJobsTable() {
         ...old,
         additionalState: {
           togglingJob: null,
-        },
+        } satisfies TableAdditionalState,
       };
     });
   };
 
   if (isLoadingJobs) {
     return (
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex size-full items-center justify-center">
         <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
       </div>
     );
@@ -339,15 +339,7 @@ export default function ScheduledJobsTable() {
         <DataTable
           elementsPerPage={JOBS_TABLE_PAGE_SIZE}
           noResultsLabel="No jobs found."
-          data={scheduledJobsEnriched.sort((a: Job, b: Job) => {
-            if (a.name < b.name) {
-              return -1;
-            }
-            if (a.name > b.name) {
-              return 1;
-            }
-            return 0;
-          })}
+          data={scheduledJobsEnriched.sort(sortByString('name'))}
           columns={getColumnsDefinition({
             setError: setErrorDialogContent,
             editJob: (job: EnrichedJob) => {

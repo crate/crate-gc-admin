@@ -36,9 +36,8 @@ const Root = React.forwardRef<
           'pointer-events-none block rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=unchecked]:translate-x-0',
           'relative',
           {
-            'h-[18px] w-[18px] data-[state=checked]:translate-x-[22px]':
-              isMediumSize,
-            'h-[12px] w-[12px] data-[state=checked]:translate-x-[12px]': isSmallSize,
+            'size-[18px] data-[state=checked]:translate-x-[22px]': isMediumSize,
+            'size-[12px] data-[state=checked]:translate-x-[12px]': isSmallSize,
           },
         )}
       >
@@ -48,8 +47,8 @@ const Root = React.forwardRef<
             className={cn(
               'absolute left-1/2 top-1/2 !block -translate-x-1/2 -translate-y-1/2',
               {
-                'h-[8px] w-[8px]': !isMediumSize,
-                'h-[16px] w-[16px]': isMediumSize,
+                'size-[8px]': !isMediumSize,
+                'size-[16px]': isMediumSize,
               },
             )}
           />

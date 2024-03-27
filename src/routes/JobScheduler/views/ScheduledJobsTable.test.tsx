@@ -9,6 +9,7 @@ import { cronParser } from '../../../utils/cron';
 import ScheduledJobsTable, { JOBS_TABLE_PAGE_SIZE } from './ScheduledJobsTable';
 import { DATE_FORMAT } from 'constants/defaults';
 import { navigateMock } from '../../../../__mocks__/react-router-dom';
+import { sortByString } from 'utils';
 
 const setup = () => {
   return render(<ScheduledJobsTable />);
@@ -51,7 +52,7 @@ describe('The "ScheduledJobsTable" component', () => {
       // Check that we have pagination in our table
       expect(scheduledJobs.length).toBeGreaterThan(ITEMS_PER_PAGE);
 
-      scheduledJobs.forEach((job, jobIndex) => {
+      scheduledJobs.sort(sortByString('name')).forEach((job, jobIndex) => {
         const tableRow = container.querySelector(`[data-row-key="${job.id}"]`);
 
         if (jobIndex < ITEMS_PER_PAGE) {
@@ -176,7 +177,7 @@ describe('The "ScheduledJobsTable" component', () => {
         screen.getByTestId('last-execution').getElementsByTagName('a')[0],
       ).toHaveAttribute(
         'href',
-        `?schedulerTab=scheduled_logs&job_name=${encodeURIComponent(job.name)}`,
+        `?schedulerTab=scheduled_logs&name=${encodeURIComponent(job.name)}`,
       );
     });
 

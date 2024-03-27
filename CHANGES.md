@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Table Lifecycle Management - Data Retention.
+
 ## 2024-03-18 - 0.6.27
 
 - Fixing undefined error on getting job last execution.

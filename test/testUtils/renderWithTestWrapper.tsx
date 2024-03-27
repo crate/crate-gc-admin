@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { render as rtlRender } from '@testing-library/react';
+import { render as rtlRender, screen as rtlScreen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import { ConnectionStatus, GCContextProvider } from '../../src/contexts';
 import { SWRConfig } from 'swr';
@@ -53,5 +53,16 @@ const render = (ui: React.ReactElement, { ...options } = {}): RenderType => {
 // re-export everything
 export * from '@testing-library/react';
 
-// override render method
-export { render };
+// Override screen object
+type TScreen = typeof rtlScreen & {
+  getByName: (name: string) => Element | null;
+};
+const screen: TScreen = {
+  ...rtlScreen,
+  getByName: (name: string) => {
+    return document.querySelector(`[name=${name}]`);
+  },
+};
+
+// override render method and screen object
+export { render, screen };

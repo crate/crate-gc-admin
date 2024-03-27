@@ -47,7 +47,7 @@ describe('The Checkbox component', () => {
         indeterminate: true,
       });
 
-      expect(screen.getByTestId('check-intederminate')).toBeInTheDocument();
+      expect(screen.getByTestId('check-intederminate')).not.toHaveClass('opacity-0');
     });
   });
 });

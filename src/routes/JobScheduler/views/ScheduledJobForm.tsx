@@ -10,6 +10,7 @@ import { QueryResults } from 'types/query';
 import {
   Button,
   Form,
+  Grid,
   Input,
   LabelWithTooltip,
   Loader,
@@ -18,25 +19,10 @@ import {
   Switch,
   Text,
 } from 'components';
-import { z } from 'zod';
-
-const formSchema = z.object({
-  name: z.string(),
-  cron: z.string(),
-  enabled: z.boolean().default(true),
-  sql: z.string(),
-});
-type TForm = z.infer<typeof formSchema>;
+import { ApiError } from 'types/api';
 
 type ScheduledJobFormAdd = { type: 'add' };
 type ScheduledJobFormEdit = { type: 'edit'; job: Job };
-type JobApiError = {
-  errors: {
-    [key in keyof JobInput]: string[];
-  };
-  message: string;
-  success: boolean;
-};
 
 type ScheduledJobFormProps = {
   type: 'add' | 'edit';
@@ -51,7 +37,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
   const gcApi = useGcApi();
   const navigate = useNavigate();
 
-  const form = useForm<TForm>({
+  const form = useForm<JobInput>({
     defaultValues:
       type === 'add'
         ? {
@@ -73,12 +59,12 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
     navigate('..', { relative: 'path' });
   };
 
-  const onSubmit: SubmitHandler<TForm> = async (data: JobInput) => {
-    let result: ApiOutput<JobApiError | Job>;
+  const onSubmit: SubmitHandler<JobInput> = async (data: JobInput) => {
+    let result: ApiOutput<ApiError<JobInput> | Job>;
     setShowLoader(true);
     if (type === 'add') {
       // CREATE
-      result = await apiPost<JobApiError | Job>(
+      result = await apiPost<ApiError<JobInput> | Job>(
         gcApi,
         `/api/scheduled-jobs/`,
         data,
@@ -90,7 +76,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
     } else {
       // UPDATE
       const job = props.job;
-      result = await apiPut<JobApiError | Job>(
+      result = await apiPut<ApiError<JobInput> | Job>(
         gcApi,
         `/api/scheduled-jobs/${job.id}`,
         data,
@@ -140,7 +126,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
 
   if (showLoader) {
     return (
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex size-full items-center justify-center">
         <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
       </div>
     );
@@ -152,11 +138,11 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
         role="form"
         id="job-form"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
+        className="mt-2 flex flex-col gap-2"
         autoComplete="off"
       >
-        <div className="flex flex-col gap-2 md:grid md:grid-cols-12 md:gap-4">
-          <div className="col-span-5 flex flex-col gap-2">
+        <Grid columns={Grid.COLS.N12} className="gap-2 md:gap-4">
+          <Grid.Item colSpan={5}>
             <Form.Field
               control={form.control}
               name="name"
@@ -170,19 +156,16 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
                       Job Name <span className="text-red-600">*</span>
                     </Form.Label>
                     <Form.Control>
-                      <Input
-                        {...field}
-                        id="name"
-                        error={errors.name && errors.name.message}
-                      />
+                      <Input {...field} id="name" />
                     </Form.Control>
+                    <Form.Message />
                   </Form.Item>
                 );
               }}
             />
-          </div>
+          </Grid.Item>
 
-          <div className="col-span-5 flex flex-col gap-2">
+          <Grid.Item colSpan={5}>
             <Form.Field
               control={form.control}
               name="cron"
@@ -207,13 +190,9 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
                       />
                     </Form.Label>
                     <Form.Control>
-                      <Input
-                        {...field}
-                        id="cron"
-                        placeholder="* * * * *"
-                        error={errors.cron && errors.cron.message}
-                      />
+                      <Input {...field} id="cron" placeholder="* * * * *" />
                     </Form.Control>
+                    <Form.Message />
 
                     <Text
                       className={cn({
@@ -231,34 +210,32 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
                 );
               }}
             />
-          </div>
+          </Grid.Item>
 
-          <div className="col-span-2 flex gap-2 md:pt-8">
+          <Grid.Item colSpan={2}>
             <div>
               <Form.Field
                 control={form.control}
                 name="enabled"
                 render={({ field }) => {
                   return (
-                    <Form.Item className="space-y-1/2 flex gap-2">
+                    <Form.Item>
+                      <Form.Label htmlFor="enabled">Active</Form.Label>
                       <Form.Control>
                         <Switch.Root
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="mt-1"
+                          className="mt-2"
                           id="enabled"
                         />
                       </Form.Control>
-                      <Form.Label className="mt-2" htmlFor="enabled">
-                        Active
-                      </Form.Label>
                     </Form.Item>
                   );
                 }}
               />
             </div>
-          </div>
-        </div>
+          </Grid.Item>
+        </Grid>
 
         <div>
           <Form.Field
@@ -282,7 +259,7 @@ export default function ScheduledJobForm(props: ScheduledJobFormProps) {
                         form.setValue('sql', query, { shouldValidate: true });
                       }}
                       onExecute={executeQuery}
-                      error={errors.sql && errors.sql.message}
+                      errorMessage={<Form.Message />}
                     />
                   </Form.Control>
                 </Form.Item>

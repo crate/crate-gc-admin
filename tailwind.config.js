@@ -5,6 +5,10 @@ module.exports = {
   prefix: '',
   theme: {
     extend: {
+      transitionTimingFunction: {
+        'antd-check-animation-not-checked': 'cubic-bezier(0.12, 0.4, 0.29, 1.46)',
+        'antd-check-animation-checked': 'cubic-bezier(0.71, -0.46, 0.88, 0.6)',
+      },
       colors: {
         'crate-blue': '#00A6D1',
         'crate-navigation-bg': '#262626',

@@ -1,7 +1,16 @@
-import { Auth, Help, Overview, SQLConsole, Tables, Users, Nodes } from '../routes';
-import EnterpriseScreen from '../components/EnterpriseScreen';
-import { Route } from '../types';
-import ScheduledJobs from '../routes/JobScheduler';
+import {
+  Auth,
+  Help,
+  Overview,
+  SQLConsole,
+  Tables,
+  Users,
+  Nodes,
+  JobScheduler,
+  TableLifecycle,
+} from 'routes';
+import { EnterpriseScreen } from 'components';
+import { Route } from 'types';
 
 const routes: Route[] = [
   {
@@ -43,12 +52,24 @@ const routes: Route[] = [
     element: (
       <div className="p-4">
         <EnterpriseScreen>
-          <ScheduledJobs />
+          <JobScheduler />
         </EnterpriseScreen>
       </div>
     ),
     label: 'Scheduler',
     key: 'sql-scheduler',
+  },
+  {
+    path: '/table-lifecycle/*',
+    element: (
+      <div className="p-4">
+        <EnterpriseScreen>
+          <TableLifecycle />
+        </EnterpriseScreen>
+      </div>
+    ),
+    label: 'Table Lifecycle',
+    key: 'table-lifecycle',
   },
   {
     path: '/tables',

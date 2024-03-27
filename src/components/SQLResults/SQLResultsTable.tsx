@@ -232,7 +232,7 @@ function SQLResultsTable({ result }: Params) {
         const [t, k, v] = arr;
         // Array types are noted as [100, X]
         const actualType = Array.isArray(t) ? t[0] : t;
-        const actualValue = nicelyHandleTypes(actualType, v, len);
+        const actualValue = nicelyHandleTypes(actualType!, v, len);
         // @ts-expect-error typing is hard
         res[k] = <pre>{actualValue}</pre>;
       });

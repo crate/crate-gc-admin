@@ -1,4 +1,4 @@
-import { useGCGetScheduledJobsLogs } from 'hooks/swrHooks';
+import { useGCGetPoliciesLogs, useGCGetScheduledJobsLogs } from 'hooks/swrHooks';
 import { JobLogWithName, TJobLogStatementError } from 'types';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -17,23 +17,27 @@ import moment from 'moment';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { cn, compareDurations, compareIsoDates } from 'utils';
 import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
-import { getLogDuration } from '../utils/logs';
+import { getLogDuration } from 'utils';
+
+type LogsEntity = 'policies' | 'scheduled_jobs';
 
 export const JOB_LOG_TABLE_PAGE_SIZE = 10;
 
 const getColumnsDefinition = ({
+  entity,
   setError,
 }: {
+  entity: LogsEntity;
   setError: (error: TJobLogStatementError & { timestamp: string }) => void;
 }) => {
   const columns: ColumnDef<JobLogWithName>[] = [
     {
-      header: 'Job Name',
-      id: 'job_name',
+      header: entity === 'policies' ? 'Policy Name' : 'Job Name',
+      id: 'name',
       meta: {
         columnWidth: '15%',
         filter: {
-          label: 'Jobs',
+          label: entity === 'policies' ? 'Policies' : 'Jobs',
           accessorFn: log => {
             return log.job_name;
           },
@@ -82,7 +86,7 @@ const getColumnsDefinition = ({
           <div className="w-full">
             <span>
               {!logAvailable ? (
-                <Text className="pl-7">-</Text>
+                <Text>-</Text>
               ) : (
                 <div className="flex gap-2">
                   <div>
@@ -223,8 +227,21 @@ const getColumnsDefinition = ({
   return columns;
 };
 
-export default function ScheduledJobLogs() {
-  const { data: jobLogs, isLoading: isLoadingJobLogs } = useGCGetScheduledJobsLogs();
+type JobLogsTableProps = {
+  entity: LogsEntity;
+};
+
+const getData = (entity: LogsEntity) => {
+  switch (entity) {
+    case 'policies':
+      return useGCGetPoliciesLogs();
+    case 'scheduled_jobs':
+      return useGCGetScheduledJobsLogs();
+  }
+};
+
+export default function JobLogsTable({ entity }: JobLogsTableProps) {
+  const { data: jobLogs, isLoading: isLoadingJobLogs } = getData(entity);
   const [errorDialogContent, setErrorDialogContent] = useState<
     (TJobLogStatementError & { timestamp: string }) | null
   >(null);
@@ -239,7 +256,7 @@ export default function ScheduledJobLogs() {
 
   if (isLoadingJobLogs || !jobLogs) {
     return (
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex size-full items-center justify-center">
         <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
       </div>
     );
@@ -251,6 +268,7 @@ export default function ScheduledJobLogs() {
         <DataTable
           data={jobLogs}
           columns={getColumnsDefinition({
+            entity,
             setError: openErrorDialog,
           })}
           className="table-fixed"

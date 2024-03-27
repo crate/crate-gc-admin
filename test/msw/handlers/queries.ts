@@ -1,11 +1,28 @@
 import { RestHandler, rest } from 'msw';
-import query from '../../__mocks__/query';
+import { queryResult, schemasQueryResult } from '../../__mocks__/query';
+import handlerFactory from '../handlerFactory';
+import { getPartitionedTablesQuery } from 'constants/queries';
 
-export const executeQueryPost: RestHandler = rest.post(
+const executeQueryPost: RestHandler = rest.post(
   '/api/_sql',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(query));
+  async (req, res, ctx) => {
+    const body = await req.json();
+
+    let result: null | object = null;
+
+    switch (body.stmt) {
+      case getPartitionedTablesQuery(false):
+        result = schemasQueryResult;
+        break;
+      default:
+        result = queryResult;
+        break;
+    }
+
+    return res(ctx.status(200), ctx.json(result));
   },
 );
 
 export const executeQueryHandlers: RestHandler[] = [executeQueryPost];
+
+export const customExecuteQueryResponse = handlerFactory('/api/_sql');

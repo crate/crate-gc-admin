@@ -1,3 +1,4 @@
+import { SYSTEM_SCHEMAS } from 'constants/database';
 import {
   Allocation,
   ClusterInfo,
@@ -10,6 +11,7 @@ import {
   User,
 } from '../types/cratedb';
 import useExecuteSql from './useExecuteSql';
+import { getPartitionedTablesQuery } from 'constants/queries';
 export const useGetUsersQuery = () => {
   const executeSql = useExecuteSql();
 
@@ -101,7 +103,33 @@ export const useGetSchemasQuery = () => {
   return getSchemas;
 };
 
-export const useGetTablesQuery = () => {
+export const useGetPartitionedTablesQuery = (
+  includeSystemTables: boolean = true,
+) => {
+  const executeSql = useExecuteSql();
+
+  const getPartitionedTables = async (): Promise<TableListEntry[]> => {
+    const res = await executeSql(getPartitionedTablesQuery(includeSystemTables));
+
+    if (!res.data || Array.isArray(res.data)) {
+      return [];
+    }
+
+    return res.data.rows.map(r => {
+      return {
+        table_schema: r[0],
+        table_name: r[1],
+        number_of_shards: r[2],
+        number_of_replicas: r[3],
+        system: r[5],
+      };
+    });
+  };
+
+  return getPartitionedTables;
+};
+
+export const useGetTablesQuery = (includeSystemTables: boolean = true) => {
   const executeSql = useExecuteSql();
 
   const getTables = async (): Promise<TableListEntry[]> => {
@@ -117,7 +145,7 @@ export const useGetTablesQuery = () => {
                         t.number_of_replicas,
                         IF (
                           (
-                            t.table_schema IN ('sys', 'pg_catalog', 'information_schema', 'gc')
+                            t.table_schema IN (${SYSTEM_SCHEMAS.map(el => `'${el}'`).join(',')})
                           ),
                           true,
                           false
@@ -130,8 +158,8 @@ export const useGetTablesQuery = () => {
                         t.table_name
                     ) tables
                   WHERE
-                    tables.number_of_shards IS NOT NULL
-                    or tables.system`,
+                    (tables.number_of_shards IS NOT NULL
+                    or tables.system) ${includeSystemTables ? '' : 'AND NOT tables.system'}`,
     );
 
     if (!res.data || Array.isArray(res.data)) {

@@ -1,5 +1,6 @@
 import { CrateTabs } from 'components';
-import { ScheduledJobsTable, ScheduledJobLogs } from '../views';
+import { ScheduledJobsTable } from '../views';
+import JobLogsTable from 'components/ScheduledJobLogsTable';
 
 export default function ScheduledJobs() {
   return (
@@ -11,7 +12,7 @@ export default function ScheduledJobs() {
           key: 'scheduled_overview',
         },
         {
-          children: <ScheduledJobLogs />,
+          children: <JobLogsTable entity="scheduled_jobs" />,
           label: 'Logs',
           key: 'scheduled_logs',
         },

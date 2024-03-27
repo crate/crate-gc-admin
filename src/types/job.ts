@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type Job = {
   id: string;
   name: string;
@@ -47,9 +49,11 @@ export type JobLogWithName = JobLog & {
   job_name: string;
 };
 
-export type JobInput = {
-  name: string;
-  cron: string;
-  enabled: boolean;
-  sql: string;
-};
+const JobFormSchemaInput = z.object({
+  name: z.string(),
+  cron: z.string(),
+  enabled: z.boolean().default(true),
+  sql: z.string(),
+});
+
+export type JobInput = z.infer<typeof JobFormSchemaInput>;

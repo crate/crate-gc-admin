@@ -1,21 +1,15 @@
 import React from 'react';
-import Text from '../Text';
 import cn from '../../utils/cn';
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
-> & {
-  error?: React.ReactNode;
-};
+>;
 
 const Input = React.forwardRef(
-  (
-    { error = undefined, ...inputProps }: InputProps,
-    ref: React.ForwardedRef<HTMLInputElement>,
-  ) => {
+  ({ ...inputProps }: InputProps, ref: React.ForwardedRef<HTMLInputElement>) => {
     return (
-      <>
+      <span>
         <input
           ref={ref}
           {...inputProps}
@@ -29,12 +23,11 @@ const Input = React.forwardRef(
               'focus:border-crate-blue': true,
               'outline-none': true,
             },
-            { 'border-red-600': error },
+            { 'border-red-600': inputProps['aria-invalid'] },
             inputProps.className,
           )}
         />
-        {error && <Text className="text-red-600">{error}</Text>}
-      </>
+      </span>
     );
   },
 );

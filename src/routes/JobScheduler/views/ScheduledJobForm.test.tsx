@@ -72,7 +72,7 @@ describe('The "ScheduledJobForm" component', () => {
   });
 
   describe('the "Cancel" button', () => {
-    it('calls "backToJobList" callback', async () => {
+    it('goes back to jobs table', async () => {
       const { user } = setupAdd();
 
       await user.click(screen.getByText('Cancel'));
@@ -82,7 +82,7 @@ describe('The "ScheduledJobForm" component', () => {
   });
 
   describe('the "Save" button', () => {
-    it('creates a new job', async () => {
+    it('creates a new job and goes back to jobs table', async () => {
       const createJobSpy = getRequestSpy('POST', '/api/scheduled-jobs/');
       const { user } = setupAdd();
 
@@ -125,7 +125,7 @@ describe('The "ScheduledJobForm" component', () => {
     });
 
     describe('the "Save" button', () => {
-      it('updates the job', async () => {
+      it('updates the job and goes back to jobs table', async () => {
         const updateJobSpy = getRequestSpy('PUT', '/api/scheduled-jobs/:jobId');
         const { user } = setupEdit(scheduledJob);
 

@@ -1,14 +1,14 @@
-import ScheduledJobLogs, { JOB_LOG_TABLE_PAGE_SIZE } from './ScheduledJobLogs';
-import { render, screen, within } from '../../../../test/testUtils';
-import server, { customAllScheduledJobLogsGetResponse } from '../../../../test/msw';
+import JobLogsTable, { JOB_LOG_TABLE_PAGE_SIZE } from './JobLogsTable';
+import { render, screen, within } from '../../../test/testUtils';
+import server, { customAllScheduledJobLogsGetResponse } from '../../../test/msw';
 import moment from 'moment';
-import { JobLogWithName } from '../../../types';
+import { JobLogWithName } from '../../types';
 import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
 import { scheduledJobLogsWithName } from 'test/__mocks__/scheduledJobLogs';
-import { getLogDuration } from '../utils/logs';
+import { getLogDuration } from 'utils';
 
 const setup = () => {
-  return render(<ScheduledJobLogs />);
+  return render(<JobLogsTable entity="scheduled_jobs" />);
 };
 
 const waitForTableRender = async () => {
