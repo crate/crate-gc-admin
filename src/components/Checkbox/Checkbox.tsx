@@ -7,21 +7,34 @@ export type CheckboxProps = React.DetailedHTMLProps<
 > & {
   required?: boolean;
   indeterminate?: boolean;
+  containerClassName?: string;
 };
 
 const Checkbox = React.forwardRef(
   (
-    { indeterminate, checked, className, ...checkboxProps }: CheckboxProps,
+    {
+      indeterminate,
+      checked,
+      containerClassName,
+      className,
+      disabled,
+      ...checkboxProps
+    }: CheckboxProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
-      <div className="relative flex">
+      <div className={cn('relative flex', containerClassName)}>
         <input
           className={cn(
-            'peer relative h-4 w-4 shrink-0 appearance-none',
-            'border-2 border-blue-200',
-            'checked:border-0 checked:bg-crate-blue',
+            'peer size-4 shrink-0 appearance-none',
+            'border border-[#d9d9d9]',
             'cursor-pointer rounded-sm bg-white',
+            {
+              'border-0 bg-crate-blue': checked,
+            },
+            {
+              'cursor-not-allowed opacity-50': disabled,
+            },
             className,
           )}
           type="checkbox"
@@ -29,31 +42,53 @@ const Checkbox = React.forwardRef(
           checked={
             typeof indeterminate !== 'undefined' ? checked || indeterminate : checked
           }
+          disabled={disabled}
           {...checkboxProps}
         />
-        {/* Custom chekmark */}
-        <svg
-          className="pointer-events-none absolute hidden h-4 w-4 stroke-white outline-none peer-checked:block"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="-4 -4 32 32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {indeterminate ? (
-            <line
-              x1="4"
-              y1="12"
-              x2="20"
-              y2="12"
-              data-testid="check-intederminate"
-            ></line>
-          ) : (
-            <polyline points="20 6 9 17 4 12" data-testid="check-normal"></polyline>
+
+        <span
+          className={cn(
+            'pointer-events-none absolute size-full',
+            // animation details
+            'transition-all',
+            // when checked
+            'opacity-1 scale-100 delay-100 duration-100',
+            // when not checked
+            {
+              'antd-check-animation-not-checked scale-0 opacity-0 duration-100':
+                !checked && !indeterminate,
+            },
           )}
-        </svg>
+        >
+          {/* Check custom tick */}
+          <svg
+            className={cn(
+              'absolute block size-full stroke-white outline-none peer-checked:block',
+              {
+                'size-0': !checked,
+              },
+            )}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-4 -4 32 32"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12" data-testid="check-normal"></polyline>
+          </svg>
+
+          {/* Indeterminate custom tick */}
+          <span
+            data-testid="check-intederminate"
+            className={cn('absolute flex size-full items-center justify-center', {
+              'opacity-0': !indeterminate,
+            })}
+          >
+            <span className="size-1/2 bg-crate-blue" />
+          </span>
+        </span>
       </div>
     );
   },

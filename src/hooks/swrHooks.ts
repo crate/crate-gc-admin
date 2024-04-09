@@ -2,7 +2,16 @@ import useSWR from 'swr';
 import swrCORSFetch from 'utils/swrCORSFetch';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'utils/api';
-import { EnrichedJob, Job, JobLog, JobLogWithName } from 'types';
+import {
+  EnrichedJob,
+  EnrichedPolicy,
+  Job,
+  JobLog,
+  JobLogWithName,
+  Policy,
+  PolicyLog,
+  PolicyLogWithName,
+} from 'types';
 import useGcApi from 'hooks/useGcApi';
 import {
   useGetClusterInfoQuery,
@@ -12,6 +21,7 @@ import {
   useGetShardsQuery,
   useGetAllocationsQuery,
   useGetQueryStatsQuery,
+  useGetPartitionedTablesQuery,
 } from 'hooks/queryHooks';
 import { useGCContext } from 'contexts';
 
@@ -69,7 +79,6 @@ export const useGCGetScheduledJobEnriched = (jobs: Job[]) => {
       const lastLog = await apiGet<JobLog[]>(
         gcApi,
         `/api/scheduled-jobs/${job.id}/log?limit=2`,
-        null,
         {
           credentials: 'include',
         },
@@ -107,6 +116,60 @@ export const useGCGetScheduledJobEnriched = (jobs: Job[]) => {
   return { jobsToReturn, setJobsToReturn };
 };
 
+// NOTE: This Hook will be removed when API will return the last_execution
+export const useGCGetPoliciesEnriched = (policies: Policy[]) => {
+  const [policiesToReturn, setPoliciesToReturn] = useState<EnrichedPolicy[]>([]);
+  const gcApi = useGcApi();
+
+  useEffect(() => {
+    const promises = policies.map(async (policy: Policy) => {
+      const lastLog = await apiGet<PolicyLog[]>(
+        gcApi,
+        `/api/policies/${policy.id}/log?limit=2`,
+        {
+          credentials: 'include',
+        },
+      );
+
+      return lastLog.data ? lastLog.data : undefined;
+    });
+
+    Promise.all(promises).then(logResults => {
+      const newPolicies: EnrichedPolicy[] = policies.map((policy, policyIndex) => {
+        const jobLogs = logResults[policyIndex];
+        if (typeof jobLogs === 'undefined') {
+          return {
+            ...policy,
+            last_execution: undefined,
+            running: false,
+          };
+        }
+
+        const lastLog = jobLogs.filter(log => log.end !== null)[0];
+
+        return {
+          ...policy,
+          last_execution: lastLog,
+          running: jobLogs && jobLogs[0] && jobLogs[0].end === null ? true : false,
+        } satisfies EnrichedPolicy;
+      });
+
+      if (JSON.stringify(newPolicies) !== JSON.stringify(policiesToReturn)) {
+        setPoliciesToReturn(newPolicies);
+      }
+    });
+  }, [policies]);
+
+  return { policiesToReturn, setPoliciesToReturn };
+};
+
+export const useGCGetPolicy = (policyId: string) => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+
+  return useSWR<Policy>(gcApiKeyBuilder(`/api/policies/${policyId}`), swrFetch);
+};
+
 export const useGetNodeStatus = () => {
   const getNodes = useGetNodesQuery();
   return useSWR(
@@ -136,11 +199,26 @@ export const useGetCurrentUser = () => {
   return useSWR(`swr-fetch-user`, () => getCurrentUser());
 };
 
-export const useGetTables = () => {
-  const getTables = useGetTablesQuery();
-  return useSWR(`swr-fetch-tables`, () => getTables(), {
-    refreshInterval: 5000,
-  });
+export const useGetTables = (includeSystemTables: boolean = true) => {
+  const getTables = useGetTablesQuery(includeSystemTables);
+  return useSWR(
+    `swr-fetch-tables-${includeSystemTables ? 'all' : 'non-system'}`,
+    () => getTables(),
+    {
+      refreshInterval: 5000,
+    },
+  );
+};
+
+export const useGetPartitionedTables = (includeSystemTables: boolean = true) => {
+  const getTables = useGetPartitionedTablesQuery(includeSystemTables);
+  return useSWR(
+    `swr-fetch-partitioned-tables-${includeSystemTables ? 'all' : 'non-system'}`,
+    () => getTables(),
+    {
+      refreshInterval: 5000,
+    },
+  );
 };
 
 export const useGetShards = () => {
@@ -162,4 +240,34 @@ export const useGetQueryStats = () => {
   return useSWR(`swr-fetch-query-stats`, () => getQueryStats(), {
     refreshInterval: 5000,
   });
+};
+
+export const useGCGetPolicies = () => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+
+  return useSWR<Policy[]>(gcApiKeyBuilder(`/api/policies/`), swrFetch, {
+    refreshInterval: 30 * 1000,
+  });
+};
+
+export const useGCGetSchemas = (includeTables: boolean = true) => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+  return useSWR<Policy[]>(
+    gcApiKeyBuilder(`/api/data/schemas/?include_tables=${includeTables}`),
+    swrFetch,
+  );
+};
+
+export const useGCGetPoliciesLogs = () => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+  return useSWR<PolicyLogWithName[]>(
+    gcApiKeyBuilder(`/api/policies/logs?limit=100`),
+    swrFetch,
+    {
+      refreshInterval: 30 * 1000,
+    },
+  );
 };

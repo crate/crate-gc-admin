@@ -6,6 +6,7 @@ import {
   ToolOutlined,
   UserOutlined,
   ClusterOutlined,
+  ScheduleOutlined,
 } from '@ant-design/icons';
 
 export const topNavigation = [
@@ -37,6 +38,12 @@ export const topNavigation = [
     icon: <ClockCircleOutlined />,
     label: <span>SQL scheduler</span>,
     path: '/sql-scheduler',
+    type: 'internal' as const,
+  },
+  {
+    icon: <ScheduleOutlined />,
+    label: <span>Table Policies</span>,
+    path: '/table-policies',
     type: 'internal' as const,
   },
   {

@@ -209,9 +209,9 @@ export function DataTable<TData, TValue>({
                           id={`sorting_button_${header.id}`}
                         >
                           {header.column.getIsSorted() === 'asc' ? (
-                            <ArrowUpOutlined className="ml-2 h-4 w-4" />
+                            <ArrowUpOutlined className="ml-2 size-4" />
                           ) : (
-                            <ArrowDownOutlined className="ml-2 h-4 w-4" />
+                            <ArrowDownOutlined className="ml-2 size-4" />
                           )}
                         </Button>
                       )}

@@ -147,9 +147,9 @@ function TableList({
         >
           <div className="flex items-center gap-2 text-white">
             {expandedSchemas?.includes(schema.name) ? (
-              <CaretDownOutlined className="h-3 w-3 opacity-40 group-hover:opacity-100" />
+              <CaretDownOutlined className="size-3 opacity-40 group-hover:opacity-100" />
             ) : (
-              <CaretRightOutlined className="h-3 w-3 opacity-40 group-hover:opacity-100" />
+              <CaretRightOutlined className="size-3 opacity-40 group-hover:opacity-100" />
             )}
             <div className="flex gap-1">
               <span>{schema.name}</span>
@@ -251,7 +251,7 @@ function TableList({
               value={filter}
             />
             <button
-              className="aspect-square h-5 w-5 rounded-full bg-neutral-300 text-xs text-white outline-none hover:bg-crate-blue"
+              className="aspect-square size-5 rounded-full bg-neutral-300 text-xs text-white outline-none hover:bg-crate-blue"
               onClick={() => setFilter('')}
             >
               <CloseOutlined />

@@ -34,7 +34,7 @@ export enum ColumnType {
 }
 
 export type QueryResult = object & {
-  col_types: ColumnType[];
+  col_types: (ColumnType | ColumnType[])[];
   cols: string[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   rows: any[][];

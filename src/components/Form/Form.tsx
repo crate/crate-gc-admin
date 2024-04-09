@@ -11,7 +11,7 @@ import {
 } from 'react-hook-form';
 
 import { cn } from 'utils';
-import { Label as CrateLabel } from 'components';
+import { Label as CrateLabel, Text } from 'components';
 
 type FieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -51,9 +51,9 @@ const useFormField = () => {
   return {
     id,
     name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
+    formItemId: id ? `${id}-form-item` : undefined,
+    formDescriptionId: id ? `${id}-form-item-description` : undefined,
+    formMessageId: id ? `${id}-form-item-message` : undefined,
     ...fieldState,
   };
 };
@@ -64,13 +64,26 @@ type ItemContextValue = {
 
 const ItemContext = React.createContext<ItemContextValue>({} as ItemContextValue);
 
-const Item = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
+type ItemProps = React.HTMLAttributes<HTMLDivElement> & {
+  layout?: 'vertical' | 'horizontal';
+};
+const Item = React.forwardRef<HTMLDivElement, ItemProps>(
+  ({ className, layout = 'vertical', ...props }, ref) => {
     const id = React.useId();
 
     return (
       <ItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn('space-y-2', className)} {...props} />
+        <div
+          ref={ref}
+          className={cn(
+            {
+              'flex flex-col gap-2': layout === 'vertical',
+              'flex items-center gap-2': layout === 'horizontal',
+            },
+            className,
+          )}
+          {...props}
+        />
       </ItemContext.Provider>
     );
   },
@@ -80,17 +93,10 @@ Item.displayName = 'FormItem';
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
-  const { error, formItemId } = useFormField();
+>(({ ...props }, ref) => {
+  const { formItemId } = useFormField();
 
-  return (
-    <CrateLabel
-      ref={ref}
-      className={cn(error && 'text-red-500', className)}
-      htmlFor={formItemId}
-      {...props}
-    />
-  );
+  return <CrateLabel ref={ref} htmlFor={formItemId} {...props} />;
 });
 Label.displayName = 'FormLabel';
 
@@ -121,12 +127,14 @@ const Description = React.forwardRef<
   const { formDescriptionId } = useFormField();
 
   return (
-    <p
-      ref={ref}
-      id={formDescriptionId}
-      className={cn('text-sm text-slate-500', className)}
-      {...props}
-    />
+    <Text pale>
+      <p
+        ref={ref}
+        id={formDescriptionId}
+        className={cn('text-xs', className)}
+        {...props}
+      />
+    </Text>
   );
 });
 Description.displayName = 'FormDescription';
@@ -136,7 +144,10 @@ const Message = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
+  const body =
+    (error && error.message) || (error && error.root && error.root.message)
+      ? String(error?.message ? error.message : error.root?.message)
+      : children;
 
   if (!body) {
     return null;

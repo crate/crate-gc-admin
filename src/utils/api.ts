@@ -7,8 +7,8 @@ import type {
 } from 'axios';
 
 export type HttpMethod = 'DELETE' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'GET';
-type HttpBody = unknown;
-type HttpOptions = AxiosRequestConfig;
+export type HttpBody = unknown;
+export type HttpOptions = AxiosRequestConfig;
 
 export type ApiOutput<T> = {
   success: boolean;
@@ -123,6 +123,5 @@ export const apiPut = async <T>(
 export const apiGet = async <T>(
   instance: AxiosInstance,
   url: string,
-  data: HttpBody,
   options = {},
-) => api<T>(instance, url, 'GET', data, options);
+) => api<T>(instance, url, 'GET', null, options);

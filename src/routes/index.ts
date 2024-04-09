@@ -1,10 +1,13 @@
 export { default as Help } from './Help';
-export { default as ScheduledJobs } from './JobScheduler/routes/ScheduledJobs';
-export { default as ScheduledJobsCreate } from './JobScheduler/routes/ScheduledJobsCreate';
-export { default as ScheduledJobsEdit } from './JobScheduler/routes/ScheduledJobsEdit';
+export { default as JobScheduler } from './JobScheduler';
+export { default as CreateJob } from './JobScheduler/routes/CreateJob';
+export { default as EditJob } from './JobScheduler/routes/EditJob';
 export { default as Overview } from './Overview';
 export { default as SQLConsole } from './SQLConsole';
 export { default as Tables } from './Tables';
 export { default as Users } from './Users';
 export { default as Auth } from './Auth';
 export { default as Nodes } from './Nodes';
+export { default as TablePolicies } from './TablePolicies';
+export { default as CreatePolicy } from './TablePolicies/routes/CreatePolicy';
+export { default as EditPolicy } from './TablePolicies/routes/EditPolicy';

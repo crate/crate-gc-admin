@@ -9,7 +9,6 @@ import './mode-cratedb';
 import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
 import Button from '../../components/Button';
-import Text from '../../components/Text';
 import cn from '../../utils/cn';
 import { annotate } from './annotationUtils';
 import { QueryResults } from '../../types/query';
@@ -20,9 +19,10 @@ type SQLEditorProps = {
   value?: string | undefined | null;
   results: QueryResults;
   localStorageKey?: string;
+  'aria-invalid'?: React.AriaAttributes['aria-invalid'];
+  errorMessage?: React.ReactNode;
   showRunButton?: boolean;
   runButtonLabel?: string;
-  error?: React.ReactNode;
   onExecute: (queries: string) => void;
   onChange?: (queries: string) => void;
   setShowHistory?: (show: boolean) => void;
@@ -48,8 +48,9 @@ function SQLEditor({
   results,
   localStorageKey,
   showRunButton = true,
-  error = undefined,
   runButtonLabel = 'Execute',
+  'aria-invalid': ariaInvalid,
+  errorMessage,
   onExecute,
   onChange,
   setShowHistory,
@@ -114,7 +115,7 @@ function SQLEditor({
 
       return tables.map(table => ({
         title: table,
-        icon: <TableOutlined className="relative -top-1.5 h-3 w-3 opacity-50" />,
+        icon: <TableOutlined className="relative -top-1.5 size-3 opacity-50" />,
         key: `${schema}.${table}`,
         children: getColumns(schema, table),
       }));
@@ -125,7 +126,7 @@ function SQLEditor({
       schemas.map(schema => ({
         title: schema,
         key: schema,
-        icon: <ApartmentOutlined className="relative -top-1.5 h-3 w-3 opacity-50" />,
+        icon: <ApartmentOutlined className="relative -top-1.5 size-3 opacity-50" />,
         children: getTables(schema),
       })),
     );
@@ -308,138 +309,140 @@ function SQLEditor({
           )}
         </div>
       </div>
-      <div
-        className={cn('flex-auto rounded border-2', {
-          'border-red-600': error,
-        })}
-      >
-        <AceEditor
-          width="100%"
-          minLines={MIN_LINES}
-          maxLines={MAX_LINES}
-          mode="cratedb"
-          theme="github"
-          fontSize={16}
-          style={{
-            fontFamily:
-              "'Menlo', 'Monaco', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace",
-          }}
-          highlightActiveLine
-          enableLiveAutocompletion
-          editorProps={{ $blockScrolling: true }}
-          defaultValue={sql}
-          commands={[
-            {
-              name: 'gcExec',
-              bindKey: {
-                win: 'Ctrl-Enter',
-                mac: 'Command-Enter',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Enter',
+      <span>
+        <div
+          className={cn('flex-auto rounded border-2', {
+            'border-red-600': ariaInvalid,
+          })}
+        >
+          <AceEditor
+            width="100%"
+            minLines={MIN_LINES}
+            maxLines={MAX_LINES}
+            mode="cratedb"
+            theme="github"
+            fontSize={16}
+            style={{
+              fontFamily:
+                "'Menlo', 'Monaco', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace",
+            }}
+            highlightActiveLine
+            enableLiveAutocompletion
+            editorProps={{ $blockScrolling: true }}
+            defaultValue={sql}
+            commands={[
+              {
+                name: 'gcExec',
+                bindKey: {
+                  win: 'Ctrl-Enter',
+                  mac: 'Command-Enter',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Enter',
+                },
+                exec: editor => exec(editor.getValue()),
               },
-              exec: editor => exec(editor.getValue()),
-            },
-            {
-              name: 'gcPrev',
-              bindKey: {
-                win: 'Ctrl-Up',
-                mac: 'Command-Up',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Up',
+              {
+                name: 'gcPrev',
+                bindKey: {
+                  win: 'Ctrl-Up',
+                  mac: 'Command-Up',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Up',
+                },
+                exec: editor => {
+                  const val = popHistory();
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-              exec: editor => {
-                const val = popHistory();
-                if (val) {
-                  editor.setValue(val);
-                }
+              {
+                name: 'gcNext',
+                bindKey: {
+                  win: 'Ctrl-Down',
+                  mac: 'Command-Down',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Down',
+                },
+                exec: editor => {
+                  const val = popHistory(true);
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-            },
-            {
-              name: 'gcNext',
-              bindKey: {
-                win: 'Ctrl-Down',
-                mac: 'Command-Down',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Down',
+              {
+                name: 'gcPrev',
+                bindKey: {
+                  win: 'Ctrl-Up',
+                  mac: 'Command-Up',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Up',
+                },
+                exec: editor => {
+                  const val = popHistory();
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-              exec: editor => {
-                const val = popHistory(true);
-                if (val) {
-                  editor.setValue(val);
-                }
+              {
+                name: 'gcNext',
+                bindKey: {
+                  win: 'Ctrl-Down',
+                  mac: 'Command-Down',
+                  // @ts-expect-error type problem
+                  linux: 'Ctrl-Down',
+                },
+                exec: editor => {
+                  const val = popHistory(true);
+                  if (val) {
+                    editor.setValue(val);
+                  }
+                },
               },
-            },
-            {
-              name: 'gcPrev',
-              bindKey: {
-                win: 'Ctrl-Up',
-                mac: 'Command-Up',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Up',
-              },
-              exec: editor => {
-                const val = popHistory();
-                if (val) {
-                  editor.setValue(val);
-                }
-              },
-            },
-            {
-              name: 'gcNext',
-              bindKey: {
-                win: 'Ctrl-Down',
-                mac: 'Command-Down',
-                // @ts-expect-error type problem
-                linux: 'Ctrl-Down',
-              },
-              exec: editor => {
-                const val = popHistory(true);
-                if (val) {
-                  editor.setValue(val);
-                }
-              },
-            },
-          ]}
-          setOptions={{
-            showLineNumbers: true,
-            tabSize: 2,
-            showPrintMargin: false,
-          }}
-          onChange={onValueChange}
-          onLoad={editor => {
-            setAce(editor);
-          }}
-        />
-      </div>
-
-      <div>{/* purposefully empty */}</div>
-      <div>
-        {error && <Text className="w-full text-red-600">{error}</Text>}
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-2">
-            {showRunButton && (
-              <Button kind="primary" onClick={() => exec(sql)}>
-                <CaretRightOutlined className="mr-2" />
-                {runButtonLabel}
-              </Button>
-            )}
-            <Button kind="secondary" onClick={formatSql}>
-              <FormatPainterOutlined className="mr-2" />
-              Format
-            </Button>
-            {setShowHistory && (
-              <Button
-                onClick={() => setShowHistory(true)}
-                kind="tertiary"
-                size="small"
-              >
-                Show history
-              </Button>
-            )}
-          </div>
-          {renderInstructions()}
+            ]}
+            setOptions={{
+              showLineNumbers: true,
+              tabSize: 2,
+              showPrintMargin: false,
+            }}
+            onChange={onValueChange}
+            onLoad={editor => {
+              setAce(editor);
+            }}
+          />
         </div>
-      </div>
+
+        <div>{/* purposefully empty */}</div>
+        <div>
+          {errorMessage}
+          <div className="flex w-full items-center justify-between">
+            <div className="mt-2 flex items-center gap-2">
+              {showRunButton && (
+                <Button kind="primary" onClick={() => exec(sql)}>
+                  <CaretRightOutlined className="mr-2" />
+                  {runButtonLabel}
+                </Button>
+              )}
+              <Button kind="secondary" onClick={formatSql}>
+                <FormatPainterOutlined className="mr-2" />
+                Format
+              </Button>
+              {setShowHistory && (
+                <Button
+                  onClick={() => setShowHistory(true)}
+                  kind="tertiary"
+                  size="small"
+                >
+                  Show history
+                </Button>
+              )}
+            </div>
+            {renderInstructions()}
+          </div>
+        </div>
+      </span>
     </div>
   );
 }

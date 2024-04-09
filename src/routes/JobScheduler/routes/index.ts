@@ -1,3 +1,3 @@
-export { default as ScheduledJobsCreate } from './ScheduledJobsCreate';
-export { default as ScheduledJobsEdit } from './ScheduledJobsEdit';
-export { default as ScheduledJobs } from './ScheduledJobs';
+export { default as CreateJob } from './CreateJob';
+export { default as EditJob } from './EditJob';
+export { default as Jobs } from './Jobs';
