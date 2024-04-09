@@ -320,6 +320,10 @@ function SQLEditor({
           mode="cratedb"
           theme="github"
           fontSize={16}
+          style={{
+            fontFamily:
+              "'Menlo', 'Monaco', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace",
+          }}
           highlightActiveLine
           enableLiveAutocompletion
           editorProps={{ $blockScrolling: true }}

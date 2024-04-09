@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Switching main font for console to "Menlo" to improve compatibility with Safari.
+
 ## 2024-03-18 - 0.6.27
 
 - Fixing undefined error on getting job last execution.
