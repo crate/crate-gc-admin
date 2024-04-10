@@ -62,7 +62,7 @@ function JSONTree({ json }: JSONTreeParams) {
       let children;
       const isArray = Array.isArray(val);
       if (isArray || typeof val === 'object') {
-        children = buildTree(val, { path: `${config.path}-${k}` }, true);
+        children = buildTree(val, { path: `${config.path}-${k}` }, isArray);
       }
       const title: string | React.JSX.Element = children ? (
         <div key={`${config.path}-${k}-title`}>
