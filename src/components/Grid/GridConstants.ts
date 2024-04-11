@@ -1,0 +1,33 @@
+export const GRID_COLS = {
+  N1: 'grid-cols-1',
+  N2: 'grid-cols-2',
+  N3: 'grid-cols-3',
+  N4: 'grid-cols-4',
+  N5: 'grid-cols-5',
+  N6: 'grid-cols-6',
+  N7: 'grid-cols-7',
+  N8: 'grid-cols-8',
+  N9: 'grid-cols-9',
+  N10: 'grid-cols-10',
+  N11: 'grid-cols-11',
+  N12: 'grid-cols-12',
+  NONE: 'grid-cols-none',
+  SUBGRID: 'grid-cols-subgrid',
+};
+
+export const GRID_ROWS = {
+  N1: 'grid-rows-1',
+  N2: 'grid-rows-2',
+  N3: 'grid-rows-3',
+  N4: 'grid-rows-4',
+  N5: 'grid-rows-5',
+  N6: 'grid-rows-6',
+  N7: 'grid-rows-7',
+  N8: 'grid-rows-8',
+  N9: 'grid-rows-9',
+  N10: 'grid-rows-10',
+  N11: 'grid-rows-11',
+  N12: 'grid-rows-12',
+  NONE: 'grid-rows-none',
+  SUBGRID: 'grid-rows-subgrid',
+};

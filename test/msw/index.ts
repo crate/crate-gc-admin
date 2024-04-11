@@ -8,3 +8,10 @@ export {
   customScheduledJobLogsGetResponse,
   customScheduledJobGetResponse,
 } from './handlers/scheduledJobs';
+export {
+  customGetAllPolicies,
+  customAllPoliciesLogsGetResponse,
+  customGetPolicyLogs,
+  customGetEligibleColumns,
+} from './handlers/policies';
+export { customExecuteQueryResponse } from './handlers/queries';

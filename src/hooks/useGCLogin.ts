@@ -17,7 +17,7 @@ export default function useGCLogin() {
       qs += `&refresh=${encodeURIComponent(refresh)}`;
     }
     try {
-      const res = await apiGet(authApi, `${gcUrl}/api/auth${qs}`, {});
+      const res = await apiGet(authApi, `${gcUrl}/api/auth${qs}`);
       if (res.success && res.status == 200) {
         Cookies.set(sessionCookieName, token);
         return true;

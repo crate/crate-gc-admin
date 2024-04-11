@@ -32,7 +32,7 @@ function Navigation({
   ): JSX.Element => {
     return (
       <div className="align-center mx-auto flex w-full max-w-[300px] flex-nowrap gap-2 whitespace-nowrap">
-        <div className="h-6 w-6 text-center text-sm">{icon}</div>
+        <div className="size-6 text-center text-sm">{icon}</div>
         {navIsExpanded && (
           <div className="flex flex-nowrap items-start gap-1 overflow-hidden">
             {label}

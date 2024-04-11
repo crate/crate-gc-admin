@@ -151,14 +151,12 @@ const Pagination = ({
 
         {/* Page Size select */}
         <Select.Root
+          label="Select a page size"
           value={pageSize.toString()}
           onValueChange={(newValue: string) => {
             onPageSizeChange(parseInt(newValue));
           }}
         >
-          <Select.Trigger className="w-[110px]">
-            <Select.Value placeholder="Select a page size" />
-          </Select.Trigger>
           <Select.Content>
             <Select.Group>
               <Select.Item value="10">10 / Page</Select.Item>
@@ -245,7 +243,7 @@ const Previous = ({ className, ...props }: Partial<ButtonProps>) => (
     className={cn('!border-none', className)}
     {...props}
   >
-    <LeftOutlined className="h-4 w-4" />
+    <LeftOutlined className="size-4" />
   </Button>
 );
 Previous.displayName = 'PaginationPrevious';
@@ -256,7 +254,7 @@ const Next = ({ className, ...props }: Partial<ButtonProps>) => (
     className={cn('!border-none', className)}
     {...props}
   >
-    <RightOutlined className="h-4 w-4" />
+    <RightOutlined className="size-4" />
   </Button>
 );
 Next.displayName = 'PaginationNext';
@@ -273,7 +271,7 @@ const Ellipsis = ({
   <span
     aria-hidden
     className={cn(
-      'group relative flex h-9 w-9 items-center justify-center text-[14px] text-gray-300',
+      'group relative flex size-9 items-center justify-center text-[14px] text-gray-300',
       className,
     )}
     {...props}

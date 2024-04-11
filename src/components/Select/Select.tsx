@@ -3,30 +3,52 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { cn } from 'utils';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 
-const Root = SelectPrimitive.Root;
+type RootProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> & {
+  label: React.ReactNode;
+  className?: string;
+  'aria-invalid'?: React.AriaAttributes['aria-invalid'];
+};
+const Root = ({ children, label, className, ...props }: RootProps) => {
+  return (
+    <SelectPrimitive.Root {...props}>
+      <Trigger
+        className={cn('w-[180px]', className)}
+        aria-invalid={props['aria-invalid']}
+      >
+        <Select.Value placeholder={label} />
+      </Trigger>
+
+      <span>{children}</span>
+    </SelectPrimitive.Root>
+  );
+};
 
 const Group = SelectPrimitive.Group;
 
 const Value = SelectPrimitive.Value;
 
+type TriggerProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>;
 const Trigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-[10px] py-0 text-left text-[14px] placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-      className,
-    )}
-    {...props}
-  >
-    {children}
-    <SelectPrimitive.Icon asChild>
-      <DownOutlined className="h-4 w-4 opacity-50" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-));
+  TriggerProps
+>(({ className, children, ...props }, ref) => {
+  return (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        'flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-[10px] py-0 text-left text-[14px] placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+        { 'border-red-600': props['aria-invalid'] },
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <DownOutlined className="size-4 opacity-50" />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  );
+});
 Trigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const ScrollUpButton = React.forwardRef<
@@ -38,7 +60,7 @@ const ScrollUpButton = React.forwardRef<
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
-    <UpOutlined className="h-4 w-4" />
+    <UpOutlined className="size-4" />
   </SelectPrimitive.ScrollUpButton>
 ));
 ScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -52,7 +74,7 @@ const ScrollDownButton = React.forwardRef<
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
-    <DownOutlined className="h-4 w-4" />
+    <DownOutlined className="size-4" />
   </SelectPrimitive.ScrollDownButton>
 ));
 ScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -95,7 +117,7 @@ const Label = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn('py-1.5 pl-8 pr-2 text-[14px] font-semibold', className)}
+    className={cn('px-2 py-1.5 text-[14px] font-semibold', className)}
     {...props}
   />
 ));
@@ -134,7 +156,6 @@ const Select = {
   Root,
   Group,
   Value,
-  Trigger,
   Content,
   Label,
   Item,

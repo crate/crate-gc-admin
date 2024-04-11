@@ -1,3 +1,3 @@
-export { default as ScheduledJobForm } from './ScheduledJobForm';
-export { default as ScheduledJobLogs } from './ScheduledJobLogs';
-export { default as ScheduledJobsTable } from './ScheduledJobsTable';
+export { default as JobForm } from './JobForm';
+export { default as JobsTable } from './JobsTable';
+export { default as JobsLogs } from './JobsLogs';

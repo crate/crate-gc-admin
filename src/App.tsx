@@ -17,7 +17,7 @@ function App() {
   const gcApi = useGcApi();
 
   useMemo(() => {
-    apiGet(gcApi, `/api/`, {})
+    apiGet(gcApi, `/api/`)
       .then(res => {
         if (res.status == 200) {
           setGCStatus(ConnectionStatus.CONNECTED);

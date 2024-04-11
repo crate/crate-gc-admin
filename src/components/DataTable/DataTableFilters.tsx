@@ -104,7 +104,7 @@ export default function DataTableFilters<TData>({
 
         {enableSearchBox && (
           <span className="relative">
-            <SearchOutlined className="absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 text-slate-400" />
+            <SearchOutlined className="absolute left-3 top-1/2 size-8 -translate-y-1/2 text-slate-400" />
             <Input
               data-testid="datatable-searchbox"
               placeholder="Search..."

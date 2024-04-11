@@ -1,10 +1,6 @@
 import { useGCContext } from 'contexts';
 import { Route, Routes } from 'react-router-dom';
-import {
-  ScheduledJobsCreate,
-  ScheduledJobsEdit,
-  ScheduledJobs,
-} from 'routes/JobScheduler/routes';
+import { Jobs, CreateJob, EditJob } from 'routes/JobScheduler/routes';
 import { Heading, Text } from 'components';
 
 export default function JobScheduler() {
@@ -20,9 +16,9 @@ export default function JobScheduler() {
       )}
 
       <Routes>
-        <Route index element={<ScheduledJobs />} />
-        <Route path="create" element={<ScheduledJobsCreate />} />
-        <Route path=":jobId" element={<ScheduledJobsEdit />} />
+        <Route index element={<Jobs />} />
+        <Route path="create" element={<CreateJob />} />
+        <Route path=":jobId" element={<EditJob />} />
       </Routes>
     </div>
   );

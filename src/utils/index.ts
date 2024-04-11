@@ -6,3 +6,5 @@ export * from './api';
 export * from './arrays';
 export * from './strings';
 export * from './compare';
+export * from './jobLogs';
+export * from './sorting';
