@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-04-11 - 0.7.0
+
 - Switching main font for console to "Menlo" to improve compatibility with Safari.
 - Fix sub-objects keys in SQL query results table (keys as NaNs).
 - Table Lifecycle Management - Data Retention.
