@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix "Pretty" SQL results output unnecessary line breaks.
+
 ## 2024-04-11 - 0.7.0
 
 - Switching main font for console to "Menlo" to improve compatibility with Safari.
