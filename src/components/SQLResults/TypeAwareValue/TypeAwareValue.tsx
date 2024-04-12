@@ -1,7 +1,7 @@
 import JSONTree from '../JSONTree/JSONTree';
-import wrap from 'word-wrap';
 import { LinkOutlined } from '@ant-design/icons';
 import { ColumnType } from '../../../types/query';
+import { wrapText } from 'utils';
 
 export type TypeAwareValueParams = {
   value: unknown;
@@ -89,9 +89,8 @@ function TypeAwareValue({
     case ColumnType.TEXT:
     case ColumnType.CHARACTER:
     case ColumnType.CHAR:
-      wrapped = wrap(value as string, {
-        width: getWrapSize(totalNumColumns),
-      })?.trim();
+      wrapped = wrapText(value as string, getWrapSize(totalNumColumns));
+
       if (quoteStrings) {
         wrapped = `'${wrapped}'`;
       }
