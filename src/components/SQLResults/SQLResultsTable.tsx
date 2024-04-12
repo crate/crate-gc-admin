@@ -161,6 +161,7 @@ function SQLResultsTable({ result }: Params) {
         ),
       },
     ];
+
     const data = [
       result?.rows
         .map((row, idx) => {
@@ -174,7 +175,7 @@ function SQLResultsTable({ result }: Params) {
             const [k] = arr;
             let [, v] = arr;
             // If we don't do this, we end up with [object Object]. At least return JSON.
-            if (typeof v == 'object') {
+            if (typeof v === 'object' || typeof v === 'string') {
               v = JSON.stringify(v);
             }
             // @ts-expect-error k cannot be undefined
@@ -197,10 +198,13 @@ function SQLResultsTable({ result }: Params) {
           { accumulated: [] },
         ),
     ].map(v => {
+      const csvString = Papa.unparse(v.accumulated, {
+        quotes: false,
+      }).replace(/"""/g, '"');
       return {
         ...v,
         accumulated:
-          Papa.unparse(v?.accumulated) ||
+          csvString ||
           'Looks like this data cannot be displayed as a CSV. We tried, sorry.',
       };
     });
