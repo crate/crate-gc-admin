@@ -24,7 +24,7 @@
   background-color: rgba(0, 0, 0, 0.25);
 }
 #root .ant-switch.ant-switch-checked {
-  background-color: #00a6d1;
+  background-color: #19c0ea;
 }
 
 .anticon svg {
@@ -50,7 +50,7 @@
 
 .ant-popover-content .ant-btn-primary,
 .ant-modal-content .ant-btn-primary {
-  background-color: #00a6d1;
+  background-color: #19c0ea;
 }
 
 .ant-popover-content .ant-btn-primary:hover,

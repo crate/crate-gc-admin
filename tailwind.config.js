@@ -10,7 +10,8 @@ module.exports = {
         'antd-check-animation-checked': 'cubic-bezier(0.71, -0.46, 0.88, 0.6)',
       },
       colors: {
-        'crate-blue': '#00A6D1',
+        'crate-blue': '#19c0ea',
+        'crate-blue-hover': '#effafd',
         'crate-navigation-bg': '#262626',
         'crate-navigation-fg': '#e5e5e5',
         'crate-green-1': '#9BF1AD',

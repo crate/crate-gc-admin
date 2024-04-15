@@ -113,7 +113,7 @@ function GCChart({ title, config, data, yFormatter }: GCChartParams) {
                 key={`area-${nextKey()}`}
                 type="monotone"
                 dataKey={area.key}
-                stroke="#00a6d1"
+                stroke="#19c0ea"
                 fill="#cbe9f1"
                 name={area.name}
                 dot={false}

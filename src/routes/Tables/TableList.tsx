@@ -91,7 +91,7 @@ function TableList({
 
   const renderSchemaBadge = (schema: string) => {
     if (systemSchemas.includes(schema)) {
-      return <span className="text-xs uppercase text-white">system</span>;
+      return <span className="text-[10px] uppercase text-neutral-700">system</span>;
     }
 
     if (missingReplicasTables.filter(t => t.schema_name == schema).length > 0) {
@@ -133,7 +133,7 @@ function TableList({
 
     if (output.length === 0) {
       return (
-        <div className="bg-neutral-400 py-8 text-center text-neutral-800">
+        <div className="bg-neutral-400 py-8 text-center text-neutral-600">
           No tables found
         </div>
       );
@@ -142,18 +142,18 @@ function TableList({
     return output.map(schema => (
       <div key={schema.name}>
         <div
-          className="group flex cursor-pointer justify-between border-b border-l-4 border-b-[#0083a3]/50 border-l-[#0083a3] px-2 py-2.5 hover:border-l-[#00728f] hover:bg-[#0083a3]"
+          className="group flex cursor-pointer justify-between border-l-4 border-t border-l-transparent border-t-crate-border-mid/40 bg-white px-2 py-2.5 text-neutral-400 hover:border-l-crate-blue hover:bg-crate-blue-hover"
           onClick={() => expandCollapseSingle(schema.name)}
         >
-          <div className="flex items-center gap-2 text-white">
+          <div className="flex items-center gap-2 text-neutral-700">
             {expandedSchemas?.includes(schema.name) ? (
-              <CaretDownOutlined className="size-3 opacity-40 group-hover:opacity-100" />
+              <CaretDownOutlined className="size-3 opacity-80 group-hover:opacity-100" />
             ) : (
-              <CaretRightOutlined className="size-3 opacity-40 group-hover:opacity-100" />
+              <CaretRightOutlined className="size-3 opacity-80 group-hover:opacity-100" />
             )}
             <div className="flex gap-1">
               <span>{schema.name}</span>
-              <span className="ml-1 min-w-6 rounded-xl bg-[#00627a] px-1 py-0.5 text-center text-xs opacity-60 group-hover:opacity-100">
+              <span className="group-hover ml-1 h-5 min-w-5 rounded bg-crate-blue px-1 text-center text-[12px] leading-5 text-white">
                 {schema.tables?.length}
               </span>
             </div>
@@ -163,7 +163,7 @@ function TableList({
           </div>
         </div>
         {expandedSchemas?.includes(schema.name) && (
-          <div className="bg-[#005266]">
+          <div className="bg-crate-body-background">
             {schema.tables?.map(table => renderTable(table))}
           </div>
         )}
@@ -176,21 +176,21 @@ function TableList({
 
     return (
       <div
-        className="group cursor-pointer border-b border-l-4 border-b-white/10 border-l-[#004152] py-2 pl-8 pr-2 hover:border-b-white/20 hover:border-l-[#00313d] hover:bg-[#004152]"
+        className="group cursor-pointer border-l-4 border-t border-l-crate-body-background border-t-crate-border-mid/40 bg-white py-1.5 pl-7 pr-2 hover:border-l-crate-blue hover:bg-crate-blue-hover"
         onClick={() => setActiveTable(table)}
         key={table.table_name}
       >
-        <div className="flex items-center justify-between text-white/80 group-hover:text-white">
+        <div className="group-hover:text-text-neutral-800 flex items-center justify-between text-neutral-700">
           <span>{table.table_name}</span>
           {renderTableBadge(table)}
         </div>
         {size && (
           <>
-            <div className="text-xs text-white/80 group-hover:text-white">
+            <div className="text-xs text-neutral-600 group-hover:text-neutral-700">
               {formatHumanReadable(size.records)}{' '}
               {size.records !== 1 ? 'Records' : 'Record'} ({prettyBytes(size.bytes)})
             </div>
-            <div className="text-xs text-white/80 group-hover:text-white">
+            <div className="text-xs text-neutral-600 group-hover:text-neutral-700">
               {table.number_of_shards} shards / {table.number_of_replicas} replicas
             </div>
           </>
@@ -206,11 +206,13 @@ function TableList({
       ).length > 0
     ) {
       return (
-        <StatusLight
-          color={StatusLight.colors.RED}
-          message=""
-          tooltip="Table has missing data"
-        />
+        <div className="opacity-80 group-hover:opacity-100">
+          <StatusLight
+            color={StatusLight.colors.RED}
+            message=""
+            tooltip="Table has missing data"
+          />
+        </div>
       );
     }
 
@@ -220,23 +222,30 @@ function TableList({
       ).length > 0
     ) {
       return (
-        <StatusLight
-          color={StatusLight.colors.YELLOW}
-          message=""
-          tooltip="Table is underreplicated"
-        />
+        <div className="opacity-80 group-hover:opacity-100">
+          <StatusLight
+            color={StatusLight.colors.YELLOW}
+            message=""
+            tooltip="Table is underreplicated"
+          />
+        </div>
       );
     }
 
-    return <StatusLight color={StatusLight.colors.GREEN} message="" />;
+    return (
+      <div className="opacity-80 group-hover:opacity-100">
+        <StatusLight color={StatusLight.colors.GREEN} message="" />
+      </div>
+    );
   };
 
   if (schemas.length === 0) {
     return <Spin />;
   }
   return (
-    <div className="flex h-full select-none flex-col bg-[#d3d3d3]">
-      <div className="flex h-14 bg-white md:border-r md:border-r-neutral-200">
+    <div className="flex h-full select-none flex-col border-r bg-crate-body-background">
+      <div className="flex h-14  bg-white md:border-r md:border-r-neutral-200">
+        {/* filter input box */}
         <div className="basis-full border-r border-r-neutral-200 p-2">
           <div
             className={`flex h-full items-center gap-2 rounded-lg border-2 px-2 ${filterFocused ? 'border-crate-blue' : 'border-neutral-200'}`}
@@ -258,8 +267,10 @@ function TableList({
             </button>
           </div>
         </div>
+
+        {/* expand/collapse all */}
         <div
-          className="group flex basis-[40px] cursor-pointer justify-center px-2 hover:bg-[#f8f8f8]"
+          className="group flex basis-[40px] cursor-pointer justify-center px-2 hover:bg-crate-blue-hover"
           onClick={() => expandCollapseAll()}
         >
           {(expandedSchemas?.length || 0) < schemas.length ? (
@@ -270,7 +281,9 @@ function TableList({
         </div>
       </div>
       <div className="basis-full overflow-y-auto">
-        <div className="bg-[#0093b8] drop-shadow-xl">{renderSchemaList()}</div>
+        <div className="border-b border-b-crate-border-mid/40">
+          {renderSchemaList()}
+        </div>
       </div>
     </div>
   );
