@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import { bottomNavigation, topNavigation } from './constants/navigation';
 import routes from './constants/routes';
 import { useMemo, useState } from 'react';
@@ -44,7 +44,11 @@ function App() {
     >
       <StatsUpdater />
       <Layout
-        topbarLogo={<img alt="CrateDB logo" src={logo} />}
+        topbarLogo={
+          <Link to="/">
+            <img alt="CrateDB logo" src={logo} />
+          </Link>
+        }
         topbarContent={<StatusBar />}
         bottomNavigation={bottomNavigation}
         topNavigation={topNavigation}
