@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Fix "Pretty" SQL results output unnecessary line breaks.
+- Escape new lines and whitespace characters in CSV output.
 
 ## 2024-04-11 - 0.7.0
 
