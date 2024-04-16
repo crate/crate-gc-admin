@@ -5,6 +5,7 @@
 - Fix "Pretty" SQL results output unnecessary line breaks.
 - Escape new lines and whitespace characters in CSV output.
 - CrateDB logo in top-left now clickable.
+- New Crate blue color. Updated "Tables" list colors.
 
 ## 2024-04-11 - 0.7.0
 
