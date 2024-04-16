@@ -28,7 +28,9 @@ function SQLConsole() {
   const execute = (sql: string) => {
     setRunning(true);
     setResults(undefined);
-    executeSql(sql).then(({ data }) => {
+
+    const stripSingleLineCommentsRegex = /^((\s)*--).*$/gm;
+    executeSql(sql.replace(stripSingleLineCommentsRegex, '')).then(({ data }) => {
       setRunning(false);
       if (data) {
         setResults(data);

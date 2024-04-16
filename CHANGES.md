@@ -6,6 +6,7 @@
 - Escape new lines and whitespace characters in CSV output.
 - CrateDB logo in top-left now clickable.
 - New Crate blue color. Updated "Tables" list colors.
+- Remove single-line comments from SQL.
 
 ## 2024-04-11 - 0.7.0
 
