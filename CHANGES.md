@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-04-17 - 0.7.1
+
 - Fix "Pretty" SQL results output unnecessary line breaks.
 - Escape new lines and whitespace characters in CSV output.
 - CrateDB logo in top-left now clickable.
