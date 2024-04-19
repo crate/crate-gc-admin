@@ -110,7 +110,7 @@ const getColumnsDefinition = ({
     },
     {
       accessorKey: 'last_execution',
-      header: 'Last Executed',
+      header: 'Last executed',
       cell: ({ row }) => {
         const job = row.original;
         const lastExecution = job.last_execution;
@@ -183,7 +183,7 @@ const getColumnsDefinition = ({
     },
     {
       accessorKey: 'next_run_time',
-      header: 'Next Due',
+      header: 'Next due',
       cell: ({ row }) => {
         const job = row.original;
         const nextRunTime = job.next_run_time;
@@ -331,7 +331,7 @@ export default function JobsTable() {
           }}
           className="float-end"
         >
-          Add New Job
+          Add new job
         </Button>
       </div>
 

@@ -27,19 +27,17 @@ function SQLResultsTable({ result }: Params) {
 
   const renderErrorTable = (result: QueryResult) => {
     return (
-      <>
+      <div className="p-4">
         <div className="flex min-h-12 flex-row items-start justify-between rounded border p-2">
-          <div className="flex items-start gap-4 pr-2 text-sm">
-            <Chip className="uppercase" color={Chip.colors.RED}>
-              Error
-            </Chip>
+          <div className="flex items-center gap-4 pr-2 text-sm">
+            <Chip className="bg-red-600 uppercase text-white">Error</Chip>
             <a
               href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
               target="_blank"
             >
               {result.error?.code}
             </a>
-            <span className="font-xs font-mono">{result.error?.message}</span>
+            <span className="font-mono text-xs">{result.error?.message}</span>
           </div>
           <div className="flex select-none items-center gap-2">
             <span
@@ -61,7 +59,7 @@ function SQLResultsTable({ result }: Params) {
             <pre className="text-xs">{result.error_trace}</pre>
           </div>
         )}
-      </>
+      </div>
     );
   };
 
@@ -292,18 +290,16 @@ function SQLResultsTable({ result }: Params) {
       dataSource={data}
       pagination={{ defaultPageSize: 20, position: ['bottomRight'] }}
       showHeader
-      bordered
       size="small"
       scroll={{
         x: 'max-content',
       }}
+      sticky
       title={() => (
         <div className="flex h-8 flex-row items-center gap-2">
           <div className="flex items-center gap-2 border-e pr-2 text-xs font-bold">
-            <Chip className="mr-1.5" color={Chip.colors.GREEN}>
-              OK
-            </Chip>
-            {`${result.rowcount} rows, ${result.duration} ms`}
+            <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
+            {`${result.rowcount} rows, ${(Math.round(result?.duration) / 1000).toFixed(3)} seconds`}
           </div>
           <Radio.Group
             options={[

@@ -196,3 +196,8 @@
   line-height: 12px;
   width: 12px;
 }
+
+.ant-tabs-nav-indent .ant-tabs-nav {
+  margin-left: 12px !important;
+  margin-right: 12px !important;
+}

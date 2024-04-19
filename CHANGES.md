@@ -9,6 +9,8 @@
 - Updating imports to use path aliases.
 - Change "Max" to "Size" in heap and disk stats in Nodes page.
 - Change node attributes Chip color to gray in Nodes page.
+- Improve UX of SQL console / SQL editor by making the panels resizable.
+- Only show number of rows affected, not all the results, on the SQL scheduler.
 
 ## 2024-04-17 - 0.7.1
 

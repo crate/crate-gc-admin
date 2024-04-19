@@ -18,8 +18,8 @@ describe('The "JobForm" component', () => {
     expect(screen.getByRole('form')).toBeInTheDocument();
     expect(screen.getByRole('form').getAttribute('id')).toBe('job-form');
 
-    expect(screen.getByLabelText(/Job Name/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Job Name/)).toHaveValue('');
+    expect(screen.getByLabelText(/Job name/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Job name/)).toHaveValue('');
 
     expect(screen.getByLabelText(/Schedule/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Schedule/)).toHaveValue('');
@@ -31,13 +31,13 @@ describe('The "JobForm" component', () => {
     expect(screen.getByTestId('mocked-ace-editor')).toHaveValue('');
   });
 
-  describe('the "Job Name" field', () => {
+  describe('the "Job name" field', () => {
     it('gives validation error if submitted empty', async () => {
       const { user } = setupAdd();
 
-      await user.click(screen.getByText('Save'));
+      await user.click(screen.getByText('Add job'));
 
-      expect(screen.getByText('Job Name is a required field.')).toBeInTheDocument();
+      expect(screen.getByText('Job name is a required field.')).toBeInTheDocument();
     });
   });
 
@@ -45,7 +45,7 @@ describe('The "JobForm" component', () => {
     it('gives validation error if submitted empty', async () => {
       const { user } = setupAdd();
 
-      await user.click(screen.getByText('Save'));
+      await user.click(screen.getByText('Add job'));
 
       expect(screen.getByText('Schedule is a required field.')).toBeInTheDocument();
     });
@@ -55,7 +55,7 @@ describe('The "JobForm" component', () => {
 
       await user.type(screen.getByLabelText(/Schedule/), '*');
 
-      await user.click(screen.getByText('Save'));
+      await user.click(screen.getByText('Add job'));
 
       expect(screen.getByText('Invalid CRON schedule.')).toBeInTheDocument();
     });
@@ -65,7 +65,7 @@ describe('The "JobForm" component', () => {
     it('gives validation error if submitted empty', async () => {
       const { user } = setupAdd();
 
-      await user.click(screen.getByText('Save'));
+      await user.click(screen.getByText('Add job'));
 
       expect(screen.getByText('SQL is a required field.')).toBeInTheDocument();
     });
@@ -81,16 +81,16 @@ describe('The "JobForm" component', () => {
     });
   });
 
-  describe('the "Save" button', () => {
+  describe('the "Add job" button', () => {
     it('creates a new job and goes back to jobs table', async () => {
       const createJobSpy = getRequestSpy('POST', '/api/scheduled-jobs/');
       const { user } = setupAdd();
 
-      await user.type(screen.getByLabelText(/Job Name/), 'JOB_NAME');
+      await user.type(screen.getByLabelText(/Job name/), 'JOB_NAME');
       await user.type(screen.getByLabelText(/Schedule/), '* * * * *');
       await user.type(screen.getByTestId('mocked-ace-editor'), 'SELECT 1;');
 
-      await user.click(screen.getByText('Save'));
+      await user.click(screen.getByText('Add job'));
 
       await waitFor(() => {
         expect(createJobSpy).toHaveBeenCalled();
@@ -106,8 +106,8 @@ describe('The "JobForm" component', () => {
 
       expect(screen.getByRole('form')).toBeInTheDocument();
 
-      expect(screen.getByLabelText(/Job Name/)).toBeInTheDocument();
-      expect(screen.getByLabelText(/Job Name/)).toHaveValue(scheduledJob.name);
+      expect(screen.getByLabelText(/Job name/)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Job name/)).toHaveValue(scheduledJob.name);
 
       expect(screen.getByLabelText(/Schedule/)).toBeInTheDocument();
       expect(screen.getByLabelText(/Schedule/)).toHaveValue(scheduledJob.cron);
@@ -124,14 +124,14 @@ describe('The "JobForm" component', () => {
       expect(screen.getByTestId('mocked-ace-editor')).toHaveValue(scheduledJob.sql);
     });
 
-    describe('the "Save" button', () => {
+    describe('the "Update" button', () => {
       it('updates the job and goes back to jobs table', async () => {
         const updateJobSpy = getRequestSpy('PUT', '/api/scheduled-jobs/:jobId');
         const { user } = setupEdit(scheduledJob);
 
-        await user.click(screen.getByLabelText(/Job Name/));
-        await user.clear(screen.getByLabelText(/Job Name/));
-        await user.type(screen.getByLabelText(/Job Name/), 'JOB_NAME');
+        await user.click(screen.getByLabelText(/Job name/));
+        await user.clear(screen.getByLabelText(/Job name/));
+        await user.type(screen.getByLabelText(/Job name/), 'JOB_NAME');
 
         await user.click(screen.getByLabelText(/Schedule/));
         await user.clear(screen.getByLabelText(/Schedule/));
@@ -140,8 +140,7 @@ describe('The "JobForm" component', () => {
         await user.click(screen.getByTestId('mocked-ace-editor'));
         await user.clear(screen.getByTestId('mocked-ace-editor'));
         await user.type(screen.getByTestId('mocked-ace-editor'), 'SELECT 1;');
-
-        await user.click(screen.getByText('Save'));
+        await user.click(screen.getByText('Update job'));
 
         await waitFor(() => {
           expect(updateJobSpy).toHaveBeenCalled();
