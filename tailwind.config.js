@@ -22,6 +22,10 @@ module.exports = {
         'crate-form-disabled': '#f5f5f5',
         'crate-gray30': '#777',
         transparent: 'transparent',
+
+        // Components
+        // Table
+        'table-row-hover': '#fafafa',
       },
       fontFamily: {
         inter: ['Inter', 'Arial', 'sans-serif'],

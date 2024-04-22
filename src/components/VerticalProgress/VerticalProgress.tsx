@@ -1,19 +1,35 @@
 export type VerticalProgressProps = {
   max: number;
   current: number;
+  testId?: string;
 };
 
-function VerticalProgress({ max, current }: VerticalProgressProps) {
-  const normalized = Math.floor((current / max) * 10);
-  const missing = normalized < 10 ? new Array(10 - normalized).fill('') : [''];
+export const VERTICAL_PROGRESS_BARS = 10;
+
+function VerticalProgress({ max, current, testId }: VerticalProgressProps) {
+  const normalized = Math.floor((current / max) * VERTICAL_PROGRESS_BARS);
+  const missing =
+    normalized < VERTICAL_PROGRESS_BARS
+      ? new Array(VERTICAL_PROGRESS_BARS - normalized).fill('')
+      : [''];
   const filled = new Array(normalized).fill('');
   return (
-    <div className="h-full">
-      {missing.map(() => {
-        return <div className="mb-0.5 h-[4px] w-full bg-gray-300"></div>;
+    <div className="h-full" data-testid={testId}>
+      {missing.map((_, index) => {
+        return (
+          <div
+            key={`${index}_missing`}
+            className="mb-0.5 h-[4px] w-full bg-gray-300"
+          ></div>
+        );
       })}
-      {filled.map(() => {
-        return <div className="mb-0.5 h-[4px] w-full bg-crate-blue"></div>;
+      {filled.map((_, index) => {
+        return (
+          <div
+            key={`${index}_filled`}
+            className="mb-0.5 h-[4px] w-full bg-crate-blue"
+          ></div>
+        );
       })}
     </div>
   );

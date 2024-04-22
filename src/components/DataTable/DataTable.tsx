@@ -181,7 +181,7 @@ export function DataTable<TData, TValue>({
                     <Table.Head
                       key={header.id}
                       style={{
-                        width: header.column.columnDef.meta
+                        minWidth: header.column.columnDef.meta
                           ? header.column.columnDef.meta.columnWidth
                           : undefined,
                       }}

@@ -51,9 +51,7 @@ const getColumnsDefinition = () => {
           <div className="flex flex-col">
             <Link to={`./${encodeURIComponent(log.job_id)}`}>{name}</Link>
             <span className="text-[8px]">
-              {isRunning && (
-                <Chip className="bg-orange-400 text-white">RUNNING</Chip>
-              )}
+              {isRunning && <Chip color={Chip.colors.ORANGE}>RUNNING</Chip>}
             </span>
           </div>
         );

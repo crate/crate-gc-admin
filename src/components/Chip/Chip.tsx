@@ -1,15 +1,22 @@
 import { PropsWithChildren } from 'react';
 import { cn } from 'utils';
+import { AVAILABLE_CHIP_COLORS, COLOR_STYLES_MAP } from './ChipConstants';
 
 export type ChipProps = PropsWithChildren<{
+  color?: keyof typeof AVAILABLE_CHIP_COLORS;
   className?: string;
 }>;
 
-export default function Chip({ children, className = '' }: ChipProps) {
+export default function Chip({
+  children,
+  className = '',
+  color = AVAILABLE_CHIP_COLORS.BLUE,
+}: ChipProps) {
   return (
     <span
       className={cn(
-        `inline-flex items-center rounded-md bg-gray-100 p-1 text-[8px] uppercase !leading-3 text-black`,
+        `inline-flex items-center rounded-md p-1 text-[8px] uppercase !leading-3`,
+        COLOR_STYLES_MAP[color],
         className,
       )}
     >
@@ -17,3 +24,5 @@ export default function Chip({ children, className = '' }: ChipProps) {
     </span>
   );
 }
+
+Chip.colors = AVAILABLE_CHIP_COLORS;
