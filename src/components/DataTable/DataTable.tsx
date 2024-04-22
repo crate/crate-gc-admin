@@ -21,6 +21,7 @@ import DataTableFilters from './DataTableFilters';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { cn } from 'utils';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { arrIncludesElement } from 'utils';
 
 export const DEFAULT_ELEMENTS_PER_PAGE = 10;
 
@@ -88,6 +89,9 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    filterFns: {
+      arrIncludesElement: arrIncludesElement,
+    },
     initialState: {
       additionalState,
     },
@@ -98,7 +102,7 @@ export function DataTable<TData, TValue>({
       pagination,
     },
     defaultColumn: {
-      filterFn: 'arrIncludesSome',
+      filterFn: 'arrIncludesElement',
       enableSorting: false,
     },
     onSortingChange: setSorting,

@@ -30,15 +30,11 @@ const getColumnsDefinition = () => {
         columnWidth: '15%',
         filter: {
           label: 'Policies',
-          accessorFn: log => {
-            return log.job_name;
-          },
           searchBar: true,
         },
       },
       accessorFn: (log: PolicyLogWithName) => {
-        const isRunning = log.end === null;
-        return `${log.job_name} ${isRunning ? 'Running' : ''}`;
+        return log.job_name;
       },
       enableColumnFilter: true,
       enableSorting: true,
