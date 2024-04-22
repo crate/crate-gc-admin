@@ -65,7 +65,7 @@ const Row = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      'border-b transition-colors hover:bg-[#fafafa] data-[state=selected]:bg-slate-100',
+      'border-b transition-colors hover:bg-table-row-hover data-[state=selected]:bg-slate-100',
       className,
     )}
     {...props}
@@ -80,7 +80,7 @@ const Head = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 bg-[#fafafa] px-2 text-left align-middle font-medium text-[#737373] [&:has([role=checkbox])]:pr-0',
+      'h-12 bg-table-row-hover px-2 text-left align-middle font-medium text-[#737373] [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}

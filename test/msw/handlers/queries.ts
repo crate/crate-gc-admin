@@ -1,7 +1,20 @@
 import { RestHandler, rest } from 'msw';
-import { queryResult, schemasQueryResult } from '../../__mocks__/query';
+import {
+  clusterInfoQueryResult,
+  queryResult,
+  schemasQueryResult,
+  shardsQueryResult,
+  singleNodesQueryResult,
+} from '../../__mocks__/query';
 import handlerFactory from '../handlerFactory';
-import { getPartitionedTablesQuery } from 'constants/queries';
+import {
+  clusterInfoQuery,
+  getPartitionedTablesQuery,
+  nodesQuery,
+  shardsQuery,
+} from 'constants/queries';
+import { clusterNode } from 'test/__mocks__/nodes';
+import { shards } from 'test/__mocks__/shards';
 
 const executeQueryPost: RestHandler = rest.post(
   '/api/_sql',
@@ -11,6 +24,15 @@ const executeQueryPost: RestHandler = rest.post(
     let result: null | object = null;
 
     switch (body.stmt) {
+      case nodesQuery:
+        result = singleNodesQueryResult(clusterNode);
+        break;
+      case clusterInfoQuery:
+        result = clusterInfoQueryResult;
+        break;
+      case shardsQuery:
+        result = shardsQueryResult(shards);
+        break;
       case getPartitionedTablesQuery(false):
         result = schemasQueryResult;
         break;
@@ -25,4 +47,4 @@ const executeQueryPost: RestHandler = rest.post(
 
 export const executeQueryHandlers: RestHandler[] = [executeQueryPost];
 
-export const customExecuteQueryResponse = handlerFactory('/api/_sql');
+export const customExecuteQueryResponse = handlerFactory('/api/_sql', 'POST');

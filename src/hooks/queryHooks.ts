@@ -11,7 +11,12 @@ import {
   User,
 } from '../types/cratedb';
 import useExecuteSql from './useExecuteSql';
-import { getPartitionedTablesQuery } from 'constants/queries';
+import {
+  clusterInfoQuery,
+  getPartitionedTablesQuery,
+  nodesQuery,
+  shardsQuery,
+} from 'constants/queries';
 export const useGetUsersQuery = () => {
   const executeSql = useExecuteSql();
 
@@ -66,9 +71,7 @@ export const useGetClusterInfoQuery = () => {
   const executeSql = useExecuteSql();
 
   return async (): Promise<ClusterInfo | undefined> => {
-    const res = await executeSql(
-      'SELECT id, name, master_node, settings FROM sys.cluster',
-    );
+    const res = await executeSql(clusterInfoQuery);
     if (!res.data || Array.isArray(res.data)) {
       return;
     }
@@ -217,10 +220,7 @@ export const useGetNodesQuery = () => {
   const executeSql = useExecuteSql();
 
   const getNodes = async (): Promise<NodeStatusInfo[]> => {
-    const res = await executeSql(
-      "SELECT id, name, hostname, heap, fs, load, version, process['cpu']['percent'] as cpu_usage, " +
-        "os_info['available_processors'] as available_processors, rest_url, os_info, now(), attributes FROM sys.nodes ORDER BY name",
-    );
+    const res = await executeSql(nodesQuery);
 
     if (!res.data || Array.isArray(res.data)) {
       return [];
@@ -241,6 +241,7 @@ export const useGetNodesQuery = () => {
         os_info: r[10],
         timestamp: r[11],
         attributes: r[12],
+        mem: r[13],
       };
     });
   };
@@ -300,30 +301,7 @@ export const useGetShardsQuery = () => {
   const executeSql = useExecuteSql();
 
   const getShards = async (): Promise<ShardInfo[]> => {
-    const res = await executeSql(
-      `SELECT
-              table_name,
-              schema_name,
-              node['id'] AS node_id,
-              state,
-              routing_state,
-              relocating_node,
-              count(*) as number_of_shards,
-              "primary",
-              sum(num_docs),
-              avg(num_docs),
-              sum(size)
-            FROM
-              sys.shards
-            GROUP BY
-              table_name,
-              schema_name,
-              node_id,
-              state,
-              routing_state,
-              relocating_node,
-              "primary"`,
-    );
+    const res = await executeSql(shardsQuery);
 
     if (!res.data || Array.isArray(res.data)) {
       return [];

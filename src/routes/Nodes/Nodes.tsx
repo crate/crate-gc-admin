@@ -1,192 +1,198 @@
-import Heading from '../../components/Heading';
-import {
-  useGetCluster,
-  useGetNodeStatus,
-  useGetShards,
-} from '../../hooks/swrHooks.ts';
-import { Table, TableColumnsType, Tag } from 'antd';
-import GCSpin from '../../components/GCSpin';
-import { NodeStatusInfo } from '../../types/cratedb.ts';
+import { useGetCluster, useGetNodeStatus, useGetShards } from 'hooks/swrHooks';
+import { NodeStatusInfo } from 'types/cratedb';
 import prettyBytes from 'pretty-bytes';
-import VerticalProgress from '../../components/VerticalProgress/VerticalProgress.tsx';
-import { formatNum } from '../../utils/numbers.ts';
-import useSessionStore from '../../state/session.ts';
-import React from 'react';
+import { formatNum, getNodeStatus } from 'utils';
+import {
+  Chip,
+  DataTable,
+  GCSpin,
+  Heading,
+  StatusLight,
+  Text,
+  VerticalProgress,
+} from 'components';
+import { ColumnDef } from '@tanstack/react-table';
+import useSessionStore from 'src/state/session';
+import { useGCContext } from 'contexts';
+
+const MIN_COL_WIDTH = '170px';
 
 function Nodes() {
+  const { headings } = useGCContext();
   const { fsStats } = useSessionStore();
 
   const { data: nodes } = useGetNodeStatus();
   const { data: cluster } = useGetCluster();
   const { data: shards } = useGetShards();
 
-  interface DataType {
-    key: React.Key;
-    node: React.JSX.Element;
-    attrs: React.JSX.Element;
-    endpoint: React.JSX.Element;
-    cores: number;
-    os: React.JSX.Element;
-    jvm: React.JSX.Element;
-    heap: React.JSX.Element;
-    load: React.JSX.Element;
-    disk: React.JSX.Element;
-    diskops: React.JSX.Element;
-    shards: React.JSX.Element;
-  }
-
-  const columns: TableColumnsType<DataType> = [
+  const columns: ColumnDef<NodeStatusInfo>[] = [
     {
-      title: 'Node',
-      key: 'node',
-      dataIndex: 'node',
-      width: '20%',
-      ellipsis: false,
+      header: 'Node',
+      meta: {
+        columnWidth: '140px',
+      },
+      cell: ({ row }) => {
+        const node = row.original;
+        return renderNode(node);
+      },
+      enableSorting: true,
+      accessorFn: (nodeStatusInfo: NodeStatusInfo) => {
+        return nodeStatusInfo.name;
+      },
     },
     {
-      title: 'Attributes',
-      key: 'attrs',
-      dataIndex: 'attrs',
-      width: '5%',
-      ellipsis: false,
-      responsive: ['xl'],
+      header: 'Load',
+      meta: {
+        columnWidth: MIN_COL_WIDTH,
+      },
+      cell: ({ row }) => {
+        const node = row.original;
+        return renderLoad(node);
+      },
     },
     {
-      title: 'Cores',
-      key: 'cores',
-      dataIndex: 'cores',
-      width: '3%',
-      ellipsis: false,
+      header: 'Heap usage',
+      meta: {
+        columnWidth: MIN_COL_WIDTH,
+      },
+      cell: ({ row }) => {
+        const node = row.original;
+        return renderHeap(node);
+      },
     },
     {
-      title: 'OS',
-      key: 'os',
-      dataIndex: 'os',
-      width: '8%',
-      ellipsis: false,
-      responsive: ['xl'],
+      header: 'Disk',
+      meta: {
+        columnWidth: MIN_COL_WIDTH,
+      },
+      cell: ({ row }) => {
+        const node = row.original;
+        return renderDisk(node);
+      },
     },
     {
-      title: 'JVM',
-      key: 'jvm',
-      dataIndex: 'jvm',
-      width: '10%',
-      ellipsis: false,
-      responsive: ['xl'],
+      header: 'Disk operations',
+      meta: {
+        columnWidth: MIN_COL_WIDTH,
+      },
+      cell: ({ row }) => {
+        const node = row.original;
+        return renderFS(node);
+      },
     },
     {
-      title: 'Heap usage',
-      key: 'heap',
-      dataIndex: 'heap',
-      width: '10%',
-      ellipsis: false,
-    },
-    {
-      title: 'Load',
-      key: 'load',
-      dataIndex: 'load',
-      width: '10%',
-      ellipsis: false,
-    },
-    {
-      title: 'Disk',
-      key: 'disk',
-      dataIndex: 'disk',
-      width: '10%',
-      ellipsis: false,
-    },
-    {
-      title: 'Disk stats',
-      key: 'diskops',
-      dataIndex: 'diskops',
-      width: '13%',
-      ellipsis: false,
-    },
-    {
-      title: 'Shards',
-      key: 'shards',
-      dataIndex: 'shards',
-      width: '15%',
-      ellipsis: false,
+      header: 'Shards',
+      meta: {
+        columnWidth: MIN_COL_WIDTH,
+      },
+      cell: ({ row }) => {
+        const node = row.original;
+        return renderShards(node);
+      },
     },
   ];
 
   const renderNode = (node: NodeStatusInfo) => {
+    const isMaster = cluster?.master === node.id;
+    const attributes = Object.keys(node.attributes);
+
     return (
-      <div className="flex flex-row justify-between align-top">
-        <div>
-          <div className="font-bold">{node.name}</div>
-          <div>{node.hostname}</div>
-          <div>v{node.version.number}</div>
+      <div className="flex justify-between gap-1">
+        <div className="flex flex-col align-top">
+          <div className="flex items-center gap-2">
+            <Text className="font-bold">{node.name}</Text>
+            <div className="flex">
+              {isMaster && (
+                <StatusLight
+                  color={StatusLight.colors.BLUE}
+                  tooltip={'Master Node'}
+                  testId="master-node"
+                />
+              )}
+              {renderNodeStatus(node)}
+            </div>
+          </div>
+          <Text>{node.hostname}</Text>
+          <Text>v{node.version.number}</Text>
+          <Text>
+            {node.os_info.available_processors} CPU Cores |{' '}
+            {prettyBytes(node.mem.free + node.mem.used, {
+              maximumFractionDigits: 0,
+            })}{' '}
+            RAM
+          </Text>
         </div>
-        <div>
-          {cluster?.master == node.id && (
-            <Tag color="blue">
-              <span className="text-black">Master</span>
-            </Tag>
-          )}
+        <div className="flex flex-col gap-1">
+          {attributes.sort().map(el => {
+            return (
+              <Chip className="whitespace-nowrap" key={el}>
+                {el}: {node.attributes[el]}
+              </Chip>
+            );
+          })}
         </div>
       </div>
     );
   };
 
-  const renderAttributes = (node: NodeStatusInfo) => {
-    return (
-      <div className="">
-        {Object.keys(node.attributes).map(k => {
-          return (
-            <>
-              <Tag>
-                <span className="text-black">
-                  {k}: {node.attributes[k]}
-                </span>
-              </Tag>
-            </>
-          );
-        })}
-      </div>
-    );
-  };
+  const renderNodeStatus = (node: NodeStatusInfo) => {
+    const status = getNodeStatus(node);
 
-  const renderEndpoint = (node: NodeStatusInfo) => {
-    return (
-      <a href={`http://${node.rest_url}`} target="_blank">
-        {node.rest_url}
-      </a>
-    );
-  };
-
-  const renderOS = (node: NodeStatusInfo) => {
-    return (
-      <div className="text-xs">
-        {node.os_info.name} {node.os_info.version} ({node.os_info.arch})
-      </div>
-    );
-  };
-
-  const renderJVM = (node: NodeStatusInfo) => {
-    return (
-      <div className="text-xs">
-        {node.os_info.jvm.vm_name} {node.os_info.jvm.vm_version}
-      </div>
-    );
+    switch (status) {
+      case 'UNREACHABLE':
+        return (
+          <StatusLight
+            color={StatusLight.colors.GRAY}
+            tooltip={'Unreachable'}
+            testId="unreachable-node"
+          />
+        );
+      case 'CRITICAL':
+        return (
+          <StatusLight
+            color={StatusLight.colors.RED}
+            tooltip={'Critical'}
+            testId="critical-node"
+          />
+        );
+      case 'WARNING':
+        return (
+          <StatusLight
+            color={StatusLight.colors.YELLOW}
+            tooltip={'Warning'}
+            testId="warning-node"
+          />
+        );
+      case 'GOOD':
+        return (
+          <StatusLight
+            color={StatusLight.colors.GREEN}
+            tooltip={'Good'}
+            testId="good-node"
+          />
+        );
+    }
   };
 
   const renderHeap = (node: NodeStatusInfo) => {
     return (
       <div className="flex grid-cols-6 gap-2">
         <div className="min-w-5 p-0.5">
-          <VerticalProgress max={node.heap.max} current={node.heap.used} />
+          <VerticalProgress
+            max={node.heap.max}
+            current={node.heap.used}
+            testId="heap-progress"
+          />
         </div>
         <div className="col-span-2 font-bold">
-          <div>Used</div>
-          <div>Free</div>
-          <div>Max</div>
+          <Text>Used</Text>
+          <Text>Free</Text>
+          <Text>Max</Text>
         </div>
         <div className="col-span-3">
-          <div>{prettyBytes(node.heap.used)}</div>
-          <div>{prettyBytes(node.heap.free)}</div>
-          <div>{prettyBytes(node.heap.max)}</div>
+          <Text>{prettyBytes(node.heap.used)}</Text>
+          <Text>{prettyBytes(node.heap.free)}</Text>
+          <Text>{prettyBytes(node.heap.max)}</Text>
         </div>
       </div>
     );
@@ -194,22 +200,25 @@ function Nodes() {
 
   const renderLoad = (node: NodeStatusInfo) => {
     return (
-      <div className="flex grid-cols-6 gap-2">
-        <div className="min-w-5 p-0.5">
-          <VerticalProgress
-            max={node.os_info.available_processors}
-            current={node.load['1']}
-          />
-        </div>
-        <div className="col-span-2 font-bold">
-          <div>1 min</div>
-          <div>5 min</div>
-          <div>15 min</div>
-        </div>
-        <div className="col-span-3">
-          <div>{formatNum(node.load['1'])}</div>
-          <div>{formatNum(node.load['5'])}</div>
-          <div>{formatNum(node.load['15'])}</div>
+      <div>
+        <div className="flex grid-cols-6 gap-2">
+          <div className="min-w-5 p-0.5">
+            <VerticalProgress
+              max={node.os_info.available_processors}
+              current={node.load['1']}
+              testId="load-progress"
+            />
+          </div>
+          <div className="col-span-2 font-bold">
+            <Text>1 min</Text>
+            <Text>5 min</Text>
+            <Text>15 min</Text>
+          </div>
+          <div className="col-span-3">
+            <Text>{formatNum(node.load['1'])}</Text>
+            <Text>{formatNum(node.load['5'])}</Text>
+            <Text>{formatNum(node.load['15'])}</Text>
+          </div>
         </div>
       </div>
     );
@@ -219,17 +228,21 @@ function Nodes() {
     return (
       <div className="flex grid-cols-6 gap-2">
         <div className="min-w-5 p-0.5">
-          <VerticalProgress max={node.fs.total.size} current={node.fs.total.used} />
+          <VerticalProgress
+            max={node.fs.total.size}
+            current={node.fs.total.used}
+            testId="disk-progress"
+          />
         </div>
         <div className="col-span-2 font-bold">
-          <div>Used</div>
-          <div>Free</div>
-          <div>Max</div>
+          <Text>Used</Text>
+          <Text>Free</Text>
+          <Text>Max</Text>
         </div>
         <div className="col-span-3">
-          <div>{prettyBytes(node.fs.total.used)}</div>
-          <div>{prettyBytes(node.fs.total.available)}</div>
-          <div>{prettyBytes(node.fs.total.size)}</div>
+          <Text>{prettyBytes(node.fs.total.used)}</Text>
+          <Text>{prettyBytes(node.fs.total.available)}</Text>
+          <Text>{prettyBytes(node.fs.total.size)}</Text>
         </div>
       </div>
     );
@@ -238,35 +251,34 @@ function Nodes() {
   const renderFS = (node: NodeStatusInfo) => {
     const stats = fsStats[node.id];
     if (!stats) {
-      return <GCSpin spinning={true} />;
+      return <GCSpin spinning={true} spinnedTestId={'loading-fs'} />;
     }
-    // FIXME: This grid is a bit meh
-    // FIXME: Add arrow
+
     return (
       <div className="flex grid-cols-2 gap-4">
         <div className="font-bold">
-          <div>Reads</div>
-          <div>Writes</div>
-          <div>Read rate</div>
-          <div>Write rate</div>
+          <Text>Reads</Text>
+          <Text>Writes</Text>
+          <Text>Read rate</Text>
+          <Text>Write rate</Text>
         </div>
         <div className="col-span-3">
-          <div>{formatNum(stats.iops_read, 0)} iops</div>
-          <div>{formatNum(stats.iops_write, 0)} iops</div>
-          <div>
+          <Text>{formatNum(stats.iops_read, 0)} iops</Text>
+          <Text>{formatNum(stats.iops_write, 0)} iops</Text>
+          <Text>
             {prettyBytes(fsStats[node.id].bps_read, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
             /s
-          </div>
-          <div>
+          </Text>
+          <Text>
             {prettyBytes(fsStats[node.id].bps_write, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
             /s
-          </div>
+          </Text>
         </div>
       </div>
     );
@@ -276,69 +288,46 @@ function Nodes() {
     return (
       <div className="flex grid-cols-2 gap-4">
         <div className="font-bold">
-          <div>Initializing</div>
-          <div>Started</div>
-          <div>Relocating</div>
+          <Text>Initializing</Text>
+          <Text>Started</Text>
+          <Text>Relocating</Text>
         </div>
         <div className="col-span-3">
-          <div>
+          <Text testId="initializing-shards">
             {
               shards?.filter(
                 s => s.node_id == node.id && s.routing_state == 'INITIALIZING',
               ).length
             }
-          </div>
-          <div>
+          </Text>
+          <Text testId="started-shards">
             {
               shards?.filter(
                 s => s.node_id == node.id && s.routing_state == 'STARTED',
               ).length
             }
-          </div>
-          <div>
+          </Text>
+          <Text testId="relocating-shards">
             {
               shards?.filter(
                 s => s.node_id == node.id && s.routing_state == 'RELOCATING',
               ).length
             }
-          </div>
+          </Text>
         </div>
       </div>
     );
   };
 
-  const dataSource =
-    cluster &&
-    nodes &&
-    nodes.map(node => {
-      return {
-        key: node.id,
-        node: renderNode(node),
-        attrs: renderAttributes(node),
-        endpoint: renderEndpoint(node),
-        cores: node.os_info.available_processors,
-        os: renderOS(node),
-        jvm: renderJVM(node),
-        heap: renderHeap(node),
-        load: renderLoad(node),
-        disk: renderDisk(node),
-        diskops: renderFS(node),
-        shards: renderShards(node),
-      };
-    });
-
   return (
     <GCSpin spinning={!nodes || !cluster}>
       <div className="p-4">
-        <Heading level={Heading.levels.h1} className="mb-2">
-          Nodes
-        </Heading>
-        <Table
-          columns={columns}
-          dataSource={dataSource}
-          pagination={false}
-          size="small"
-        />
+        {headings && (
+          <Heading level={Heading.levels.h1} className="mb-2">
+            Nodes
+          </Heading>
+        )}
+        <DataTable columns={columns} data={nodes!} />
       </div>
     </GCSpin>
   );

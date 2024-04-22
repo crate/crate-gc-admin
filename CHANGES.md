@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Improve Nodes page UI/UX.
+
 ## 2024-04-17 - 0.7.1
 
 - Fix "Pretty" SQL results output unnecessary line breaks.

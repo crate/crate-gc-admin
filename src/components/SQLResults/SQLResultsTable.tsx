@@ -30,7 +30,9 @@ function SQLResultsTable({ result }: Params) {
       <>
         <div className="flex min-h-12 flex-row items-start justify-between rounded border p-2">
           <div className="flex items-start gap-4 pr-2 text-sm">
-            <Chip className="bg-red-600 uppercase text-white">Error</Chip>
+            <Chip className="uppercase" color={Chip.colors.RED}>
+              Error
+            </Chip>
             <a
               href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
               target="_blank"
@@ -298,7 +300,9 @@ function SQLResultsTable({ result }: Params) {
       title={() => (
         <div className="flex h-8 flex-row items-center gap-2">
           <div className="flex items-center gap-2 border-e pr-2 text-xs font-bold">
-            <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
+            <Chip className="mr-1.5" color={Chip.colors.GREEN}>
+              OK
+            </Chip>
             {`${result.rowcount} rows, ${result.duration} ms`}
           </div>
           <Radio.Group

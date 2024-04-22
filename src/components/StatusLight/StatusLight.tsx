@@ -6,10 +6,11 @@ import PulsingLight from './PulsingLight';
 import React from 'react';
 
 export type StatusLightProps = {
-  color: string;
+  color: keyof typeof AVAILABLE_LIGHT_COLORS;
   pulse?: boolean;
-  message: React.JSX.Element | string;
+  message?: React.JSX.Element | string;
   tooltip?: React.JSX.Element | string | undefined;
+  testId?: string;
 };
 
 function StatusLight({
@@ -17,11 +18,12 @@ function StatusLight({
   pulse = false,
   message,
   tooltip = undefined,
+  testId,
 }: StatusLightProps) {
   const LightElement = pulse ? PulsingLight : SolidLight;
 
   return (
-    <div>
+    <div data-testid={testId}>
       {tooltip ? (
         <Tooltip
           arrowPointAtCenter
@@ -38,7 +40,7 @@ function StatusLight({
       ) : (
         <LightElement className={COLOR_STYLES_MAP[color]} />
       )}
-      <Text className="ml-1 inline">{message}</Text>
+      {message && <Text className="ml-1 inline">{message}</Text>}
     </div>
   );
 }

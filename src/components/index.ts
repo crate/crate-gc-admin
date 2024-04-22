@@ -50,3 +50,4 @@ export { default as SyntaxHighlighter } from './SyntaxHighlighter';
 export { default as Table } from './Table';
 export { default as Tree } from './Tree';
 export { default as Text } from './Text';
+export { default as VerticalProgress } from './VerticalProgress';

@@ -85,7 +85,7 @@ const getColumnsDefinition = ({
           <div className="flex flex-col">
             <Text>{name}</Text>
             <span className="text-[8px]">
-              {running && <Chip className="bg-orange-400 text-white">RUNNING</Chip>}
+              {running && <Chip color={Chip.colors.ORANGE}>RUNNING</Chip>}
             </span>
           </div>
         );

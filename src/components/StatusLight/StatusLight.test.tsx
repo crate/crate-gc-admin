@@ -38,6 +38,22 @@ describe('The StatusLight component', () => {
         COLOR_STYLES_MAP[StatusLight.colors.RED],
       );
     });
+
+    it('can display a gray light', () => {
+      const { container } = setup({ color: StatusLight.colors.GRAY });
+
+      expect(container.querySelector('circle')).toHaveClass(
+        COLOR_STYLES_MAP[StatusLight.colors.GRAY],
+      );
+    });
+
+    it('can display a blue light', () => {
+      const { container } = setup({ color: StatusLight.colors.BLUE });
+
+      expect(container.querySelector('circle')).toHaveClass(
+        COLOR_STYLES_MAP[StatusLight.colors.BLUE],
+      );
+    });
   });
 
   describe('When displaying a message', () => {
@@ -61,6 +77,16 @@ describe('The StatusLight component', () => {
       const { container } = setup({ color: StatusLight.colors.GREEN, pulse: false });
 
       expect(container.querySelector('animate')).toBeNull();
+    });
+  });
+
+  describe('when the testId prop is passed', () => {
+    it('sets the testId correctly', () => {
+      setup({
+        testId: 'custom-test-id',
+      });
+
+      expect(screen.getByTestId('custom-test-id')).not.toBeNull();
     });
   });
 });

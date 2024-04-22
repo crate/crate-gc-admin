@@ -50,6 +50,15 @@ export type FSInfo = {
   };
 };
 
+export type MemInfo = {
+  free_percent: number;
+  used_percent: number;
+  free: number;
+  used: number;
+};
+
+export type NodeStatus = 'UNREACHABLE' | 'CRITICAL' | 'WARNING' | 'GOOD';
+
 export type NodeStatusInfo = {
   id: string;
   name: string;
@@ -63,6 +72,7 @@ export type NodeStatusInfo = {
   rest_url: string;
   os_info: OSInfo;
   timestamp: number;
+  mem: MemInfo;
   attributes: { [key: string]: string };
 };
 
@@ -111,7 +121,7 @@ export type ShardInfo = {
   node_id: string;
   state: string;
   routing_state: string;
-  relocating_node: string;
+  relocating_node: string | null;
   number_of_shards: number;
   primary: boolean;
   total_docs: number;
