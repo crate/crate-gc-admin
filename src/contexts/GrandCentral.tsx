@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useContext } from 'react';
-import { GRAND_CENTRAL_TOKEN_COOKIE } from '../constants/cookie';
+import { GRAND_CENTRAL_TOKEN_COOKIE } from 'constants/cookie';
 
 type GCContextType = {
   gcStatus: ConnectionStatus;

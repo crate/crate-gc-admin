@@ -16,7 +16,7 @@ import {
 import { navigateMock } from '__mocks__/react-router-dom';
 import { EligibleColumnsApiOutput, Policy } from 'types';
 import { policy } from 'test/__mocks__/policy';
-import { mapPolicyToPolicyInput } from '../utils/policies';
+import { mapPolicyToPolicyInput } from '../tablePoliciesUtils/policies';
 
 const setupAdd = () => {
   return render(<PolicyForm type="add" />);

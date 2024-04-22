@@ -8,8 +8,8 @@ import {
   TPolicyTarget,
 } from 'types';
 import { apiPost } from 'utils';
-import { mapTableListEntriesToTreeItem } from '../utils/tableTree';
-import { isTargetDeleted } from '../utils/policies';
+import { mapTableListEntriesToTreeItem } from '../tablePoliciesUtils/tableTree';
+import { isTargetDeleted } from '../tablePoliciesUtils/policies';
 
 const getEligibleColumns = async (
   gcApi: AxiosInstance,

@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import Button, { ButtonProps } from './Button';
 
 const onClickSpy = jest.fn();

@@ -1,12 +1,9 @@
 import moment from 'moment';
-import server, {
-  customGetAllPolicies,
-  customGetPolicyLogs,
-} from '../../../../test/msw';
-import { getRequestSpy, render, screen, waitFor } from '../../../../test/testUtils';
+import server, { customGetAllPolicies, customGetPolicyLogs } from 'test/msw';
+import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
 import PoliciesTable, { POLICIES_TABLE_PAGE_SIZE } from './PoliciesTable';
 import { DATE_FORMAT } from 'constants/defaults';
-import { navigateMock } from '../../../../__mocks__/react-router-dom';
+import { navigateMock } from '__mocks__/react-router-dom';
 import policies from 'test/__mocks__/policies';
 import { PolicyLog, Policy } from 'types';
 import { policiesLogs, policyErrorLog } from 'test/__mocks__/policiesLogs';

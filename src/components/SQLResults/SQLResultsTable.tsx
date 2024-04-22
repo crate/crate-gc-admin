@@ -1,13 +1,13 @@
 import React from 'react';
 import { Radio, Table } from 'antd';
 import _ from 'lodash';
-import Chip from '../Chip';
-import Switch from '../Switch';
+import Chip from 'components/Chip';
+import Switch from 'components/Switch';
 import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
 import { dbTypeToHumanReadable } from './utils';
 import Papa from 'papaparse';
-import { ColumnType, QueryResult } from '../../types/query';
-import useSessionStore from '../../state/session';
+import { ColumnType, QueryResult } from 'types/query';
+import useSessionStore from 'state/session';
 
 type Params = {
   result: QueryResult | undefined;

@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import CopyToClipboard, { CopyToClipboardProps } from './CopyToClipboard';
 
 const defaultProps: CopyToClipboardProps = {

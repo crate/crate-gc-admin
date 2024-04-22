@@ -4,7 +4,7 @@ import React from 'react';
 import {
   LONG_MESSAGE_NOTIFICATION_DURATION,
   SHORT_MESSAGE_NOTIFICATION_DURATION,
-} from '../../constants/defaults';
+} from 'constants/defaults';
 import { ArgsProps } from 'antd/es/notification';
 
 type NotificationAntd = ArgsProps & {

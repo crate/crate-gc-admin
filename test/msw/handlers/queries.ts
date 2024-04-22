@@ -5,16 +5,16 @@ import {
   schemasQueryResult,
   shardsQueryResult,
   singleNodesQueryResult,
-} from '../../__mocks__/query';
-import handlerFactory from '../handlerFactory';
+} from 'test/__mocks__/query';
+import { clusterNode } from 'test/__mocks__/nodes';
+import { shards } from 'test/__mocks__/shards';
+import handlerFactory from 'test/msw/handlerFactory';
 import {
   clusterInfoQuery,
   getPartitionedTablesQuery,
   nodesQuery,
   shardsQuery,
 } from 'constants/queries';
-import { clusterNode } from 'test/__mocks__/nodes';
-import { shards } from 'test/__mocks__/shards';
 
 const executeQueryPost: RestHandler = rest.post(
   '/api/_sql',

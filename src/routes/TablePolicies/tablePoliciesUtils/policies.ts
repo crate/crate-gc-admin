@@ -1,4 +1,4 @@
-import { mapTableListEntriesToTreeItem } from 'routes/TablePolicies/utils/tableTree';
+import { mapTableListEntriesToTreeItem } from 'routes/TablePolicies/tablePoliciesUtils/tableTree';
 import {
   Policy,
   PolicyInput,

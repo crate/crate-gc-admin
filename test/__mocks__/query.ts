@@ -1,5 +1,5 @@
 import { NodeStatusInfo, ShardInfo } from 'types/cratedb';
-import { QueryResult } from '../../src/types/query';
+import { QueryResult } from 'types/query';
 
 export const queryResult: QueryResult = {
   col_types: [9],

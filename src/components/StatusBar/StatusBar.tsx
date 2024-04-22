@@ -5,15 +5,15 @@ import {
   useGetNodeStatus,
   useGetShards,
   useGetTables,
-} from '../../hooks/swrHooks';
-import StatusLight from '../../components/StatusLight';
+} from 'hooks/swrHooks';
+import StatusLight from 'components/StatusLight';
 import { CloseOutlined, DownOutlined } from '@ant-design/icons';
-import { formatNum } from '../../utils/numbers';
+import { formatNum } from 'utils/numbers';
 import React, { useEffect, useState } from 'react';
-import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks';
-import GCSpin from '../GCSpin';
+import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
+import GCSpin from 'components/GCSpin';
 import logo from '../../assets/logo.svg';
-import useSessionStore from '../../state/session';
+import useSessionStore from 'state/session';
 
 function StatusBar() {
   const [mobileVisible, setMobileVisible] = useState(false);

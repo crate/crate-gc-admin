@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import CardHeader, { CardHeaderProps } from './CardHeader';
 
 const defaultProps: CardHeaderProps = {

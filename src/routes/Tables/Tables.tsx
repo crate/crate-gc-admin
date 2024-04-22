@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import Heading from '../../components/Heading';
+import { Heading } from 'components';
+import { TAILWIND_BREAKPOINT_MD } from 'constants/defaults';
+import { SYSTEM_SCHEMAS } from 'constants/database';
+import { TableListEntry } from 'types/cratedb';
 import TableDetail from './TableDetail';
 import TableList from './TableList';
-import { TAILWIND_BREAKPOINT_MD } from '../../constants/defaults';
-import { SYSTEM_SCHEMAS } from 'constants/database';
-import { TableListEntry } from '../../types/cratedb';
 
 function Tables() {
   const [isMobile, setIsMobile] = useState(false);

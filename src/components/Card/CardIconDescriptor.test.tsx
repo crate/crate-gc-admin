@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import CardIconDescriptor, { CardIconDescriptorProps } from './CardIconDescriptor';
 
 const defaultProps: CardIconDescriptorProps = {

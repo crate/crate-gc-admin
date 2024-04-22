@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
-import Heading from '../../components/Heading';
-import Loader from '../../components/Loader';
-import SQLEditor from '../../components/SQLEditor';
-import SQLHistory from '../../components/SQLHistory';
-import SQLResults from '../../components/SQLResults';
-import { useGCContext } from '../../contexts';
-import useExecuteSql from '../../hooks/useExecuteSql';
-import { QueryResults } from '../../types/query';
+import { Heading, Loader, SQLEditor, SQLHistory, SQLResults } from 'components';
+import { useGCContext } from 'contexts';
+import useExecuteSql from 'hooks/useExecuteSql';
+import { QueryResults } from 'types/query';
 
 function SQLConsole() {
   const executeSql = useExecuteSql();

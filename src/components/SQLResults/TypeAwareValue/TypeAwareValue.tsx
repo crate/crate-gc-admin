@@ -1,6 +1,6 @@
 import JSONTree from '../JSONTree/JSONTree';
 import { LinkOutlined } from '@ant-design/icons';
-import { ColumnType } from '../../../types/query';
+import { ColumnType } from 'types/query';
 import { wrapText } from 'utils';
 
 export type TypeAwareValueParams = {

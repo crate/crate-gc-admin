@@ -15,9 +15,9 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { cn, compareDurations, compareIsoDates } from 'utils';
 import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
 import { getLogDuration } from 'utils';
-import { getLogActionsInError } from '../utils/policies';
-import { ActionsInfoError } from '../utils/types';
+import { ActionsInfoError } from '../tablePoliciesUtils/types';
 import { POLICY_NAMES } from 'constants/policies';
+import { getLogActionsInError } from '../tablePoliciesUtils/policies';
 
 export const POLICIES_LOGS_TABLE_PAGE_SIZE = 10;
 

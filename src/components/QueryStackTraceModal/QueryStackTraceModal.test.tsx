@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import QueryStackTraceModal, {
   QueryStackTraceModalProps,
 } from './QueryStackTraceModal';

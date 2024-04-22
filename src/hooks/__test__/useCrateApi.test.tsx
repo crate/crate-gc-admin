@@ -1,5 +1,5 @@
-import { render, screen } from '../../../test/testUtils';
-import useCrateApi from '../useCrateApi';
+import { render, screen } from 'test/testUtils';
+import useCrateApi from 'hooks/useCrateApi';
 
 function MockComponent() {
   const crateApi = useCrateApi();

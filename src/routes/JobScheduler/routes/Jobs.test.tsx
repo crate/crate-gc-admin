@@ -1,6 +1,6 @@
-import { useLocation } from '../../../../__mocks__/react-router-dom';
+import { useLocation } from '__mocks__/react-router-dom';
 import Jobs from './Jobs';
-import { render, screen, waitFor } from '../../../../test/testUtils';
+import { render, screen, waitFor } from 'test/testUtils';
 import scheduledJobs from 'test/__mocks__/scheduledJobs';
 import { scheduledJobLogsWithName } from 'test/__mocks__/scheduledJobLogs';
 

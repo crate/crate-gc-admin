@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import useMessage from '../../hooks/useMessage';
+import useMessage from 'hooks/useMessage';
 
 export type CopyToClipboardProps = {
   successMessage?: string;

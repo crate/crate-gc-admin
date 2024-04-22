@@ -1,5 +1,5 @@
-import { render, screen } from '../../../test/testUtils';
-import useGcApi from '../useGcApi';
+import { render, screen } from 'test/testUtils';
+import useGcApi from 'hooks/useGcApi';
 
 function MockComponent() {
   const gcApi = useGcApi();

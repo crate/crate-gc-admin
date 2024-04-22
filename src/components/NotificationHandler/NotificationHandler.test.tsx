@@ -1,7 +1,7 @@
 import { notification } from 'antd';
-import { disableConsole, render, screen, waitFor } from '../../../test/testUtils';
-import useSessionStore from '../../state/session';
+import { disableConsole, render, screen, waitFor } from 'test/testUtils';
 import NotificationHandler from './NotificationHandler';
+import useSessionStore from 'state/session';
 
 const setup = () => render(<NotificationHandler />);
 

@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import Heading, { HeadingProps } from './Heading';
 
 const defaultProps: HeadingProps = {

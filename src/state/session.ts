@@ -2,7 +2,7 @@
 // currently used for API error notifications only
 
 import { create } from 'zustand';
-import { FSStats, LoadAverage } from '../types/cratedb';
+import { FSStats, LoadAverage } from 'types/cratedb';
 
 type Notification = {
   type?: NotificationType;

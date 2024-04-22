@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import StatusLight, { StatusLightProps } from './StatusLight';
 import { AVAILABLE_LIGHT_COLORS, COLOR_STYLES_MAP } from './StatusLightConstants';
 

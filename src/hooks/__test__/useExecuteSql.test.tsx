@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getRequestSpy, render, screen, waitFor } from '../../../test/testUtils';
-import useExecuteSql, { ExecuteSqlResult } from '../useExecuteSql';
+import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
+import useExecuteSql, { ExecuteSqlResult } from 'hooks/useExecuteSql';
 
 function MockComponent() {
   const executeSql = useExecuteSql();

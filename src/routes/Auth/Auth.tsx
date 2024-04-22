@@ -1,7 +1,7 @@
-import { GCSpin, NoDataView } from '../../components';
+import { GCSpin, NoDataView } from 'components';
 import { useMemo, useState } from 'react';
-import useGCLogin from '../../hooks/useGCLogin.ts';
-import { useGCContext } from '../../index.ts';
+import useGCLogin from 'hooks/useGCLogin';
+import { useGCContext } from 'contexts';
 
 function Auth() {
   const { gcUrl, sessionCookieName } = useGCContext();

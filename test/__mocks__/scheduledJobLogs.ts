@@ -1,4 +1,4 @@
-import { JobLog, JobLogWithName } from '../../src/types';
+import { JobLog, JobLogWithName } from 'types';
 
 const scheduledJobLogs: JobLog[] = [
   {

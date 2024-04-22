@@ -1,5 +1,5 @@
-import CrateTabs from '../CrateTabs';
-import { QueryResults } from '../../types/query';
+import CrateTabs from 'components/CrateTabs';
+import { QueryResults } from 'types/query';
 import SQLResultsTable from './SQLResultsTable';
 
 type Params = {

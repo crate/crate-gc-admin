@@ -34,6 +34,7 @@ export { default as QueryStackTraceModal } from './QueryStackTraceModal';
 export { default as RoundedIcon } from './RoundedIcon';
 export { default as Select } from './Select';
 export { default as SQLEditor } from './SQLEditor';
+export { default as SQLHistory } from './SQLHistory';
 export { default as SQLResults } from './SQLResults';
 export { default as StatsUpdater } from './StatsUpdater';
 export { default as StatusBar } from './StatusBar';

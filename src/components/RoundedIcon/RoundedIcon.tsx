@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import cn from '../../utils/cn';
+import cn from 'utils/cn';
 
 export type RoundedIconProps = {
   className?: string;
