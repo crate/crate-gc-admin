@@ -51,7 +51,7 @@ function Nodes() {
       },
     },
     {
-      header: 'Heap usage',
+      header: 'Heap Usage',
       meta: {
         columnWidth: MIN_COL_WIDTH,
       },
@@ -61,7 +61,7 @@ function Nodes() {
       },
     },
     {
-      header: 'Disk',
+      header: 'Disk Usage',
       meta: {
         columnWidth: MIN_COL_WIDTH,
       },
@@ -71,7 +71,7 @@ function Nodes() {
       },
     },
     {
-      header: 'Disk operations',
+      header: 'Disk Operations',
       meta: {
         columnWidth: MIN_COL_WIDTH,
       },
@@ -125,7 +125,7 @@ function Nodes() {
         <div className="flex flex-col gap-1">
           {attributes.sort().map(el => {
             return (
-              <Chip className="whitespace-nowrap" key={el}>
+              <Chip className="whitespace-nowrap" key={el} color={Chip.colors.GRAY}>
                 {el}: {node.attributes[el]}
               </Chip>
             );
@@ -187,7 +187,7 @@ function Nodes() {
         <div className="col-span-2 font-bold">
           <Text>Used</Text>
           <Text>Free</Text>
-          <Text>Max</Text>
+          <Text>Size</Text>
         </div>
         <div className="col-span-3">
           <Text>{prettyBytes(node.heap.used)}</Text>
@@ -237,7 +237,7 @@ function Nodes() {
         <div className="col-span-2 font-bold">
           <Text>Used</Text>
           <Text>Free</Text>
-          <Text>Max</Text>
+          <Text>Size</Text>
         </div>
         <div className="col-span-3">
           <Text>{prettyBytes(node.fs.total.used)}</Text>

@@ -5,6 +5,8 @@
 - Improve Nodes page UI/UX.
 - Fix DataTable filtering to strictly check the filter element.
 - Updating imports to use path aliases.
+- Change "Max" to "Size" in heap and disk stats in Nodes page.
+- Change node attributes Chip color to gray in Nodes page.
 
 ## 2024-04-17 - 0.7.1
 
