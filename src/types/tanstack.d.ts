@@ -12,6 +12,11 @@ declare module '@tanstack/react-table' {
     };
   }
 
+  // Custom filtering
+  interface FilterFns {
+    arrIncludesElement: FilterFn<unknown>;
+  }
+
   // Add additional state to TableState and InitialTableState
   interface TableState {
     additionalState?: unknown;

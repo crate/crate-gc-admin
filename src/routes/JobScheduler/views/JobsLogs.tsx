@@ -34,15 +34,11 @@ const getColumnsDefinition = ({
         columnWidth: '15%',
         filter: {
           label: 'Jobs',
-          accessorFn: log => {
-            return log.job_name;
-          },
           searchBar: true,
         },
       },
       accessorFn: (log: JobLogWithName) => {
-        const isRunning = log.end === null;
-        return `${log.job_name} ${isRunning ? 'Running' : ''}`;
+        return log.job_name;
       },
       enableColumnFilter: true,
       enableSorting: true,
