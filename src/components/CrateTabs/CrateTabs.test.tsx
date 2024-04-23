@@ -1,5 +1,5 @@
-import { useLocation, navigateMock } from '../../../__mocks__/react-router-dom';
-import { render, screen } from '../../../test/testUtils';
+import { useLocation, navigateMock } from '__mocks__/react-router-dom';
+import { render, screen } from 'test/testUtils';
 import CrateTabs, { CrateTabsProps } from './CrateTabs';
 
 const defaultProps: CrateTabsProps = {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import SQLResults from '../../components/SQLResults';
-import { useGetUserPermissionsQuery } from '../../hooks/queryHooks';
-import { User } from '../../types/cratedb';
-import { QueryResults } from '../../types/query';
+import { SQLResults } from 'components';
+import { useGetUserPermissionsQuery } from 'hooks/queryHooks';
+import { User } from 'types/cratedb';
+import { QueryResults } from 'types/query';
 
 type Params = {
   user: User;

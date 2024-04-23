@@ -1,6 +1,6 @@
-import { useLocation } from '../../../../__mocks__/react-router-dom';
+import { useLocation } from '__mocks__/react-router-dom';
 import Policies from './Policies';
-import { render, screen, waitFor } from '../../../../test/testUtils';
+import { render, screen, waitFor } from 'test/testUtils';
 import policies from 'test/__mocks__/policies';
 import { policiesLogsWithName } from 'test/__mocks__/policiesLogs';
 

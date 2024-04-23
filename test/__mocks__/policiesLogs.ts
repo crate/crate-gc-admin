@@ -1,4 +1,4 @@
-import { PolicyLogWithName, PolicyLog } from '../../src/types';
+import { PolicyLogWithName, PolicyLog } from 'types';
 
 const policiesLogs: PolicyLog[] = [
   {

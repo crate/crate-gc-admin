@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { LayoutProps } from './types';
 import Navigation from './Navigation';
 import TopBar from './TopBar';
-import { useGCContext } from '../../contexts';
+import { useGCContext } from 'contexts';
 
 function Layout({
   bottomNavigation,

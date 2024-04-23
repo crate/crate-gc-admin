@@ -1,6 +1,6 @@
 import policies from 'test/__mocks__/policies';
 import TablePolicies from '.';
-import { render, screen, waitFor, within } from '../../../test/testUtils';
+import { render, screen, waitFor, within } from 'test/testUtils';
 import { useParams } from '__mocks__/react-router-dom';
 
 const setup = () => {

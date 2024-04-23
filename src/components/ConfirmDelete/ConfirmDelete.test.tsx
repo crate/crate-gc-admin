@@ -1,5 +1,5 @@
 import ConfirmDelete, { ConfirmDeleteProps } from './ConfirmDelete';
-import { render, waitFor, screen } from '../../../test/testUtils';
+import { render, waitFor, screen } from 'test/testUtils';
 
 const defaultProps: ConfirmDeleteProps = {
   confirmText: 'confirmText',

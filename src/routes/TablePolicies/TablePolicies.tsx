@@ -1,7 +1,7 @@
 import { useGCContext } from 'contexts';
 import { Route, Routes } from 'react-router-dom';
 import { Heading, Text } from 'components';
-import { CreatePolicy, EditPolicy, Policies } from './routes';
+import { CreatePolicy, EditPolicy, Policies } from 'routes/TablePolicies/routes';
 
 export default function TablePolicies() {
   const { headings } = useGCContext();

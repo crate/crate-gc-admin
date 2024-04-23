@@ -9,14 +9,15 @@ import {
   TableInfo,
   TableListEntry,
   User,
-} from '../types/cratedb';
-import useExecuteSql from './useExecuteSql';
+} from 'types/cratedb';
+import useExecuteSql from 'hooks/useExecuteSql';
 import {
   clusterInfoQuery,
   getPartitionedTablesQuery,
   nodesQuery,
   shardsQuery,
 } from 'constants/queries';
+
 export const useGetUsersQuery = () => {
   const executeSql = useExecuteSql();
 

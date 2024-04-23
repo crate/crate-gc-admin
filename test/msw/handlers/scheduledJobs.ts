@@ -1,11 +1,11 @@
 import { rest, RestHandler } from 'msw';
-import scheduledJob from '../../__mocks__/scheduledJob';
-import scheduledJobs from '../../__mocks__/scheduledJobs';
+import handlerFactory from 'test/msw/handlerFactory';
+import scheduledJob from 'test/__mocks__/scheduledJob';
+import scheduledJobs from 'test/__mocks__/scheduledJobs';
 import {
   scheduledJobLogs,
   scheduledJobLogsWithName,
-} from '../../__mocks__/scheduledJobLogs';
-import handlerFactory from '../handlerFactory';
+} from 'test/__mocks__/scheduledJobLogs';
 
 const getAllScheduledJobs: RestHandler = rest.get(
   '/api/scheduled-jobs/',

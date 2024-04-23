@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { render } from '../../../test/testUtils';
+import { render } from 'test/testUtils';
 import DisplayDate from '.';
 import { DisplayDateProps } from './DisplayDate';
 

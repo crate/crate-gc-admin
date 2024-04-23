@@ -6,14 +6,14 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 import prettyBytes from 'pretty-bytes';
-import StatusLight from '../../components/StatusLight';
-import { formatHumanReadable } from '../../utils/numbers';
-import { useGetShards, useGetTables, useGetAllocations } from '../../hooks/swrHooks';
+import { StatusLight } from 'components';
+import { formatHumanReadable } from 'utils/numbers';
+import { useGetShards, useGetTables, useGetAllocations } from 'hooks/swrHooks';
 import {
   tablesWithMissingPrimaryReplicas,
   tablesWithUnassignedShards,
-} from '../../utils/statusChecks';
-import { TableListEntry } from '../../types/cratedb';
+} from 'utils/statusChecks';
+import { TableListEntry } from 'types/cratedb';
 
 function TableList({
   setActiveTable,

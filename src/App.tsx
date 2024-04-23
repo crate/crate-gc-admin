@@ -1,16 +1,14 @@
 import { Link, Route, Routes } from 'react-router-dom';
-import { bottomNavigation, topNavigation } from './constants/navigation';
-import routes from './constants/routes';
+import { bottomNavigation, topNavigation } from 'constants/navigation';
+import routes from 'constants/routes';
 import { useMemo, useState } from 'react';
-import { ConnectionStatus, GCContextProvider } from './contexts';
-import Layout from './components/Layout';
-import StatusBar from './components/StatusBar';
-import NotificationHandler from './components/NotificationHandler';
+import { ConnectionStatus, GCContextProvider } from 'contexts';
+import { Layout, StatusBar, StatsUpdater } from 'components';
 import logo from './assets/logo.svg';
-import StatsUpdater from './components/StatsUpdater';
-import useGcApi from './hooks/useGcApi.ts';
-import { apiGet } from './utils/api.ts';
-import { GRAND_CENTRAL_TOKEN_COOKIE } from './constants/cookie.ts';
+import useGcApi from 'hooks/useGcApi';
+import { apiGet } from 'utils/api';
+import { GRAND_CENTRAL_TOKEN_COOKIE } from 'constants/cookie';
+import NotificationHandler from 'components/NotificationHandler';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);

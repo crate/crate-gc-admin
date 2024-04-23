@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import Text from '../Text';
+import Text from 'components/Text';
 
 export type NoDataViewProps = PropsWithChildren<{
   description?: React.ReactNode;

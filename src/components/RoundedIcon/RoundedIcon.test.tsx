@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import RoundedIcon, { RoundedIconProps } from './RoundedIcon';
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: PropsWithChildren<RoundedIconProps> = {
   children: 'ICON',

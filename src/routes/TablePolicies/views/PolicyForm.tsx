@@ -29,14 +29,14 @@ import { ApiError } from 'types/api';
 import {
   mapPolicyInputToPolicyWithoutId,
   mapPolicyToPolicyInput,
-} from '../utils/policies';
+} from '../tablePoliciesUtils/policies';
+import { mapTableListEntriesToTreeItem } from '../tablePoliciesUtils/tableTree';
 import { INTEGER_VALUE_REGEXP } from 'constants/utils';
-import { mapTableListEntriesToTreeItem } from '../utils/tableTree';
-import useEligibleColumns from '../hooks/useEligibleColumns';
 import { WarningOutlined } from '@ant-design/icons';
-import usePolicyPreview from '../hooks/usePolicyPreview';
 import { EMPTY_POLICY_FORM } from 'constants/policies';
 import { ApiOutput, apiPost, apiPut } from 'utils';
+import useEligibleColumns from '../hooks/useEligibleColumns';
+import usePolicyPreview from '../hooks/usePolicyPreview';
 
 type PolicyFormAdd = { type: 'add' };
 type PolicyFormEdit = { type: 'edit'; policy: Policy };

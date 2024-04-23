@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import Code, { CodeProps } from './Code';
 
 const defaultProps: CodeProps = {

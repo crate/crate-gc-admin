@@ -1,6 +1,6 @@
 import { matchRequestUrl } from 'msw';
-import server from '.';
-import { HttpMethod } from '../../src/utils/api';
+import server from 'test/msw/server';
+import { HttpMethod } from 'utils/api';
 
 export const getRequestSpy = (method: HttpMethod, url: string) => {
   const requestSpy = jest.fn();

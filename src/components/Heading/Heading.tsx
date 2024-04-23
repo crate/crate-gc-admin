@@ -1,6 +1,6 @@
 import React from 'react';
 import { HEADING_LEVELS } from './HeadingConstants';
-import { ValueOf } from '../../types/utils';
+import { ValueOf } from 'types/utils';
 import { cn } from 'utils';
 
 type HeadingLevel = ValueOf<typeof HEADING_LEVELS>;

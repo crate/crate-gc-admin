@@ -2,7 +2,7 @@ import { RestHandler, rest } from 'msw';
 import policies from 'test/__mocks__/policies';
 import { policiesLogs, policiesLogsWithName } from 'test/__mocks__/policiesLogs';
 import { policy, policyEligibleColumns, policyPreview } from 'test/__mocks__/policy';
-import handlerFactory from '../handlerFactory';
+import handlerFactory from 'test/msw/handlerFactory';
 
 const getAllPolicy: RestHandler = rest.get('/api/policies/', (_, res, ctx) => {
   return res(ctx.status(200), ctx.json(policies));

@@ -1,4 +1,4 @@
-import { ConnectionStatus, useGCContext } from '../../contexts';
+import { ConnectionStatus, useGCContext } from 'contexts';
 
 function renderStatus(status: ConnectionStatus) {
   const prefix = 'GC';

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '../../../test/testUtils';
+import { render, screen, waitFor } from 'test/testUtils';
 import CrateTable, { CrateTableProps } from './CrateTable';
 
 type DataType = {

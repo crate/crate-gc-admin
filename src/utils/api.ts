@@ -1,4 +1,4 @@
-import useSessionStore, { NotificationType } from '../state/session';
+import useSessionStore, { NotificationType } from 'state/session';
 import type {
   AxiosError,
   AxiosInstance,

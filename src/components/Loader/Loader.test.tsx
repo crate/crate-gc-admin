@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import Loader, { LoaderProps } from './Loader';
 
 const defaultProps: LoaderProps = {

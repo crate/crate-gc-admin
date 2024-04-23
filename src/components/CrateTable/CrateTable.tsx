@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Spin, Table } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import Button from '../Button';
-import NoDataView from '../NoDataView';
 import { RenderExpandIcon } from 'rc-table/lib/interface';
+import Button from 'components/Button';
+import NoDataView from 'components/NoDataView';
 
 type TablePropsType<RecordType extends object> = React.ComponentProps<
   typeof Table<RecordType>

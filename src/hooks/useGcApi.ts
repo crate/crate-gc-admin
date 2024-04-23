@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useGCContext } from '../contexts';
+import { useGCContext } from 'contexts';
 
 export default function useGcApi() {
   const { gcUrl, onGcApiJwtExpire, sessionCookieName } = useGCContext();

@@ -1,14 +1,14 @@
 import moment from 'moment';
-import { scheduledJobLogs } from '../../../../test/__mocks__/scheduledJobLogs';
-import scheduledJobs from '../../../../test/__mocks__/scheduledJobs';
-import server, { customScheduledJobLogsGetResponse } from '../../../../test/msw';
-import { customScheduledJobGetResponse } from '../../../../test/msw';
-import { getRequestSpy, render, screen, waitFor } from '../../../../test/testUtils';
-import { Job, JobLog } from '../../../types';
-import { cronParser } from '../../../utils/cron';
+import { scheduledJobLogs } from 'test/__mocks__/scheduledJobLogs';
+import scheduledJobs from 'test/__mocks__/scheduledJobs';
+import server, { customScheduledJobLogsGetResponse } from 'test/msw';
+import { customScheduledJobGetResponse } from 'test/msw';
+import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
+import { Job, JobLog } from 'types';
+import { cronParser } from 'utils/cron';
 import JobsTable, { JOBS_TABLE_PAGE_SIZE } from './JobsTable';
 import { DATE_FORMAT } from 'constants/defaults';
-import { navigateMock } from '../../../../__mocks__/react-router-dom';
+import { navigateMock } from '__mocks__/react-router-dom';
 import { sortByString } from 'utils';
 
 const setup = () => {

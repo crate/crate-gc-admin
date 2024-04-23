@@ -2,7 +2,7 @@
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { QUERY_PARAM_KEY_ACTIVE_TAB } from '../../constants/defaults';
+import { QUERY_PARAM_KEY_ACTIVE_TAB } from 'constants/defaults';
 
 export type CrateTabsProps = TabsProps & {
   items: NonNullable<TabsProps['items']>;

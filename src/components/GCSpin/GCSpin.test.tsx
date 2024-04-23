@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import GCSpin, { GCSpinParams } from './GCSpin.tsx';
 
 const defaultProps: GCSpinParams = {

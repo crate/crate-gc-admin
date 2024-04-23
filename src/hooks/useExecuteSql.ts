@@ -1,8 +1,8 @@
-import { QueryResults } from '../types/query';
-import { apiPost } from '../utils/api';
-import useGcApi from './useGcApi';
-import useCrateApi from './useCrateApi';
-import { ConnectionStatus, useGCContext } from '../contexts';
+import { QueryResults } from 'types/query';
+import { apiPost } from 'utils/api';
+import useGcApi from 'hooks/useGcApi';
+import useCrateApi from 'hooks/useCrateApi';
+import { ConnectionStatus, useGCContext } from 'contexts';
 
 export type ExecuteSqlResult = {
   data: QueryResults | null;

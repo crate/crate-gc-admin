@@ -8,12 +8,12 @@ import 'ace-builds/src-min-noconflict/ext-language_tools';
 import './mode-cratedb';
 import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
-import Button from '../../components/Button';
-import cn from '../../utils/cn';
+import Button from 'components/Button';
+import { cn } from 'utils';
 import { annotate } from './annotationUtils';
-import { QueryResults } from '../../types/query';
+import { QueryResults } from 'types/query';
 import { SchemaTableColumn } from 'types/cratedb';
-import { useGetTableColumnsQuery } from '../../hooks/queryHooks';
+import { useGetTableColumnsQuery } from 'hooks/queryHooks';
 
 type SQLEditorProps = {
   value?: string | undefined | null;

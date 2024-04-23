@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { render, screen, waitFor } from '../../../test/testUtils';
+import { render, screen, waitFor } from 'test/testUtils';
 import DisplayUTCDate from '.';
 import { DisplayUTCDateProps } from './DisplayUTCDate';
 

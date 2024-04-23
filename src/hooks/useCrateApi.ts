@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useGCContext } from '../contexts';
+import { useGCContext } from 'contexts';
 
 export default function useCrateApi() {
   const { crateUrl } = useGCContext();

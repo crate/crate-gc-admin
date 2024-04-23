@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from 'react';
 import { render as rtlRender, screen as rtlScreen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
-import { ConnectionStatus, GCContextProvider } from '../../src/contexts';
+import { ConnectionStatus, GCContextProvider } from 'contexts';
 import { SWRConfig } from 'swr';
-import { GRAND_CENTRAL_TOKEN_COOKIE } from '../../src/constants/cookie';
+import { GRAND_CENTRAL_TOKEN_COOKIE } from 'constants/cookie';
 
 type RenderType = {
   user: UserEvent;

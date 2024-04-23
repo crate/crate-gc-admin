@@ -1,16 +1,10 @@
-import {
-  useGetAllocations,
-  useGetCluster,
-  useGetQueryStats,
-} from '../../hooks/swrHooks';
-import GCSpin from '../../components/GCSpin';
-import Heading from '../../components/Heading';
+import { useGetAllocations, useGetCluster, useGetQueryStats } from 'hooks/swrHooks';
+import { GCSpin, Heading, GCChart } from 'components';
 import { Statistic, Tag } from 'antd';
-import { ClusterStatusColor, getClusterStatus } from '../../utils/statusChecks';
-import { formatHumanReadable, formatNum } from '../../utils/numbers';
-import GCChart from '../../components/GCChart';
-import useSessionStore from '../../state/session';
-import { STATS_PERIOD } from '../../components/StatsUpdater/StatsUpdater';
+import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
+import { formatHumanReadable, formatNum } from 'utils/numbers';
+import useSessionStore from 'state/session';
+import { STATS_PERIOD } from 'components/StatsUpdater/StatsUpdater';
 
 function Overview() {
   const { load } = useSessionStore();

@@ -1,7 +1,7 @@
 import { navigateMock } from '__mocks__/react-router-dom';
-import scheduledJob from '../../../../test/__mocks__/scheduledJob';
-import { getRequestSpy, render, screen, waitFor } from '../../../../test/testUtils';
-import { Job } from '../../../types';
+import scheduledJob from 'test/__mocks__/scheduledJob';
+import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
+import { Job } from 'types';
 import JobForm from './JobForm';
 
 const setupAdd = () => {

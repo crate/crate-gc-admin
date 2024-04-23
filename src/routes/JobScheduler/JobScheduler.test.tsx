@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '../../../test/testUtils';
+import { render, screen, waitFor, within } from 'test/testUtils';
 import JobScheduler from '.';
 import { useParams } from '__mocks__/react-router-dom';
 import scheduledJobs from 'test/__mocks__/scheduledJobs';

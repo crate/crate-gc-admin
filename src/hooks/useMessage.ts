@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { TOAST_NOTIFICATION_DURATION } from '../constants/defaults';
+import { TOAST_NOTIFICATION_DURATION } from 'constants/defaults';
 
 /*
 

@@ -1,7 +1,7 @@
-import { useGetNodeStatus } from '../../hooks/swrHooks';
+import { useGetNodeStatus } from 'hooks/swrHooks';
 import { useEffect, useState } from 'react';
-import useSessionStore from '../../state/session';
-import { NodeStatusInfo } from '../../types/cratedb';
+import useSessionStore from 'state/session';
+import { NodeStatusInfo } from 'types/cratedb';
 
 export const STATS_PERIOD = 15 * 60 * 1000;
 

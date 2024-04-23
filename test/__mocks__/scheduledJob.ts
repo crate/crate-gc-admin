@@ -1,4 +1,4 @@
-import { Job } from '../../src/types';
+import { Job } from 'types';
 
 const scheduledJob: Job = {
   cron: '* * * * *',

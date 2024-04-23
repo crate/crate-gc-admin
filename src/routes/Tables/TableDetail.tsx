@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { Table, Tabs, Tag } from 'antd';
-import Button from '../../components/Button';
-import Heading from '../../components/Heading';
-import routes from '../../constants/routes';
+import { Button, Heading } from 'components';
+import routes from 'constants/routes';
 import { format as formatSQL } from 'sql-formatter';
 import {
   useGetTableInformationQuery,
   useShowCreateTableQuery,
-} from '../../hooks/queryHooks';
-import { TableInfo, TableListEntry } from '../../types/cratedb';
+} from 'hooks/queryHooks';
+import { TableInfo, TableListEntry } from 'types/cratedb';
 
 function TableDetail({
   activeTable,

@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import SyntaxHighlighter, { SyntaxHighlighterProps } from './SyntaxHighlighter';
 
 const defaultProps: SyntaxHighlighterProps = {

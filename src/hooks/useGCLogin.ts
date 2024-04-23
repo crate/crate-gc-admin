@@ -1,4 +1,4 @@
-import { apiGet } from '../utils/api';
+import { apiGet } from 'utils/api';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 

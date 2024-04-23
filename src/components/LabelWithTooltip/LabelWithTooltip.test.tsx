@@ -1,4 +1,4 @@
-import { render, screen } from '../../../test/testUtils';
+import { render, screen } from 'test/testUtils';
 import LabelWithTooltip, { TLabelWithTooltip } from './LabelWithTooltip';
 
 const defaultProps: TLabelWithTooltip = {

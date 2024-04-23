@@ -11,7 +11,7 @@ import {
 } from 'types';
 import { TableListEntry } from 'types/cratedb';
 import { apiPost } from 'utils';
-import { isTargetDeleted } from '../utils/policies';
+import { isTargetDeleted } from '../tablePoliciesUtils/policies';
 
 const getPreview = async (gcApi: AxiosInstance, policy: TPolicyPreviewBody) => {
   const preview = await apiPost<EligibleTablesApiOutput>(

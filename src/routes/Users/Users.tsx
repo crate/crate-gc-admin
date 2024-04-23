@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
-import Heading from '../../components/Heading';
+import { Heading } from 'components';
 import UserInfo from './UserInfo';
-import { useGetCurrentUserQuery, useGetUsersQuery } from '../../hooks/queryHooks';
-import { User } from '../../types/cratedb';
+import { useGetCurrentUserQuery, useGetUsersQuery } from 'hooks/queryHooks';
+import { User } from 'types/cratedb';
 
 function Users() {
   const getCurrentUser = useGetCurrentUserQuery();
