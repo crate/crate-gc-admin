@@ -7,11 +7,9 @@ export type Job = {
   enabled: boolean;
   sql: string;
   next_run_time?: string;
-};
-
-export type EnrichedJob = Job & {
-  last_execution?: JobLog;
   running: boolean;
+  last_job_logs: JobLog[] | null;
+  last_execution: JobLog | null;
 };
 
 export type TJobLogStatementError = {

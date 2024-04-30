@@ -8,6 +8,9 @@ const scheduledJobs: Job[] = [
     name: 'Test',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'SELECT 1;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -16,6 +19,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 6',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'SELECT 6;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -24,6 +30,9 @@ const scheduledJobs: Job[] = [
     name: 'Test 3',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'SELECT 3;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -32,6 +41,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 2',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'SELECT 1;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -40,6 +52,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 5',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'SELECT 5;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -48,6 +63,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 41',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'select 4;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -56,6 +74,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 42',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'select 4;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -64,6 +85,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 7',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'select 4;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -72,6 +96,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 48',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'select 4;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -80,6 +107,9 @@ const scheduledJobs: Job[] = [
     name: 'Job 009',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'select 4;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
   {
     cron: '* * * * *',
@@ -88,6 +118,9 @@ const scheduledJobs: Job[] = [
     name: 'New Job 009',
     next_run_time: '2024-01-19T10:25:00+00:00',
     sql: 'select 4;',
+    running: false,
+    last_job_logs: null,
+    last_execution: null,
   },
 ].sort((a: Job, b: Job) => {
   if (a.name < b.name) {

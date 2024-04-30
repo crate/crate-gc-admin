@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useGCGetScheduledJobEnriched, useGCGetScheduledJobs } from 'hooks/swrHooks';
-import { EnrichedJob, TJobLogStatementError } from 'types';
+import { useGCGetScheduledJobs } from 'hooks/swrHooks';
+import { Job, TJobLogStatementError } from 'types';
 import useGcApi from 'hooks/useGcApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { ColumnDef, Table } from '@tanstack/react-table';
@@ -32,9 +32,9 @@ type TableAdditionalState = {
 
 type GetColumnsDefinitionProps = {
   setError: (error: TJobLogStatementError & { timestamp: string }) => void;
-  editJob: (job: EnrichedJob) => void;
-  deleteJob: (job: EnrichedJob) => void;
-  toggleJobActivation: (job: EnrichedJob, table: Table<EnrichedJob>) => void;
+  editJob: (job: Job) => void;
+  deleteJob: (job: Job) => void;
+  toggleJobActivation: (job: Job, table: Table<Job>) => void;
   showLoaderDelete: boolean;
 };
 const getColumnsDefinition = ({
@@ -44,7 +44,7 @@ const getColumnsDefinition = ({
   showLoaderDelete,
   toggleJobActivation,
 }: GetColumnsDefinitionProps) => {
-  const columns: ColumnDef<EnrichedJob>[] = [
+  const columns: ColumnDef<Job>[] = [
     {
       accessorKey: 'enabled',
       header: 'Active',
@@ -255,17 +255,23 @@ export default function JobsTable() {
     mutate: mutateScheduledJobs,
     isLoading: isLoadingJobs,
   } = useGCGetScheduledJobs();
-  const {
-    jobsToReturn: scheduledJobsEnriched,
-    setJobsToReturn: setScheduledJobsEnriched,
-  } = useGCGetScheduledJobEnriched(scheduledJobs || []);
+
+  const enrichedScheduledJobs = scheduledJobs?.map(job => ({
+    ...job,
+    running:
+      job.last_job_logs && job.last_job_logs[0] && job.last_job_logs[0].end === null
+        ? true
+        : false,
+    last_execution: (job.last_job_logs ?? []).filter(log => log.end !== null)[0],
+  }));
+
   const gcApi = useGcApi();
 
   const closeErrorDialog = () => {
     setErrorDialogContent(null);
   };
 
-  const handleDeleteJob = async (job: EnrichedJob) => {
+  const handleDeleteJob = async (job: Job) => {
     setShowLoaderDelete(true);
 
     await apiDelete(gcApi, `/api/scheduled-jobs/${job.id}`, null, {
@@ -276,10 +282,7 @@ export default function JobsTable() {
     setShowLoaderDelete(false);
   };
 
-  const toggleJobActivation = async (
-    job: EnrichedJob,
-    table: Table<EnrichedJob>,
-  ) => {
+  const toggleJobActivation = async (job: Job, table: Table<Job>) => {
     table.setState(old => {
       return {
         ...old,
@@ -295,14 +298,13 @@ export default function JobsTable() {
       sql: job.sql,
     });
 
-    const newData = scheduledJobsEnriched;
-    newData.forEach(el => {
+    const newData = enrichedScheduledJobs;
+    newData?.forEach(el => {
       if (el.id === job.id) {
         el.enabled = !el.enabled;
       }
     });
 
-    setScheduledJobsEnriched(newData);
     await mutateScheduledJobs();
     table.setState(old => {
       return {
@@ -339,10 +341,10 @@ export default function JobsTable() {
         <DataTable
           elementsPerPage={JOBS_TABLE_PAGE_SIZE}
           noResultsLabel="No jobs found."
-          data={scheduledJobsEnriched.sort(sortByString('name'))}
+          data={(enrichedScheduledJobs ?? []).sort(sortByString('name'))}
           columns={getColumnsDefinition({
             setError: setErrorDialogContent,
-            editJob: (job: EnrichedJob) => {
+            editJob: (job: Job) => {
               navigate(job.id);
             },
             deleteJob: handleDeleteJob,
