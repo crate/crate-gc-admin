@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2024-04-17 - 0.7.2
+## 2024-04-30 - 0.7.2
 
 - Improve Nodes page UI/UX.
 - Fix DataTable filtering to strictly check the filter element.
