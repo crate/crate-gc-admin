@@ -3,7 +3,6 @@ import swrCORSFetch from 'utils/swrCORSFetch';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'utils/api';
 import {
-  EnrichedJob,
   EnrichedPolicy,
   Job,
   JobLog,
@@ -67,53 +66,6 @@ export const useGCGetScheduledJobsLogs = () => {
       refreshInterval: 30 * 1000,
     },
   );
-};
-
-// NOTE: This Hook will be removed when API will return the last_execution
-export const useGCGetScheduledJobEnriched = (jobs: Job[]) => {
-  const [jobsToReturn, setJobsToReturn] = useState<EnrichedJob[]>([]);
-  const gcApi = useGcApi();
-
-  useEffect(() => {
-    const promises = jobs.map(async (job: Job) => {
-      const lastLog = await apiGet<JobLog[]>(
-        gcApi,
-        `/api/scheduled-jobs/${job.id}/log?limit=2`,
-        {
-          credentials: 'include',
-        },
-      );
-
-      return lastLog.data ? lastLog.data : undefined;
-    });
-
-    Promise.all(promises).then(logResults => {
-      const newJobs: EnrichedJob[] = jobs.map((job, jobIndex) => {
-        const jobLogs = logResults[jobIndex];
-        if (typeof jobLogs === 'undefined') {
-          return {
-            ...job,
-            last_execution: undefined,
-            running: false,
-          };
-        }
-
-        const lastLog = jobLogs.filter(log => log.end !== null)[0];
-
-        return {
-          ...job,
-          last_execution: lastLog,
-          running: jobLogs && jobLogs[0] && jobLogs[0].end === null ? true : false,
-        };
-      });
-
-      if (JSON.stringify(newJobs) !== JSON.stringify(jobsToReturn)) {
-        setJobsToReturn(newJobs);
-      }
-    });
-  }, [jobs]);
-
-  return { jobsToReturn, setJobsToReturn };
 };
 
 // NOTE: This Hook will be removed when API will return the last_execution

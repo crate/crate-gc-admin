@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { scheduledJobLogs } from 'test/__mocks__/scheduledJobLogs';
 import scheduledJobs from 'test/__mocks__/scheduledJobs';
-import server, { customScheduledJobLogsGetResponse } from 'test/msw';
+import server from 'test/msw';
 import { customScheduledJobGetResponse } from 'test/msw';
 import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
 import { Job, JobLog } from 'types';
@@ -130,11 +130,17 @@ describe('The "JobsTable" component', () => {
     });
 
     it('displays "Running" for running jobs', async () => {
-      const log: JobLog = {
-        ...scheduledJobLogs[0],
-        end: null,
+      const job: Job = {
+        ...scheduledJobs[0],
+        last_job_logs: [
+          {
+            ...scheduledJobLogs[0],
+            end: null,
+          },
+        ],
       };
-      server.use(customScheduledJobLogsGetResponse([log]));
+      server.use(customScheduledJobGetResponse([job]));
+
       setup();
 
       await waitForTableRender();
@@ -154,15 +160,23 @@ describe('The "JobsTable" component', () => {
   });
 
   describe('the "Last Execution" cell', () => {
+    const lastJobLog: JobLog = scheduledJobLogs[0];
+
+    beforeEach(() => {
+      const job: Job = {
+        ...scheduledJobs[0],
+        last_job_logs: [lastJobLog],
+      };
+      server.use(customScheduledJobGetResponse([job]));
+    });
+
     it('renders the last execution date and time along with time difference', async () => {
       // Render only one job
-      const log: JobLog = scheduledJobLogs[0];
-
       setup();
 
       await waitForTableRender();
 
-      const formattedDate = moment.utc(log.end).format(DATE_FORMAT);
+      const formattedDate = moment.utc(lastJobLog.end).format(DATE_FORMAT);
       expect(screen.getByTestId('last-execution')).toHaveTextContent(formattedDate);
       expect(screen.getByTestId('last-execution-difference')).toBeInTheDocument();
     });
@@ -194,17 +208,24 @@ describe('The "JobsTable" component', () => {
 
     it('displays red error icon if last execution has an error', async () => {
       // Show only one job with errors
-      const log: JobLog = {
-        ...scheduledJobLogs[0],
-        error: 'Query error',
-        statements: {
-          '0': {
-            error: 'QUERY_ERROR',
-            sql: 'SELECT 1;',
+      const lastJobLog: JobLog = scheduledJobLogs[0];
+
+      const job: Job = {
+        ...scheduledJobs[0],
+        last_job_logs: [
+          {
+            ...lastJobLog,
+            error: 'Query error',
+            statements: {
+              '0': {
+                error: 'QUERY_ERROR',
+                sql: 'SELECT 1;',
+              },
+            },
           },
-        },
+        ],
       };
-      server.use(customScheduledJobLogsGetResponse([log]));
+      server.use(customScheduledJobGetResponse([job]));
 
       setup();
 
@@ -217,13 +238,35 @@ describe('The "JobsTable" component', () => {
     });
 
     it('displays - for job that have no executions', async () => {
-      server.use(customScheduledJobLogsGetResponse([]));
+      const job: Job = scheduledJobs[0];
+
+      server.use(customScheduledJobGetResponse([job]));
 
       setup();
 
       await waitForTableRender();
 
       expect(screen.getByText('-')).toBeInTheDocument();
+    });
+
+    it('displays last execution of the next to last if last is running', async () => {
+      const lastJobLog: JobLog = scheduledJobLogs[0];
+      const nextToLastJobLog: JobLog = scheduledJobLogs[1];
+
+      const job: Job = {
+        ...scheduledJobs[0],
+        last_job_logs: [{ ...lastJobLog, end: null }, nextToLastJobLog],
+      };
+      server.use(customScheduledJobGetResponse([job]));
+      setup();
+
+      await waitForTableRender();
+
+      expect(screen.getByText('RUNNING')).toBeInTheDocument();
+
+      const formattedDate = moment.utc(nextToLastJobLog.end).format(DATE_FORMAT);
+      expect(screen.getByTestId('last-execution')).toHaveTextContent(formattedDate);
+      expect(screen.getByTestId('last-execution-difference')).toBeInTheDocument();
     });
   });
 
@@ -244,6 +287,7 @@ describe('The "JobsTable" component', () => {
         ...scheduledJobs[0],
         enabled: false,
         next_run_time: undefined,
+        last_job_logs: [scheduledJobLogs[0]],
       };
       server.use(customScheduledJobGetResponse([job]));
 
@@ -252,6 +296,13 @@ describe('The "JobsTable" component', () => {
       await waitForTableRender();
 
       expect(screen.getByText('-')).toBeInTheDocument();
+      const formattedDate = moment
+        .utc(scheduledJobs[0].next_run_time)
+        .format(DATE_FORMAT);
+      expect(screen.queryByText(formattedDate)).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('next-execution-difference'),
+      ).not.toBeInTheDocument();
     });
   });
 
