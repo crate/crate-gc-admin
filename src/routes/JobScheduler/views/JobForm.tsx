@@ -292,7 +292,6 @@ export default function JobForm(props: JobFormProps) {
                 <Form.Item>
                   <Form.Label>
                     SQL <span className="text-red-600">*</span>
-                    <div>{field.value}</div>
                   </Form.Label>
                   <Form.Control>
                     <div className="h-72 rounded border-2">
