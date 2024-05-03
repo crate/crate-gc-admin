@@ -39,11 +39,7 @@ const routes: Route[] = [
   },
   {
     path: '/sql',
-    element: (
-      <div className="p-4">
-        <SQLConsole />
-      </div>
-    ),
+    element: <SQLConsole />,
     label: 'SQL',
     key: 'sql',
   },

@@ -8,6 +8,7 @@ export type CrateTabsProps = TabsProps & {
   items: NonNullable<TabsProps['items']>;
   defaultActiveKey: NonNullable<TabsProps['defaultActiveKey']>;
   queryParamKeyActiveTab?: string;
+  indentTabBar?: boolean; // indent the tabs (but not the content) for situations where the tabs are pushed up against a container
 };
 
 function CrateTabs({
@@ -15,6 +16,7 @@ function CrateTabs({
   activeKey,
   items,
   queryParamKeyActiveTab = QUERY_PARAM_KEY_ACTIVE_TAB,
+  indentTabBar = false,
   ...rest
 }: CrateTabsProps) {
   const location = useLocation();
@@ -55,6 +57,20 @@ function CrateTabs({
     searchParams.set(queryParamKeyActiveTab, key);
     navigate(`?${searchParams.toString()}`);
   };
+
+  if (indentTabBar) {
+    return (
+      <div className="ant-tabs-nav-indent">
+        <Tabs
+          defaultActiveKey={defaultActiveKey}
+          items={items}
+          {...restProps}
+          onTabClick={handleTabClick}
+          animated
+        />
+      </div>
+    );
+  }
 
   return (
     <Tabs

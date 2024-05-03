@@ -6,16 +6,16 @@ import { Job, JobInput } from 'types';
 import useGcApi from 'hooks/useGcApi';
 import useExecuteSql from 'hooks/useExecuteSql';
 import { useNavigate } from 'react-router-dom';
-import { QueryResults } from 'types/query';
+import { QueryResult, QueryResults } from 'types/query';
 import {
   Button,
+  Chip,
   Form,
   Grid,
   Input,
   LabelWithTooltip,
   Loader,
   SQLEditor,
-  SQLResults,
   Switch,
   Text,
 } from 'components';
@@ -117,11 +117,54 @@ export default function JobForm(props: JobFormProps) {
     });
   };
 
-  const renderResults = () => {
+  const renderResult = () => {
+    const drawResult = (result: QueryResult, index?: number) => {
+      if (result.error) {
+        return (
+          <div className="flex h-8 items-center gap-2 text-sm">
+            {index ? (
+              <div className="w-14 text-xs text-crate-border-mid">
+                Result #{index}
+              </div>
+            ) : null}
+            <Chip className="bg-red-600 uppercase text-white">Error</Chip>
+            <a
+              href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
+              target="_blank"
+            >
+              {result.error?.code}
+            </a>
+            <span className="font-mono text-xs">{result.error?.message}</span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex h-8 items-center gap-2 text-sm">
+          {index ? (
+            <div className="w-14 text-xs text-crate-border-mid">Result #{index}</div>
+          ) : null}
+          <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
+          {`${result.rowcount} rows, ${(Math.round(result?.duration) / 1000).toFixed(3)} seconds`}
+        </div>
+      );
+    };
+
     if (queryRunning) {
       return <Loader />;
     }
-    return <SQLResults results={queryResults} />;
+
+    if (!queryResults) {
+      return null;
+    }
+
+    return (
+      <div className="space-y-1 py-2">
+        {Array.isArray(queryResults)
+          ? queryResults.map((r, i) => drawResult(r, i + 1))
+          : drawResult(queryResults)}
+      </div>
+    );
   };
 
   if (showLoader) {
@@ -147,13 +190,13 @@ export default function JobForm(props: JobFormProps) {
               control={form.control}
               name="name"
               rules={{
-                required: 'Job Name is a required field.',
+                required: 'Job name is a required field.',
               }}
               render={({ field }) => {
                 return (
                   <Form.Item>
                     <Form.Label htmlFor="name">
-                      Job Name <span className="text-red-600">*</span>
+                      Job name <span className="text-red-600">*</span>
                     </Form.Label>
                     <Form.Control>
                       <Input {...field} id="name" />
@@ -249,18 +292,21 @@ export default function JobForm(props: JobFormProps) {
                 <Form.Item>
                   <Form.Label>
                     SQL <span className="text-red-600">*</span>
+                    <div>{field.value}</div>
                   </Form.Label>
                   <Form.Control>
-                    <SQLEditor
-                      results={queryResults}
-                      localStorageKey="sql-job-editor"
-                      value={field.value}
-                      onChange={query => {
-                        form.setValue('sql', query, { shouldValidate: true });
-                      }}
-                      onExecute={executeQuery}
-                      errorMessage={<Form.Message />}
-                    />
+                    <div className="h-72 rounded border-2">
+                      <SQLEditor
+                        results={queryResults}
+                        localStorageKey="sql-job-editor"
+                        value={field.value}
+                        onChange={query => {
+                          form.setValue('sql', query, { shouldValidate: true });
+                        }}
+                        onExecute={executeQuery}
+                        errorMessage={<Form.Message />}
+                      />
+                    </div>
                   </Form.Control>
                 </Form.Item>
               );
@@ -268,16 +314,17 @@ export default function JobForm(props: JobFormProps) {
           />
         </div>
 
-        <div className="flex w-full flex-col justify-end gap-2 md:flex-row">
-          <Button kind={Button.kinds.SECONDARY} onClick={backToJobList}>
-            Cancel
-          </Button>
-          <Button kind={Button.kinds.PRIMARY} type={Button.types.SUBMIT}>
-            Save
-          </Button>
+        <div className="flex justify-between gap-4">
+          <div>{renderResult()}</div>
+          <div className="flex flex-col items-start justify-end gap-2 md:flex-row">
+            <Button kind={Button.kinds.SECONDARY} onClick={backToJobList}>
+              Cancel
+            </Button>
+            <Button kind={Button.kinds.PRIMARY} type={Button.types.SUBMIT}>
+              {type === 'add' ? 'Add job' : 'Update job'}
+            </Button>
+          </div>
         </div>
-
-        <div className="mt-4">{renderResults()}</div>
       </form>
     </Form.FormProvider>
   );
