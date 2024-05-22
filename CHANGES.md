@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Rework policy condition and add weeks as interval unit.
+
 ## 2024-05-21 - 0.8.0
 
 - Improve UX of SQL console / SQL editor by making the panels resizable.
