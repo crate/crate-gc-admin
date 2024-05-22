@@ -242,74 +242,13 @@ export default function PolicyForm(props: PolicyFormProps) {
                 The affected partitions are the ones that satisfy the condition on
                 the specified time column.
               </Text>
-              {/* partitioning.column_name */}
-              <Form.Field
-                control={form.control}
-                name="partitioning.column_name"
-                render={({ field }) => {
-                  return (
-                    <Form.Item className="mt-2">
-                      <div>
-                        <Form.Label>
-                          Time Column <span className="text-red-600">*</span>
-                        </Form.Label>
-                        <Text pale className="text-xs leading-4">
-                          The time column will be used with the condition to select
-                          which data will be affected. This column should be preset
-                          in all the tables/schemas that the policy is using.
-                        </Text>
-                      </div>
-                      <Form.Control>
-                        <span className="flex items-center gap-2">
-                          <Select.Root
-                            label="Column Name"
-                            value={field.value}
-                            name="select-column-name"
-                            disabled={eligibleColumns.length === 0}
-                            onValueChange={(newValue: string) => {
-                              form.setValue('partitioning.column_name', newValue, {
-                                shouldValidate: true,
-                              });
-                            }}
-                          >
-                            <Select.Content>
-                              {eligibleColumns.map(el => {
-                                return (
-                                  <Select.Item key={el.name} value={el.name}>
-                                    {el.name}
-                                  </Select.Item>
-                                );
-                              })}
-                            </Select.Content>
-                          </Select.Root>
-                          {loadingColumns && <Loader size={Loader.sizes.SMALL} />}
-                        </span>
-                      </Form.Control>
-                      {showColumnsWarning ? (
-                        <Form.Message
-                          className="flex gap-2 font-normal text-black"
-                          data-testid="column-warning"
-                        >
-                          <WarningOutlined className="text-orange-500" />
-                          <Text pale displayAs={Text.elements.SPAN}>
-                            The selected column is not part of all the selected
-                            targets. Consider creating multiple policies instead.
-                          </Text>
-                        </Form.Message>
-                      ) : (
-                        <Form.Message />
-                      )}
-                    </Form.Item>
-                  );
-                }}
-              />
-
-              {/* condition */}
               <Form.Field
                 control={form.control}
                 name="partitioning"
                 render={({ formState }) => {
                   const partitionValueError = formState.errors.partitioning?.value;
+                  const partitionColumnNameError =
+                    formState.errors.partitioning?.column_name;
 
                   return (
                     <div className="mt-2 flex flex-col gap-2">
@@ -323,36 +262,81 @@ export default function PolicyForm(props: PolicyFormProps) {
                         </Text>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <div className="flex flex-col gap-2">
-                          <Form.Field
-                            control={form.control}
-                            name="partitioning.operation"
-                            render={({ field }) => {
-                              const value = field.value;
-                              return (
-                                <>
-                                  <Form.Control>
+                        <Form.Field
+                          control={form.control}
+                          name="partitioning.column_name"
+                          render={({ field }) => {
+                            return (
+                              <>
+                                <Form.Control>
+                                  <span className="flex items-center gap-2">
                                     <Select.Root
-                                      label="Operation"
-                                      value={value}
-                                      name="select-operation"
-                                      onValueChange={(
-                                        newValue: TPolicyPartitioningOperation,
-                                      ) => {
-                                        field.onChange(newValue);
+                                      label="Column Name"
+                                      value={field.value}
+                                      name="select-column-name"
+                                      disabled={eligibleColumns.length === 0}
+                                      onValueChange={(newValue: string) => {
+                                        form.setValue(
+                                          'partitioning.column_name',
+                                          newValue,
+                                          {
+                                            shouldValidate: true,
+                                          },
+                                        );
                                       }}
                                     >
                                       <Select.Content>
-                                        <Select.Item value="<=">{'<='}</Select.Item>
-                                        <Select.Item value="<">{'<'}</Select.Item>
+                                        {eligibleColumns.map(el => {
+                                          return (
+                                            <Select.Item
+                                              key={el.name}
+                                              value={el.name}
+                                            >
+                                              {el.name}
+                                            </Select.Item>
+                                          );
+                                        })}
                                       </Select.Content>
                                     </Select.Root>
-                                  </Form.Control>
-                                </>
-                              );
-                            }}
-                          />
-                        </div>
+                                    {loadingColumns && (
+                                      <Loader size={Loader.sizes.SMALL} />
+                                    )}
+                                  </span>
+                                </Form.Control>
+                              </>
+                            );
+                          }}
+                        />
+                        <Form.Field
+                          control={form.control}
+                          name="partitioning.operation"
+                          render={({ field }) => {
+                            const value = field.value;
+                            return (
+                              <>
+                                <Form.Control>
+                                  <Select.Root
+                                    label="Operation"
+                                    value={value}
+                                    name="select-operation"
+                                    onValueChange={(
+                                      newValue: TPolicyPartitioningOperation,
+                                    ) => {
+                                      field.onChange(newValue);
+                                    }}
+                                  >
+                                    <Select.Content>
+                                      <Select.Item value="<">Older than</Select.Item>
+                                      <Select.Item value="<=">
+                                        Older than or exactly
+                                      </Select.Item>
+                                    </Select.Content>
+                                  </Select.Root>
+                                </Form.Control>
+                              </>
+                            );
+                          }}
+                        />
                         <Form.Field
                           control={form.control}
                           name="partitioning.value"
@@ -385,48 +369,65 @@ export default function PolicyForm(props: PolicyFormProps) {
                             );
                           }}
                         />
-                        <div className="flex flex-col gap-2">
-                          <Form.Field
-                            control={form.control}
-                            name="partitioning.unit"
-                            render={({ field }) => {
-                              const value = field.value;
-                              return (
-                                <>
-                                  <Form.Control>
-                                    <Select.Root
-                                      name="select-time-unit"
-                                      value={value}
-                                      label="Time Unit"
-                                      onValueChange={(
-                                        newValue: TPolicyPartitioningUnit,
-                                      ) => {
-                                        field.onChange(newValue);
-                                      }}
-                                    >
-                                      <Select.Content>
-                                        <Select.Item value="days">
-                                          day(s)
-                                        </Select.Item>
-                                        <Select.Item value="months">
-                                          month(s)
-                                        </Select.Item>
-                                        <Select.Item value="years">
-                                          year(s)
-                                        </Select.Item>
-                                      </Select.Content>
-                                    </Select.Root>
-                                  </Form.Control>
+                        <Form.Field
+                          control={form.control}
+                          name="partitioning.unit"
+                          render={({ field }) => {
+                            const value = field.value;
+                            return (
+                              <>
+                                <Form.Control>
+                                  <Select.Root
+                                    name="select-time-unit"
+                                    value={value}
+                                    label="Time Unit"
+                                    onValueChange={(
+                                      newValue: TPolicyPartitioningUnit,
+                                    ) => {
+                                      field.onChange(newValue);
+                                    }}
+                                  >
+                                    <Select.Content>
+                                      <Select.Item value="days">day(s)</Select.Item>
+                                      <Select.Item value="weeks">
+                                        week(s)
+                                      </Select.Item>
+                                      <Select.Item value="months">
+                                        month(s)
+                                      </Select.Item>
+                                      <Select.Item value="years">
+                                        year(s)
+                                      </Select.Item>
+                                    </Select.Content>
+                                  </Select.Root>
+                                </Form.Control>
 
-                                  <Form.Message />
-                                </>
-                              );
-                            }}
-                          />
-                        </div>
+                                <Form.Message />
+                              </>
+                            );
+                          }}
+                        />
                       </div>
                       {partitionValueError && (
                         <Form.Message>{partitionValueError.message}</Form.Message>
+                      )}
+                      {partitionColumnNameError && (
+                        <Form.Message>
+                          {partitionColumnNameError.message}
+                        </Form.Message>
+                      )}
+
+                      {showColumnsWarning && (
+                        <Form.Message
+                          className="flex gap-2 font-normal text-black"
+                          data-testid="column-warning"
+                        >
+                          <WarningOutlined className="text-orange-500" />
+                          <Text pale displayAs={Text.elements.SPAN}>
+                            The selected column is not part of all the selected
+                            targets. Consider creating multiple policies instead.
+                          </Text>
+                        </Form.Message>
                       )}
                     </div>
                   );
