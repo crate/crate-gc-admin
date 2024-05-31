@@ -1,5 +1,9 @@
 import { JobForm } from '../views';
 
-export default function CreateJob() {
-  return <JobForm type="add" />;
+type CreateJobProps = {
+  onCreateJob?: () => void;
+};
+
+export default function CreateJob({ onCreateJob }: CreateJobProps) {
+  return <JobForm type="add" onSave={onCreateJob} />;
 }

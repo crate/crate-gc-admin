@@ -3,7 +3,17 @@ import { Route, Routes } from 'react-router-dom';
 import { Heading, Text } from 'components';
 import { CreatePolicy, EditPolicy, Policies } from 'routes/TablePolicies/routes';
 
-export default function TablePolicies() {
+type TablePoliciesProps = {
+  onCreatePolicy?: () => void;
+  onDeletePolicy?: () => void;
+  onEditPolicy?: () => void;
+};
+
+export default function TablePolicies({
+  onCreatePolicy,
+  onDeletePolicy,
+  onEditPolicy,
+}: TablePoliciesProps) {
   const { headings } = useGCContext();
 
   return (
@@ -16,9 +26,15 @@ export default function TablePolicies() {
       )}
 
       <Routes>
-        <Route index element={<Policies />} />
-        <Route path="create" element={<CreatePolicy />} />
-        <Route path=":policyId" element={<EditPolicy />} />
+        <Route index element={<Policies onDeletePolicy={onDeletePolicy} />} />
+        <Route
+          path="create"
+          element={<CreatePolicy onCreatePolicy={onCreatePolicy} />}
+        />
+        <Route
+          path=":policyId"
+          element={<EditPolicy onEditPolicy={onEditPolicy} />}
+        />
       </Routes>
     </div>
   );

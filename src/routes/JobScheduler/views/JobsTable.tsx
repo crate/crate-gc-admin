@@ -243,8 +243,9 @@ const getColumnsDefinition = ({
 
   return columns;
 };
+type JobsTableProps = { onDeleteJob?: () => void };
 
-export default function JobsTable() {
+export default function JobsTable({ onDeleteJob }: JobsTableProps) {
   const navigate = useNavigate();
   const [errorDialogContent, setErrorDialogContent] = useState<
     (TJobLogStatementError & { timestamp: string }) | null
@@ -272,6 +273,9 @@ export default function JobsTable() {
   };
 
   const handleDeleteJob = async (job: Job) => {
+    if (onDeleteJob) {
+      onDeleteJob();
+    }
     setShowLoaderDelete(true);
 
     await apiDelete(gcApi, `/api/scheduled-jobs/${job.id}`, null, {

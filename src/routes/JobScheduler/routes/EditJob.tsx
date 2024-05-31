@@ -5,7 +5,11 @@ import useGcApi from 'hooks/useGcApi';
 import { useApiCall } from 'hooks/useApiCall';
 import { Job } from 'types';
 
-export default function EditJob() {
+type EditJobProps = {
+  onEditJob?: () => void;
+};
+
+export default function EditJob({ onEditJob }: EditJobProps) {
   const { jobId } = useParams();
   const gcApi = useGcApi();
   const { data: job, loading } = useApiCall<Job>({
@@ -14,5 +18,9 @@ export default function EditJob() {
     method: 'GET',
   });
 
-  return loading || !job ? <Loader /> : <JobForm type="edit" job={job} />;
+  return loading || !job ? (
+    <Loader />
+  ) : (
+    <JobForm type="edit" job={job} onSave={onEditJob} />
+  );
 }

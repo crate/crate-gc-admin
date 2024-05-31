@@ -204,7 +204,9 @@ const getColumnsDefinition = ({
   return columns;
 };
 
-export default function PoliciesTable() {
+type PoliciesTableProps = { onDeletePolicy?: () => void };
+
+export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
   const navigate = useNavigate();
   const gcApi = useGcApi();
   const [showLoaderDelete, setShowLoaderDelete] = useState(false);
@@ -219,6 +221,9 @@ export default function PoliciesTable() {
   } = useGCGetPoliciesEnriched(policies || []);
 
   const handleDelete = async (policy: EnrichedPolicy) => {
+    if (onDeletePolicy) {
+      onDeletePolicy();
+    }
     setShowLoaderDelete(true);
 
     await apiDelete(gcApi, `/api/policies/${policy.id}`, null);

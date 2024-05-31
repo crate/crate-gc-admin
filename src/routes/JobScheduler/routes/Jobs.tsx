@@ -1,12 +1,16 @@
 import { CrateTabs } from 'components';
 import { JobsTable, JobsLogs } from '../views';
 
-export default function Jobs() {
+type JobsProps = {
+  onDeleteJob?: () => void;
+};
+
+export default function Jobs({ onDeleteJob }: JobsProps) {
   return (
     <CrateTabs
       items={[
         {
-          children: <JobsTable />,
+          children: <JobsTable onDeleteJob={onDeleteJob} />,
           label: 'Overview',
           key: 'scheduled_overview',
         },
