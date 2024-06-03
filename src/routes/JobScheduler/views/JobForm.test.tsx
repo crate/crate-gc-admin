@@ -4,14 +4,20 @@ import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
 import { Job } from 'types';
 import JobForm from './JobForm';
 
-const setupAdd = () => {
-  return render(<JobForm type="add" />);
+const onSaveSpy = jest.fn();
+
+const setupAdd = (onSave?: () => void) => {
+  return render(<JobForm type="add" onSave={onSave} />);
 };
-const setupEdit = (job: Job) => {
-  return render(<JobForm type="edit" job={job} />);
+const setupEdit = (job: Job, onSave?: () => void) => {
+  return render(<JobForm type="edit" job={job} onSave={onSave} />);
 };
 
 describe('The "JobForm" component', () => {
+  afterEach(() => {
+    onSaveSpy.mockClear();
+  });
+
   it('displays an empty form', () => {
     setupAdd();
 
@@ -81,26 +87,46 @@ describe('The "JobForm" component', () => {
     });
   });
 
-  describe('the "Add job" button', () => {
-    it('creates a new job and goes back to jobs table', async () => {
-      const createJobSpy = getRequestSpy('POST', '/api/scheduled-jobs/');
-      const { user } = setupAdd();
+  describe('when type is "add"', () => {
+    describe('the "Add job" button', () => {
+      it('creates a new job and goes back to jobs table', async () => {
+        const createJobSpy = getRequestSpy('POST', '/api/scheduled-jobs/');
+        const { user } = setupAdd();
 
-      await user.type(screen.getByLabelText(/Job name/), 'JOB_NAME');
-      await user.type(screen.getByLabelText(/Schedule/), '* * * * *');
-      await user.type(screen.getByTestId('mocked-ace-editor'), 'SELECT 1;');
+        await user.type(screen.getByLabelText(/Job name/), 'JOB_NAME');
+        await user.type(screen.getByLabelText(/Schedule/), '* * * * *');
+        await user.type(screen.getByTestId('mocked-ace-editor'), 'SELECT 1;');
 
-      await user.click(screen.getByText('Add job'));
+        await user.click(screen.getByText('Add job'));
 
-      await waitFor(() => {
-        expect(createJobSpy).toHaveBeenCalled();
+        await waitFor(() => {
+          expect(createJobSpy).toHaveBeenCalled();
+        });
+
+        expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
       });
+    });
 
-      expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
+    describe('when an onSave event is passed to the form', () => {
+      it('calls the event handler', async () => {
+        const { user } = setupAdd(onSaveSpy);
+
+        await user.type(screen.getByLabelText(/Job name/), 'JOB_NAME');
+        await user.type(screen.getByLabelText(/Schedule/), '* * * * *');
+        await user.type(screen.getByTestId('mocked-ace-editor'), 'SELECT 1;');
+
+        await user.click(screen.getByText('Add job'));
+
+        expect(onSaveSpy).toHaveBeenCalled();
+      });
     });
   });
 
   describe('when type is "edit"', () => {
+    afterEach(() => {
+      onSaveSpy.mockClear();
+    });
+
     it('display a pre-filled form with job details', async () => {
       setupEdit(scheduledJob);
 
@@ -147,6 +173,27 @@ describe('The "JobForm" component', () => {
         });
 
         expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
+      });
+    });
+
+    describe('when an onSave event is passed to the form', () => {
+      it('calls the event handler', async () => {
+        const { user } = setupEdit(scheduledJob, onSaveSpy);
+
+        await user.click(screen.getByLabelText(/Job name/));
+        await user.clear(screen.getByLabelText(/Job name/));
+        await user.type(screen.getByLabelText(/Job name/), 'JOB_NAME');
+
+        await user.click(screen.getByLabelText(/Schedule/));
+        await user.clear(screen.getByLabelText(/Schedule/));
+        await user.type(screen.getByLabelText(/Schedule/), '* * * * *');
+
+        await user.click(screen.getByTestId('mocked-ace-editor'));
+        await user.clear(screen.getByTestId('mocked-ace-editor'));
+        await user.type(screen.getByTestId('mocked-ace-editor'), 'SELECT 1;');
+        await user.click(screen.getByText('Update job'));
+
+        expect(onSaveSpy).toHaveBeenCalled();
       });
     });
   });

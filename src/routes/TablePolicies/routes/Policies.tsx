@@ -1,12 +1,15 @@
 import { CrateTabs } from 'components';
 import { PoliciesLogs, PoliciesTable } from '../views';
 
-export default function Policies() {
+type PoliciesProps = {
+  onDeletePolicy?: () => void;
+};
+export default function Policies({ onDeletePolicy }: PoliciesProps) {
   return (
     <CrateTabs
       items={[
         {
-          children: <PoliciesTable />,
+          children: <PoliciesTable onDeletePolicy={onDeletePolicy} />,
           label: 'Overview',
           key: 'policies_overview',
         },

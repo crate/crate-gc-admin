@@ -38,12 +38,12 @@ import { ApiOutput, apiPost, apiPut } from 'utils';
 import useEligibleColumns from '../hooks/useEligibleColumns';
 import usePolicyPreview from '../hooks/usePolicyPreview';
 
-type PolicyFormAdd = { type: 'add' };
-type PolicyFormEdit = { type: 'edit'; policy: Policy };
+type PolicyFormAdd = { type: 'add'; onSave?: () => void };
+type PolicyFormEdit = { type: 'edit'; onSave?: () => void; policy: Policy };
 type PolicyFormProps = PolicyFormAdd | PolicyFormEdit;
 
 export default function PolicyForm(props: PolicyFormProps) {
-  const { type } = props;
+  const { type, onSave } = props;
   const navigate = useNavigate();
   const gcApi = useGcApi();
   const [showLoader, setShowLoader] = useState(false);
@@ -81,6 +81,10 @@ export default function PolicyForm(props: PolicyFormProps) {
   };
 
   const onSubmit: SubmitHandler<PolicyInput> = async (data: PolicyInput) => {
+    if (onSave) {
+      onSave();
+    }
+
     let result: ApiOutput<ApiError<PolicyInput> | Policy>;
 
     const policy = mapPolicyInputToPolicyWithoutId(data);

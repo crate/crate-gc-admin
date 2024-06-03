@@ -4,7 +4,9 @@ import { Loader, NoDataView, SQLEditor, SQLHistory, SQLResults } from 'component
 import useExecuteSql from 'hooks/useExecuteSql';
 import { QueryResults } from 'types/query';
 
-function SQLConsole() {
+type SQLConsoleProps = { onQuery?: () => void; onViewHistory?: () => void };
+
+function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
   const executeSql = useExecuteSql();
   const specifiedQuery = new URLSearchParams(location.search).get('q');
   const [results, setResults] = useState<QueryResults | undefined>(undefined);
@@ -25,6 +27,9 @@ function SQLConsole() {
   const execute = (sql: string) => {
     setRunning(true);
     setResults(undefined);
+    if (onQuery) {
+      onQuery();
+    }
 
     const stripSingleLineCommentsRegex = /^((\s)*--).*$/gm;
     executeSql(sql.replace(stripSingleLineCommentsRegex, '')).then(({ data }) => {
@@ -65,7 +70,12 @@ function SQLConsole() {
               onExecute={execute}
               localStorageKey={LOCAL_STORAGE_KEY}
               results={results}
-              setShowHistory={setShowHistory}
+              setShowHistory={() => {
+                if (onViewHistory) {
+                  onViewHistory();
+                }
+                setShowHistory;
+              }}
               value={currentQuery}
             />
           </div>

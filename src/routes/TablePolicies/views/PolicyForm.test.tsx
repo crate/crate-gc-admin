@@ -18,11 +18,13 @@ import { EligibleColumnsApiOutput, Policy } from 'types';
 import { policy } from 'test/__mocks__/policy';
 import { mapPolicyToPolicyInput } from '../tablePoliciesUtils/policies';
 
-const setupAdd = () => {
-  return render(<PolicyForm type="add" />);
+const onSaveSpy = jest.fn();
+
+const setupAdd = (onSave?: () => void) => {
+  return render(<PolicyForm type="add" onSave={onSave} />);
 };
-const setupEdit = (policy: Policy) => {
-  return render(<PolicyForm type="edit" policy={policy} />);
+const setupEdit = (policy: Policy, onSave?: () => void) => {
+  return render(<PolicyForm type="edit" policy={policy} onSave={onSave} />);
 };
 
 const waitForFormRender = async () => {
@@ -473,28 +475,50 @@ describe('The "PolicyForm" component', () => {
     });
   });
 
-  describe('the "Save" button', () => {
-    it('creates a new job and goes back to policies table', async () => {
-      const createPolicySpy = getRequestSpy('POST', '/api/policies/');
-      const { user } = setupAdd();
-      await waitForFormRender();
+  describe('when type is "add"', () => {
+    describe('the "Save" button', () => {
+      it('creates a new job and goes back to policies table', async () => {
+        const createPolicySpy = getRequestSpy('POST', '/api/policies/');
+        const { user } = setupAdd();
+        await waitForFormRender();
 
-      await user.type(screen.getByLabelText(/Policy Name/), 'POLICY_NAME');
+        await user.type(screen.getByLabelText(/Policy Name/), 'POLICY_NAME');
 
-      const tablesTree = screen.getByTestId('tables-tree');
-      await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
+        const tablesTree = screen.getByTestId('tables-tree');
+        await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
 
-      await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
+        await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 
-      await user.click(screen.getByTestId('deletePartition-enabled'));
+        await user.click(screen.getByTestId('deletePartition-enabled'));
 
-      await user.click(screen.getByText('Save'));
+        await user.click(screen.getByText('Save'));
 
-      await waitFor(() => {
-        expect(createPolicySpy).toHaveBeenCalled();
+        await waitFor(() => {
+          expect(createPolicySpy).toHaveBeenCalled();
+        });
+
+        expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
       });
+    });
 
-      expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
+    describe('when an onSave event is passed to the form', () => {
+      it('calls the event handler', async () => {
+        const { user } = setupAdd(onSaveSpy);
+        await waitForFormRender();
+
+        await user.type(screen.getByLabelText(/Policy Name/), 'POLICY_NAME');
+
+        const tablesTree = screen.getByTestId('tables-tree');
+        await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
+
+        await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
+
+        await user.click(screen.getByTestId('deletePartition-enabled'));
+
+        await user.click(screen.getByText('Save'));
+
+        expect(onSaveSpy).toHaveBeenCalled();
+      });
     });
   });
 
@@ -596,6 +620,26 @@ describe('The "PolicyForm" component', () => {
         });
 
         expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
+      });
+    });
+
+    describe('when an onSave event is passed to the form', () => {
+      it('calls the event handler', async () => {
+        const { user } = setupEdit(policy, onSaveSpy);
+        await waitForFormRender();
+
+        await user.type(screen.getByLabelText(/Policy Name/), 'POLICY_NAME_UPDATED');
+
+        await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
+
+        await user.click(screen.getByTestId('forceMerge-enabled'));
+        await user.type(screen.getByTestId('forceMerge-value'), '1');
+        await user.click(screen.getByTestId('setReplicas-enabled'));
+        await user.type(screen.getByTestId('setReplicas-value'), '1');
+
+        await user.click(screen.getByText('Save'));
+
+        expect(onSaveSpy).toHaveBeenCalled();
       });
     });
   });

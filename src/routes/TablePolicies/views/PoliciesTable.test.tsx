@@ -9,8 +9,10 @@ import { PolicyLog, Policy } from 'types';
 import { policiesLogs, policyErrorLog } from 'test/__mocks__/policiesLogs';
 import { sortByString } from 'utils';
 
-const setup = () => {
-  return render(<PoliciesTable />);
+const onDeleteSpy = jest.fn();
+
+const setup = (onDeletePolicy?: () => void) => {
+  return render(<PoliciesTable onDeletePolicy={onDeletePolicy} />);
 };
 
 const waitForTableRender = async () => {
@@ -271,6 +273,24 @@ describe('The "PoliciesTable" component', () => {
       await user.click(screen.getByText('OK'));
 
       expect(deletePolicySpy).toHaveBeenCalled();
+    });
+
+    describe('when an onDeletePolicy event is used', () => {
+      it('calls the event handler', async () => {
+        const { user, container } = setup(onDeleteSpy);
+
+        await waitForTableRender();
+
+        await user.click(container.getElementsByClassName('anticon-delete')[0]);
+
+        expect(
+          screen.getByText('Are you sure to delete this policy?'),
+        ).toBeInTheDocument();
+
+        await user.click(screen.getByText('OK'));
+
+        expect(onDeleteSpy).toHaveBeenCalled();
+      });
     });
   });
 });

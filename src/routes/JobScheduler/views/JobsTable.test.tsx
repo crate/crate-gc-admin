@@ -11,8 +11,10 @@ import { DATE_FORMAT } from 'constants/defaults';
 import { navigateMock } from '__mocks__/react-router-dom';
 import { sortByString } from 'utils';
 
-const setup = () => {
-  return render(<JobsTable />);
+const onDeleteSpy = jest.fn();
+
+const setup = (onDeleteJob?: () => void) => {
+  return render(<JobsTable onDeleteJob={onDeleteJob} />);
 };
 
 const waitForTableRender = async () => {
@@ -23,6 +25,10 @@ const waitForTableRender = async () => {
 };
 
 describe('The "JobsTable" component', () => {
+  afterEach(() => {
+    onDeleteSpy.mockClear();
+  });
+
   const job = scheduledJobs[0];
 
   beforeEach(() => {
@@ -346,6 +352,24 @@ describe('The "JobsTable" component', () => {
       await user.click(screen.getByText('OK'));
 
       expect(deleteJobSpy).toHaveBeenCalled();
+    });
+
+    describe('when an onDeleteJob event is used', () => {
+      it('calls the event handler', async () => {
+        const { user, container } = setup(onDeleteSpy);
+
+        await waitForTableRender();
+
+        await user.click(container.getElementsByClassName('anticon-delete')[0]);
+
+        expect(
+          screen.getByText('Are you sure to delete this job?'),
+        ).toBeInTheDocument();
+
+        await user.click(screen.getByText('OK'));
+
+        expect(onDeleteSpy).toHaveBeenCalled();
+      });
     });
   });
 });

@@ -3,7 +3,17 @@ import { Route, Routes } from 'react-router-dom';
 import { Jobs, CreateJob, EditJob } from 'routes/JobScheduler/routes';
 import { Heading, Text } from 'components';
 
-export default function JobScheduler() {
+type JobSchedulerProps = {
+  onCreateJob?: () => void;
+  onDeleteJob?: () => void;
+  onEditJob?: () => void;
+};
+
+export default function JobScheduler({
+  onCreateJob,
+  onDeleteJob,
+  onEditJob,
+}: JobSchedulerProps) {
   const { headings } = useGCContext();
 
   return (
@@ -16,9 +26,9 @@ export default function JobScheduler() {
       )}
 
       <Routes>
-        <Route index element={<Jobs />} />
-        <Route path="create" element={<CreateJob />} />
-        <Route path=":jobId" element={<EditJob />} />
+        <Route index element={<Jobs onDeleteJob={onDeleteJob} />} />
+        <Route path="create" element={<CreateJob onCreateJob={onCreateJob} />} />
+        <Route path=":jobId" element={<EditJob onEditJob={onEditJob} />} />
       </Routes>
     </div>
   );

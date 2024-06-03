@@ -26,10 +26,11 @@ type JobFormEdit = { type: 'edit'; job: Job };
 
 type JobFormProps = {
   type: 'add' | 'edit';
+  onSave?: () => void;
 } & (JobFormAdd | JobFormEdit);
 
 export default function JobForm(props: JobFormProps) {
-  const { type } = props;
+  const { type, onSave } = props;
   const executeSql = useExecuteSql();
   const [showLoader, setShowLoader] = useState(false);
   const [queryResults, setQueryResults] = useState<QueryResults>(undefined);
@@ -60,6 +61,10 @@ export default function JobForm(props: JobFormProps) {
   };
 
   const onSubmit: SubmitHandler<JobInput> = async (data: JobInput) => {
+    if (onSave) {
+      onSave();
+    }
+
     let result: ApiOutput<ApiError<JobInput> | Job>;
     setShowLoader(true);
     if (type === 'add') {

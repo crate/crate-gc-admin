@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added ability to pass in optional event handlers to SQL Console, Job Scheduler and Table Policies.
+
 ## 2024-05-21 - 0.8.0
 
 - Improve UX of SQL console / SQL editor by making the panels resizable.

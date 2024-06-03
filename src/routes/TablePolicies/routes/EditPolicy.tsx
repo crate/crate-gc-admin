@@ -5,7 +5,11 @@ import { useApiCall } from 'hooks/useApiCall';
 import useGcApi from 'hooks/useGcApi';
 import { Policy } from 'types';
 
-export default function EditPolicy() {
+type EditPolicyProps = {
+  onEditPolicy?: () => void;
+};
+
+export default function EditPolicy({ onEditPolicy }: EditPolicyProps) {
   const { policyId } = useParams();
   const gcApi = useGcApi();
   const { data: policy, loading } = useApiCall<Policy>({
@@ -17,6 +21,6 @@ export default function EditPolicy() {
   return loading || !policy ? (
     <Loader />
   ) : (
-    <PolicyForm type="edit" policy={policy} />
+    <PolicyForm type="edit" policy={policy} onSave={onEditPolicy} />
   );
 }
