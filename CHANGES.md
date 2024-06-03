@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-06-03 - 0.8.1
+
 - Added ability to pass in optional event handlers to SQL Console, Job Scheduler and Table Policies.
 
 ## 2024-05-21 - 0.8.0
