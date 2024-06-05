@@ -6,6 +6,7 @@ import '@testing-library/jest-dom';
 import 'whatwg-fetch';
 import server from './msw';
 import { useLocation } from '__mocks__/react-router-dom';
+import mockLocalStorage from '__mocks__/localStorageMock';
 
 class ResizeObserver {
   observe: jest.Mock<any, any, any>;
@@ -33,6 +34,10 @@ global.window.matchMedia = query => ({
 global.window.open = jest.fn();
 global.window.ResizeObserver = ResizeObserver;
 global.window.scrollTo = jest.fn();
+
+Object.defineProperty(window, 'localStorage', {
+  value: mockLocalStorage,
+});
 
 beforeEach(() => {
   server.listen();
