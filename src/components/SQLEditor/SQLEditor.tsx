@@ -9,14 +9,15 @@ import 'ace-builds/src-min-noconflict/ext-language_tools';
 import './mode-cratedb';
 import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
-import Button from 'components/Button';
 import { cn } from 'utils';
 import { annotate } from './annotationUtils';
 import { QueryResults } from 'types/query';
 import { SchemaTableColumn } from 'types/cratedb';
 import { useGetTableColumnsQuery } from 'hooks/queryHooks';
+import { Loader, Text, Button, CopyToClipboard } from 'components';
+import { SYSTEM_SCHEMAS } from 'constants/database';
 
-type SQLEditorProps = {
+export type SQLEditorProps = {
   value?: string | undefined | null;
   results: QueryResults;
   localStorageKey?: string;
@@ -31,7 +32,7 @@ type SQLEditorProps = {
 };
 
 type AntDesignTreeItem = {
-  title: string;
+  title: React.ReactNode;
   key: string;
   children?: AntDesignTreeItem[];
 };
@@ -96,7 +97,18 @@ function SQLEditor({
         .filter(i => i.table_name === table)
         .filter(column => !column.column_name?.endsWith(']'))
         .map(column => ({
-          title: column.column_name,
+          title: (
+            <span
+              data-testid={`${column.table_schema}.${column.table_name}.${column.column_name}`}
+            >
+              <CopyToClipboard textToCopy={column.column_name}>
+                {column.column_name}
+              </CopyToClipboard>
+              <Text pale className="ml-1 inline text-xs italic !leading-3">
+                {column.data_type}
+              </Text>
+            </span>
+          ),
           key: `${schema}.${table}.${column.column_name}`,
         }));
     };
@@ -109,7 +121,11 @@ function SQLEditor({
       ];
 
       return tables.map(table => ({
-        title: table,
+        title: (
+          <CopyToClipboard textToCopy={`${schema}.${table}`}>
+            {table}
+          </CopyToClipboard>
+        ),
         icon: <TableOutlined className="relative -top-1.5 size-3 opacity-50" />,
         key: `${schema}.${table}`,
         children: getColumns(schema, table),
@@ -119,7 +135,16 @@ function SQLEditor({
     const schemas: string[] = [...new Set(input.map(i => i?.table_schema))];
     setTableTree(
       schemas.map(schema => ({
-        title: schema,
+        title: (
+          <span className="!leading-3" data-testid={`schema-${schema}`}>
+            {schema}{' '}
+            {SYSTEM_SCHEMAS.includes(schema) && (
+              <Text className="inline text-xs italic !leading-3" pale>
+                system
+              </Text>
+            )}
+          </span>
+        ),
         key: schema,
         icon: <ApartmentOutlined className="relative -top-1.5 size-3 opacity-50" />,
         children: getTables(schema),
@@ -275,8 +300,15 @@ function SQLEditor({
       <Panel>
         <div className="ant-tree-tiny h-full overflow-auto p-2">
           {/* wait for tablesTree to be ready else defaultExpandedKeys won't work */}
-          {tablesTree && tablesTree.length > 0 && (
-            <Tree selectable={false} showIcon treeData={tablesTree} />
+          {tablesTree && tablesTree.length > 0 ? (
+            <Tree
+              data-testid="tables-tree"
+              selectable={false}
+              showIcon
+              treeData={tablesTree}
+            />
+          ) : (
+            <Loader />
           )}
         </div>
       </Panel>
@@ -290,6 +322,7 @@ function SQLEditor({
             className={cn('flex-auto border-b', {
               'border-red-600': ariaInvalid,
             })}
+            data-testid="ace-editor-wrapper"
           >
             <AceEditor
               commands={[

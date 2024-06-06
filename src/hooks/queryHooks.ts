@@ -14,6 +14,7 @@ import useExecuteSql from 'hooks/useExecuteSql';
 import {
   clusterInfoQuery,
   getPartitionedTablesQuery,
+  getTablesColumnsQuery,
   nodesQuery,
   shardsQuery,
 } from 'constants/queries';
@@ -188,19 +189,7 @@ export const useGetTableColumnsQuery = () => {
   const executeSql = useExecuteSql();
 
   const getTableColumns = async (): Promise<SchemaTableColumn[]> => {
-    const res = await executeSql(
-      `SELECT
-         table_schema,
-         table_name,
-         column_name,
-         data_type
-       FROM
-        "information_schema"."columns"
-       ORDER BY
-         table_schema,
-         table_name,
-         ordinal_position`,
-    );
+    const res = await executeSql(getTablesColumnsQuery);
 
     if (!res.data || Array.isArray(res.data)) {
       return [];

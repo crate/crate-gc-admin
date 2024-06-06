@@ -1,5 +1,6 @@
 import { NodeStatusInfo, ShardInfo } from 'types/cratedb';
 import { QueryResult } from 'types/query';
+import { schemaTableColumnMock } from './schemaTableColumn';
 
 export const queryResult: QueryResult = {
   col_types: [9],
@@ -263,3 +264,5 @@ export const shardsQueryResult = (shards: ShardInfo[]): QueryResult => {
     duration: 52.280266,
   };
 };
+
+export const getTablesColumnsResult = schemaTableColumnMock;

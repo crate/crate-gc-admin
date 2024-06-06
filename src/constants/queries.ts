@@ -1,5 +1,18 @@
 import { SYSTEM_SCHEMAS } from './database';
 
+export const getTablesColumnsQuery = `
+  SELECT
+    table_schema,
+    table_name,
+    column_name,
+    data_type
+  FROM
+    "information_schema"."columns"
+  ORDER BY
+    table_schema,
+    table_name,
+    ordinal_position`;
+
 export const getPartitionedTablesQuery = (includeSystemTables = false) => {
   return `SELECT
     *
