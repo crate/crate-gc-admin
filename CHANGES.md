@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Usability Improvements for the Table Tree.
+- Fixing cursor pointer in schema Table Tree item.
 
 ## 2024-06-03 - 0.8.1
 

@@ -136,17 +136,20 @@ function SQLEditor({
     setTableTree(
       schemas.map(schema => ({
         title: (
-          <span className="!leading-3" data-testid={`schema-${schema}`}>
-            {schema}{' '}
+          <span
+            className="flex cursor-default !leading-3"
+            data-testid={`schema-${schema}`}
+          >
+            <ApartmentOutlined className="mr-1.5 size-3 opacity-50" />
+            {schema}
             {SYSTEM_SCHEMAS.includes(schema) && (
-              <Text className="inline text-xs italic !leading-3" pale>
+              <Text className="ml-1 inline text-xs italic !leading-3" pale>
                 system
               </Text>
             )}
           </span>
         ),
         key: schema,
-        icon: <ApartmentOutlined className="relative -top-1.5 size-3 opacity-50" />,
         children: getTables(schema),
       })),
     );
