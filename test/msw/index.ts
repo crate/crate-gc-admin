@@ -5,6 +5,7 @@ export default server;
 // custom api handlers
 export {
   customAllScheduledJobLogsGetResponse,
+  customAllLogsGetResponse,
   customScheduledJobLogsGetResponse,
   customScheduledJobGetResponse,
 } from './handlers/scheduledJobs';

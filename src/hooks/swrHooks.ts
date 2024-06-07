@@ -10,6 +10,7 @@ import {
   Policy,
   PolicyLog,
   PolicyLogWithName,
+  TaskLog,
 } from 'types';
 import useGcApi from 'hooks/useGcApi';
 import {
@@ -61,6 +62,18 @@ export const useGCGetScheduledJobsLogs = () => {
   const swrFetch = swrCORSFetch(gcApi);
   return useSWR<JobLogWithName[]>(
     gcApiKeyBuilder(`/api/scheduled-jobs/logs?limit=100`),
+    swrFetch,
+    {
+      refreshInterval: 30 * 1000,
+    },
+  );
+};
+
+export const useGCGetScheduledJobsAllLogs = () => {
+  const gcApi = useGcApi();
+  const swrFetch = swrCORSFetch(gcApi);
+  return useSWR<TaskLog[]>(
+    gcApiKeyBuilder(`/api/scheduled-jobs/all/logs?limit=100`),
     swrFetch,
     {
       refreshInterval: 30 * 1000,

@@ -471,7 +471,7 @@ describe('The "PolicyForm" component', () => {
 
       await user.click(screen.getByText('Cancel'));
 
-      expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
+      expect(navigateMock).toHaveBeenCalledWith(-1);
     });
   });
 
@@ -497,7 +497,7 @@ describe('The "PolicyForm" component', () => {
           expect(createPolicySpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
+        expect(navigateMock).toHaveBeenCalledWith(-1);
       });
     });
 
@@ -619,7 +619,7 @@ describe('The "PolicyForm" component', () => {
           expect(updatePolicySpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith('..', { relative: 'path' });
+        expect(navigateMock).toHaveBeenCalledWith(-1);
       });
     });
 

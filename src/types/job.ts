@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PolicyLogWithName } from './policies';
 
 export type Job = {
   id: string;
@@ -41,6 +42,7 @@ export type JobLog = {
   job_id: string;
   start: string;
   end: string | null;
+  task_type: 'sql';
 } & (ErrorJobLog | SuccessJobLog);
 
 export type JobLogWithName = JobLog & {
@@ -55,3 +57,5 @@ const JobFormSchemaInput = z.object({
 });
 
 export type JobInput = z.infer<typeof JobFormSchemaInput>;
+
+export type TaskLog = JobLogWithName | PolicyLogWithName;

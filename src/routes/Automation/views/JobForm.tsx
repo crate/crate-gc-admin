@@ -57,7 +57,7 @@ export default function JobForm(props: JobFormProps) {
   const errors = form.formState.errors;
 
   const backToJobList = () => {
-    navigate('..', { relative: 'path' });
+    navigate(-1);
   };
 
   const onSubmit: SubmitHandler<JobInput> = async (data: JobInput) => {

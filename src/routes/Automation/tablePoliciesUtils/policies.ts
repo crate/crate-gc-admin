@@ -1,4 +1,3 @@
-import { mapTableListEntriesToTreeItem } from 'routes/TablePolicies/tablePoliciesUtils/tableTree';
 import {
   Policy,
   PolicyInput,
@@ -10,6 +9,7 @@ import {
 } from 'types';
 import { TableListEntry } from 'types/cratedb';
 import { ActionsInfoError, ActionsInfoTablesError } from './types';
+import { mapTableListEntriesToTreeItem } from './tableTree';
 
 export const mapPolicyToPolicyInput = (policy: Policy): PolicyInput => {
   const forceMerge = policy.actions.find(el => el.action === 'force_merge');

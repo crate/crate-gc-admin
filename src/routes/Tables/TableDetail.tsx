@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { Table, Tabs, Tag } from 'antd';
 import { Button, Heading } from 'components';
-import routes from 'constants/routes';
 import { format as formatSQL } from 'sql-formatter';
 import {
   useGetTableInformationQuery,
   useShowCreateTableQuery,
 } from 'hooks/queryHooks';
 import { TableInfo, TableListEntry } from 'types/cratedb';
+import { sql } from 'constants/paths';
 
 function TableDetail({
   activeTable,
@@ -119,7 +119,7 @@ function TableDetail({
           <div className="mt-4">
             <Link
               to={{
-                pathname: routes.find(r => r.key == 'sql')?.path,
+                pathname: sql.path,
                 search: `?q=SELECT * FROM "${activeTable.table_schema}"."${activeTable.table_name}" LIMIT 100;`,
               }}
             >

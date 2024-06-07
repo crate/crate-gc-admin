@@ -10,6 +10,11 @@ import JobsTable, { JOBS_TABLE_PAGE_SIZE } from './JobsTable';
 import { DATE_FORMAT } from 'constants/defaults';
 import { navigateMock } from '__mocks__/react-router-dom';
 import { sortByString } from 'utils';
+import {
+  AUTOMATION_TAB_KEYS,
+  AUTOMATION_TAB_QUERY_PARAM_KEY,
+} from '../routes/AutomationTabsConstants';
+import { automationEditJob } from 'constants/paths';
 
 const onDeleteSpy = jest.fn();
 
@@ -197,7 +202,7 @@ describe('The "JobsTable" component', () => {
         screen.getByTestId('last-execution').getElementsByTagName('a')[0],
       ).toHaveAttribute(
         'href',
-        `?schedulerTab=scheduled_logs&name=${encodeURIComponent(job.name)}`,
+        `?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.LOGS}&name=${encodeURIComponent(job.name)}`,
       );
     });
 
@@ -320,7 +325,11 @@ describe('The "JobsTable" component', () => {
 
       await user.click(container.getElementsByClassName('anticon-edit')[0]);
 
-      expect(navigateMock).toHaveBeenCalledWith(job.id);
+      expect(navigateMock).toHaveBeenCalledWith(
+        `.${automationEditJob.build({
+          jobId: job.id,
+        })}`,
+      );
     });
   });
 

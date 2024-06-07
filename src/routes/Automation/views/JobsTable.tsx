@@ -23,6 +23,11 @@ import {
   EditOutlined,
 } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
+import { automationCreateJob, automationEditJob } from 'constants/paths';
+import {
+  AUTOMATION_TAB_KEYS,
+  AUTOMATION_TAB_QUERY_PARAM_KEY,
+} from '../routes/AutomationTabsConstants';
 
 export const JOBS_TABLE_PAGE_SIZE = 10;
 
@@ -142,7 +147,7 @@ const getColumnsDefinition = ({
                   <div className="flex w-full flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
-                        to={`?schedulerTab=scheduled_logs&name=${encodeURIComponent(job.name)}`}
+                        to={`?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.LOGS}&name=${encodeURIComponent(job.name)}`}
                       >
                         <DisplayUTCDate isoDate={lastExecution.end!} tooltip />
                       </Link>
@@ -333,7 +338,7 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
       <div className="flex w-full justify-end">
         <Button
           onClick={() => {
-            navigate('./create');
+            navigate(`.${automationCreateJob.build()}`);
           }}
           className="float-end"
         >
@@ -349,7 +354,11 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
           columns={getColumnsDefinition({
             setError: setErrorDialogContent,
             editJob: (job: Job) => {
-              navigate(job.id);
+              navigate(
+                `.${automationEditJob.build({
+                  jobId: job.id,
+                })}`,
+              );
             },
             deleteJob: handleDeleteJob,
             showLoaderDelete: showLoaderDelete,
