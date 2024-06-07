@@ -70,12 +70,8 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
               onExecute={execute}
               localStorageKey={LOCAL_STORAGE_KEY}
               results={results}
-              setShowHistory={() => {
-                if (onViewHistory) {
-                  onViewHistory();
-                }
-                setShowHistory;
-              }}
+              setShowHistory={setShowHistory}
+              onViewHistory={onViewHistory}
               value={currentQuery}
             />
           </div>

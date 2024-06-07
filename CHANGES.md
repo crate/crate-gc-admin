@@ -4,6 +4,7 @@
 
 - Usability Improvements for the Table Tree.
 - Fixing cursor pointer in schema Table Tree item.
+- Fixed bug in SQL console view history handler.
 
 ## 2024-06-03 - 0.8.1
 

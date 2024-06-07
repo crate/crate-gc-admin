@@ -28,6 +28,7 @@ export type SQLEditorProps = {
   onExecute: (queries: string) => void;
   onChange?: (queries: string) => void;
   setShowHistory?: (show: boolean) => void;
+  onViewHistory?: () => void;
   title?: React.ReactNode;
 };
 
@@ -57,6 +58,7 @@ function SQLEditor({
   onExecute,
   onChange,
   setShowHistory,
+  onViewHistory,
   title,
 }: SQLEditorProps) {
   const SQL_EDITOR_CONTENT_KEY =
@@ -441,7 +443,12 @@ function SQLEditor({
                 </Button>
                 {setShowHistory && (
                   <Button
-                    onClick={() => setShowHistory(true)}
+                    onClick={() => {
+                      if (onViewHistory) {
+                        onViewHistory();
+                      }
+                      setShowHistory(true);
+                    }}
                     kind="tertiary"
                     size="small"
                   >
