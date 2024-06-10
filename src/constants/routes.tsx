@@ -1,24 +1,16 @@
-import {
-  Auth,
-  Help,
-  Overview,
-  SQLConsole,
-  Tables,
-  Users,
-  Nodes,
-  JobScheduler,
-  TablePolicies,
-} from 'routes';
+import { Auth, Help, Overview, SQLConsole, Tables, Users, Nodes } from 'routes';
 import { EnterpriseScreen } from 'components';
 import { Route } from 'types';
+import { auth, automation, help, nodes, root, sql, tables, users } from './paths';
+import Automation from 'routes/Automation';
 
 const routes: Route[] = [
   {
-    path: '/auth',
+    path: auth.path,
     element: <Auth />,
   },
   {
-    path: '/',
+    path: root.path,
     element: (
       <div className="p-4">
         <Overview />
@@ -28,7 +20,7 @@ const routes: Route[] = [
     key: 'overview',
   },
   {
-    path: '/help',
+    path: help.path,
     element: (
       <div className="p-4">
         <Help />
@@ -38,49 +30,37 @@ const routes: Route[] = [
     key: 'help',
   },
   {
-    path: '/sql',
+    path: sql.path,
     element: <SQLConsole />,
     label: 'SQL',
     key: 'sql',
   },
   {
-    path: '/sql-scheduler/*',
+    path: `${automation.path}/*`,
     element: (
       <div className="p-4">
         <EnterpriseScreen>
-          <JobScheduler />
+          <Automation />
         </EnterpriseScreen>
       </div>
     ),
-    label: 'Scheduler',
-    key: 'sql-scheduler',
+    label: 'Automation',
+    key: 'automation',
   },
   {
-    path: '/table-policies/*',
-    element: (
-      <div className="p-4">
-        <EnterpriseScreen>
-          <TablePolicies />
-        </EnterpriseScreen>
-      </div>
-    ),
-    label: 'Table Policies',
-    key: 'table-policies',
-  },
-  {
-    path: '/tables',
+    path: tables.path,
     element: <Tables />,
     label: 'Tables',
     key: 'tables',
   },
   {
-    path: '/nodes',
+    path: nodes.path,
     element: <Nodes />,
     label: 'Nodes',
     key: 'nodes',
   },
   {
-    path: '/users',
+    path: users.path,
     element: (
       <div className="p-4">
         <Users />

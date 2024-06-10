@@ -9,6 +9,7 @@ import useGcApi from 'hooks/useGcApi';
 import { apiGet } from 'utils/api';
 import { GRAND_CENTRAL_TOKEN_COOKIE } from 'constants/cookie';
 import NotificationHandler from 'components/NotificationHandler';
+import { root } from 'constants/paths';
 
 function App() {
   const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
@@ -43,7 +44,7 @@ function App() {
       <StatsUpdater />
       <Layout
         topbarLogo={
-          <Link to="/">
+          <Link to={root.build()}>
             <img alt="CrateDB logo" src={logo} />
           </Link>
         }

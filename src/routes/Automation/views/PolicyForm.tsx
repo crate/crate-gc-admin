@@ -77,7 +77,7 @@ export default function PolicyForm(props: PolicyFormProps) {
   });
 
   const backToPolicyList = () => {
-    navigate('..', { relative: 'path' });
+    navigate(-1);
   };
 
   const onSubmit: SubmitHandler<PolicyInput> = async (data: PolicyInput) => {

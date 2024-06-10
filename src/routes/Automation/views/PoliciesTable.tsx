@@ -16,12 +16,17 @@ import {
   Switch,
   Text,
 } from 'components';
+import { automationCreatePolicy, automationEditPolicy } from 'constants/paths';
 import { useGCGetPolicies, useGCGetPoliciesEnriched } from 'hooks/swrHooks';
 import useGcApi from 'hooks/useGcApi';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { EnrichedPolicy, PolicyWithoutId } from 'types';
 import { apiDelete, apiPut, cn, sortByString } from 'utils';
+import {
+  AUTOMATION_TAB_KEYS,
+  AUTOMATION_TAB_QUERY_PARAM_KEY,
+} from '../routes/AutomationTabsConstants';
 
 export const POLICIES_TABLE_PAGE_SIZE = 10;
 
@@ -125,7 +130,7 @@ const getColumnsDefinition = ({
                   <div className="flex w-full flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
-                        to={`?tablePoliciesTab=policies_logs&name=${encodeURIComponent(policy.name)}`}
+                        to={`?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.LOGS}&name=${encodeURIComponent(policy.name)}`}
                       >
                         <DisplayUTCDate isoDate={lastExecution.end!} tooltip />
                       </Link>
@@ -285,7 +290,7 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
       <div className="flex w-full justify-end">
         <Button
           onClick={() => {
-            navigate('./create');
+            navigate(`.${automationCreatePolicy.build()}`);
           }}
           className="float-end"
         >
@@ -300,7 +305,11 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
           data={policiesEnriched.sort(sortByString('name'))}
           columns={getColumnsDefinition({
             editPolicy: (policy: EnrichedPolicy) => {
-              navigate(policy.id);
+              navigate(
+                `.${automationEditPolicy.build({
+                  policyId: policy.id,
+                })}`,
+              );
             },
             deletePolicy: handleDelete,
             showLoaderDelete: showLoaderDelete,

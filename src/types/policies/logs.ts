@@ -35,6 +35,7 @@ export type PolicyLog = {
   job_id: string;
   start: string;
   end: string | null;
+  task_type: 'policy';
 } & (ErrorPolicyLog | SuccessPolicyLog);
 
 export type PolicyLogWithName = PolicyLog & {

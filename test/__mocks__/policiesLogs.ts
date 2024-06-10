@@ -12,6 +12,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:57:00.016000+00:00',
@@ -24,6 +25,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:56:00.019000+00:00',
@@ -36,6 +38,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:55:00.018000+00:00',
@@ -48,6 +51,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:54:00.018000+00:00',
@@ -60,6 +64,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:53:00.017000+00:00',
@@ -72,6 +77,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:52:00.020000+00:00',
@@ -84,6 +90,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:51:00.019000+00:00',
@@ -96,6 +103,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:50:00.038000+00:00',
@@ -108,6 +116,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:49:00.052000+00:00',
@@ -120,6 +129,7 @@ const policiesLogs: PolicyLog[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
 ];
 
@@ -136,6 +146,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:57:00.016000+00:00',
@@ -149,6 +160,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:56:00.019000+00:00',
@@ -162,6 +174,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:55:00.018000+00:00',
@@ -175,6 +188,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:54:00.018000+00:00',
@@ -188,6 +202,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:53:00.017000+00:00',
@@ -201,6 +216,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:52:00.020000+00:00',
@@ -214,6 +230,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:51:00.019000+00:00',
@@ -227,6 +244,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:50:00.038000+00:00',
@@ -240,6 +258,7 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
   {
     end: '2024-01-19T07:49:00.052000+00:00',
@@ -253,8 +272,20 @@ const policiesLogsWithName: PolicyLogWithName[] = [
         sql: 'SELECT 1;',
       },
     },
+    task_type: 'policy',
   },
 ];
+
+const policyLog: PolicyLogWithName = {
+  ...policiesLogsWithName[0],
+  error: null,
+  statements: {
+    '0': {
+      duration: 0.1,
+      sql: 'SELECT 1;',
+    },
+  },
+};
 
 const policyErrorLog: PolicyLogWithName = {
   ...policiesLogs[0],
@@ -284,4 +315,15 @@ const policyErrorLog: PolicyLogWithName = {
   },
 };
 
-export { policiesLogs, policiesLogsWithName, policyErrorLog };
+const policyLogRunning: PolicyLogWithName = {
+  ...policyLog,
+  end: null,
+};
+
+export {
+  policiesLogs,
+  policiesLogsWithName,
+  policyLog,
+  policyErrorLog,
+  policyLogRunning,
+};

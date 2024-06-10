@@ -42,6 +42,13 @@ const getAllScheduledJobLogs: RestHandler = rest.get(
   },
 );
 
+const getAllLogs: RestHandler = rest.get(
+  '/api/scheduled-jobs/all/logs',
+  (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(scheduledJobLogsWithName));
+  },
+);
+
 const getScheduledJob: RestHandler = rest.get(
   '/api/scheduled-jobs/:jobId',
   (_, res, ctx) => {
@@ -61,6 +68,7 @@ export const scheduledJobHandlers: RestHandler[] = [
   createJobPost,
   updateJobPut,
   getScheduledJobLogs,
+  getAllLogs,
   getAllScheduledJobLogs,
   getScheduledJob,
   deleteScheduledJob,
@@ -71,5 +79,8 @@ export const customAllScheduledJobLogsGetResponse = handlerFactory(
 );
 export const customScheduledJobLogsGetResponse = handlerFactory(
   '/api/scheduled-jobs/:jobId/log',
+);
+export const customAllLogsGetResponse = handlerFactory(
+  '/api/scheduled-jobs/all/logs',
 );
 export const customScheduledJobGetResponse = handlerFactory('/api/scheduled-jobs/');
