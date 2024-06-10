@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2024-06-10 - 0.8.3
+## 2024-06-10 - 0.8.4
 
 - Combine "Scheduler" and "Table Policies" UI into "Automation" section.
 
