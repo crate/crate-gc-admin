@@ -70,6 +70,7 @@ const triggerTreeItem = async (
 const onExecute = jest.fn();
 const onChange = jest.fn();
 const setShowHistory = jest.fn();
+const onViewHistory = jest.fn();
 const defaultProps: SQLEditorProps = {
   onExecute,
   onChange,
@@ -309,6 +310,16 @@ describe('The SQLEditor component', () => {
       await user.click(screen.getByText('Show history'));
 
       expect(setShowHistory).toHaveBeenCalledWith(true);
+    });
+
+    describe('when an onViewHistory event function is passed', () => {
+      it('clicking on it triggers onViewHistory', async () => {
+        const { user } = await setup({ setShowHistory, onViewHistory });
+
+        await user.click(screen.getByText('Show history'));
+
+        expect(onViewHistory).toHaveBeenCalled();
+      });
     });
   });
 
