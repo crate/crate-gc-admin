@@ -2,12 +2,15 @@
 
 ## Unreleased
 
+## 2024-06-10 - 0.8.3
+
+- Combine "Scheduler" and "Table Policies" UI into "Automation" section.
+
 ## 2024-06-10 - 0.8.2
 
 - Usability Improvements for the Table Tree.
 - Fixing cursor pointer in schema Table Tree item.
 - Fixed bug in SQL console view history handler.
-- Combine "Scheduler" and "Table Policies" UI into "Automation" section.
 
 ## 2024-06-03 - 0.8.1
 
