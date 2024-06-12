@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Loader, NoDataView, SQLEditor, SQLHistory, SQLResults } from 'components';
 import useExecuteSql from 'hooks/useExecuteSql';
-import { QueryResults } from 'types/query';
+import { QueryResult, QueryResults } from 'types/query';
+import { sqlparse } from '@cratedb/cratedb-sqlparse';
 
 type SQLConsoleProps = { onQuery?: () => void; onViewHistory?: () => void };
 
@@ -24,21 +25,27 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
     }
   }, [specifiedQuery]);
 
-  const execute = (sql: string) => {
-    setRunning(true);
-    setResults(undefined);
-    if (onQuery) {
-      onQuery();
-    }
-
-    const stripSingleLineCommentsRegex = /^((\s)*--).*$/gm;
-    executeSql(sql.replace(stripSingleLineCommentsRegex, '')).then(({ data }) => {
+  const execute = async (sql: string) => {
+    try {
+      setRunning(true);
+      setResults(undefined);
+      const stmt_parsed = sqlparse(sql);
+      await executeSqlNew(stmt_parsed);
+    } finally {
       setRunning(false);
-      if (data) {
-        setResults(data);
-      }
-    });
+    }
   };
+
+  async function executeSqlNew(stmt_parsed: any) {
+    const results: QueryResult[] = [];
+    for (const stmt of stmt_parsed) {
+      const data = (await executeSql(stmt.query)).data;
+      if (data) {
+        Array.isArray(data) ? results.push(...data) : results.push(data);
+        setResults([...results]); // Use a new array to trigger state updates
+      }
+    }
+  }
 
   const LOCAL_STORAGE_KEY = 'sql-editor';
   const SQL_HISTORY_CONTENT_KEY = `crate.gc.admin.${LOCAL_STORAGE_KEY}-history`;
