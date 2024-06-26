@@ -48,6 +48,17 @@
   display: none !important;
 }
 
+/* Handle Horizontal Scroll on table without data */
+.ant-table-scroll-horizontal .ant-table-placeholder {
+  display: block !important;
+}
+.ant-table-scroll-horizontal .ant-table-placeholder .ant-table-expanded-row-fixed {
+  display: none !important;
+}
+.ant-table-scroll-horizontal .ant-table-placeholder > td {
+  padding: 0 !important;
+}
+
 .ant-popover-content .ant-btn-primary,
 .ant-modal-content .ant-btn-primary {
   background-color: #19c0ea;
