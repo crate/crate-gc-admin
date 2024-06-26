@@ -9,6 +9,8 @@ import Papa from 'papaparse';
 import { ColumnType, QueryResult } from 'types/query';
 import useSessionStore from 'state/session';
 
+const COLUMN_SIZE = 150;
+
 type Params = {
   result: QueryResult | undefined;
   format?: boolean;
@@ -218,13 +220,13 @@ function SQLResultsTable({ result }: Params) {
       return {
         title: () => (
           <div>
-            <div className="font-bold">{col}</div>
+            <div className="overflow-hidden text-ellipsis font-bold">{col}</div>
             <div className="text-xs opacity-50">{dbTypeToHumanReadable(type)}</div>
           </div>
         ),
         key: col,
         dataIndex: col,
-        width: '10%',
+        width: `${COLUMN_SIZE}px`,
         ellipsis: true,
         className: 'align-top',
       };
@@ -291,10 +293,11 @@ function SQLResultsTable({ result }: Params) {
       pagination={{ defaultPageSize: 20, position: ['bottomRight'] }}
       showHeader
       size="small"
-      scroll={{
-        x: 'max-content',
-      }}
       sticky
+      scroll={{
+        x: COLUMN_SIZE,
+      }}
+      className="min-h-[50px]"
       title={() => (
         <div className="flex h-8 flex-row items-center gap-2">
           <div className="flex items-center gap-2 border-e pr-2 text-xs font-bold">

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- SQL Console - Fixing visibility of long column names.
+- SQL Console - Fixing column names not visible when querying empty tables.
+
 ## 2024-06-10 - 0.8.4
 
 - Combine "Scheduler" and "Table Policies" UI into "Automation" section.
