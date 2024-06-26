@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-06-26 - 0.8.5
+
 - SQL Console - Fixing visibility of long column names.
 - SQL Console - Fixing column names not visible when querying empty tables.
 
