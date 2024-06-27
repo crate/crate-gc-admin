@@ -28,6 +28,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@cratedb/cratedb-sqlparse": "^0.0.2",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
