@@ -1,5 +1,7 @@
+import { Statement } from 'node_modules/@cratedb/cratedb-sqlparse/dist/parser';
+
 export type Error = {
-  code: number;
+  code?: number;
   message: string;
 };
 
@@ -33,7 +35,14 @@ export enum ColumnType {
   ARRAY = 100,
 }
 
-export type QueryResult = object & {
+export type QueryResultError = {
+  error: Error;
+  error_trace?: string;
+  original_query?: Statement;
+  line?: number;
+};
+
+export type QueryResultSuccess = object & {
   col_types: (ColumnType | ColumnType[])[];
   cols: string[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +50,19 @@ export type QueryResult = object & {
   rowcount: number;
   duration: number;
   original_query?: string;
-  error?: Error;
-  error_trace?: string;
 };
+
+export type QueryResult = QueryResultSuccess | QueryResultError;
+
 export type QueryResults = QueryResult | QueryResult[] | undefined;
+
+export type QueryStatusType =
+  | 'SUCCESS'
+  | 'ERROR'
+  | 'WAITING'
+  | 'EXECUTING'
+  | 'NOT_EXECUTED';
+export type QueryStatus = {
+  status: QueryStatusType;
+  result: QueryResult | undefined;
+};

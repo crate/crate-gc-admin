@@ -22,6 +22,7 @@ import {
   useGetAllocationsQuery,
   useGetQueryStatsQuery,
   useGetPartitionedTablesQuery,
+  useGetUserPermissionsQuery,
 } from 'hooks/queryHooks';
 import { useGCContext } from 'contexts';
 
@@ -205,6 +206,13 @@ export const useGetQueryStats = () => {
   return useSWR(`swr-fetch-query-stats`, () => getQueryStats(), {
     refreshInterval: 5000,
   });
+};
+
+export const useGetUserPermissions = (username: string) => {
+  const getUserPermissionsQuery = useGetUserPermissionsQuery();
+  return useSWR(`swr-fetch-user-permissions`, () =>
+    getUserPermissionsQuery(username),
+  );
 };
 
 export const useGCGetPolicies = () => {

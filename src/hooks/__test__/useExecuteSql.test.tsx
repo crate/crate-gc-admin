@@ -10,7 +10,7 @@ function MockComponent() {
     executeSql('SELECT 1').then(queryRes => {
       setResponse(queryRes);
     });
-  });
+  }, []);
 
   return (
     <div>
