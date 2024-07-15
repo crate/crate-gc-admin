@@ -212,3 +212,8 @@
   margin-left: 12px !important;
   margin-right: 12px !important;
 }
+
+/* Squeezed tabs */
+.squeezed-tabs .ant-tabs-nav {
+  margin-bottom: 0px !important;
+}

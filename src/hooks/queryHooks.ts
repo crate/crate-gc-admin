@@ -28,7 +28,7 @@ export const useGetUsersQuery = () => {
       return [];
     }
 
-    if (res.data.error) {
+    if ('error' in res.data) {
       throw res.data.error;
     }
 
@@ -60,7 +60,7 @@ export const useGetCurrentUserQuery = () => {
 
   const getCurrentUser = async (): Promise<string> => {
     const res = await executeSql('SELECT CURRENT_USER');
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return '';
     }
     return res.data.rows[0][0];
@@ -74,7 +74,7 @@ export const useGetClusterInfoQuery = () => {
 
   return async (): Promise<ClusterInfo | undefined> => {
     const res = await executeSql(clusterInfoQuery);
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return;
     }
     const row = res.data.rows[0];
@@ -98,7 +98,7 @@ export const useGetSchemasQuery = () => {
                                               WHERE table_schema NOT IN ('gc') ORDER BY 1;`,
     );
 
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return [];
     }
 
@@ -116,7 +116,7 @@ export const useGetPartitionedTablesQuery = (
   const getPartitionedTables = async (): Promise<TableListEntry[]> => {
     const res = await executeSql(getPartitionedTablesQuery(includeSystemTables));
 
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return [];
     }
 
@@ -167,7 +167,7 @@ export const useGetTablesQuery = (includeSystemTables: boolean = true) => {
                     or tables.system) ${includeSystemTables ? '' : 'AND NOT tables.system'}`,
     );
 
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return [];
     }
 
@@ -191,7 +191,7 @@ export const useGetTableColumnsQuery = () => {
   const getTableColumns = async (): Promise<SchemaTableColumn[]> => {
     const res = await executeSql(getTablesColumnsQuery);
 
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return [];
     }
 
@@ -212,7 +212,7 @@ export const useGetNodesQuery = () => {
   const getNodes = async (): Promise<NodeStatusInfo[]> => {
     const res = await executeSql(nodesQuery);
 
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return [];
     }
 
@@ -269,7 +269,7 @@ export const useGetTableInformationQuery = () => {
                   AND c.table_schema = '${schema}';`,
     );
 
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return [];
     }
 
@@ -293,7 +293,7 @@ export const useGetShardsQuery = () => {
   const getShards = async (): Promise<ShardInfo[]> => {
     const res = await executeSql(shardsQuery);
 
-    if (!res.data || Array.isArray(res.data)) {
+    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
       return [];
     }
 
@@ -330,7 +330,7 @@ export const useShowCreateTableQuery = () => {
       return;
     }
 
-    if (res.data && res.data.error) {
+    if (res.data && 'error' in res.data) {
       return;
     }
     return res.data && res.data.rows[0][0];
@@ -369,7 +369,7 @@ export const useGetAllocationsQuery = () => {
       return;
     }
 
-    if (res.data && res.data.error) {
+    if (res.data && 'error' in res.data) {
       return;
     }
 
@@ -426,7 +426,7 @@ export const useGetQueryStatsQuery = () => {
       return;
     }
 
-    if (res.data && res.data.error) {
+    if (res.data && 'error' in res.data) {
       return;
     }
     return res.data.rows.map(r => {

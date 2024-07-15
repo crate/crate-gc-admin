@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Split and execute queries sequentially using cratedb-sqlparse.
+
 ## 2024-06-26 - 0.8.5
 
 - SQL Console - Fixing visibility of long column names.

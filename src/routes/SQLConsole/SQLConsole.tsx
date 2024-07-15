@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { Loader, NoDataView, SQLEditor, SQLHistory, SQLResults } from 'components';
-import useExecuteSql from 'hooks/useExecuteSql';
-import { QueryResults } from 'types/query';
+import { NoDataView, SQLEditor, SQLHistory, SQLResults } from 'components';
+import useExecuteMultiSql from 'hooks/useExecuteMultiSql';
 
 type SQLConsoleProps = { onQuery?: () => void; onViewHistory?: () => void };
 
 function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
-  const executeSql = useExecuteSql();
+  const { executeSqlWithStatus, queryResults, resetResults } = useExecuteMultiSql();
   const specifiedQuery = new URLSearchParams(location.search).get('q');
-  const [results, setResults] = useState<QueryResults | undefined>(undefined);
-  const [running, setRunning] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [currentQuery, setCurrentQuery] = useState<string | null>(null);
   const [rerender, setRerender] = useState(false);
@@ -24,20 +21,12 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
     }
   }, [specifiedQuery]);
 
-  const execute = (sql: string) => {
-    setRunning(true);
-    setResults(undefined);
+  const execute = (sqlQueries: string) => {
     if (onQuery) {
       onQuery();
     }
 
-    const stripSingleLineCommentsRegex = /^((\s)*--).*$/gm;
-    executeSql(sql.replace(stripSingleLineCommentsRegex, '')).then(({ data }) => {
-      setRunning(false);
-      if (data) {
-        setResults(data);
-      }
-    });
+    executeSqlWithStatus(sqlQueries);
   };
 
   const LOCAL_STORAGE_KEY = 'sql-editor';
@@ -57,7 +46,7 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
 
   const displayHistoryItem = (query: string) => {
     setCurrentQuery(query);
-    setResults(undefined);
+    resetResults();
     setShowHistory(false);
   };
 
@@ -69,7 +58,13 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
             <SQLEditor
               onExecute={execute}
               localStorageKey={LOCAL_STORAGE_KEY}
-              results={results}
+              results={
+                queryResults
+                  ? queryResults
+                      .filter(el => el.result && 'error' in el.result)
+                      .map(el => el.result!)
+                  : undefined
+              }
               setShowHistory={setShowHistory}
               onViewHistory={onViewHistory}
               value={currentQuery}
@@ -81,9 +76,8 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
         </PanelResizeHandle>
         <Panel minSize={5}>
           <div className="h-full overflow-auto">
-            {running && <Loader />}
-            {!running && <SQLResults results={results} />}
-            {!running && !results && <NoDataView />}
+            {queryResults && <SQLResults results={queryResults} />}
+            {!queryResults && <NoDataView />}
           </div>
         </Panel>
       </PanelGroup>

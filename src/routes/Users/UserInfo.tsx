@@ -1,24 +1,19 @@
-import { useEffect, useState } from 'react';
-import { SQLResults } from 'components';
-import { useGetUserPermissionsQuery } from 'hooks/queryHooks';
+import { Loader } from 'components';
 import { User } from 'types/cratedb';
-import { QueryResults } from 'types/query';
+import { useGetUserPermissions } from 'hooks/swrHooks';
+import SQLResultsTable from 'components/SQLResults/SQLResultsTable';
+import { QueryResult } from 'types/query';
 
 type Params = {
   user: User;
 };
 
 function UserInfo({ user }: Params) {
-  const getUserPermissions = useGetUserPermissionsQuery();
-  const [result, setResult] = useState<QueryResults>();
+  const { data: result, isLoading: loading } = useGetUserPermissions(user.name);
 
-  useEffect(() => {
-    getUserPermissions(user.name).then(res => {
-      if (res.data) {
-        setResult(res.data);
-      }
-    });
-  }, [user]);
+  if (loading || !result) {
+    return <Loader />;
+  }
 
   return (
     <div>
@@ -28,7 +23,7 @@ function UserInfo({ user }: Params) {
           perform GRANT, DENY or REVOKE statements on the superuser.
         </div>
       )}
-      {!user.superuser && <SQLResults results={result} />}
+      {!user.superuser && <SQLResultsTable result={result.data! as QueryResult} />}
     </div>
   );
 }

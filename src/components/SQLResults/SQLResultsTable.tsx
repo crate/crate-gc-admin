@@ -6,7 +6,12 @@ import Switch from 'components/Switch';
 import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
 import { dbTypeToHumanReadable } from './utils';
 import Papa from 'papaparse';
-import { ColumnType, QueryResult } from 'types/query';
+import {
+  ColumnType,
+  QueryResult,
+  QueryResultError,
+  QueryResultSuccess,
+} from 'types/query';
 import useSessionStore from 'state/session';
 
 const COLUMN_SIZE = 150;
@@ -27,33 +32,37 @@ function SQLResultsTable({ result }: Params) {
     setShowErrorTrace(!showErrorTrace);
   };
 
-  const renderErrorTable = (result: QueryResult) => {
+  const renderErrorTable = (result: QueryResultError) => {
     return (
       <div className="p-4">
-        <div className="flex min-h-12 flex-row items-start justify-between rounded border p-2">
+        <div className="flex min-h-12 flex-row items-center justify-between rounded border p-2">
           <div className="flex items-center gap-4 pr-2 text-sm">
             <Chip className="bg-red-600 uppercase text-white">Error</Chip>
-            <a
-              href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
-              target="_blank"
-            >
-              {result.error?.code}
-            </a>
+            {typeof result.error.code !== 'undefined' && (
+              <a
+                href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
+                target="_blank"
+              >
+                {result.error?.code}
+              </a>
+            )}
             <span className="font-mono text-xs">{result.error?.message}</span>
           </div>
-          <div className="flex select-none items-center gap-2">
-            <span
-              className="cursor-pointer whitespace-nowrap text-sm"
-              onClick={toggleErrorTrace}
-            >
-              Show error trace
-            </span>
-            <Switch.Root
-              checked={showErrorTrace}
-              onCheckedChange={() => setShowErrorTrace(!showErrorTrace)}
-              size="small"
-            />
-          </div>
+          {result.error_trace && (
+            <div className="flex select-none items-center gap-2">
+              <span
+                className="cursor-pointer whitespace-nowrap text-sm"
+                onClick={toggleErrorTrace}
+              >
+                Show error trace
+              </span>
+              <Switch.Root
+                checked={showErrorTrace}
+                onCheckedChange={() => setShowErrorTrace(!showErrorTrace)}
+                size="small"
+              />
+            </div>
+          )}
         </div>
         {showErrorTrace && (
           <div className="mt-4">
@@ -85,7 +94,7 @@ function SQLResultsTable({ result }: Params) {
     return value;
   };
 
-  const asJson = (result: QueryResult) => {
+  const asJson = (result: QueryResultSuccess) => {
     const columns = [
       {
         title: () => (
@@ -139,7 +148,7 @@ function SQLResultsTable({ result }: Params) {
     return [columns, data];
   };
 
-  const asCSV = (result: QueryResult) => {
+  const asCSV = (result: QueryResultSuccess) => {
     const columns = [
       {
         title: () => (
@@ -214,7 +223,7 @@ function SQLResultsTable({ result }: Params) {
     return [columns, data];
   };
 
-  const asTable = (result: QueryResult) => {
+  const asTable = (result: QueryResultSuccess) => {
     const columns = _.zip(result.col_types, result.cols).flatMap(arr => {
       const [type, col] = arr;
       return {
@@ -252,7 +261,7 @@ function SQLResultsTable({ result }: Params) {
     return null;
   }
 
-  if (result.error) {
+  if ('error' in result) {
     return renderErrorTable(result);
   }
 

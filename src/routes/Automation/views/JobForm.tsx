@@ -4,9 +4,9 @@ import { ApiOutput, apiPost, apiPut } from 'utils/api';
 import { useState } from 'react';
 import { Job, JobInput } from 'types';
 import useGcApi from 'hooks/useGcApi';
-import useExecuteSql from 'hooks/useExecuteSql';
+import useExecuteMultiSql from 'hooks/useExecuteMultiSql';
 import { useNavigate } from 'react-router-dom';
-import { QueryResult, QueryResults } from 'types/query';
+import { QueryStatus } from 'types/query';
 import {
   Button,
   Chip,
@@ -31,10 +31,8 @@ type JobFormProps = {
 
 export default function JobForm(props: JobFormProps) {
   const { type, onSave } = props;
-  const executeSql = useExecuteSql();
+  const { executeSqlWithStatus, queryResults } = useExecuteMultiSql();
   const [showLoader, setShowLoader] = useState(false);
-  const [queryResults, setQueryResults] = useState<QueryResults>(undefined);
-  const [queryRunning, setQueryRunning] = useState(false);
   const gcApi = useGcApi();
   const navigate = useNavigate();
 
@@ -112,19 +110,17 @@ export default function JobForm(props: JobFormProps) {
 
   const executeQuery = () => {
     const sql = form.watch('sql');
-    setQueryRunning(true);
-    setQueryResults(undefined);
-    executeSql(sql).then(({ data }) => {
-      setQueryRunning(false);
-      if (data) {
-        setQueryResults(data);
-      }
-    });
+
+    executeSqlWithStatus(sql);
   };
 
   const renderResult = () => {
-    const drawResult = (result: QueryResult, index?: number) => {
-      if (result.error) {
+    const drawResult = (queryResult: QueryStatus, index?: number) => {
+      if (!queryResult) {
+        return null;
+      }
+
+      if (queryResult.result && 'error' in queryResult.result) {
         return (
           <div className="flex h-8 items-center gap-2 text-sm">
             {index ? (
@@ -137,27 +133,29 @@ export default function JobForm(props: JobFormProps) {
               href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
               target="_blank"
             >
-              {result.error?.code}
+              {queryResult.result!.error?.code}
             </a>
-            <span className="font-mono text-xs">{result.error?.message}</span>
+            <span className="font-mono text-xs">
+              {queryResult.result!.error?.message}
+            </span>
           </div>
         );
       }
 
       return (
-        <div className="flex h-8 items-center gap-2 text-sm">
-          {index ? (
-            <div className="w-14 text-xs text-crate-border-mid">Result #{index}</div>
-          ) : null}
-          <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
-          {`${result.rowcount} rows, ${(Math.round(result?.duration) / 1000).toFixed(3)} seconds`}
-        </div>
+        queryResult.result && (
+          <div className="flex h-8 items-center gap-2 text-sm">
+            {index ? (
+              <div className="w-14 text-xs text-crate-border-mid">
+                Result #{index}
+              </div>
+            ) : null}
+            <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
+            {`${queryResult.result.rowcount} rows, ${(Math.round(queryResult?.result.duration) / 1000).toFixed(3)} seconds`}
+          </div>
+        )
       );
     };
-
-    if (queryRunning) {
-      return <Loader />;
-    }
 
     if (!queryResults) {
       return null;
@@ -165,9 +163,7 @@ export default function JobForm(props: JobFormProps) {
 
     return (
       <div className="space-y-1 py-2">
-        {Array.isArray(queryResults)
-          ? queryResults.map((r, i) => drawResult(r, i + 1))
-          : drawResult(queryResults)}
+        {queryResults.map((r, i) => drawResult(r, i + 1))}
       </div>
     );
   };
@@ -301,7 +297,13 @@ export default function JobForm(props: JobFormProps) {
                   <Form.Control>
                     <div className="h-72 rounded border-2">
                       <SQLEditor
-                        results={queryResults}
+                        results={
+                          queryResults
+                            ? queryResults
+                                .filter(el => el.result && 'error' in el.result)
+                                .map(el => el.result!)
+                            : undefined
+                        }
                         localStorageKey="sql-job-editor"
                         value={field.value}
                         onChange={query => {
