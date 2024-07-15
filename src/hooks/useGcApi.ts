@@ -1,6 +1,11 @@
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import Cookies from 'js-cookie';
 import { useGCContext } from 'contexts';
+
+const RENEW_JWT_CODES: HttpStatusCode[] = [
+  HttpStatusCode.Unauthorized, // 401
+  HttpStatusCode.Forbidden, // 403
+];
 
 export default function useGcApi() {
   const { gcUrl, onGcApiJwtExpire, sessionCookieName } = useGCContext();
@@ -27,7 +32,7 @@ export default function useGcApi() {
         if (err.response) {
           // Check if Access Token was expired
           if (
-            err.response.status >= 401 &&
+            RENEW_JWT_CODES.includes(err.response.status) &&
             !originalConfig._retry &&
             onGcApiJwtExpire
           ) {
