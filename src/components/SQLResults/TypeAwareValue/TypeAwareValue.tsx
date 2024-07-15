@@ -48,7 +48,7 @@ function TypeAwareValue({
     try {
       const url = new URL(value as string);
       return (
-        <a href={url.toString()} target="_blank">
+        <a href={url.toString()} target="_blank" rel="noopener noreferrer">
           <LinkOutlined /> {url.toString()}
         </a>
       );
@@ -97,8 +97,36 @@ function TypeAwareValue({
       ret = <span>{wrapped}</span>;
       break;
     case ColumnType.GEOPOINT:
+      ret = (
+        <div>
+          {JSON.stringify(value)}
+          <a
+            href={`https://www.openstreetmap.org/?mlat=${value[1]}&mlon=${value[0]}&layers=H`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <LinkOutlined />
+          </a>
+        </div>
+      );
+      break;
     case ColumnType.GEOSHAPE:
-      ret = <span>{JSON.stringify(value)}</span>;
+      ret = (
+        <pre className="query-result object">
+          <span>Type: </span> 
+          <a
+            href={`http://geojson.io/#data=data:application/json,${encodeURIComponent(
+              JSON.stringify(value)
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {value.type} <LinkOutlined />
+          </a>
+          <br />
+          <span>Coordinates</span>: <JSONTree json={value.coordinates as object} />
+        </pre>
+      );
       break;
     case ColumnType.NULL:
       ret = (
