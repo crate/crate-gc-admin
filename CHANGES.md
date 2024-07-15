@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a link to OpenStreetMap for the `geo_point` data type formatter and a
+  link to GeoJSON for the `geo_shape` data type formatter.
+
 ## 2024-07-15 - 0.9.0
 
 - Split and execute queries sequentially using cratedb-sqlparse.
