@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-07-15 - 0.9.0
+
 - Split and execute queries sequentially using cratedb-sqlparse.
 
 ## 2024-06-26 - 0.8.5
