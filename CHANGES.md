@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-07-15 - 0.9.1
+
+- Renew JWT only on 401 and 403 HTTP error codes from GC.
+
 ## 2024-07-15 - 0.9.0
 
 - Split and execute queries sequentially using cratedb-sqlparse.
