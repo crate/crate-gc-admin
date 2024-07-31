@@ -8,6 +8,7 @@ type GCContextType = {
   sessionCookieName: string;
   headings?: boolean;
   onGcApiJwtExpire?: () => Promise<void>;
+  clusterId?: string;
 };
 
 export enum ConnectionStatus {
@@ -24,6 +25,7 @@ const defaultProps: GCContextType = {
   sessionCookieName: GRAND_CENTRAL_TOKEN_COOKIE,
   crateUrl: undefined,
   headings: true,
+  clusterId: undefined,
 };
 
 const GCContext = React.createContext<GCContextType>(defaultProps);

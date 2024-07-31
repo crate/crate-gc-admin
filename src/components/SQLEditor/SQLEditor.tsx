@@ -16,6 +16,7 @@ import { SchemaTableColumn } from 'types/cratedb';
 import { useGetTableColumnsQuery } from 'hooks/queryHooks';
 import { Loader, Text, Button, CopyToClipboard } from 'components';
 import { SYSTEM_SCHEMAS } from 'constants/database';
+import { useGCContext } from 'contexts';
 
 export type SQLEditorProps = {
   value?: string | undefined | null;
@@ -61,12 +62,16 @@ function SQLEditor({
   onViewHistory,
   title,
 }: SQLEditorProps) {
+  const { clusterId } = useGCContext();
+
   const SQL_EDITOR_CONTENT_KEY =
-    localStorageKey && `crate.gc.admin.${localStorageKey}`;
+    localStorageKey && `crate.gc.admin.${localStorageKey}.${clusterId || ''}`;
   const SQL_HISTORY_CONTENT_KEY =
-    localStorageKey && `crate.gc.admin.${localStorageKey}-history`;
+    localStorageKey &&
+    `crate.gc.admin.${localStorageKey}-history.${clusterId || ''}`;
   const SQL_HISTORY_TEMP_CONTENT_KEY =
-    localStorageKey && `crate.gc.admin.${localStorageKey}-history-temp`;
+    localStorageKey &&
+    `crate.gc.admin.${localStorageKey}-history-temp.${clusterId || ''}`;
 
   const getTableColumns = useGetTableColumnsQuery();
   const dataFromLocalStorage = SQL_EDITOR_CONTENT_KEY

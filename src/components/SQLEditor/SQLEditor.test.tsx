@@ -324,8 +324,8 @@ describe('The SQLEditor component', () => {
   });
 
   describe('when localStorageKey is set', () => {
-    const LOCAL_STORAGE_VALUE_KEY = 'crate.gc.admin.test';
-    const LOCAL_STORAGE_HISTORY_KEY = 'crate.gc.admin.test-history';
+    const LOCAL_STORAGE_VALUE_KEY = 'crate.gc.admin.test.';
+    const LOCAL_STORAGE_HISTORY_KEY = 'crate.gc.admin.test-history.';
 
     const initializeLocalStorage = (value: string, history: string) => {
       localStorage.setItem(LOCAL_STORAGE_VALUE_KEY, value);
