@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2024-08-02 - 0.9.2
+## 2024-08-02 - 0.9.3
 
 - Add clusterID to context, filter SQL console history by cluster.
 
