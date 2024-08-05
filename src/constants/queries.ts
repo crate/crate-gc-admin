@@ -2,12 +2,15 @@ import { SYSTEM_SCHEMAS } from './database';
 
 export const getTablesColumnsQuery = `
   SELECT
-    table_schema,
-    table_name,
-    column_name,
-    data_type
+    c.table_schema,
+    c.table_name,
+    c.column_name,
+    c.data_type,
+    t.table_type
   FROM
-    "information_schema"."columns"
+    "information_schema"."columns" c
+  JOIN
+    "information_schema"."tables" t ON c.table_schema = t.table_schema AND c.table_name = t.table_name
   ORDER BY
     table_schema,
     table_name,
@@ -43,33 +46,33 @@ export const getPartitionedTablesQuery = (includeSystemTables = false) => {
     or tables.system) AND partitioned_by IS NOT NULL ${includeSystemTables ? '' : 'AND NOT tables.system'}`;
 };
 
-export const nodesQuery = `SELECT 
-    id, 
-    name, 
-    hostname, 
-    heap, 
-    fs, 
-    load, 
-    version, 
-    process['cpu']['percent'] as cpu_usage, 
-    os_info['available_processors'] as available_processors, 
-    rest_url, 
-    os_info, 
-    now(), 
-    attributes, 
-    mem 
-  FROM 
-    sys.nodes 
-  ORDER BY 
+export const nodesQuery = `SELECT
+    id,
+    name,
+    hostname,
+    heap,
+    fs,
+    load,
+    version,
+    process['cpu']['percent'] as cpu_usage,
+    os_info['available_processors'] as available_processors,
+    rest_url,
+    os_info,
+    now(),
+    attributes,
+    mem
+  FROM
+    sys.nodes
+  ORDER BY
     name`;
 
 export const clusterInfoQuery = `
-  SELECT 
-    id, 
-    name, 
-    master_node, 
-    settings 
-  FROM 
+  SELECT
+    id,
+    name,
+    master_node,
+    settings
+  FROM
     sys.cluster`;
 
 export const shardsQuery = `

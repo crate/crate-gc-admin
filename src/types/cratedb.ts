@@ -113,6 +113,7 @@ export type SchemaTableColumn = {
   table_name: string;
   column_name: string;
   data_type: string;
+  table_type: string;
 };
 
 export type ShardInfo = {
