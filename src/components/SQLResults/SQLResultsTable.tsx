@@ -88,6 +88,9 @@ function SQLResultsTable({ result }: Params) {
         />
       );
     }
+    if (tableResultsFormat == 'raw' && typeof value == 'boolean') {
+      return value.toString();
+    }
     if (typeof value == 'object') {
       return JSON.stringify(value);
     }
