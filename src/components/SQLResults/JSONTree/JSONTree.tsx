@@ -66,7 +66,8 @@ function JSONTree({ json }: JSONTreeParams) {
       }
       const title: string | React.JSX.Element = children ? (
         <div key={`${config.path}-${k}-title`}>
-          {k}: <span className="opacity-50">{typeTitle(val)}</span>
+          {parentIsArray ? parseInt(k) + 1 : k}:{' '}
+          <span className="opacity-50">{typeTitle(val)}</span>
         </div>
       ) : (
         <div
