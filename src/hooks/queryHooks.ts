@@ -200,6 +200,7 @@ export const useGetTableColumnsQuery = () => {
       table_name: r[1],
       column_name: r[2],
       data_type: r[3],
+      table_type: r[4],
     }));
   };
 

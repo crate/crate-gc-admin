@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
 import { Tree } from 'antd';
-import { ApartmentOutlined, TableOutlined } from '@ant-design/icons';
+import {
+  ApartmentOutlined,
+  CompassOutlined,
+  SearchOutlined,
+  TableOutlined,
+} from '@ant-design/icons';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 import 'ace-builds/src-noconflict/theme-github';
@@ -120,26 +125,65 @@ function SQLEditor({
         }));
     };
 
+    const getTableIcon = (tableType: string) => {
+      switch (tableType) {
+        case 'FOREIGN':
+          return <CompassOutlined className="mr-1 size-3 opacity-50" />;
+        case 'VIEW':
+          return <SearchOutlined className="mr-1 size-3 opacity-50" />;
+        default:
+          return <TableOutlined className="mr-1 size-3 opacity-50" />;
+      }
+    };
+
+    const getTableDescription = (tableType: string) => {
+      switch (tableType) {
+        case 'FOREIGN':
+          return <div>foreign table</div>;
+        case 'VIEW':
+          return <div>view</div>;
+        default:
+          return <div>table</div>;
+      }
+    };
+
     const getTables = (schema: string) => {
-      const tables: string[] = [
-        ...new Set(
-          input.filter(i => i.table_schema === schema).map(i => i.table_name),
-        ),
-      ];
+      // constuct a list of unique table names. Note: cannot use Set()
+      // because equal objects are not considered unique
+      let prevTableName: string | null = null;
+      const tables: { name: string; type: string }[] = [];
+      input
+        .filter(i => i.table_schema === schema)
+        .forEach(i => {
+          if (prevTableName !== i.table_name) {
+            tables.push({ name: i.table_name, type: i.table_type });
+            prevTableName = i.table_name;
+          }
+        });
 
       return tables.map(table => ({
         title: (
-          <CopyToClipboard textToCopy={`${schema}.${table}`}>
-            {table}
-          </CopyToClipboard>
+          <span
+            className="flex items-center"
+            data-testid={`${schema}.${table.name}.${table.type}`}
+          >
+            {getTableIcon(table.type)}
+            <CopyToClipboard textToCopy={`${schema}.${table.name}`}>
+              {table.name}
+            </CopyToClipboard>
+            <Text pale className="ml-1 inline text-xs italic !leading-3">
+              {getTableDescription(table.type)}
+            </Text>
+          </span>
         ),
-        icon: <TableOutlined className="relative -top-1.5 size-3 opacity-50" />,
-        key: `${schema}.${table}`,
-        children: getColumns(schema, table),
+        // icon: getTableIcon(table.type),
+        key: `${schema}.${table.name}.${table.type}`,
+        children: getColumns(schema, table.name),
       }));
     };
 
     const schemas: string[] = [...new Set(input.map(i => i?.table_schema))];
+
     setTableTree(
       schemas.map(schema => ({
         title: (
@@ -325,7 +369,7 @@ function SQLEditor({
       <PanelResizeHandle className="flex w-1 flex-col justify-center bg-neutral-200 hover:bg-crate-blue">
         <div className="h-10 w-full bg-crate-blue" />
       </PanelResizeHandle>
-      <Panel defaultSize={85} minSize={25}>
+      <Panel defaultSize={78} minSize={25}>
         <div className="flex h-full flex-col">
           {title}
           <div

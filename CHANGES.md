@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-08-06 - 0.9.5
+
+- Mark VIEWs and FOREIGN TABLEs as such in the Console Table tree.
+
 ## 2024-08-02 - 0.9.4
 
 - Add clusterID to context, filter SQL console history by cluster.
