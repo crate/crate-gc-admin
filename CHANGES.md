@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-08-06 - 0.10.1
+
+- Console SQL array results are 1-indexed.
+
 ## 2024-08-06 - 0.10.0
 
 - Rework policy condition and add weeks as interval unit.
