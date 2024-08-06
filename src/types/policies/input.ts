@@ -17,7 +17,7 @@ export const PolicyTargetInput = z.object({
 });
 
 // Partitioning
-const PolicyPartitioningUnit = z.enum(['days', 'months', 'years']);
+const PolicyPartitioningUnit = z.enum(['days', 'weeks', 'months', 'years']);
 const PolicyPartitioningOperation = z.enum(['<=', '<']);
 export const PolicyPartitioningFormSchemaInput = z.object({
   column_name: z.string().min(1, {

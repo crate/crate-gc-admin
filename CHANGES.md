@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-08-06 - 0.10.0
+
+- Rework policy condition and add weeks as interval unit.
+
 ## 2024-08-06 - 0.9.6
 
 - Fix bug in SQL results to show booleans in RAW output correctly.

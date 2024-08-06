@@ -3,6 +3,10 @@ import scheduledJob from 'test/__mocks__/scheduledJob';
 import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
 import { Job } from 'types';
 import JobForm from './JobForm';
+import {
+  AUTOMATION_TAB_KEYS,
+  AUTOMATION_TAB_QUERY_PARAM_KEY,
+} from '../routes/AutomationTabsConstants';
 
 const onSaveSpy = jest.fn();
 
@@ -12,6 +16,8 @@ const setupAdd = (onSave?: () => void) => {
 const setupEdit = (job: Job, onSave?: () => void) => {
   return render(<JobForm type="edit" job={job} onSave={onSave} />);
 };
+
+const backToJobsListLink = `..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.JOBS}`;
 
 describe('The "JobForm" component', () => {
   afterEach(() => {
@@ -83,7 +89,7 @@ describe('The "JobForm" component', () => {
 
       await user.click(screen.getByText('Cancel'));
 
-      expect(navigateMock).toHaveBeenCalledWith(-1);
+      expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink);
     });
   });
 
@@ -103,7 +109,7 @@ describe('The "JobForm" component', () => {
           expect(createJobSpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith(-1);
+        expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink);
       });
     });
 
@@ -172,7 +178,7 @@ describe('The "JobForm" component', () => {
           expect(updateJobSpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith(-1);
+        expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink);
       });
     });
 

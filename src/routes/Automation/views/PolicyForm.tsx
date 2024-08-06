@@ -37,6 +37,10 @@ import { EMPTY_POLICY_FORM } from 'constants/policies';
 import { ApiOutput, apiPost, apiPut } from 'utils';
 import useEligibleColumns from '../hooks/useEligibleColumns';
 import usePolicyPreview from '../hooks/usePolicyPreview';
+import {
+  AUTOMATION_TAB_KEYS,
+  AUTOMATION_TAB_QUERY_PARAM_KEY,
+} from '../routes/AutomationTabsConstants';
 
 type PolicyFormAdd = { type: 'add'; onSave?: () => void };
 type PolicyFormEdit = { type: 'edit'; onSave?: () => void; policy: Policy };
@@ -77,7 +81,7 @@ export default function PolicyForm(props: PolicyFormProps) {
   });
 
   const backToPolicyList = () => {
-    navigate(-1);
+    navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.POLICIES}`);
   };
 
   const onSubmit: SubmitHandler<PolicyInput> = async (data: PolicyInput) => {
@@ -191,8 +195,7 @@ export default function PolicyForm(props: PolicyFormProps) {
           <Grid.Item colSpan={6}>
             <Card title="Tables" className="p-0">
               <Form.Description>
-                Select the tables that contains the partitions that you want to be
-                affected by the policy.
+                Specify which tables will be impacted by the policy.
               </Form.Description>
               <Form.Field
                 control={form.control}
@@ -243,8 +246,7 @@ export default function PolicyForm(props: PolicyFormProps) {
           <Grid.Item colSpan={6}>
             <Card title="Partitions" className="p-0">
               <Text pale className="text-xs leading-4">
-                The affected partitions are the ones that satisfy the condition on
-                the specified time column.
+                Specify which partitions will be impacted by the policy.
               </Text>
               {/* partitioning.column_name */}
               <Form.Field
@@ -258,9 +260,9 @@ export default function PolicyForm(props: PolicyFormProps) {
                           Time Column <span className="text-red-600">*</span>
                         </Form.Label>
                         <Text pale className="text-xs leading-4">
-                          The time column will be used with the condition to select
-                          which data will be affected. This column should be preset
-                          in all the tables/schemas that the policy is using.
+                          Select a timestamp column used for partitioning. Ensure
+                          this column exists in all relevant tables or schemas for
+                          the policy to work correctly.
                         </Text>
                       </div>
                       <Form.Control>
@@ -322,8 +324,7 @@ export default function PolicyForm(props: PolicyFormProps) {
                           Condition <span className="text-red-600">*</span>
                         </Form.Label>
                         <Text pale className="text-xs leading-4">
-                          It is used to select the partitions that will be affected
-                          by policy actions.
+                          Filter the partitions that will be affected by the policy.
                         </Text>
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -411,6 +412,9 @@ export default function PolicyForm(props: PolicyFormProps) {
                                       <Select.Content>
                                         <Select.Item value="days">
                                           day(s)
+                                        </Select.Item>
+                                        <Select.Item value="weeks">
+                                          week(s)
                                         </Select.Item>
                                         <Select.Item value="months">
                                           month(s)
