@@ -20,6 +20,10 @@ import {
   Text,
 } from 'components';
 import { ApiError } from 'types/api';
+import {
+  AUTOMATION_TAB_KEYS,
+  AUTOMATION_TAB_QUERY_PARAM_KEY,
+} from '../routes/AutomationTabsConstants';
 
 type JobFormAdd = { type: 'add' };
 type JobFormEdit = { type: 'edit'; job: Job };
@@ -55,7 +59,7 @@ export default function JobForm(props: JobFormProps) {
   const errors = form.formState.errors;
 
   const backToJobList = () => {
-    navigate(-1);
+    navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.JOBS}`);
   };
 
   const onSubmit: SubmitHandler<JobInput> = async (data: JobInput) => {
