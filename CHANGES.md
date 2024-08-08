@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-08-08 - 0.10.2
+
+- Change operation labels in policy form.
+
 ## 2024-08-06 - 0.10.1
 
 - Console SQL array results are 1-indexed.
