@@ -348,8 +348,12 @@ export default function PolicyForm(props: PolicyFormProps) {
                                       }}
                                     >
                                       <Select.Content>
-                                        <Select.Item value="<=">{'<='}</Select.Item>
-                                        <Select.Item value="<">{'<'}</Select.Item>
+                                        <Select.Item value="<">
+                                          older than
+                                        </Select.Item>
+                                        <Select.Item value="<=">
+                                          exactly or older than
+                                        </Select.Item>
                                       </Select.Content>
                                     </Select.Root>
                                   </Form.Control>
