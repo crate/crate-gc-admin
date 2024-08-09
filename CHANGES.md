@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-08-12 - 0.10.3
+
+- Handle sqlparse errors.
+
 ## 2024-08-08 - 0.10.2
 
 - Change operation labels in policy form.
