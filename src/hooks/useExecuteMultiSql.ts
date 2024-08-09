@@ -49,9 +49,18 @@ export default function useExecuteMultiSql() {
     executionId.current = executionId.current + 1;
 
     // Parse queries
-    const parsedQueries = parseQueries(multipleQueries);
-
-    const errorStatement = parsedQueries.find(stmt => stmt.exception);
+    let parsedQueries;
+    let errorStatement;
+    // let errorStatement = null;
+    try {
+      parsedQueries = parseQueries(multipleQueries);
+      errorStatement = parsedQueries.find(stmt => stmt.exception);
+    } catch (e) {
+      parsedQueries = [];
+      errorStatement = {
+        exception: { line: 1, message: 'Unable to parse queries' },
+      };
+    }
 
     if (errorStatement) {
       // set error
