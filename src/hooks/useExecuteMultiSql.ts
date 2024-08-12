@@ -1,4 +1,5 @@
 import { sqlparse } from '@cratedb/cratedb-sqlparse';
+import { Statement } from 'node_modules/@cratedb/cratedb-sqlparse/dist/parser';
 import { QueryResult, QueryStatus, QueryStatusType } from 'types/query';
 import useExecuteSql from './useExecuteSql';
 import { HttpStatusCode } from 'axios';
@@ -49,9 +50,18 @@ export default function useExecuteMultiSql() {
     executionId.current = executionId.current + 1;
 
     // Parse queries
-    const parsedQueries = parseQueries(multipleQueries);
-
-    const errorStatement = parsedQueries.find(stmt => stmt.exception);
+    let parsedQueries: Statement[];
+    let errorStatement;
+    // let errorStatement = null;
+    try {
+      parsedQueries = parseQueries(multipleQueries);
+      errorStatement = parsedQueries.find(stmt => stmt.exception);
+    } catch (e) {
+      parsedQueries = [];
+      errorStatement = {
+        exception: { line: 1, message: 'Unable to parse queries' },
+      };
+    }
 
     if (errorStatement) {
       // set error
