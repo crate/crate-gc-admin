@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-08-14 - 0.11.0
+
+- Migrate JWT token store from cookies to sessionStorage.
+
 ## 2024-08-12 - 0.10.3
 
 - Handle sqlparse errors.

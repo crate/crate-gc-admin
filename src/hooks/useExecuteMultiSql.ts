@@ -52,7 +52,6 @@ export default function useExecuteMultiSql() {
     // Parse queries
     let parsedQueries: Statement[];
     let errorStatement;
-    // let errorStatement = null;
     try {
       parsedQueries = parseQueries(multipleQueries);
       errorStatement = parsedQueries.find(stmt => stmt.exception);
