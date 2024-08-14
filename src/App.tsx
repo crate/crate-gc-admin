@@ -7,7 +7,7 @@ import { Layout, StatusBar, StatsUpdater } from 'components';
 import logo from './assets/logo.svg';
 import useGcApi from 'hooks/useGcApi';
 import { apiGet } from 'utils/api';
-import { GRAND_CENTRAL_TOKEN_COOKIE } from 'constants/cookie';
+import { GRAND_CENTRAL_SESSION_TOKEN_KEY } from 'constants/session';
 import NotificationHandler from 'components/NotificationHandler';
 import { root } from 'constants/paths';
 
@@ -39,7 +39,7 @@ function App() {
       gcStatus={gcStatus}
       gcUrl={gcUrl}
       crateUrl={crateUrl}
-      sessionCookieName={GRAND_CENTRAL_TOKEN_COOKIE}
+      sessionTokenKey={GRAND_CENTRAL_SESSION_TOKEN_KEY}
     >
       <StatsUpdater />
       <Layout

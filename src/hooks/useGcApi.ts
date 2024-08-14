@@ -1,5 +1,4 @@
 import axios, { HttpStatusCode } from 'axios';
-import Cookies from 'js-cookie';
 import { useGCContext } from 'contexts';
 
 const RENEW_JWT_CODES: HttpStatusCode[] = [
@@ -8,7 +7,7 @@ const RENEW_JWT_CODES: HttpStatusCode[] = [
 ];
 
 export default function useGcApi() {
-  const { gcUrl, onGcApiJwtExpire, sessionCookieName } = useGCContext();
+  const { gcUrl, onGcApiJwtExpire, sessionTokenKey } = useGCContext();
 
   const instance = axios.create({
     baseURL: gcUrl,
@@ -16,7 +15,7 @@ export default function useGcApi() {
   });
 
   instance.interceptors.request.use(config => {
-    const token = Cookies.get(sessionCookieName);
+    const token = sessionStorage.getItem(sessionTokenKey);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

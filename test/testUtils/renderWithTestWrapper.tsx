@@ -3,7 +3,7 @@ import { render as rtlRender, screen as rtlScreen } from '@testing-library/react
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import { ConnectionStatus, GCContextProvider } from 'contexts';
 import { SWRConfig } from 'swr';
-import { GRAND_CENTRAL_TOKEN_COOKIE } from 'constants/cookie';
+import { GRAND_CENTRAL_SESSION_TOKEN_KEY } from 'constants/session';
 
 type RenderType = {
   user: UserEvent;
@@ -31,7 +31,7 @@ const render = (ui: React.ReactElement, { ...options } = {}): RenderType => {
             crateUrl={'CRATE_URL'}
             gcStatus={ConnectionStatus.CONNECTED}
             headings
-            sessionCookieName={GRAND_CENTRAL_TOKEN_COOKIE}
+            sessionTokenKey={GRAND_CENTRAL_SESSION_TOKEN_KEY}
           >
             {children}
           </GCContextProvider>
