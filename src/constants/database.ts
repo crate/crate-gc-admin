@@ -12,3 +12,9 @@ export const NODE_STATUS_THRESHOLD = {
   WARNING: 90,
   GOOD: 0,
 } as const;
+
+// JWT authentication was added in crate 5.7.2. however, it is supported
+// on all clusters in the cloud from 5.8.2.
+// it is possible to manually enable it on 5.7.2+ cloud clusters, but at
+// this time, this has not been done.
+export const CRATE_AUTHENTICATE_VIA_JWT_MIN_VERSION = '5.8.2';
