@@ -5,6 +5,7 @@ type GCContextType = {
   gcStatus: ConnectionStatus;
   gcUrl?: string;
   crateUrl?: string;
+  crateVersion?: string;
   sessionTokenKey: string;
   headings?: boolean;
   onGcApiJwtExpire?: () => Promise<void>;
@@ -24,6 +25,7 @@ const defaultProps: GCContextType = {
   gcUrl: process.env.REACT_APP_GRAND_CENTRAL_URL,
   sessionTokenKey: GRAND_CENTRAL_SESSION_TOKEN_KEY,
   crateUrl: undefined,
+  crateVersion: undefined,
   headings: true,
   clusterId: undefined,
 };

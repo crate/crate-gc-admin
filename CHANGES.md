@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-02 - 0.12.0
+
+- Update SQL query call to connect directly to database, rather than via GC, when able to do so.
+
 ## 2024-08-14 - 0.11.0
 
 - Migrate JWT token store from cookies to sessionStorage.
