@@ -215,11 +215,11 @@ function SQLEditor({
       We have to do this hack to reset the command used by the shortcut, because Ace
       keeps hang of it between re-renders and does not update. And it does need to
       update, i.e. if the URL to the backend changes.
-     */
+    */
     if (!ace) {
       return;
     }
-    ace.commands.byName.gcExec.exec = editor => exec(editor.getValue());
+    ace.commands.byName.gcExec.exec = () => exec();
   }, [ace, onExecute]);
 
   // Update annotations when results are ready
@@ -244,14 +244,17 @@ function SQLEditor({
     }
   }, [value]);
 
-  const exec = (sql: string | null) => {
+  const exec = () => {
+    const sql = ace?.getSelectedText().trim() || ace?.getValue() || '';
     if (!sql) {
       return;
     }
+
     if (isLocalStorageUsed) {
       localStorage.setItem(SQL_EDITOR_CONTENT_KEY!, sql);
       pushHistory(sql);
     }
+
     onExecute(sql);
     ace?.focus();
   };
@@ -388,7 +391,7 @@ function SQLEditor({
                     // @ts-expect-error type problem
                     linux: 'Ctrl-Enter',
                   },
-                  exec: editor => exec(editor.getValue()),
+                  exec: () => exec(),
                 },
                 {
                   name: 'gcPrev',
@@ -481,7 +484,7 @@ function SQLEditor({
             <div className="flex w-full items-center justify-between px-2 py-1.5">
               <div className="flex items-center gap-2 ">
                 {showRunButton && (
-                  <Button kind="primary" size="small" onClick={() => exec(sql)}>
+                  <Button kind="primary" size="small" onClick={() => exec()}>
                     <CaretRightOutlined className="mr-2" />
                     {runButtonLabel}
                   </Button>

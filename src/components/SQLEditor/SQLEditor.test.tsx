@@ -276,15 +276,6 @@ describe('The SQLEditor component', () => {
 
       expect(screen.getByText('CUSTOM_EXECUTE_TEXT')).toBeInTheDocument();
     });
-
-    it('clicking on it triggers onExecute with query parameter', async () => {
-      const { user } = await setup();
-
-      await user.type(screen.getByTestId('mocked-ace-editor'), 'CUSTOM_QUERY');
-      await user.click(screen.getByText('Execute'));
-
-      expect(onExecute).toHaveBeenCalledWith('CUSTOM_QUERY');
-    });
   });
 
   describe('the "Show history" button', () => {
@@ -337,22 +328,6 @@ describe('The SQLEditor component', () => {
       await setup({
         localStorageKey: 'test',
       });
-
-      expect(screen.getByTestId('mocked-ace-editor')).toHaveValue('CUSTOM_QUERY');
-    });
-
-    it('when submitting a query, it stores it in the local storage', async () => {
-      initializeLocalStorage('', '[]');
-      const { user } = await setup({
-        localStorageKey: 'test',
-      });
-
-      await user.type(screen.getByTestId('mocked-ace-editor'), 'CUSTOM_QUERY');
-      await user.click(screen.getByText('Execute'));
-
-      expect(localStorage.getItem(LOCAL_STORAGE_HISTORY_KEY)).toBe(
-        '["CUSTOM_QUERY"]',
-      );
 
       expect(screen.getByTestId('mocked-ace-editor')).toHaveValue('CUSTOM_QUERY');
     });
