@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-09-05 - 0.12.1
+
 - Add ability to execute selected text only in SQL console.
 
 ## 2024-09-02 - 0.12.0
