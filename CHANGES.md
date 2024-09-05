@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add ability to execute selected text only in SQL console.
+
 ## 2024-09-02 - 0.12.0
 
 - Update SQL query call to connect directly to database, rather than via GC, when able to do so.
