@@ -55,7 +55,7 @@ const getColumnsDefinition = ({
       accessorKey: 'active',
       header: 'Active',
       meta: {
-        columnWidth: '70px',
+        minWidth: '70px',
       },
       cell: ({ row, table }) => {
         const policy = row.original;
@@ -172,7 +172,7 @@ const getColumnsDefinition = ({
     {
       header: ' ',
       meta: {
-        columnWidth: '80px',
+        minWidth: '80px',
       },
       cell: ({ row }) => {
         const policy = row.original;
@@ -301,7 +301,7 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
       <div className="overflow-x-a w-full">
         <DataTable
           elementsPerPage={POLICIES_TABLE_PAGE_SIZE}
-          noResultsLabel="No policies found."
+          noResultsLabel="No policies found"
           data={policiesEnriched.sort(sortByString('name'))}
           columns={getColumnsDefinition({
             editPolicy: (policy: EnrichedPolicy) => {

@@ -29,7 +29,7 @@ function Nodes() {
     {
       header: 'Node',
       meta: {
-        columnWidth: '140px',
+        minWidth: '140px',
       },
       cell: ({ row }) => {
         const node = row.original;
@@ -43,7 +43,7 @@ function Nodes() {
     {
       header: 'Load',
       meta: {
-        columnWidth: MIN_COL_WIDTH,
+        minWidth: MIN_COL_WIDTH,
       },
       cell: ({ row }) => {
         const node = row.original;
@@ -53,7 +53,7 @@ function Nodes() {
     {
       header: 'Heap Usage',
       meta: {
-        columnWidth: MIN_COL_WIDTH,
+        minWidth: MIN_COL_WIDTH,
       },
       cell: ({ row }) => {
         const node = row.original;
@@ -63,7 +63,7 @@ function Nodes() {
     {
       header: 'Disk Usage',
       meta: {
-        columnWidth: MIN_COL_WIDTH,
+        minWidth: MIN_COL_WIDTH,
       },
       cell: ({ row }) => {
         const node = row.original;
@@ -73,7 +73,7 @@ function Nodes() {
     {
       header: 'Disk Operations',
       meta: {
-        columnWidth: MIN_COL_WIDTH,
+        minWidth: MIN_COL_WIDTH,
       },
       cell: ({ row }) => {
         const node = row.original;
@@ -83,7 +83,7 @@ function Nodes() {
     {
       header: 'Shards',
       meta: {
-        columnWidth: MIN_COL_WIDTH,
+        minWidth: MIN_COL_WIDTH,
       },
       cell: ({ row }) => {
         const node = row.original;

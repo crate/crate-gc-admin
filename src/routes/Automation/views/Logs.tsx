@@ -178,7 +178,7 @@ const getColumnsDefinition = ({ setError }: { setError: SetErrorFunction }) => {
       header: 'Name',
       id: 'name',
       meta: {
-        columnWidth: '15%',
+        minWidth: '15%',
         filter: {
           label: 'Tasks',
           searchBar: true,
@@ -197,7 +197,7 @@ const getColumnsDefinition = ({ setError }: { setError: SetErrorFunction }) => {
       header: 'Execution Time',
       id: 'execution_time',
       meta: {
-        columnWidth: '25%',
+        minWidth: '25%',
       },
       enableSorting: true,
       accessorFn: (log: TaskLog) => {
@@ -217,7 +217,7 @@ const getColumnsDefinition = ({ setError }: { setError: SetErrorFunction }) => {
       header: 'Run Time',
       id: 'run_time',
       meta: {
-        columnWidth: '200px',
+        minWidth: '200px',
       },
       enableSorting: true,
       sortingFn: (rowA: Row<TaskLog>, rowB: Row<TaskLog>) => {
@@ -313,7 +313,7 @@ export default function Logs() {
           className="table-fixed"
           enableFilters
           elementsPerPage={JOBS_LOGS_TABLE_PAGE_SIZE}
-          noResultsLabel="No logs found."
+          noResultsLabel="No logs found"
           defaultSorting={[
             {
               id: 'execution_time',

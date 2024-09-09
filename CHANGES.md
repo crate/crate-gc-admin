@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## 2024-09-19 - 0.13.0
+
 - Add scroll margin to SQL console editor.
 - Bump sqlparse to 0.0.6.
+- Improve the UX of the SQL results output.
 
 ## 2024-09-05 - 0.12.1
 

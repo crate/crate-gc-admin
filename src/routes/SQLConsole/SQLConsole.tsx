@@ -80,10 +80,8 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
           <div className="h-full w-10 bg-crate-blue" />
         </PanelResizeHandle>
         <Panel minSize={5}>
-          <div className="h-full overflow-auto">
-            {queryResults && <SQLResults results={queryResults} />}
-            {!queryResults && <NoDataView />}
-          </div>
+          {queryResults && <SQLResults results={queryResults} />}
+          {!queryResults && <NoDataView />}
         </Panel>
       </PanelGroup>
       <SQLHistory

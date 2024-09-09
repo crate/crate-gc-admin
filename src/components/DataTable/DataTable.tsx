@@ -35,6 +35,11 @@ export type DataTableProps<TData, TValue> = {
   elementsPerPage?: number;
   additionalState?: unknown;
   defaultSorting?: ColumnSort[];
+  hidePaginationPageSize?: boolean;
+  hidePaginationWhenSinglePage?: boolean;
+  stickyHeader?: boolean;
+  paginationContent?: React.ReactNode;
+  paginationAtTop?: boolean;
   getRowId?: (data: TData, index: number, row?: Row<TData>) => string;
 };
 
@@ -63,11 +68,16 @@ export function DataTable<TData, TValue>({
   data,
   className,
   defaultSorting,
-  noResultsLabel = 'No results.',
+  noResultsLabel = 'No results',
   enableFilters = false,
   enableSearchBox = false,
+  hidePaginationPageSize = false,
+  hidePaginationWhenSinglePage = false,
+  stickyHeader = false,
   elementsPerPage = DEFAULT_ELEMENTS_PER_PAGE,
   additionalState,
+  paginationContent,
+  paginationAtTop = false,
   getRowId,
 }: DataTableProps<TData, TValue>) {
   const location = useLocation();
@@ -136,6 +146,37 @@ export function DataTable<TData, TValue>({
     return flexRender(header.column.columnDef.header, header.getContext());
   };
 
+  const renderPagination = () => {
+    // return null when there is nothing to show
+    if (!paginationContent && pageCount === 1 && hidePaginationWhenSinglePage) {
+      return null;
+    }
+
+    return (
+      <div
+        className={`flex h-10 items-center justify-between px-2 py-1 ${paginationAtTop ? 'border-b' : 'border-t'}`}
+      >
+        {paginationContent ? paginationContent : <div />}
+        {!(pageCount === 1 && hidePaginationWhenSinglePage) && (
+          <Pagination
+            testId="datatable-pagination"
+            className="justify-end"
+            pageSize={pageSize}
+            currentPage={currentPage}
+            totalPages={pageCount}
+            onPageChange={(pageNumber: number) => {
+              table.setPageIndex(pageNumber - 1);
+            }}
+            onPageSizeChange={(pageSize: number) => {
+              table.setPageSize(pageSize);
+            }}
+            hidePageSize={!hidePaginationPageSize}
+          />
+        )}
+      </div>
+    );
+  };
+
   // Sync col filters with query param!
   useEffect(() => {
     const urlSearch = new URLSearchParams(location.search);
@@ -161,7 +202,10 @@ export function DataTable<TData, TValue>({
   }, [columnFilters]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <>
+      {/* Pagination */}
+      {paginationAtTop && renderPagination()}
+
       {/* Filters */}
       {enableFilters && (
         <DataTableFilters
@@ -175,99 +219,89 @@ export function DataTable<TData, TValue>({
       )}
 
       {/* Table */}
-      <div>
-        <Table className={className}>
-          <Table.Header>
-            {table.getHeaderGroups().map(headerGroup => (
-              <Table.RowHeader key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  return (
-                    <Table.Head
-                      key={header.id}
-                      style={{
-                        minWidth: header.column.columnDef.meta
-                          ? header.column.columnDef.meta.columnWidth
-                          : undefined,
-                      }}
-                      data-testid={`head_col_${header.id}`}
-                      data-sorting={header.column.getIsSorted() || 'false'}
-                    >
-                      {renderHeader(header)}
+      <Table className={className}>
+        <Table.Header>
+          {table.getHeaderGroups().map(headerGroup => (
+            <Table.RowHeader key={headerGroup.id}>
+              {headerGroup.headers.map(header => {
+                return (
+                  <Table.Head
+                    key={header.id}
+                    className={stickyHeader ? 'sticky top-0 z-10 bg-slate-50' : ''}
+                    style={{
+                      width: header.column.columnDef.meta?.width
+                        ? header.column.columnDef.meta.width
+                        : undefined,
+                      minWidth: header.column.columnDef.meta?.minWidth
+                        ? header.column.columnDef.meta.minWidth
+                        : undefined,
+                    }}
+                    data-testid={`head_col_${header.id}`}
+                    data-sorting={header.column.getIsSorted() || 'false'}
+                  >
+                    {renderHeader(header)}
 
-                      {header.column.getCanSort() && (
-                        <Button
-                          kind={Button.kinds.TERTIARY}
-                          className={cn(
-                            '!leading-3',
-                            {
-                              'opacity-20': !header.column.getIsSorted(),
-                              'opacity-70': header.column.getIsSorted(),
-                            },
-                            'hover:opacity-100',
-                          )}
-                          onClick={() => {
-                            header.column.toggleSorting(
-                              header.column.getIsSorted() !== 'desc',
-                            );
-                          }}
-                          id={`sorting_button_${header.id}`}
-                        >
-                          {header.column.getIsSorted() === 'asc' ? (
-                            <ArrowUpOutlined className="ml-2 size-4" />
-                          ) : (
-                            <ArrowDownOutlined className="ml-2 size-4" />
-                          )}
-                        </Button>
-                      )}
-                    </Table.Head>
-                  );
-                })}
-              </Table.RowHeader>
-            ))}
-          </Table.Header>
-          <Table.Body>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
-                <Table.Row
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  data-row-key={row.id}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <Table.Cell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </Table.Cell>
-                  ))}
-                </Table.Row>
-              ))
-            ) : (
-              <Table.Row>
-                <Table.Cell
-                  colSpan={columns.length}
-                  className="h-24 pt-10 text-center leading-5 tracking-wide text-neutral-500"
-                >
-                  {noResultsLabel}
-                </Table.Cell>
+                    {header.column.getCanSort() && (
+                      <Button
+                        kind={Button.kinds.TERTIARY}
+                        className={cn(
+                          '!leading-3',
+                          {
+                            'opacity-20': !header.column.getIsSorted(),
+                            'opacity-70': header.column.getIsSorted(),
+                          },
+                          'hover:opacity-100',
+                        )}
+                        onClick={() => {
+                          header.column.toggleSorting(
+                            header.column.getIsSorted() !== 'desc',
+                          );
+                        }}
+                        id={`sorting_button_${header.id}`}
+                      >
+                        {header.column.getIsSorted() === 'asc' ? (
+                          <ArrowUpOutlined className="ml-2 size-4" />
+                        ) : (
+                          <ArrowDownOutlined className="ml-2 size-4" />
+                        )}
+                      </Button>
+                    )}
+                  </Table.Head>
+                );
+              })}
+            </Table.RowHeader>
+          ))}
+        </Table.Header>
+        <Table.Body>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map(row => (
+              <Table.Row
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+                data-row-key={row.id}
+              >
+                {row.getVisibleCells().map(cell => (
+                  <Table.Cell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Table.Cell>
+                ))}
               </Table.Row>
-            )}
-          </Table.Body>
-        </Table>
-      </div>
+            ))
+          ) : (
+            <Table.Row className="hover:bg-transparent">
+              <Table.Cell
+                colSpan={columns.length}
+                className="h-24 pt-10 text-center leading-5 tracking-wide text-neutral-500 "
+              >
+                {noResultsLabel}
+              </Table.Cell>
+            </Table.Row>
+          )}
+        </Table.Body>
+      </Table>
 
       {/* Pagination */}
-      <Pagination
-        testId="datatable-pagination"
-        className="justify-end"
-        pageSize={pageSize}
-        currentPage={currentPage}
-        totalPages={pageCount}
-        onPageChange={(pageNumber: number) => {
-          table.setPageIndex(pageNumber - 1);
-        }}
-        onPageSizeChange={(pageSize: number) => {
-          table.setPageSize(pageSize);
-        }}
-      />
-    </div>
+      {!paginationAtTop && renderPagination()}
+    </>
   );
 }

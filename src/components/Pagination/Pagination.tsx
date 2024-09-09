@@ -17,6 +17,7 @@ export type PaginationProps = {
   pageToShow?: number;
   className?: string;
   testId?: string;
+  hidePageSize?: boolean;
   onPageChange: (pageNumber: number) => void;
   onPageSizeChange: (pageSize: number) => void;
 };
@@ -30,6 +31,7 @@ const Pagination = ({
   onPageSizeChange,
   className = '',
   testId,
+  hidePageSize = false,
 }: PaginationProps) => {
   let minPageIndex = currentPage - Math.floor(pageToShow / 2);
   let maxPageIndex = currentPage + Math.ceil(pageToShow / 2);
@@ -57,7 +59,7 @@ const Pagination = ({
       data-testid={testId}
       role="navigation"
       aria-label="pagination"
-      className={cn('mx-auto flex w-full justify-center', className)}
+      className={cn('mx-auto flex w-full select-none justify-center', className)}
     >
       <Content>
         {/* Prev Button */}
@@ -150,22 +152,24 @@ const Pagination = ({
         </Item>
 
         {/* Page Size select */}
-        <Select.Root
-          label="Select a page size"
-          value={pageSize.toString()}
-          onValueChange={(newValue: string) => {
-            onPageSizeChange(parseInt(newValue));
-          }}
-        >
-          <Select.Content>
-            <Select.Group>
-              <Select.Item value="10">10 / Page</Select.Item>
-              <Select.Item value="20">20 / Page</Select.Item>
-              <Select.Item value="50">50 / Page</Select.Item>
-              <Select.Item value="100">100 / Page</Select.Item>
-            </Select.Group>
-          </Select.Content>
-        </Select.Root>
+        {!hidePageSize && (
+          <Select.Root
+            label="Select a page size"
+            value={pageSize.toString()}
+            onValueChange={(newValue: string) => {
+              onPageSizeChange(parseInt(newValue));
+            }}
+          >
+            <Select.Content>
+              <Select.Group>
+                <Select.Item value="10">10 / Page</Select.Item>
+                <Select.Item value="20">20 / Page</Select.Item>
+                <Select.Item value="50">50 / Page</Select.Item>
+                <Select.Item value="100">100 / Page</Select.Item>
+              </Select.Group>
+            </Select.Content>
+          </Select.Root>
+        )}
       </Content>
     </nav>
   );
@@ -210,18 +214,18 @@ const Button = ({
         // Normal state
         '!border-transparent',
         {
-          'hover:!text-[#23bfde] active:!border-[#23bfde] active:!text-[#23bfde]':
-            !disabled,
+          'hover:!text-[#23bfde]': !disabled,
+          'hover:!text-white': isActive && !disabled,
         },
-        '!px-[6px]',
-        '!text-[14px]',
+        '!px-[4px]',
+        '!text-[13px]',
         '!leading-[22px]',
-        '!h-auto',
+        '!h-[18px]',
         // + active
         {
           '!text-black': !isActive,
-          '!text-crate-blue': isActive,
-          '!border-crate-blue': isActive,
+          '!text-white': isActive,
+          '!bg-crate-blue': isActive,
         },
         // + disable state
         {
@@ -243,7 +247,7 @@ const Previous = ({ className, ...props }: Partial<ButtonProps>) => (
     className={cn('!border-none', className)}
     {...props}
   >
-    <LeftOutlined className="size-4" />
+    <LeftOutlined className="size-2" />
   </Button>
 );
 Previous.displayName = 'PaginationPrevious';
@@ -254,7 +258,7 @@ const Next = ({ className, ...props }: Partial<ButtonProps>) => (
     className={cn('!border-none', className)}
     {...props}
   >
-    <RightOutlined className="size-4" />
+    <RightOutlined className="size-2" />
   </Button>
 );
 Next.displayName = 'PaginationNext';
