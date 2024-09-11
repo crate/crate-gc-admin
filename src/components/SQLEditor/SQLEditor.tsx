@@ -465,6 +465,7 @@ function SQLEditor({
               onLoad={editor => {
                 setAce(editor);
               }}
+              scrollMargin={[5, 5, 0, 5]}
               setOptions={{
                 showLineNumbers: true,
                 tabSize: 2,
