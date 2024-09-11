@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add scroll margin to SQL console editor.
+
 ## 2024-09-05 - 0.12.1
 
 - Add ability to execute selected text only in SQL console.
