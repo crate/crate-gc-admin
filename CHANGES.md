@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add scroll margin to SQL console editor.
+- Bump sqlparse to 0.0.6.
 
 ## 2024-09-05 - 0.12.1
 
