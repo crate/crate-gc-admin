@@ -80,12 +80,12 @@ const Head = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 bg-table-row-hover px-2 text-left align-middle font-medium text-[#737373] [&:has([role=checkbox])]:pr-0',
+      'h-12 bg-table-row-hover text-left align-middle font-medium text-[#737373] [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}
   >
-    <span className="flex grow border-r">{children}</span>
+    <span className="flex grow border-r px-2">{children}</span>
   </th>
 ));
 Head.displayName = 'TableHead';

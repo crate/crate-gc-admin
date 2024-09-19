@@ -1,13 +1,13 @@
-import CrateTabs from 'components/CrateTabs';
-import { QueryStatus } from 'types/query';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
   PauseCircleOutlined,
 } from '@ant-design/icons';
-import SQLResultsTable from './SQLResultsTable';
+import CrateTabsShad from 'components/CrateTabsShad';
 import Loader from 'components/Loader';
+import SQLResultsTable from './SQLResultsTable';
+import { QueryStatus } from 'types/query';
 
 type Params = {
   results: QueryStatus[] | undefined;
@@ -62,18 +62,11 @@ function SQLResults({ results, format }: Params) {
           ) : null}
         </div>
       ),
-      children: renderResult(queryResult),
+      content: renderResult(queryResult),
     };
   });
-  return (
-    <CrateTabs
-      defaultActiveKey="1"
-      items={tabs}
-      indentTabBar
-      queryParamKeyActiveTab={null}
-      className="squeezed-tabs"
-    />
-  );
+
+  return <CrateTabsShad items={tabs} hideWhenSingleTab stickyTabBar />;
 }
 
 export default SQLResults;

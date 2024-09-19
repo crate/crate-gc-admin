@@ -1,7 +1,8 @@
-import React from 'react';
-import { Radio, Table } from 'antd';
+import { Radio } from 'antd';
+import { ColumnDef } from '@tanstack/react-table';
 import _ from 'lodash';
 import Chip from 'components/Chip';
+import DataTable from 'components/DataTable';
 import Switch from 'components/Switch';
 import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
 import { dbTypeToHumanReadable } from './utils';
@@ -14,11 +15,28 @@ import {
 } from 'types/query';
 import useSessionStore from 'state/session';
 
-const COLUMN_SIZE = 150;
-
 type Params = {
   result: QueryResult | undefined;
   format?: boolean;
+};
+
+type JSONData = {
+  json: string;
+  SQL_RESULTS_ROW_NUMBER: React.ReactNode;
+};
+type CSVData = {
+  csv: string;
+};
+type TableViewData = Record<string, React.ReactNode> & {
+  SQL_RESULTS_ROW_NUMBER: React.ReactNode;
+};
+type NoColumnsData = {
+  result: string;
+};
+
+type DataTableColumnData<T> = {
+  columns: ColumnDef<T>[];
+  data: T[];
 };
 
 function SQLResultsTable({ result }: Params) {
@@ -78,8 +96,8 @@ function SQLResultsTable({ result }: Params) {
     type: ColumnType,
     value: unknown,
     numColumns: number,
-  ) => {
-    if (tableResultsFormat == 'pretty') {
+  ): React.ReactNode => {
+    if (tableResultsFormat === 'pretty') {
       return (
         <TypeAwareValue
           value={value}
@@ -88,176 +106,162 @@ function SQLResultsTable({ result }: Params) {
         />
       );
     }
-    if (tableResultsFormat == 'raw' && typeof value == 'boolean') {
+    if (tableResultsFormat === 'raw' && typeof value === 'boolean') {
       return value.toString();
     }
-    if (typeof value == 'object') {
+    if (typeof value === 'object') {
       return JSON.stringify(value);
     }
-    return value;
+    return value as string;
   };
 
-  const asJson = (result: QueryResultSuccess) => {
-    const columns = [
+  const asJson = (result: QueryResultSuccess): DataTableColumnData<JSONData> => {
+    const columns: ColumnDef<JSONData>[] = [
       {
-        title: () => (
-          <div>
-            <div className="font-bold">JSON</div>
-          </div>
-        ),
-        key: 'json',
-        dataIndex: 'json',
-        width: '100%',
-        ellipsis: false,
-        className: 'align-top',
-        render: (res: React.JSX.Element) => (
+        header: () => <div className="font-bold">JSON</div>,
+        accessorKey: 'json',
+        cell: ({ cell }) => (
+          // select all contents on double click
           <pre
             onDoubleClick={event => {
               window?.getSelection()?.selectAllChildren(event.currentTarget);
             }}
           >
-            {res}
-          </pre>
-        ),
-      },
-    ];
-    const data = [
-      result?.rows
-        .map((row, idx) => {
-          const res = { key: `row-${idx}`, json: '' };
-          const rowValue = {};
-          _.zip(result.cols, row).forEach(arr => {
-            const [k, v] = arr;
-            // @ts-expect-error k cannot be undefined
-            rowValue[k] = v;
-          });
-          res.json = JSON.stringify(rowValue);
-          return res;
-        })
-        .reduce(
-          // @ts-expect-error initial value has null
-          (prev, next) => {
-            const concat = prev.json ? prev.json + '\n' + next.json : next.json;
-            return {
-              key: 'single',
-              title: 'single',
-              json: concat,
-            };
-          },
-          { json: null },
-        ),
-    ];
-
-    return [columns, data];
-  };
-
-  const asCSV = (result: QueryResultSuccess) => {
-    const columns = [
-      {
-        title: () => (
-          <div>
-            <div className="font-bold">CSV</div>
-          </div>
-        ),
-        key: 'csv',
-        dataIndex: 'accumulated',
-        width: '100%',
-        ellipsis: false,
-        className: 'align-top',
-        render: (res: React.JSX.Element) => (
-          <pre
-            onDoubleClick={event => {
-              window?.getSelection()?.selectAllChildren(event.currentTarget);
-            }}
-          >
-            {res}
+            {cell.getValue<string>()}
           </pre>
         ),
       },
     ];
 
-    const data = [
-      result?.rows
-        .map((row, idx) => {
-          const res: { key: string; row: object; accumulated: object[] } = {
-            key: `row-${idx}`,
-            row: {},
-            accumulated: [],
-          };
-          const rowValue = {};
-          _.zip(result.cols, row).forEach(arr => {
-            const [k] = arr;
-            let [, v] = arr;
-            // If we don't do this, we end up with [object Object]. At least return JSON.
-            if (typeof v === 'object' || typeof v === 'string') {
-              v = JSON.stringify(v);
-            }
-            // @ts-expect-error k cannot be undefined
-            rowValue[k] = v;
-          });
-          res.row = rowValue;
-          return res;
-        })
-        .reduce(
-          // @ts-expect-error we're specifying an initial value with nulls. TS unhappy.
-          (prev, next) => {
-            const acc: object[] = prev.accumulated;
-            acc.push(next.row);
-            return {
-              key: 'single',
-              row: {},
-              accumulated: acc,
-            };
-          },
-          { accumulated: [] },
-        ),
-    ].map(v => {
-      const csvString = Papa.unparse(v.accumulated, {
-        quotes: false,
-      }).replace(/"""/g, '"');
-      return {
-        ...v,
-        accumulated:
-          csvString ||
-          'Looks like this data cannot be displayed as a CSV. We tried, sorry.',
-      };
+    // add row number
+    columns.unshift({
+      header: () => <div className="w-1"></div>,
+      accessorKey: 'SQL_RESULTS_ROW_NUMBER',
+      cell: ({ cell }) => cell.getValue(),
+      meta: { width: '1px' },
     });
 
-    return [columns, data];
+    const data: JSONData[] = result.rows
+      .map(row =>
+        _.zip(result.cols, row).reduce((result: Record<string, unknown>, arr) => {
+          result[arr[0] as string] = arr[1];
+          return result;
+        }, {}),
+      )
+      .map((row, idx) => {
+        return {
+          json: JSON.stringify(row),
+          SQL_RESULTS_ROW_NUMBER: (
+            <div className="text-right text-xs text-neutral-400">{idx + 1}</div>
+          ),
+        };
+      });
+
+    return {
+      columns,
+      data,
+    } satisfies DataTableColumnData<JSONData>;
   };
 
-  const asTable = (result: QueryResultSuccess) => {
-    const columns = _.zip(result.col_types, result.cols).flatMap(arr => {
+  const asCSV = (result: QueryResultSuccess): DataTableColumnData<CSVData> => {
+    const columns: ColumnDef<CSVData>[] = [
+      {
+        header: () => <div className="font-bold">CSV</div>,
+        accessorKey: 'csv',
+        cell: ({ cell }) => (
+          // select all contents on double click
+          <pre
+            onDoubleClick={event => {
+              window?.getSelection()?.selectAllChildren(event.currentTarget);
+            }}
+          >
+            {cell.getValue<string>()}
+          </pre>
+        ),
+      },
+    ];
+
+    const unparsedCSV = result.rows.map(row =>
+      _.zip(result.cols, row)
+        .map(arr => {
+          arr[1] =
+            typeof arr[1] === 'object' || typeof arr[1] === 'string'
+              ? JSON.stringify(arr[1])
+              : arr[1];
+          return arr;
+        })
+        .reduce((result: Record<string, unknown>, arr: [unknown, unknown]) => {
+          result[arr[0] as string] = arr[1];
+          return result;
+        }, {}),
+    );
+    const csvString = Papa.unparse(unparsedCSV).replace(/"""/g, '"');
+
+    return {
+      columns,
+      data: [
+        {
+          csv:
+            csvString ||
+            'Looks like this data cannot be displayed as a CSV. We tried, sorry.',
+        },
+      ] satisfies CSVData[],
+    } satisfies DataTableColumnData<CSVData>;
+  };
+
+  const asTable = (
+    result: QueryResultSuccess,
+  ): DataTableColumnData<TableViewData> => {
+    const columns: ColumnDef<TableViewData>[] = _.zip(
+      result.col_types,
+      result.cols,
+    ).flatMap(arr => {
       const [type, col] = arr;
       return {
-        title: () => (
+        header: () => (
           <div>
             <div className="overflow-hidden text-ellipsis font-bold">{col}</div>
             <div className="text-xs opacity-50">{dbTypeToHumanReadable(type)}</div>
           </div>
         ),
-        key: col,
-        dataIndex: col,
-        width: `${COLUMN_SIZE}px`,
-        ellipsis: true,
-        className: 'align-top',
+        accessorKey: col!,
+        cell: ({ cell }) => cell.getValue(),
       };
     });
-    const data = result?.rows.map((row, idx) => {
-      const res = { key: `row-${idx}` };
-      const len = result.cols.length;
-      _.zip(result.col_types, result.cols, row).forEach(arr => {
-        const [t, k, v] = arr;
-        // Array types are noted as [100, X]
-        const actualType = Array.isArray(t) ? t[0] : t;
-        const actualValue = nicelyHandleTypes(actualType!, v, len);
-        // @ts-expect-error typing is hard
-        res[k] = <pre>{actualValue}</pre>;
-      });
-      return res;
+
+    // prepend row number
+    columns.unshift({
+      header: () => <div className="w-1"></div>,
+      accessorKey: 'SQL_RESULTS_ROW_NUMBER',
+      cell: ({ cell }) => cell.getValue(),
+      meta: { width: '1px' },
     });
 
-    return [columns, data];
+    const data: TableViewData[] = result?.rows
+      .map(row => {
+        const res: Record<string, React.ReactNode> = {};
+        const len = result.cols.length;
+        _.zip(result.col_types, result.cols, row).forEach(arr => {
+          const [t, k, v] = arr;
+          // Array types are noted as [100, X]
+          const actualType = Array.isArray(t) ? t[0]! : t!;
+          const actualValue = nicelyHandleTypes(actualType!, v, len);
+
+          res[k!] = <pre>{actualValue}</pre>;
+        });
+        return res;
+      })
+      .map((row, idx) => ({
+        ...row,
+        SQL_RESULTS_ROW_NUMBER: (
+          <div className="text-right text-xs text-neutral-400">{idx + 1}</div>
+        ),
+      }));
+
+    return {
+      columns,
+      data,
+    } satisfies DataTableColumnData<TableViewData>;
   };
 
   if (!result) {
@@ -268,70 +272,77 @@ function SQLResultsTable({ result }: Params) {
     return renderErrorTable(result);
   }
 
-  let columns;
-  let data: object[];
+  let output:
+    | DataTableColumnData<JSONData>
+    | DataTableColumnData<CSVData>
+    | DataTableColumnData<TableViewData>
+    | DataTableColumnData<NoColumnsData>;
 
-  if (tableResultsFormat == 'json') {
-    [columns, data] = asJson(result);
-  } else if (tableResultsFormat == 'csv') {
-    [columns, data] = asCSV(result);
+  if (tableResultsFormat === 'json') {
+    output = asJson(result);
+  } else if (tableResultsFormat === 'csv') {
+    output = asCSV(result);
   } else {
-    [columns, data] = asTable(result);
+    output = asTable(result);
   }
 
-  if (columns?.length == 0) {
-    columns = [
-      {
-        title: () => <span className="font-bold">result</span>,
-        key: 'result',
-        dataIndex: 'result',
-        width: '100%',
-        ellipsis: true,
-        className: '',
-      },
-    ];
-    data = [
-      {
-        key: 'OK',
-        result: 'OK',
-      },
-    ];
+  if (
+    output.columns.length === 1 &&
+    ['json', 'pretty', 'raw'].includes(tableResultsFormat)
+  ) {
+    output = {
+      columns: [
+        {
+          header: () => <span className="font-bold">result</span>,
+          accessorKey: 'result',
+        },
+      ],
+      data: [
+        {
+          result: 'OK',
+        },
+      ],
+    } satisfies DataTableColumnData<NoColumnsData>;
   }
 
   return (
-    <Table
-      columns={columns}
-      dataSource={data}
-      pagination={{ defaultPageSize: 20, position: ['bottomRight'] }}
-      showHeader
-      size="small"
-      sticky
-      scroll={{
-        x: COLUMN_SIZE,
-      }}
-      className="min-h-[50px]"
-      title={() => (
-        <div className="flex h-8 flex-row items-center gap-2">
-          <div className="flex items-center gap-2 border-e pr-2 text-xs font-bold">
-            <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
-            {`${result.rowcount} rows, ${(Math.round(result?.duration) / 1000).toFixed(3)} seconds`}
+    <div className="flex h-full w-full flex-col overflow-hidden">
+      <DataTable
+        {...(output as DataTableColumnData<unknown>)}
+        elementsPerPage={100}
+        hidePaginationPageSize
+        stickyHeader
+        className="h-full w-full overflow-auto"
+        paginationAtTop
+        paginationContent={
+          <div className="flex w-full items-center gap-4">
+            <div className="flex items-center gap-2 text-xs">
+              <Chip className="bg-green-600 text-white">OK</Chip>
+              <div className="whitespace-nowrap leading-[1.1] text-neutral-600">
+                <div>
+                  {`${result.rowcount}`} {result.rowcount === 1 ? 'row' : 'rows'}
+                </div>
+                <div>{(Math.round(result?.duration) / 1000).toFixed(3)} seconds</div>
+              </div>
+            </div>
+            <Radio.Group
+              className="whitespace-nowrap"
+              options={[
+                { label: 'Pretty', value: 'pretty' },
+                { label: 'Raw', value: 'raw' },
+                { label: 'CSV', value: 'csv' },
+                { label: 'JSON', value: 'json' },
+              ]}
+              onChange={evt => setTableResultsFormat(evt.target.value)}
+              value={tableResultsFormat}
+              optionType="button"
+              buttonStyle="solid"
+              size="small"
+            />
           </div>
-          <Radio.Group
-            options={[
-              { label: 'Pretty', value: 'pretty' },
-              { label: 'Raw', value: 'raw' },
-              { label: 'CSV', value: 'csv' },
-              { label: 'JSON', value: 'json' },
-            ]}
-            onChange={evt => setTableResultsFormat(evt.target.value)}
-            value={tableResultsFormat}
-            optionType="button"
-            buttonStyle="solid"
-            size="small"
-          />
-        </div>
-      )}
-    />
+        }
+      />
+    </div>
   );
 }
 

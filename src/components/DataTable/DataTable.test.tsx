@@ -158,6 +158,51 @@ describe('The DataTable component', () => {
       // There should be only 10 table rows per page
       expect(getNumberOfRows(container)).toBe(10);
     });
+
+    describe('when hidePaginationWhenSinglePage is set', () => {
+      it('does not display pagination if there is only one page', () => {
+        setup({
+          data: generateData(1),
+          hidePaginationWhenSinglePage: true,
+        });
+
+        expect(screen.queryByTestId('datatable-pagination')).not.toBeInTheDocument();
+      });
+    });
+
+    describe('when hidePaginationPageSize is set', () => {
+      it('does not display the page size selector', () => {
+        setup({
+          hidePaginationPageSize: true,
+        });
+
+        expect(screen.queryByTestId('datatable-pagination')).toBeInTheDocument();
+
+        expect(
+          screen.queryByTestId('datatable-pagination-page-size'),
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    describe('when paginationContent is set', () => {
+      it('displays the custom pagination content', () => {
+        setup({
+          paginationContent: <div data-testid="custom-pagination-content" />,
+        });
+
+        expect(screen.getByTestId('custom-pagination-content')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('when stickyHeader is set', () => {
+    it('applies the CSS classes to make the table header sticky', () => {
+      setup({
+        stickyHeader: true,
+      });
+
+      expect(screen.getByTestId('head_col_name')).toHaveClass('sticky');
+    });
   });
 
   describe('when table is empty', () => {

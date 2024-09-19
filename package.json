@@ -1,6 +1,6 @@
 {
   "name": "@crate.io/crate-gc-admin",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "author": "crate.io",
   "private": false,
   "type": "module",
@@ -36,6 +36,7 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.1.0",
     "@tanstack/match-sorter-utils": "^8.11.8",
     "@tanstack/react-table": "^8.11.8",
     "ace-builds": "^1.32.2",
@@ -75,6 +76,7 @@
     "start": "vite",
     "build": "tsc && vite build",
     "build-lib": "tsc && vite build --config vite.config.lib.ts",
+    "check-types": "tsc --noemit",
     "prepack": "yarn run build-lib",
     "test": "jest",
     "lint": "eslint --cache --ext=.ts --ext=.tsx src/",

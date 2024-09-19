@@ -54,7 +54,7 @@ const getColumnsDefinition = ({
       accessorKey: 'enabled',
       header: 'Active',
       meta: {
-        columnWidth: '70px',
+        minWidth: '70px',
       },
       cell: ({ row, table }) => {
         const job = row.original;
@@ -82,7 +82,7 @@ const getColumnsDefinition = ({
       accessorKey: 'name',
       header: 'Name',
       meta: {
-        columnWidth: '15%',
+        minWidth: '15%',
       },
       cell: ({ row }) => {
         const name = row.original.name;
@@ -101,7 +101,7 @@ const getColumnsDefinition = ({
       accessorKey: 'cron',
       header: 'Schedule',
       meta: {
-        columnWidth: '20%',
+        minWidth: '20%',
       },
       cell: ({ cell }) => {
         const schedule = cell.getValue<string>();
@@ -212,7 +212,7 @@ const getColumnsDefinition = ({
     {
       header: ' ',
       meta: {
-        columnWidth: '80px',
+        minWidth: '80px',
       },
       cell: ({ row }) => {
         const job = row.original;
@@ -349,7 +349,6 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
       <div className="overflow-x-a w-full">
         <DataTable
           elementsPerPage={JOBS_TABLE_PAGE_SIZE}
-          noResultsLabel="No jobs found."
           data={(enrichedScheduledJobs ?? []).sort(sortByString('name'))}
           columns={getColumnsDefinition({
             setError: setErrorDialogContent,
