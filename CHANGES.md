@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-19 - 0.13.1
+
+- Fix an incorrect parameter accidentally committed during testing.
+
 ## 2024-09-19 - 0.13.0
 
 - Add scroll margin to SQL console editor.
