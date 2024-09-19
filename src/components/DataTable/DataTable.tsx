@@ -170,7 +170,7 @@ export function DataTable<TData, TValue>({
             onPageSizeChange={(pageSize: number) => {
               table.setPageSize(pageSize);
             }}
-            hidePageSize={!hidePaginationPageSize}
+            hidePageSize={hidePaginationPageSize}
           />
         )}
       </div>
