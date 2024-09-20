@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -41,30 +42,34 @@ function SQLResults({ results, format }: Params) {
 
   let idx = 0;
 
-  const tabs = results.map(queryResult => {
-    const i = ++idx;
+  const tabs = useMemo(
+    () =>
+      results.map(queryResult => {
+        const i = ++idx;
 
-    return {
-      key: `${i}`,
-      label: (
-        <div className="flex items-center justify-between gap-1.5">
-          <span>Result {i}</span>
-          {queryResult.status === 'EXECUTING' ? (
-            <Loader size={Loader.sizes.SMALL} />
-          ) : queryResult.status === 'ERROR' ? (
-            <CloseCircleOutlined className="!mr-0 text-xs text-red-600" />
-          ) : queryResult.status === 'SUCCESS' ? (
-            <CheckCircleOutlined className="!mr-0 text-xs text-green-600" />
-          ) : queryResult.status === 'WAITING' ? (
-            <ClockCircleOutlined className="!mr-0 text-xs" />
-          ) : queryResult.status === 'NOT_EXECUTED' ? (
-            <PauseCircleOutlined className="!mr-0 text-xs" />
-          ) : null}
-        </div>
-      ),
-      content: renderResult(queryResult),
-    };
-  });
+        return {
+          key: `${i}`,
+          label: (
+            <div className="flex items-center justify-between gap-1.5">
+              <span>Result {i}</span>
+              {queryResult.status === 'EXECUTING' ? (
+                <Loader size={Loader.sizes.SMALL} />
+              ) : queryResult.status === 'ERROR' ? (
+                <CloseCircleOutlined className="!mr-0 text-xs text-red-600" />
+              ) : queryResult.status === 'SUCCESS' ? (
+                <CheckCircleOutlined className="!mr-0 text-xs text-green-600" />
+              ) : queryResult.status === 'WAITING' ? (
+                <ClockCircleOutlined className="!mr-0 text-xs" />
+              ) : queryResult.status === 'NOT_EXECUTED' ? (
+                <PauseCircleOutlined className="!mr-0 text-xs" />
+              ) : null}
+            </div>
+          ),
+          content: renderResult(queryResult),
+        };
+      }),
+    [results],
+  );
 
   return <CrateTabsShad items={tabs} hideWhenSingleTab stickyTabBar />;
 }
