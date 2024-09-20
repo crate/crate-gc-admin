@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-20 - 0.13.2
+
+- Update SQL Results output to be memoized to prevent unnecessary re-renders.
+
 ## 2024-09-19 - 0.13.1
 
 - Fix an incorrect parameter accidentally committed during testing.
