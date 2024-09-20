@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 
 import { cn } from 'utils';
@@ -22,14 +22,34 @@ function CrateTabsShad({
   items = [],
   stickyTabBar = false,
 }: CrateTabsShadProps) {
+  const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
+
+  const getDefaultTab = (): string => {
+    if (initialActiveTab && items.map(item => item.key).includes(initialActiveTab)) {
+      return initialActiveTab;
+    }
+    return items[0].key;
+  };
+
+  const onTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
+  // ensure that the active tab is a valid option
+  useEffect(() => {
+    setActiveTab(getDefaultTab());
+  }, [items]);
+
   return (
     <Tabs
-      defaultValue={initialActiveTab || items[0].key}
       className={stickyTabBar ? 'flex h-full w-full flex-col' : ''}
       data-testid="tabs-container"
+      defaultValue={getDefaultTab()}
+      value={activeTab}
+      onValueChange={onTabChange}
     >
       <TabsList
-        className={hideWhenSingleTab && items.length == 1 ? 'hidden' : 'border-b'}
+        className={hideWhenSingleTab && items.length === 1 ? 'hidden' : 'border-b'}
       >
         {items.map(item => (
           <TabsTrigger key={item.key} value={item.key}>

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-20 - 0.13.3
+
+- Fix edge-case bug where tabs don't always display when hideWhenSingleTab is set.
+
 ## 2024-09-20 - 0.13.2
 
 - Update SQL Results output to be memoized to prevent unnecessary re-renders.
