@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from 'utils';
 
 const Table = ({ className, ...props }: React.ComponentProps<'table'>) => (
-  <div className="relative w-full overflow-auto">
+  <div className="relative w-full grow overflow-auto">
     <table
       className={cn('w-full caption-bottom text-[14px]', className)}
       {...props}
