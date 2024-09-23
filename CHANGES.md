@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-23 - 0.13.4
+
+- Fix minor issue with content jumping when navigating between tabs.
+
 ## 2024-09-20 - 0.13.3
 
 - Fix edge-case bug where tabs don't always display when hideWhenSingleTab is set.

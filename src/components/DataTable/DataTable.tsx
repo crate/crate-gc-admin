@@ -154,7 +154,7 @@ export function DataTable<TData, TValue>({
 
     return (
       <div
-        className={`flex h-10 items-center justify-between px-2 py-1 ${paginationAtTop ? 'border-b' : 'border-t'}`}
+        className={`flex min-h-10 items-center justify-between px-2 py-1 ${paginationAtTop ? 'border-b' : 'border-t'}`}
       >
         {paginationContent ? paginationContent : <div />}
         {!(pageCount === 1 && hidePaginationWhenSinglePage) && (

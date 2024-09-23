@@ -49,7 +49,7 @@ function CrateTabsShad({
       onValueChange={onTabChange}
     >
       <TabsList
-        className={hideWhenSingleTab && items.length === 1 ? 'hidden' : 'border-b'}
+        className={`min-h-10 ${hideWhenSingleTab && items.length === 1 ? 'hidden' : 'border-b'}`}
       >
         {items.map(item => (
           <TabsTrigger key={item.key} value={item.key}>
@@ -61,7 +61,7 @@ function CrateTabsShad({
         <TabsContent
           key={item.key}
           value={item.key}
-          className={stickyTabBar ? 'h-full w-full overflow-hidden' : ''}
+          className={stickyTabBar ? 'w-full grow overflow-hidden' : ''}
         >
           {item.content}
         </TabsContent>

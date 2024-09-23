@@ -312,7 +312,7 @@ function SQLResultsTable({ result }: Params) {
         elementsPerPage={100}
         hidePaginationPageSize
         stickyHeader
-        className="h-full w-full overflow-auto"
+        className="w-full overflow-auto"
         paginationAtTop
         paginationContent={
           <div className="flex w-full items-center gap-4">
