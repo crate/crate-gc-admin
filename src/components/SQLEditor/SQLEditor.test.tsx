@@ -203,6 +203,88 @@ describe('The SQLEditor component', () => {
         expect(clipboardText).toBe(column.columnName);
       });
     });
+
+    describe('filtering via the search input', () => {
+      it('displays the filter search input', async () => {
+        await setup();
+
+        expect(screen.getByTestId('object-filter-input')).toBeInTheDocument();
+      });
+
+      it('entering a string which matches a schema name, shows that schema and all its tables', async () => {
+        const { user } = await setup();
+
+        await user.type(screen.getByTestId('object-filter-input'), 'gc');
+
+        // should show gc schema
+        expect(screen.getByText('gc')).toBeInTheDocument();
+        expect(screen.queryByText('sys')).not.toBeInTheDocument();
+
+        // open gc schema tree, should contain all tables for that schema
+        await triggerTreeItem(user, 'gc');
+        schemaTableColumns[0].tables.forEach(table => {
+          expect(screen.getByText(table.tableName)).toBeInTheDocument();
+        });
+      });
+
+      it('entering a string which matches a table name, but not a schema name, shows that schema and matching tables', async () => {
+        const { user } = await setup();
+
+        await user.type(screen.getByTestId('object-filter-input'), 'alembic');
+
+        // should show gc schema
+        expect(screen.getByText('gc')).toBeInTheDocument();
+        expect(screen.queryByText('sys')).not.toBeInTheDocument();
+
+        // open gc schema tree, should contain all tables for that schema
+        await triggerTreeItem(user, 'gc');
+        schemaTableColumns[0].tables.forEach(table => {
+          if (table.tableName.includes('alembic')) {
+            expect(screen.getByText(table.tableName)).toBeInTheDocument();
+          } else {
+            expect(screen.queryByText(table.tableName)).not.toBeInTheDocument();
+          }
+        });
+      });
+    });
+
+    describe('filtering via the checkboxes', () => {
+      it('displays the filter button', async () => {
+        await setup();
+
+        expect(screen.getByTestId('show-filter-options-icon')).toBeInTheDocument();
+      });
+
+      it('when filters are set, the filter button shows in a different color', async () => {
+        const { user } = await setup();
+
+        // button should initially be in the "off" state
+        expect(
+          screen.getByTestId('show-filter-options-icon').parentElement,
+        ).not.toHaveClass('bg-crate-blue');
+
+        // open the filter options, deselect 'system tables'
+        await user.click(screen.getByTestId('show-filter-options-icon'));
+        await user.click(screen.getByText('Views'));
+
+        // should show gc schema
+        expect(
+          screen.getByTestId('show-filter-options-icon').parentElement,
+        ).toHaveClass('bg-crate-blue');
+      });
+
+      it('when filtering out system tables, hide those schemas from the tree', async () => {
+        const { user } = await setup();
+
+        // open the filter options, deselect 'system tables'
+        await user.click(screen.getByTestId('show-filter-options-icon'));
+        await user.click(screen.getByText('System schemas'));
+
+        // hide system schemas
+        expect(screen.queryByText('gc')).not.toBeInTheDocument();
+        expect(screen.queryByText('sys')).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe('the value', () => {

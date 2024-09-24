@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-26 - 0.14.0
+
+- Add SQL editor object filtering.
+
 ## 2024-09-24 - 0.13.5
 
 - Fix problem with SQL results not being displayed in certain circumstances.
