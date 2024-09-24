@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-24 - 0.13.5
+
+- Fix problem with SQL results not being displayed in certain circumstances.
+
 ## 2024-09-23 - 0.13.4
 
 - Fix minor issue with content jumping when navigating between tabs.

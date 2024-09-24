@@ -215,7 +215,7 @@ function SQLResultsTable({ result }: Params) {
     const columns: ColumnDef<TableViewData>[] = _.zip(
       result.col_types,
       result.cols,
-    ).flatMap(arr => {
+    ).flatMap((arr, idx) => {
       const [type, col] = arr;
       return {
         header: () => (
@@ -224,7 +224,7 @@ function SQLResultsTable({ result }: Params) {
             <div className="text-xs opacity-50">{dbTypeToHumanReadable(type)}</div>
           </div>
         ),
-        accessorKey: col!,
+        accessorKey: `col${idx}`,
         cell: ({ cell }) => cell.getValue(),
       };
     });
@@ -241,13 +241,13 @@ function SQLResultsTable({ result }: Params) {
       .map(row => {
         const res: Record<string, React.ReactNode> = {};
         const len = result.cols.length;
-        _.zip(result.col_types, result.cols, row).forEach(arr => {
-          const [t, k, v] = arr;
+        _.zip(result.col_types, row).forEach((arr, idx) => {
+          const [t, v] = arr;
           // Array types are noted as [100, X]
           const actualType = Array.isArray(t) ? t[0]! : t!;
           const actualValue = nicelyHandleTypes(actualType!, v, len);
 
-          res[k!] = <pre>{actualValue}</pre>;
+          res[`col${idx}`] = <pre>{actualValue}</pre>;
         });
         return res;
       })
