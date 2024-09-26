@@ -1,19 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
-import { Tree } from 'antd';
+import { Checkbox, Tree } from 'antd';
 import {
   ApartmentOutlined,
+  CaretRightOutlined,
+  CloseCircleFilled,
   CompassOutlined,
+  FilterOutlined,
+  FormatPainterOutlined,
   SearchOutlined,
   TableOutlined,
 } from '@ant-design/icons';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import './mode-cratedb';
 import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
+import { Popover, PopoverContent, PopoverTrigger } from 'components';
 import { cn } from 'utils';
 import { annotate } from './annotationUtils';
 import { QueryResults } from 'types/query';
@@ -53,6 +57,33 @@ const getInitialValue = (
   } else return dataFromLocalStorage || '';
 };
 
+type InternalTreeColumn = {
+  column_name: string;
+  data_type: string;
+  path: string;
+};
+
+type InternalTreeTable = {
+  table_name: string;
+  table_type: string;
+  path: string;
+  columns: InternalTreeColumn[];
+  is_system_table: boolean;
+};
+
+type InternalTreeSchema = {
+  schema_name: string;
+  path: string;
+  tables: InternalTreeTable[];
+};
+
+const FILTER_TYPES = {
+  TABLE: 'table',
+  VIEW: 'view',
+  FOREIGN: 'foreign',
+  SYSTEM: 'system',
+};
+
 function SQLEditor({
   value,
   results,
@@ -86,9 +117,16 @@ function SQLEditor({
     getInitialValue(value, dataFromLocalStorage),
   );
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
-  const [tablesTree, setTableTree] = useState<AntDesignTreeItem[] | undefined>(
-    undefined,
+  const [internalSchemaTree, setInternalSchemaTree] = useState<InternalTreeSchema[]>(
+    [],
   );
+  const [treeFilterSearch, setTreeFilterSearch] = useState<string>('');
+  const [treeFilterType, setTreeFilterType] = useState<string[]>([
+    FILTER_TYPES.TABLE,
+    FILTER_TYPES.VIEW,
+    FILTER_TYPES.FOREIGN,
+    FILTER_TYPES.SYSTEM,
+  ]);
 
   const isLocalStorageUsed = useMemo(() => {
     return (
@@ -102,112 +140,73 @@ function SQLEditor({
     SQL_HISTORY_TEMP_CONTENT_KEY,
   ]);
 
-  const constructTableTree = (input: SchemaTableColumn[]) => {
-    const getColumns = (schema: string, table: string) => {
-      return input
-        .filter(i => i.table_schema === schema)
-        .filter(i => i.table_name === table)
-        .filter(column => !column.column_name?.endsWith(']'))
-        .map(column => ({
-          title: (
-            <span
-              data-testid={`${column.table_schema}.${column.table_name}.${column.column_name}`}
-            >
-              <CopyToClipboard textToCopy={column.column_name}>
-                {column.column_name}
-              </CopyToClipboard>
-              <Text pale className="ml-1 inline text-xs italic !leading-3">
-                {column.data_type}
-              </Text>
-            </span>
-          ),
-          key: `${schema}.${table}.${column.column_name}`,
-        }));
-    };
+  const constructSchemaTree = (input: SchemaTableColumn[]) => {
+    const constructTables = (input: SchemaTableColumn[]) => {
+      const tree: InternalTreeTable[] = [];
 
-    const getTableIcon = (tableType: string) => {
-      switch (tableType) {
-        case 'FOREIGN':
-          return <CompassOutlined className="mr-1 size-3 opacity-50" />;
-        case 'VIEW':
-          return <SearchOutlined className="mr-1 size-3 opacity-50" />;
-        default:
-          return <TableOutlined className="mr-1 size-3 opacity-50" />;
-      }
-    };
+      // for convenience, create a lookup dict of the tables/columns in this schema
+      const tableLookup: {
+        [key: string]: {
+          name: string;
+          type: string;
+          path: string;
+          is_system_table: boolean;
+        };
+      } = input.reduce((prev, next) => {
+        return {
+          ...prev,
+          [next.table_name]: {
+            name: next.table_name as string,
+            type: next.table_type,
+            path: `${next.table_schema}.${next.table_name}`,
+            schema: next.table_schema,
+            is_system_table: SYSTEM_SCHEMAS.includes(next.table_schema),
+          },
+        };
+      }, {});
 
-    const getTableDescription = (tableType: string) => {
-      switch (tableType) {
-        case 'FOREIGN':
-          return <div>foreign table</div>;
-        case 'VIEW':
-          return <div>view</div>;
-        default:
-          return <div>table</div>;
-      }
-    };
-
-    const getTables = (schema: string) => {
-      // constuct a list of unique table names. Note: cannot use Set()
-      // because equal objects are not considered unique
-      let prevTableName: string | null = null;
-      const tables: { name: string; type: string }[] = [];
-      input
-        .filter(i => i.table_schema === schema)
-        .forEach(i => {
-          if (prevTableName !== i.table_name) {
-            tables.push({ name: i.table_name, type: i.table_type });
-            prevTableName = i.table_name;
-          }
+      // loop through array of tables
+      const tableNames = [...new Set(input.map(i => i.table_name))];
+      tableNames.forEach(tableName => {
+        tree.push({
+          table_name: tableLookup[tableName].name,
+          table_type: tableLookup[tableName].type,
+          path: tableLookup[tableName].path,
+          is_system_table: tableLookup[tableName].is_system_table,
+          columns: input
+            .filter(i => i.table_name === tableName)
+            .map(column => ({
+              column_name: column.column_name,
+              data_type: column.data_type,
+              path: `${tableLookup[tableName].path}.${column.column_name}`,
+            })),
         });
+      });
 
-      return tables.map(table => ({
-        title: (
-          <span
-            className="flex items-center"
-            data-testid={`${schema}.${table.name}.${table.type}`}
-          >
-            {getTableIcon(table.type)}
-            <CopyToClipboard textToCopy={`${schema}.${table.name}`}>
-              {table.name}
-            </CopyToClipboard>
-            <Text pale className="ml-1 inline text-xs italic !leading-3">
-              {getTableDescription(table.type)}
-            </Text>
-          </span>
-        ),
-        // icon: getTableIcon(table.type),
-        key: `${schema}.${table.name}.${table.type}`,
-        children: getColumns(schema, table.name),
-      }));
+      return tree;
     };
 
-    const schemas: string[] = [...new Set(input.map(i => i?.table_schema))];
+    const constructSchemas = (input: SchemaTableColumn[]) => {
+      const tree: InternalTreeSchema[] = [];
 
-    setTableTree(
-      schemas.map(schema => ({
-        title: (
-          <span
-            className="flex cursor-default !leading-3"
-            data-testid={`schema-${schema}`}
-          >
-            <ApartmentOutlined className="mr-1.5 size-3 opacity-50" />
-            {schema}
-            {SYSTEM_SCHEMAS.includes(schema) && (
-              <Text className="ml-1 inline text-xs italic !leading-3" pale>
-                system
-              </Text>
-            )}
-          </span>
-        ),
-        key: schema,
-        children: getTables(schema),
-      })),
-    );
+      // loop through array of unique schema names
+      const schemaNames = [...new Set(input.map(i => i.table_schema))];
+      schemaNames.forEach(schemaName => {
+        tree.push({
+          schema_name: schemaName,
+          path: schemaName,
+          tables: constructTables(input.filter(i => i.table_schema === schemaName)),
+        });
+      });
+
+      return tree;
+    };
+
+    setInternalSchemaTree(constructSchemas(input));
   };
 
   useEffect(() => {
-    getTableColumns().then(constructTableTree);
+    getTableColumns().then(constructSchemaTree);
   }, []);
 
   useEffect(() => {
@@ -235,7 +234,7 @@ function SQLEditor({
       ace.getSession().clearAnnotations();
     }
 
-    getTableColumns().then(constructTableTree);
+    getTableColumns().then(constructSchemaTree);
   }, [results]);
 
   useEffect(() => {
@@ -352,22 +351,225 @@ function SQLEditor({
     );
   };
 
+  const drawFilterCheckbox = (label: string, type: string) => (
+    <label className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap">
+      <Checkbox
+        checked={treeFilterType.includes(type)}
+        onChange={() => {
+          updateFilterTypes(type);
+        }}
+        data-testid={`filter-checkbox-${type}`}
+      />
+      <span className="opacity-70">{label}</span>
+    </label>
+  );
+
+  const updateFilterTypes = (type: string) => {
+    if (treeFilterType.includes(type)) {
+      const types = [...treeFilterType].filter(t => t !== type);
+      if (types.length > 0) {
+        setTreeFilterType(types);
+      }
+    } else {
+      setTreeFilterType([...treeFilterType, type]);
+    }
+  };
+
+  const filterTreeData = (tree: InternalTreeSchema[]) => {
+    // if no filters are applied, return the full tree
+    if (treeFilterSearch === '' && treeFilterType.length === 4) {
+      return tree;
+    }
+
+    // filter: system tables
+    if (!treeFilterType.includes(FILTER_TYPES.SYSTEM)) {
+      tree = tree.map(schema => ({
+        ...schema,
+        tables: schema.tables.filter(table => !table.is_system_table),
+      }));
+    }
+
+    // filter: tables
+    if (!treeFilterType.includes(FILTER_TYPES.TABLE)) {
+      tree = tree.map(schema => ({
+        ...schema,
+        tables: schema.tables.filter(table => table.table_type !== 'BASE TABLE'),
+      }));
+    }
+
+    // filter: foreign tables
+    if (!treeFilterType.includes(FILTER_TYPES.FOREIGN)) {
+      tree = tree.map(schema => ({
+        ...schema,
+        tables: schema.tables.filter(table => table.table_type !== 'FOREIGN'),
+      }));
+    }
+
+    // filter: views
+    if (!treeFilterType.includes(FILTER_TYPES.VIEW)) {
+      tree = tree.map(schema => ({
+        ...schema,
+        tables: schema.tables.filter(table => table.table_type !== 'VIEW'),
+      }));
+    }
+
+    // filter: search string
+    if (treeFilterSearch !== '') {
+      const searchString = treeFilterSearch.toLowerCase();
+      tree = tree.map(schema => ({
+        ...schema,
+        tables: schema.tables.filter(table =>
+          table.path.toLowerCase().includes(searchString),
+        ),
+      }));
+    }
+
+    // tidy up: remove all empty schemas
+    return tree.filter(schema => schema.tables.length > 0);
+  };
+
+  const drawTreeData = (): AntDesignTreeItem[] => {
+    const drawColumn = (column: InternalTreeColumn) => (
+      <span data-testid={column.path}>
+        <CopyToClipboard textToCopy={column.column_name}>
+          {column.column_name}
+        </CopyToClipboard>
+        <Text pale className="ml-1 inline text-xs italic !leading-3">
+          {column.data_type}
+        </Text>
+      </span>
+    );
+
+    const drawTableIcon = (tableType: string) => {
+      switch (tableType) {
+        case 'FOREIGN':
+          return <CompassOutlined className="mr-1 size-3 opacity-50" />;
+        case 'VIEW':
+          return <SearchOutlined className="mr-1 size-3 opacity-50" />;
+        default:
+          return <TableOutlined className="mr-1 size-3 opacity-50" />;
+      }
+    };
+
+    const drawTableDescription = (tableType: string) => {
+      switch (tableType) {
+        case 'FOREIGN':
+          return <div>foreign table</div>;
+        case 'VIEW':
+          return <div>view</div>;
+        default:
+          return <div>table</div>;
+      }
+    };
+
+    const drawSchemaRow = (schema: InternalTreeSchema) => (
+      <span
+        className="flex cursor-default !leading-3"
+        data-testid={`schema-${schema.schema_name}`}
+      >
+        <ApartmentOutlined className="mr-1.5 size-3 opacity-50" />
+        {schema.schema_name}
+        {schema.tables.find(table => table.is_system_table) && (
+          <Text className="ml-1 inline text-xs italic !leading-3" pale>
+            system
+          </Text>
+        )}
+      </span>
+    );
+
+    const drawTableRow = (table: InternalTreeTable) => (
+      <span className="flex items-center" data-testid={table.path}>
+        {drawTableIcon(table.table_type)}
+        <CopyToClipboard textToCopy={table.path}>{table.table_name}</CopyToClipboard>
+        <Text pale className="ml-1 inline text-xs italic !leading-3">
+          {drawTableDescription(table.table_type)}
+        </Text>
+      </span>
+    );
+
+    return filterTreeData(internalSchemaTree).map(schema => ({
+      title: drawSchemaRow(schema),
+      key: schema.path,
+      children: schema.tables.map(table => ({
+        title: drawTableRow(table),
+        key: table.path,
+        children: table.columns.map(column => ({
+          title: drawColumn(column),
+          key: column.path,
+        })),
+      })),
+    }));
+  };
+
+  const treeData = drawTreeData();
+
   return (
     <PanelGroup direction="horizontal">
       <Panel>
-        <div className="ant-tree-tiny h-full overflow-auto p-2">
-          {/* wait for tablesTree to be ready else defaultExpandedKeys won't work */}
-          {tablesTree && tablesTree.length > 0 ? (
-            <Tree
-              data-testid="tables-tree"
-              selectable={false}
-              showIcon
-              treeData={tablesTree}
-            />
-          ) : (
-            <Loader />
-          )}
-        </div>
+        {internalSchemaTree.length > 0 ? (
+          <div className="flex h-full flex-col">
+            <div
+              className="min-w-32 shrink-0 border-b px-1 py-1"
+              data-testid="object-filter-panel"
+            >
+              <div className="flex items-center gap-1">
+                <div className="flex grow select-none items-center rounded border-2 pl-2 pr-1">
+                  <input
+                    type="text"
+                    placeholder="Filter"
+                    className="w-full text-sm outline-none"
+                    value={treeFilterSearch}
+                    onChange={e => setTreeFilterSearch(e.target.value)}
+                    data-testid="object-filter-input"
+                  />
+                  {treeFilterSearch && (
+                    <CloseCircleFilled
+                      className="text opacity-25 hover:text-crate-blue hover:opacity-100"
+                      onClick={() => setTreeFilterSearch('')}
+                    />
+                  )}
+                </div>
+                <Popover>
+                  <PopoverTrigger>
+                    <div
+                      className={`group h-5 w-5 rounded ${treeFilterType.length === 4 ? 'text-black' : 'bg-crate-blue text-white'} `}
+                    >
+                      <FilterOutlined
+                        className="opacity-80 group-hover:opacity-100"
+                        data-testid="show-filter-options-icon"
+                      />
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="select-none space-y-1">
+                    {drawFilterCheckbox('Tables', FILTER_TYPES.TABLE)}
+                    {drawFilterCheckbox('Views', FILTER_TYPES.VIEW)}
+                    {drawFilterCheckbox('Foreign tables', FILTER_TYPES.FOREIGN)}
+                    <div className="py-1">
+                      <hr />
+                    </div>
+                    {drawFilterCheckbox('System schemas', FILTER_TYPES.SYSTEM)}
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+            <div className="ant-tree-tiny grow overflow-auto px-1 py-2">
+              {treeData.length > 0 ? (
+                <Tree
+                  data-testid="tables-tree"
+                  selectable={false}
+                  showIcon
+                  treeData={drawTreeData()}
+                />
+              ) : (
+                <div className="px-2 text-center text-sm text-crate-border-mid">
+                  No data found
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <Loader />
+        )}
       </Panel>
       <PanelResizeHandle className="flex w-1 flex-col justify-center bg-neutral-200 hover:bg-crate-blue">
         <div className="h-10 w-full bg-crate-blue" />

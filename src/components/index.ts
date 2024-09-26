@@ -31,6 +31,7 @@ export { default as MultiSelect } from './MultiSelect';
 export { default as NoDataView } from './NoDataView';
 // export { default as NotificationHandler } from './NotificationHandler';  // do not export, specific to this repo
 export { default as Pagination } from './Pagination';
+export { default as Popover, PopoverTrigger, PopoverContent } from './Popover';
 export { default as QueryStackTraceModal } from './QueryStackTraceModal';
 export { default as RoundedIcon } from './RoundedIcon';
 export { default as Select } from './Select';
