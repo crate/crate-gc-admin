@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix bug where JWT calls to the database were still being sent to Grand Central.
+
 ## 2024-09-26 - 0.14.0
 
 - Add SQL editor object filtering.

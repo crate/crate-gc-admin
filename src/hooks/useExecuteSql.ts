@@ -32,29 +32,38 @@ export default function useExecuteSql() {
     compare(crateVersion, CRATE_AUTHENTICATE_VIA_JWT_MIN_VERSION, '>=');
 
   const executeSql = async (query: string): Promise<ExecuteSqlResult> => {
-    const token = sessionStorage.getItem(sessionTokenKey);
+    // retrieve existing token from sessionstorage + refresh if necessary, or
+    // get a new token if none exists
+    const getToken = async () => {
+      let token = sessionStorage.getItem(sessionTokenKey);
 
-    if (crateAcceptsJwt) {
-      let refreshToken = token == null;
+      if (crateAcceptsJwt) {
+        let refreshToken = token === null;
 
-      // decode the token
-      if (token) {
-        const decodedToken = jwtDecode(token);
-        if (decodedToken.exp) {
-          // check for token expiry
-          const exp = decodedToken.exp * 1000;
-          const now = new Date().getTime();
-          refreshToken = exp < now;
-        } else {
-          // token is malformed
-          refreshToken = true;
+        // decode the token
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          if (decodedToken.exp) {
+            // check for token expiry
+            const exp = decodedToken.exp * 1000;
+            const now = new Date().getTime();
+            refreshToken = exp < now;
+          } else {
+            // token is malformed
+            refreshToken = true;
+          }
+        }
+
+        if (refreshToken) {
+          await onGcApiJwtExpire();
+          token = sessionStorage.getItem(sessionTokenKey);
         }
       }
 
-      if (refreshToken) {
-        await onGcApiJwtExpire();
-      }
-    }
+      return token;
+    };
+
+    const token = await getToken();
 
     let endpoint = crateJwtApi;
     let api = '/_sql?error_trace&types';
