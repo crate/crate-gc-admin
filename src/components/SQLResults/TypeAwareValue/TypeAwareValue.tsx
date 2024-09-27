@@ -2,6 +2,7 @@ import JSONTree from '../JSONTree/JSONTree';
 import { LinkOutlined } from '@ant-design/icons';
 import { ColumnType } from 'types/query';
 import { wrapText } from 'utils';
+import { ArrowUpOutlined } from '@ant-design/icons';
 
 export type TypeAwareValueParams = {
   value: unknown;
@@ -19,9 +20,11 @@ function TypeAwareValue({
   if (value == null) {
     return <span className="text-crate-blue">null</span>;
   }
+
   let ret = <span>{value as string}</span>;
   let isoDate;
   let actualType = columnType;
+
   // If we don't know the column type (i.e. when displaying in a JSON tree),
   // attempt to guess what it might be.
   if (!actualType) {
@@ -97,8 +100,43 @@ function TypeAwareValue({
       ret = <span>{wrapped}</span>;
       break;
     case ColumnType.GEOPOINT:
+      ret = (
+        <div className="whitespace-nowrap">
+          <span>{JSON.stringify(value)}</span>{' '}
+          <a
+            href={`https://www.openstreetmap.org/?mlat=${(value as number[])[1]}&mlon=${(value as number[])[0]}`}
+            target="_blank"
+            data-testid="geopoint-link"
+          >
+            <ArrowUpOutlined
+              rotate={45}
+              className="relative bottom-1 left-0.5 opacity-50"
+            />
+          </a>
+        </div>
+      );
+      break;
     case ColumnType.GEOSHAPE:
-      ret = <span>{JSON.stringify(value)}</span>;
+      ret = (
+        <div className="whitespace-nowrap">
+          <span>Type: {(value as { type: string }).type!}</span>{' '}
+          <a
+            href={`http://geojson.io/#data=data:application/json,${JSON.stringify(value)}`}
+            target="_blank"
+            data-testid="geoshape-link"
+          >
+            <ArrowUpOutlined
+              rotate={45}
+              className="relative bottom-1 left-0.5 opacity-50"
+            />
+          </a>
+          <br />
+          Coordinates:{' '}
+          {JSON.stringify(
+            (value as { coordinates: [number, number][][] }).coordinates!,
+          )}
+        </div>
+      );
       break;
     case ColumnType.NULL:
       ret = (

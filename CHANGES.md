@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2024-09-27 - 0.14.1
+
 - Fix bug where JWT calls to the database were still being sent to Grand Central.
+- Display Geo shapes and points nicely in the SQL results.
 
 ## 2024-09-26 - 0.14.0
 
