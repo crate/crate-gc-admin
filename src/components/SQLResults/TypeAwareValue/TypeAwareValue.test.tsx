@@ -46,6 +46,38 @@ describe('The TypeAwareValue component', () => {
       await user.click(screen.getByText('Object'));
       expect(screen.getByText('MyKey:')).toBeInTheDocument();
     });
+
+    it('will render a geopoint', () => {
+      setup({ value: [53.370351, -1.470883], columnType: ColumnType.GEOPOINT });
+
+      expect(screen.getByText('[53.370351,-1.470883]')).toBeInTheDocument();
+      expect(screen.getByTestId('geopoint-link').getAttribute('href')).toBe(
+        'https://www.openstreetmap.org/?mlat=-1.470883&mlon=53.370351',
+      );
+    });
+
+    it('will render a geoshape', () => {
+      setup({
+        value: {
+          coordinates: [
+            [
+              [16.344, 48.137],
+              [16.344, 48.261],
+              [16.462, 48.261],
+              [16.462, 48.137],
+              [16.344, 48.137],
+            ],
+          ],
+          type: 'Polygon',
+        },
+        columnType: ColumnType.GEOSHAPE,
+      });
+
+      expect(screen.getByText('Type: Polygon')).toBeInTheDocument();
+      expect(screen.getByTestId('geoshape-link').getAttribute('href')).toBe(
+        'http://geojson.io/#data=data:application/json,{"coordinates":[[[16.344,48.137],[16.344,48.261],[16.462,48.261],[16.462,48.137],[16.344,48.137]]],"type":"Polygon"}',
+      );
+    });
   });
 
   describe('when a crate type is not specified', () => {
