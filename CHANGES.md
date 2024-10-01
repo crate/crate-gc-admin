@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-01 - 0.14.2
+
+- Fix bug where the SQL editor was re-rendering too frequently.
+
 ## 2024-09-27 - 0.14.1
 
 - Fix bug where JWT calls to the database were still being sent to Grand Central.
