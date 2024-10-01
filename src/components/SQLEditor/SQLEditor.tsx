@@ -113,9 +113,6 @@ function SQLEditor({
   const dataFromLocalStorage = SQL_EDITOR_CONTENT_KEY
     ? localStorage.getItem(SQL_EDITOR_CONTENT_KEY)
     : undefined;
-  const [sql, setSql] = useState<string>(
-    getInitialValue(value, dataFromLocalStorage),
-  );
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
   const [internalSchemaTree, setInternalSchemaTree] = useState<InternalTreeSchema[]>(
     [],
@@ -227,7 +224,7 @@ function SQLEditor({
       return;
     }
     // Compute and set Ace Editor annotations
-    const ann = annotate(ace, results, sql, SQL_EDITOR_CONTENT_KEY);
+    const ann = annotate(ace, results, getEditorValue(), SQL_EDITOR_CONTENT_KEY);
     if (ann) {
       ace.getSession().setAnnotations(ann);
     } else {
@@ -243,18 +240,24 @@ function SQLEditor({
     }
   }, [value]);
 
+  const getEditorValue = (selectedOnlyIfExists: boolean = false) => {
+    return selectedOnlyIfExists
+      ? ace?.getSelectedText().trim() || ace?.getValue() || ''
+      : ace?.getValue() || '';
+  };
+
   const exec = () => {
-    const sql = ace?.getSelectedText().trim() || ace?.getValue() || '';
-    if (!sql) {
+    const value = getEditorValue(true);
+    if (!value) {
       return;
     }
 
     if (isLocalStorageUsed) {
-      localStorage.setItem(SQL_EDITOR_CONTENT_KEY!, sql);
-      pushHistory(sql);
+      localStorage.setItem(SQL_EDITOR_CONTENT_KEY!, value);
+      pushHistory(value);
     }
 
-    onExecute(sql);
+    onExecute(value);
     ace?.focus();
   };
 
@@ -269,18 +272,18 @@ function SQLEditor({
   stale closures. As a result, we cannot use useState() - until someone figures out a
   way to do that.
    */
-  const pushHistory = (sql: string) => {
+  const pushHistory = (value: string) => {
     if (!isLocalStorageUsed) {
       return;
     }
     const strHistory = localStorage.getItem(SQL_HISTORY_CONTENT_KEY!) || '[]';
     let historyArray: string[] = JSON.parse(strHistory);
     const last = historyArray.slice(-1);
-    if (last.length > 0 && last[0] == sql) {
+    if (last.length > 0 && last[0] == value) {
       // do not push if same as last
       return;
     }
-    historyArray.push(sql);
+    historyArray.push(value);
     if (historyArray.length > 100) {
       historyArray = historyArray.slice(1); // remove the head
     }
@@ -314,8 +317,8 @@ function SQLEditor({
   };
 
   const formatSql = () => {
-    if (sql && ace) {
-      const formatted = formatSQL(sql, { language: 'postgresql' });
+    if (ace) {
+      const formatted = formatSQL(getEditorValue(), { language: 'postgresql' });
       ace.getSession().setValue(formatted);
       ace.focus();
     }
@@ -323,9 +326,6 @@ function SQLEditor({
 
   // onChange method
   const onValueChange = (newValue: string) => {
-    // It updates current state and call onChange
-    setSql(newValue);
-
     if (onChange) {
       onChange(newValue);
     }
@@ -656,14 +656,14 @@ function SQLEditor({
                   },
                 },
               ]}
-              defaultValue={sql}
-              editorProps={{ $blockScrolling: true }}
+              defaultValue={getInitialValue(value, dataFromLocalStorage)}
               enableLiveAutocompletion
+              editorProps={{ $blockScrolling: true }}
               fontSize={16}
               height="100%"
               highlightActiveLine
-              mode="cratedb"
               onChange={onValueChange}
+              mode="cratedb"
               onLoad={editor => {
                 setAce(editor);
               }}
