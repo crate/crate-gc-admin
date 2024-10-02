@@ -2,7 +2,7 @@ import { render, screen, waitFor, within } from 'test/testUtils';
 import SQLEditor, { SQLEditorProps } from './SQLEditor';
 import { SYSTEM_SCHEMAS } from 'constants/database';
 import {
-  schameTablesNonSystemMock,
+  schemaTablesNonSystemMock,
   schemaTableColumnMock,
 } from 'test/__mocks__/schemaTableColumn';
 import _ from 'lodash';
@@ -58,7 +58,6 @@ const triggerTreeItem = async (
     ?.getElementsByClassName('ant-tree-switcher')[0];
 
   await user.click(triggerIcon!);
-
   if (textToWait) {
     // wait for first element
     await waitFor(() => {
@@ -115,7 +114,7 @@ describe('The SQLEditor component', () => {
         await setup();
 
         // NON SYSTEM schemas should NOT have system text
-        schameTablesNonSystemMock.forEach(schema => {
+        schemaTablesNonSystemMock.forEach(schema => {
           expect(screen.getByTestId(`schema-${schema}`)).toBeInTheDocument();
           expect(
             within(screen.getByTestId(`schema-${schema}`)).queryByText('system'),

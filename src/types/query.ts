@@ -49,7 +49,7 @@ export type QueryResultSuccess = object & {
   rows: any[][];
   rowcount: number;
   duration: number;
-  original_query?: string;
+  original_query?: Statement;
 };
 
 export type QueryResult = QueryResultSuccess | QueryResultError;

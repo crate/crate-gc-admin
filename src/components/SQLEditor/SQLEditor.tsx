@@ -17,19 +17,29 @@ import 'ace-builds/src-min-noconflict/ext-language_tools';
 import './mode-cratedb';
 import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
-import { Popover, PopoverContent, PopoverTrigger } from 'components';
+import {
+  Button,
+  CopyToClipboard,
+  Loader,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+} from 'components';
 import { cn } from 'utils';
 import { annotate } from './annotationUtils';
-import { QueryResults } from 'types/query';
-import { SchemaTableColumn } from 'types/cratedb';
-import { useGetTableColumnsQuery } from 'hooks/queryHooks';
-import { Loader, Text, Button, CopyToClipboard } from 'components';
-import { SYSTEM_SCHEMAS } from 'constants/database';
-import { useGCContext } from 'contexts';
+import { QueryStatus } from 'types/query';
+import {
+  useGCContext,
+  useSchemaTreeContext,
+  Schema,
+  SchemaTable,
+  SchemaTableColumn,
+} from 'contexts';
 
 export type SQLEditorProps = {
   value?: string | undefined | null;
-  results: QueryResults;
+  results: QueryStatus[] | undefined;
   localStorageKey?: string;
   'aria-invalid'?: React.AriaAttributes['aria-invalid'];
   errorMessage?: React.ReactNode;
@@ -57,26 +67,6 @@ const getInitialValue = (
   } else return dataFromLocalStorage || '';
 };
 
-type InternalTreeColumn = {
-  column_name: string;
-  data_type: string;
-  path: string;
-};
-
-type InternalTreeTable = {
-  table_name: string;
-  table_type: string;
-  path: string;
-  columns: InternalTreeColumn[];
-  is_system_table: boolean;
-};
-
-type InternalTreeSchema = {
-  schema_name: string;
-  path: string;
-  tables: InternalTreeTable[];
-};
-
 const FILTER_TYPES = {
   TABLE: 'table',
   VIEW: 'view',
@@ -99,6 +89,7 @@ function SQLEditor({
   title,
 }: SQLEditorProps) {
   const { clusterId } = useGCContext();
+  const { schemaTree, refreshSchemaTree } = useSchemaTreeContext();
 
   const SQL_EDITOR_CONTENT_KEY =
     localStorageKey && `crate.gc.admin.${localStorageKey}.${clusterId || ''}`;
@@ -109,14 +100,10 @@ function SQLEditor({
     localStorageKey &&
     `crate.gc.admin.${localStorageKey}-history-temp.${clusterId || ''}`;
 
-  const getTableColumns = useGetTableColumnsQuery();
   const dataFromLocalStorage = SQL_EDITOR_CONTENT_KEY
     ? localStorage.getItem(SQL_EDITOR_CONTENT_KEY)
     : undefined;
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
-  const [internalSchemaTree, setInternalSchemaTree] = useState<InternalTreeSchema[]>(
-    [],
-  );
   const [treeFilterSearch, setTreeFilterSearch] = useState<string>('');
   const [treeFilterType, setTreeFilterType] = useState<string[]>([
     FILTER_TYPES.TABLE,
@@ -137,74 +124,16 @@ function SQLEditor({
     SQL_HISTORY_TEMP_CONTENT_KEY,
   ]);
 
-  const constructSchemaTree = (input: SchemaTableColumn[]) => {
-    const constructTables = (input: SchemaTableColumn[]) => {
-      const tree: InternalTreeTable[] = [];
-
-      // for convenience, create a lookup dict of the tables/columns in this schema
-      const tableLookup: {
-        [key: string]: {
-          name: string;
-          type: string;
-          path: string;
-          is_system_table: boolean;
-        };
-      } = input.reduce((prev, next) => {
-        return {
-          ...prev,
-          [next.table_name]: {
-            name: next.table_name as string,
-            type: next.table_type,
-            path: `${next.table_schema}.${next.table_name}`,
-            schema: next.table_schema,
-            is_system_table: SYSTEM_SCHEMAS.includes(next.table_schema),
-          },
-        };
-      }, {});
-
-      // loop through array of tables
-      const tableNames = [...new Set(input.map(i => i.table_name))];
-      tableNames.forEach(tableName => {
-        tree.push({
-          table_name: tableLookup[tableName].name,
-          table_type: tableLookup[tableName].type,
-          path: tableLookup[tableName].path,
-          is_system_table: tableLookup[tableName].is_system_table,
-          columns: input
-            .filter(i => i.table_name === tableName)
-            .map(column => ({
-              column_name: column.column_name,
-              data_type: column.data_type,
-              path: `${tableLookup[tableName].path}.${column.column_name}`,
-            })),
-        });
-      });
-
-      return tree;
-    };
-
-    const constructSchemas = (input: SchemaTableColumn[]) => {
-      const tree: InternalTreeSchema[] = [];
-
-      // loop through array of unique schema names
-      const schemaNames = [...new Set(input.map(i => i.table_schema))];
-      schemaNames.forEach(schemaName => {
-        tree.push({
-          schema_name: schemaName,
-          path: schemaName,
-          tables: constructTables(input.filter(i => i.table_schema === schemaName)),
-        });
-      });
-
-      return tree;
-    };
-
-    setInternalSchemaTree(constructSchemas(input));
+  const resultsIncludeSuccessfulDDLQuery = (results: QueryStatus[]): boolean => {
+    const DDL_QUERIES = ['create', 'alter', 'drop', 'rename'];
+    return (
+      results.filter(
+        result =>
+          result.status === 'SUCCESS' &&
+          DDL_QUERIES.includes(result.result?.original_query?.type),
+      ).length > 0
+    );
   };
-
-  useEffect(() => {
-    getTableColumns().then(constructSchemaTree);
-  }, []);
 
   useEffect(() => {
     /*
@@ -223,15 +152,27 @@ function SQLEditor({
     if (!ace) {
       return;
     }
+
+    // refresh the schema tree if we believe the schema has changed
+    if (results && resultsIncludeSuccessfulDDLQuery(results)) {
+      refreshSchemaTree();
+    }
+
     // Compute and set Ace Editor annotations
-    const ann = annotate(ace, results, getEditorValue(), SQL_EDITOR_CONTENT_KEY);
+    const errorResults = results
+      ? results.filter(el => el.result && 'error' in el.result).map(el => el.result!)
+      : undefined;
+    const ann = annotate(
+      ace,
+      errorResults,
+      getEditorValue(),
+      SQL_EDITOR_CONTENT_KEY,
+    );
     if (ann) {
       ace.getSession().setAnnotations(ann);
     } else {
       ace.getSession().clearAnnotations();
     }
-
-    getTableColumns().then(constructSchemaTree);
   }, [results]);
 
   useEffect(() => {
@@ -324,7 +265,6 @@ function SQLEditor({
     }
   };
 
-  // onChange method
   const onValueChange = (newValue: string) => {
     if (onChange) {
       onChange(newValue);
@@ -375,15 +315,15 @@ function SQLEditor({
     }
   };
 
-  const filterTreeData = (tree: InternalTreeSchema[]) => {
+  const filterTreeData = (filteredSchemaTree: Schema[]): Schema[] => {
     // if no filters are applied, return the full tree
     if (treeFilterSearch === '' && treeFilterType.length === 4) {
-      return tree;
+      return filteredSchemaTree;
     }
 
     // filter: system tables
     if (!treeFilterType.includes(FILTER_TYPES.SYSTEM)) {
-      tree = tree.map(schema => ({
+      filteredSchemaTree = filteredSchemaTree.map(schema => ({
         ...schema,
         tables: schema.tables.filter(table => !table.is_system_table),
       }));
@@ -391,7 +331,7 @@ function SQLEditor({
 
     // filter: tables
     if (!treeFilterType.includes(FILTER_TYPES.TABLE)) {
-      tree = tree.map(schema => ({
+      filteredSchemaTree = filteredSchemaTree.map(schema => ({
         ...schema,
         tables: schema.tables.filter(table => table.table_type !== 'BASE TABLE'),
       }));
@@ -399,7 +339,7 @@ function SQLEditor({
 
     // filter: foreign tables
     if (!treeFilterType.includes(FILTER_TYPES.FOREIGN)) {
-      tree = tree.map(schema => ({
+      filteredSchemaTree = filteredSchemaTree.map(schema => ({
         ...schema,
         tables: schema.tables.filter(table => table.table_type !== 'FOREIGN'),
       }));
@@ -407,7 +347,7 @@ function SQLEditor({
 
     // filter: views
     if (!treeFilterType.includes(FILTER_TYPES.VIEW)) {
-      tree = tree.map(schema => ({
+      filteredSchemaTree = filteredSchemaTree.map(schema => ({
         ...schema,
         tables: schema.tables.filter(table => table.table_type !== 'VIEW'),
       }));
@@ -416,7 +356,7 @@ function SQLEditor({
     // filter: search string
     if (treeFilterSearch !== '') {
       const searchString = treeFilterSearch.toLowerCase();
-      tree = tree.map(schema => ({
+      filteredSchemaTree = filteredSchemaTree.map(schema => ({
         ...schema,
         tables: schema.tables.filter(table =>
           table.path.toLowerCase().includes(searchString),
@@ -425,11 +365,11 @@ function SQLEditor({
     }
 
     // tidy up: remove all empty schemas
-    return tree.filter(schema => schema.tables.length > 0);
+    return filteredSchemaTree.filter(schema => schema.tables.length > 0);
   };
 
-  const drawTreeData = (): AntDesignTreeItem[] => {
-    const drawColumn = (column: InternalTreeColumn) => (
+  const drawTreeData = (filteredSchemaTree: Schema[]): AntDesignTreeItem[] => {
+    const drawColumn = (column: SchemaTableColumn) => (
       <span data-testid={column.path}>
         <CopyToClipboard textToCopy={column.column_name}>
           {column.column_name}
@@ -462,7 +402,7 @@ function SQLEditor({
       }
     };
 
-    const drawSchemaRow = (schema: InternalTreeSchema) => (
+    const drawSchemaRow = (schema: Schema) => (
       <span
         className="flex cursor-default !leading-3"
         data-testid={`schema-${schema.schema_name}`}
@@ -477,7 +417,7 @@ function SQLEditor({
       </span>
     );
 
-    const drawTableRow = (table: InternalTreeTable) => (
+    const drawTableRow = (table: SchemaTable) => (
       <span className="flex items-center" data-testid={table.path}>
         {drawTableIcon(table.table_type)}
         <CopyToClipboard textToCopy={table.path}>{table.table_name}</CopyToClipboard>
@@ -487,7 +427,7 @@ function SQLEditor({
       </span>
     );
 
-    return filterTreeData(internalSchemaTree).map(schema => ({
+    return filteredSchemaTree.map(schema => ({
       title: drawSchemaRow(schema),
       key: schema.path,
       children: schema.tables.map(table => ({
@@ -501,12 +441,12 @@ function SQLEditor({
     }));
   };
 
-  const treeData = drawTreeData();
+  const filteredSchemaTree = filterTreeData(schemaTree);
 
   return (
     <PanelGroup direction="horizontal">
       <Panel>
-        {internalSchemaTree.length > 0 ? (
+        {schemaTree.length > 0 ? (
           <div className="flex h-full flex-col">
             <div
               className="min-w-32 shrink-0 border-b px-1 py-1"
@@ -553,12 +493,12 @@ function SQLEditor({
               </div>
             </div>
             <div className="ant-tree-tiny grow overflow-auto px-1 py-2">
-              {treeData.length > 0 ? (
+              {filteredSchemaTree.length > 0 ? (
                 <Tree
                   data-testid="tables-tree"
                   selectable={false}
                   showIcon
-                  treeData={drawTreeData()}
+                  treeData={drawTreeData(filteredSchemaTree)}
                 />
               ) : (
                 <div className="px-2 text-center text-sm text-crate-border-mid">
@@ -711,6 +651,7 @@ function SQLEditor({
                   </Button>
                 )}
               </div>
+
               {renderInstructions()}
             </div>
           </div>

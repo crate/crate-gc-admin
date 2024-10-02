@@ -1,4 +1,4 @@
-export const schameTablesNonSystemMock = ['new_schema'];
+export const schemaTablesNonSystemMock = ['new_schema'];
 
 export const schemaTableColumnMock = {
   cols: ['table_schema', 'table_name', 'column_name', 'data_type'],

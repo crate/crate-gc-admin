@@ -63,13 +63,7 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
             <SQLEditor
               onExecute={execute}
               localStorageKey={LOCAL_STORAGE_KEY}
-              results={
-                queryResults
-                  ? queryResults
-                      .filter(el => el.result && 'error' in el.result)
-                      .map(el => el.result!)
-                  : undefined
-              }
+              results={queryResults ? queryResults : undefined}
               setShowHistory={setShowHistory}
               onViewHistory={onViewHistory}
               value={currentQuery}
