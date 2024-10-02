@@ -108,14 +108,6 @@ export type TableInfo = {
   constraint_type: string | null;
 };
 
-export type SchemaTableColumn = {
-  table_schema: string;
-  table_name: string;
-  column_name: string;
-  data_type: string;
-  table_type: string;
-};
-
 export type ShardInfo = {
   table_name: string;
   schema_name: string;

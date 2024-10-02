@@ -2,7 +2,11 @@ import { Link, Route, Routes } from 'react-router-dom';
 import { bottomNavigation, topNavigation } from 'constants/navigation';
 import routes from 'constants/routes';
 import { useMemo, useState } from 'react';
-import { ConnectionStatus, GCContextProvider } from 'contexts';
+import {
+  ConnectionStatus,
+  GCContextProvider,
+  SchemaTreeContextProvider,
+} from 'contexts';
 import { Layout, StatusBar, StatsUpdater } from 'components';
 import logo from './assets/logo.svg';
 import useGcApi from 'hooks/useGcApi';
@@ -41,24 +45,26 @@ function App() {
       crateUrl={crateUrl}
       sessionTokenKey={GRAND_CENTRAL_SESSION_TOKEN_KEY}
     >
-      <StatsUpdater />
-      <Layout
-        topbarLogo={
-          <Link to={root.build()}>
-            <img alt="CrateDB logo" src={logo} />
-          </Link>
-        }
-        topbarContent={<StatusBar />}
-        bottomNavigation={bottomNavigation}
-        topNavigation={topNavigation}
-      >
-        <Routes>
-          {routes.map(route => (
-            <Route key={route.path} path={route.path} element={route.element} />
-          ))}
-        </Routes>
-      </Layout>
-      <NotificationHandler />
+      <SchemaTreeContextProvider>
+        <StatsUpdater />
+        <Layout
+          topbarLogo={
+            <Link to={root.build()}>
+              <img alt="CrateDB logo" src={logo} />
+            </Link>
+          }
+          topbarContent={<StatusBar />}
+          bottomNavigation={bottomNavigation}
+          topNavigation={topNavigation}
+        >
+          <Routes>
+            {routes.map(route => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </Layout>
+        <NotificationHandler />
+      </SchemaTreeContextProvider>
     </GCContextProvider>
   );
 }

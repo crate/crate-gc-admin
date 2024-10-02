@@ -63,7 +63,8 @@ describe('The useExecuteSql hook', () => {
 
       expect(screen.getByTestId('number-of-queries')).toHaveTextContent('2');
 
-      expect(executeQuerySpy).toHaveBeenCalledTimes(2);
+      // note: the SchemaTreeContextProvider also makes a request, so we expect 3
+      expect(executeQuerySpy).toHaveBeenCalledTimes(3);
     });
 
     it('gets all the statuses', async () => {

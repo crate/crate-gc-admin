@@ -4,7 +4,6 @@ import {
   ClusterInfo,
   NodeStatusInfo,
   QueryStats,
-  SchemaTableColumn,
   ShardInfo,
   TableInfo,
   TableListEntry,
@@ -14,7 +13,6 @@ import useExecuteSql from 'hooks/useExecuteSql';
 import {
   clusterInfoQuery,
   getPartitionedTablesQuery,
-  getTablesColumnsQuery,
   nodesQuery,
   shardsQuery,
 } from 'constants/queries';
@@ -183,28 +181,6 @@ export const useGetTablesQuery = (includeSystemTables: boolean = true) => {
   };
 
   return getTables;
-};
-
-export const useGetTableColumnsQuery = () => {
-  const executeSql = useExecuteSql();
-
-  const getTableColumns = async (): Promise<SchemaTableColumn[]> => {
-    const res = await executeSql(getTablesColumnsQuery);
-
-    if (!res.data || 'error' in res.data || Array.isArray(res.data)) {
-      return [];
-    }
-
-    return res.data.rows.map(r => ({
-      table_schema: r[0],
-      table_name: r[1],
-      column_name: r[2],
-      data_type: r[3],
-      table_type: r[4],
-    }));
-  };
-
-  return getTableColumns;
 };
 
 export const useGetNodesQuery = () => {

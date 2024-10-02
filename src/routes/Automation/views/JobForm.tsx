@@ -301,13 +301,7 @@ export default function JobForm(props: JobFormProps) {
                   <Form.Control>
                     <div className="h-72 rounded border-2">
                       <SQLEditor
-                        results={
-                          queryResults
-                            ? queryResults
-                                .filter(el => el.result && 'error' in el.result)
-                                .map(el => el.result!)
-                            : undefined
-                        }
+                        results={queryResults ? queryResults : undefined}
                         localStorageKey="sql-job-editor"
                         value={field.value}
                         onChange={query => {

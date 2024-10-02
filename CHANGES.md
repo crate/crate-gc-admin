@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-02 - 0.15.0
+
+- Refactor schema fetching to store values in a context provider for re-use elsewhere.
+
 ## 2024-10-01 - 0.14.2
 
 - Fix bug where the SQL editor was re-rendering too frequently.

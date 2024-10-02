@@ -1,7 +1,11 @@
 import React, { PropsWithChildren } from 'react';
 import { render as rtlRender, screen as rtlScreen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
-import { ConnectionStatus, GCContextProvider } from 'contexts';
+import {
+  ConnectionStatus,
+  GCContextProvider,
+  SchemaTreeContextProvider,
+} from 'contexts';
 import { SWRConfig } from 'swr';
 import { GRAND_CENTRAL_SESSION_TOKEN_KEY } from 'constants/session';
 
@@ -33,7 +37,7 @@ const render = (ui: React.ReactElement, { ...options } = {}): RenderType => {
             headings
             sessionTokenKey={GRAND_CENTRAL_SESSION_TOKEN_KEY}
           >
-            {children}
+            <SchemaTreeContextProvider>{children}</SchemaTreeContextProvider>
           </GCContextProvider>
         </SWRConfig>
       </main>
