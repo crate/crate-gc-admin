@@ -4,6 +4,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getGroupedRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
@@ -96,6 +97,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -227,6 +229,7 @@ export function DataTable<TData, TValue>({
                 return (
                   <Table.Head
                     key={header.id}
+                    colSpan={header.colSpan}
                     className={stickyHeader ? 'sticky top-0 z-10 bg-slate-50' : ''}
                     style={{
                       width: header.column.columnDef.meta?.width

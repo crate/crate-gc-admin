@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-15 - 0.15.1
+
+- Display grouped table columns correctly.
+
 ## 2024-10-02 - 0.15.0
 
 - Refactor schema fetching to store values in a context provider for re-use elsewhere.
