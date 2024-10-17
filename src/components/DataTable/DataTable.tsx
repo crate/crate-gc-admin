@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   ColumnDef,
   PaginationState,
@@ -15,6 +16,7 @@ import type {
   SortingState,
   ColumnSort,
   Row,
+  TableOptions,
 } from '@tanstack/react-table';
 import { Button, Pagination, Table } from 'components';
 import { useEffect, useState } from 'react';
@@ -42,6 +44,8 @@ export type DataTableProps<TData, TValue> = {
   paginationContent?: React.ReactNode;
   paginationAtTop?: boolean;
   getRowId?: (data: TData, index: number, row?: Row<TData>) => string;
+  customTableHeader?: React.ReactNode;
+  disablePagination?: boolean;
 };
 
 const getFiltersFromQuery = <TData, TValue>(
@@ -80,6 +84,8 @@ export function DataTable<TData, TValue>({
   paginationContent,
   paginationAtTop = false,
   getRowId,
+  customTableHeader = null,
+  disablePagination = false,
 }: DataTableProps<TData, TValue>) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -93,38 +99,47 @@ export function DataTable<TData, TValue>({
     getFiltersFromQuery(location.search, columns),
   );
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getGroupedRowModel: getGroupedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    filterFns: {
-      arrIncludesElement: arrIncludesElement,
-    },
-    initialState: {
-      additionalState,
-    },
-    state: {
-      sorting,
-      columnFilters,
-      globalFilter: searchTerm,
-      pagination,
-    },
-    defaultColumn: {
-      filterFn: 'arrIncludesElement',
-      enableSorting: false,
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setSearchTerm,
-    onPaginationChange: setPagination,
-    globalFilterFn: 'includesString',
-    getRowId,
-  });
+  const getReactTableOptions = (): TableOptions<TData> => {
+    const options: TableOptions<TData> = {
+      data,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      getGroupedRowModel: getGroupedRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      filterFns: {
+        arrIncludesElement: arrIncludesElement,
+      },
+      initialState: {
+        additionalState,
+      },
+      state: {
+        sorting,
+        columnFilters,
+        globalFilter: searchTerm,
+        pagination,
+      },
+      defaultColumn: {
+        filterFn: 'arrIncludesElement',
+        enableSorting: false,
+      },
+      onSortingChange: setSorting,
+      onColumnFiltersChange: setColumnFilters,
+      onGlobalFilterChange: setSearchTerm,
+      onPaginationChange: setPagination,
+      globalFilterFn: 'includesString',
+      getRowId,
+    };
 
+    // include pagination if it is not disabled
+    if (!disablePagination) {
+      options['getPaginationRowModel'] = getPaginationRowModel();
+    }
+
+    return options;
+  };
+
+  const table = useReactTable(getReactTableOptions());
   const currentPage = table.getState().pagination.pageIndex + 1;
   const pageSize = table.getState().pagination.pageSize;
   const pageCount = Math.max(1, table.getPageCount());
@@ -206,7 +221,7 @@ export function DataTable<TData, TValue>({
   return (
     <>
       {/* Pagination */}
-      {paginationAtTop && renderPagination()}
+      {!disablePagination && paginationAtTop && renderPagination()}
 
       {/* Filters */}
       {enableFilters && (
@@ -222,59 +237,64 @@ export function DataTable<TData, TValue>({
 
       {/* Table */}
       <Table className={className}>
-        <Table.Header>
-          {table.getHeaderGroups().map(headerGroup => (
-            <Table.RowHeader key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                return (
-                  <Table.Head
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    className={stickyHeader ? 'sticky top-0 z-10 bg-slate-50' : ''}
-                    style={{
-                      width: header.column.columnDef.meta?.width
-                        ? header.column.columnDef.meta.width
-                        : undefined,
-                      minWidth: header.column.columnDef.meta?.minWidth
-                        ? header.column.columnDef.meta.minWidth
-                        : undefined,
-                    }}
-                    data-testid={`head_col_${header.id}`}
-                    data-sorting={header.column.getIsSorted() || 'false'}
-                  >
-                    {renderHeader(header)}
+        {customTableHeader ? (
+          customTableHeader
+        ) : (
+          <Table.Header>
+            {table.getHeaderGroups().map(headerGroup => (
+              <Table.RowHeader key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <Table.Head
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className={stickyHeader ? 'sticky top-0 z-10 bg-slate-50' : ''}
+                      style={{
+                        width: header.column.columnDef.meta?.width
+                          ? header.column.columnDef.meta.width
+                          : undefined,
+                        minWidth: header.column.columnDef.meta?.minWidth
+                          ? header.column.columnDef.meta.minWidth
+                          : undefined,
+                      }}
+                      data-testid={`head_col_${header.id}`}
+                      data-sorting={header.column.getIsSorted() || 'false'}
+                    >
+                      {renderHeader(header)}
 
-                    {header.column.getCanSort() && (
-                      <Button
-                        kind={Button.kinds.TERTIARY}
-                        className={cn(
-                          '!leading-3',
-                          {
-                            'opacity-20': !header.column.getIsSorted(),
-                            'opacity-70': header.column.getIsSorted(),
-                          },
-                          'hover:opacity-100',
-                        )}
-                        onClick={() => {
-                          header.column.toggleSorting(
-                            header.column.getIsSorted() !== 'desc',
-                          );
-                        }}
-                        id={`sorting_button_${header.id}`}
-                      >
-                        {header.column.getIsSorted() === 'asc' ? (
-                          <ArrowUpOutlined className="ml-2 size-4" />
-                        ) : (
-                          <ArrowDownOutlined className="ml-2 size-4" />
-                        )}
-                      </Button>
-                    )}
-                  </Table.Head>
-                );
-              })}
-            </Table.RowHeader>
-          ))}
-        </Table.Header>
+                      {header.column.getCanSort() && (
+                        <Button
+                          kind={Button.kinds.TERTIARY}
+                          className={cn(
+                            '!leading-3',
+                            {
+                              'opacity-20': !header.column.getIsSorted(),
+                              'opacity-70': header.column.getIsSorted(),
+                            },
+                            'hover:opacity-100',
+                          )}
+                          onClick={() => {
+                            header.column.toggleSorting(
+                              header.column.getIsSorted() !== 'desc',
+                            );
+                          }}
+                          id={`sorting_button_${header.id}`}
+                        >
+                          {header.column.getIsSorted() === 'asc' ? (
+                            <ArrowUpOutlined className="ml-2 size-4" />
+                          ) : (
+                            <ArrowDownOutlined className="ml-2 size-4" />
+                          )}
+                        </Button>
+                      )}
+                    </Table.Head>
+                  );
+                })}
+              </Table.RowHeader>
+            ))}
+          </Table.Header>
+        )}
+
         <Table.Body>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
@@ -304,7 +324,7 @@ export function DataTable<TData, TValue>({
       </Table>
 
       {/* Pagination */}
-      {!paginationAtTop && renderPagination()}
+      {!disablePagination && !paginationAtTop && renderPagination()}
     </>
   );
 }

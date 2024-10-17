@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-17 - 0.15.2
+
+- Add ability to disable pagination and provide a custom header for DataTable.
+
 ## 2024-10-15 - 0.15.1
 
 - Display grouped table columns correctly.

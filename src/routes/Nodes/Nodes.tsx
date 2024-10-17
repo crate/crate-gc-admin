@@ -327,7 +327,7 @@ function Nodes() {
             Nodes
           </Heading>
         )}
-        <DataTable columns={columns} data={nodes!} />
+        <DataTable columns={columns} data={nodes!} disablePagination />
       </div>
     </GCSpin>
   );
