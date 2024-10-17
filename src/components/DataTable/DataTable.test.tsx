@@ -300,4 +300,31 @@ describe('The DataTable component', () => {
       });
     });
   });
+
+  describe('when the pagination is disabled', () => {
+    it('does not display the pagination', () => {
+      setup({ disablePagination: true });
+
+      expect(screen.queryByTestId('datatable-pagination')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('when passing in a custom table header', () => {
+    it('renders the custom header, not the standard one', () => {
+      setup({
+        customTableHeader: (
+          <thead data-testId="custom-table-header">
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+        ),
+      });
+
+      expect(screen.getByTestId('custom-table-header')).toBeInTheDocument();
+      expect(screen.getAllByRole('columnheader').length).toBe(3);
+    });
+  });
 });
