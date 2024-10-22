@@ -96,7 +96,7 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>(defaultSorting || []);
   const [searchTerm, setSearchTerm] = useState('');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    getFiltersFromQuery(location.search, columns),
+    getFiltersFromQuery(location?.search, columns),
   );
 
   const getReactTableOptions = (): TableOptions<TData> => {
@@ -196,7 +196,7 @@ export function DataTable<TData, TValue>({
 
   // Sync col filters with query param!
   useEffect(() => {
-    const urlSearch = new URLSearchParams(location.search);
+    const urlSearch = new URLSearchParams(location?.search);
 
     // Clean all filter key from urlSearch
     const enableFilterKeys = columns

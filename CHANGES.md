@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-22 - 0.15.3
+
+- Make location.search optional in DataTable to prevent issues with tests.
+
 ## 2024-10-17 - 0.15.2
 
 - Add ability to disable pagination and provide a custom header for DataTable.
