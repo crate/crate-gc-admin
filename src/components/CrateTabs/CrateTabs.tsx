@@ -24,7 +24,7 @@ function CrateTabs({
   // preselected tabs set via URL search params will override
   // the default active key
   const searchParamValue = queryParamKeyActiveTab
-    ? new URLSearchParams(location.search).get(queryParamKeyActiveTab)
+    ? new URLSearchParams(location?.search).get(queryParamKeyActiveTab)
     : null;
   const childKeysIncludesSearchParam = searchParamValue
     ? items
@@ -54,7 +54,7 @@ function CrateTabs({
   // means the browser back button can be used.
   const handleTabClick = (key: string) => {
     if (queryParamKeyActiveTab) {
-      const searchParams = new URLSearchParams(location.search);
+      const searchParams = new URLSearchParams(location?.search);
       searchParams.set(queryParamKeyActiveTab, key);
       navigate(`?${searchParams.toString()}`);
     }
