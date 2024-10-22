@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-23 - 0.15.4
+
+- Upgrade @cratedb/cratedb-sqlparse to the latest version.
+
 ## 2024-10-22 - 0.15.3
 
 - Make location.search optional in DataTable to prevent issues with tests.
