@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-24 - 0.15.5
+
+- Fix bug where the shards data in the Nodes component was being counted instead of summed.
+
 ## 2024-10-23 - 0.15.4
 
 - Upgrade @cratedb/cratedb-sqlparse to the latest version.

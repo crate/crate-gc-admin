@@ -85,7 +85,7 @@ const Head = React.forwardRef<
     )}
     {...props}
   >
-    <span className="flex grow border-r px-2">{children}</span>
+    <span className="flex h-full grow items-end border-r px-2 pb-1">{children}</span>
   </th>
 ));
 Head.displayName = 'TableHead';
