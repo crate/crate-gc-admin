@@ -112,7 +112,7 @@ function Nodes() {
               {renderNodeStatus(node)}
             </div>
           </div>
-          <Text>{node.hostname}</Text>
+          {headings && <Text>{node.hostname}</Text>}
           <Text>v{node.version.number}</Text>
           <Text>
             {node.os_info.available_processors} CPU Cores |{' '}
@@ -294,25 +294,27 @@ function Nodes() {
         </div>
         <div className="col-span-3">
           <Text testId="initializing-shards">
-            {
-              shards?.filter(
+            {shards
+              ?.filter(
                 s => s.node_id == node.id && s.routing_state == 'INITIALIZING',
-              ).length
-            }
+              )
+              .reduce((prev, next) => {
+                return prev + next.number_of_shards;
+              }, 0)}
           </Text>
           <Text testId="started-shards">
-            {
-              shards?.filter(
-                s => s.node_id == node.id && s.routing_state == 'STARTED',
-              ).length
-            }
+            {shards
+              ?.filter(s => s.node_id == node.id && s.routing_state == 'STARTED')
+              .reduce((prev, next) => {
+                return prev + next.number_of_shards;
+              }, 0)}
           </Text>
           <Text testId="relocating-shards">
-            {
-              shards?.filter(
-                s => s.node_id == node.id && s.routing_state == 'RELOCATING',
-              ).length
-            }
+            {shards
+              ?.filter(s => s.node_id == node.id && s.routing_state == 'RELOCATING')
+              .reduce((prev, next) => {
+                return prev + next.number_of_shards;
+              }, 0)}
           </Text>
         </div>
       </div>
