@@ -9,6 +9,8 @@ import CrateTabsShad from 'components/CrateTabsShad';
 import Loader from 'components/Loader';
 import SQLResultsTable from './SQLResultsTable';
 import { QueryStatus } from 'types/query';
+import { Tooltip } from 'antd';
+import { truncate } from 'lodash';
 
 type Params = {
   results: QueryStatus[] | undefined;
@@ -50,20 +52,26 @@ function SQLResults({ results, format }: Params) {
         return {
           key: `${i}`,
           label: (
-            <div className="flex items-center justify-between gap-1.5">
-              <span>Result {i}</span>
-              {queryResult.status === 'EXECUTING' ? (
-                <Loader size={Loader.sizes.SMALL} />
-              ) : queryResult.status === 'ERROR' ? (
-                <CloseCircleOutlined className="!mr-0 text-xs text-red-600" />
-              ) : queryResult.status === 'SUCCESS' ? (
-                <CheckCircleOutlined className="!mr-0 text-xs text-green-600" />
-              ) : queryResult.status === 'WAITING' ? (
-                <ClockCircleOutlined className="!mr-0 text-xs" />
-              ) : queryResult.status === 'NOT_EXECUTED' ? (
-                <PauseCircleOutlined className="!mr-0 text-xs" />
-              ) : null}
-            </div>
+            <Tooltip
+              title={truncate(queryResult.result?.original_query?.query || '', {
+                length: 50,
+              })}
+            >
+              <div className="flex items-center justify-between gap-1.5">
+                <span>Result {i}</span>
+                {queryResult.status === 'EXECUTING' ? (
+                  <Loader size={Loader.sizes.SMALL} />
+                ) : queryResult.status === 'ERROR' ? (
+                  <CloseCircleOutlined className="!mr-0 text-xs text-red-600" />
+                ) : queryResult.status === 'SUCCESS' ? (
+                  <CheckCircleOutlined className="!mr-0 text-xs text-green-600" />
+                ) : queryResult.status === 'WAITING' ? (
+                  <ClockCircleOutlined className="!mr-0 text-xs" />
+                ) : queryResult.status === 'NOT_EXECUTED' ? (
+                  <PauseCircleOutlined className="!mr-0 text-xs" />
+                ) : null}
+              </div>
+            </Tooltip>
           ),
           content: renderResult(queryResult),
         };

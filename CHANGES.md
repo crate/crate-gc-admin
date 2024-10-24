@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-24 - 0.15.6
+
+- Add tooltip to SQL result tabs showing the given query.
+
 ## 2024-10-24 - 0.15.5
 
 - Fix bug where the shards data in the Nodes component was being counted instead of summed.
