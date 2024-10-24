@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-24 - 0.15.7
+
+- Use quoted identifiers when copying from the SQL tree.
+
 ## 2024-10-24 - 0.15.6
 
 - Add tooltip to SQL result tabs showing the given query.

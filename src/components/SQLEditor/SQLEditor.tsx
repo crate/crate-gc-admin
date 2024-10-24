@@ -371,7 +371,7 @@ function SQLEditor({
   const drawTreeData = (filteredSchemaTree: Schema[]): AntDesignTreeItem[] => {
     const drawColumn = (column: SchemaTableColumn) => (
       <span data-testid={column.path}>
-        <CopyToClipboard textToCopy={column.column_name}>
+        <CopyToClipboard textToCopy={column.quoted_column_name}>
           {column.column_name}
         </CopyToClipboard>
         <Text pale className="ml-1 inline text-xs italic !leading-3">
@@ -420,7 +420,9 @@ function SQLEditor({
     const drawTableRow = (table: SchemaTable) => (
       <span className="flex items-center" data-testid={table.path}>
         {drawTableIcon(table.table_type)}
-        <CopyToClipboard textToCopy={table.path}>{table.table_name}</CopyToClipboard>
+        <CopyToClipboard textToCopy={table.quoted_path}>
+          {table.table_name}
+        </CopyToClipboard>
         <Text pale className="ml-1 inline text-xs italic !leading-3">
           {drawTableDescription(table.table_type)}
         </Text>

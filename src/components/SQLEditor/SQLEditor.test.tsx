@@ -13,7 +13,10 @@ const getSchemaTableColumns = () => {
     table_schema: r[0],
     table_name: r[1],
     column_name: r[2],
-    data_type: r[3],
+    quoted_table_schema: r[3],
+    quoted_table_name: r[4],
+    quoted_column_name: r[5],
+    data_type: r[6],
   }));
 
   const groupedBySchema = _.groupBy(schemaTableColumnsParsed, 'table_schema');

@@ -5,6 +5,9 @@ export const getTablesColumnsQuery = `
     c.table_schema,
     c.table_name,
     c.column_name,
+    QUOTE_IDENT(c.table_schema) AS quoted_table_schema,
+    QUOTE_IDENT(c.table_name) AS quoted_table_name,
+    QUOTE_IDENT(c.column_name) AS quoted_column_name,
     c.data_type,
     t.table_type
   FROM
