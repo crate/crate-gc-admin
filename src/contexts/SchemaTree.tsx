@@ -10,14 +10,19 @@ type SchemaDescription = {
   table_schema: string;
   table_name: string;
   column_name: string;
+  quoted_table_schema: string;
+  quoted_table_name: string;
+  quoted_column_name: string;
   data_type: string;
   table_type: string;
 };
 
 export type SchemaTableColumn = {
   column_name: string;
+  quoted_column_name: string;
   data_type: string;
   path: string;
+  quoted_path: string;
 };
 
 type SchemaTableType = 'BASE TABLE' | 'VIEW' | 'FOREIGN';
@@ -25,14 +30,18 @@ type SchemaTableType = 'BASE TABLE' | 'VIEW' | 'FOREIGN';
 export type SchemaTable = {
   table_name: string;
   table_type: SchemaTableType;
+  quoted_table_name: string;
   path: string;
+  quoted_path: string;
   columns: SchemaTableColumn[];
   is_system_table: boolean;
 };
 
 export type Schema = {
   schema_name: string;
+  quoted_schema_name: string;
   path: string;
+  quoted_path: string;
   tables: SchemaTable[];
 };
 
@@ -61,17 +70,21 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
       const tableLookup: {
         [key: string]: {
           name: string;
+          quotedName: string;
           type: string;
           path: string;
+          quotedPath: string;
           is_system_table: boolean;
         };
       } = input.reduce((prev, next) => {
         return {
           ...prev,
           [next.table_name]: {
-            name: next.table_name as string,
+            name: next.table_name,
+            quotedName: next.quoted_table_name,
             type: next.table_type,
             path: `${next.table_schema}.${next.table_name}`,
+            quotedPath: `${next.quoted_table_schema}.${next.quoted_table_name}`,
             schema: next.table_schema,
             is_system_table: SYSTEM_SCHEMAS.includes(next.table_schema),
           },
@@ -83,15 +96,19 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
       tableNames.forEach(tableName => {
         tree.push({
           table_name: tableLookup[tableName].name,
+          quoted_table_name: tableLookup[tableName].quotedName,
           table_type: tableLookup[tableName].type as SchemaTableType,
           path: tableLookup[tableName].path,
+          quoted_path: tableLookup[tableName].quotedPath,
           is_system_table: tableLookup[tableName].is_system_table,
           columns: input
             .filter(i => i.table_name === tableName)
             .map(column => ({
               column_name: column.column_name,
+              quoted_column_name: column.quoted_column_name,
               data_type: column.data_type,
               path: `${tableLookup[tableName].path}.${column.column_name}`,
+              quoted_path: `${tableLookup[tableName].quotedPath}.${column.quoted_column_name}`,
             })),
         });
       });
@@ -105,9 +122,15 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
       // loop through array of unique schema names
       const schemaNames = [...new Set(input.map(i => i.table_schema))];
       schemaNames.forEach(schemaName => {
+        const quotedSchemaName = input.find(
+          i => i.table_schema === schemaName,
+        )!.quoted_table_schema;
+
         tree.push({
           schema_name: schemaName,
+          quoted_schema_name: quotedSchemaName,
           path: schemaName,
+          quoted_path: quotedSchemaName,
           tables: constructTables(input.filter(i => i.table_schema === schemaName)),
         });
       });
@@ -128,8 +151,11 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
         table_schema: r[0],
         table_name: r[1],
         column_name: r[2],
-        data_type: r[3],
-        table_type: r[4],
+        quoted_table_schema: r[3],
+        quoted_table_name: r[4],
+        quoted_column_name: r[5],
+        data_type: r[6],
+        table_type: r[7],
       }));
     }
 
