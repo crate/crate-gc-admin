@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-25 - 0.15.8
+
+- Upgrade @cratedb/cratedb-sqlparse to the latest version.
+
 ## 2024-10-24 - 0.15.7
 
 - Use quoted identifiers when copying from the SQL tree.
