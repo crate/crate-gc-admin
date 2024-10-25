@@ -42,7 +42,7 @@
     "@tanstack/react-table": "^8.11.8",
     "ace-builds": "^1.32.2",
     "antd": "^4.24.14",
-    "axios": "^1.6.7",
+    "axios": "^1.7.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "compare-versions": "^6.1.1",
