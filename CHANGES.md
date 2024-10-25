@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dependabot: bump vite from 5.3.3 to 5.3.6.
+
 ## 2024-10-29 - 0.16.2
 
 - Fix DDL/DQL format query to a try-format method.
