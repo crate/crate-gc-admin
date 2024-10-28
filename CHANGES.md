@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-29 - 0.16.0
+
+- Add option to generate DQL and DDL statements.
+
 ## 2024-10-28 - 0.15.9
 
 - Dependabot bump @types/react from 18.3.3 to 18.3.12.

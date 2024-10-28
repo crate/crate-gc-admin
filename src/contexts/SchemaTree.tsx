@@ -28,6 +28,7 @@ export type SchemaTableColumn = {
 type SchemaTableType = 'BASE TABLE' | 'VIEW' | 'FOREIGN';
 
 export type SchemaTable = {
+  schema_name: string;
   table_name: string;
   table_type: SchemaTableType;
   quoted_table_name: string;
@@ -69,6 +70,7 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
       // for convenience, create a lookup dict of the tables/columns in this schema
       const tableLookup: {
         [key: string]: {
+          schema_name: string;
           name: string;
           quotedName: string;
           type: string;
@@ -81,6 +83,7 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
           ...prev,
           [next.table_name]: {
             name: next.table_name,
+            schema_name: next.table_schema,
             quotedName: next.quoted_table_name,
             type: next.table_type,
             path: `${next.table_schema}.${next.table_name}`,
@@ -95,6 +98,7 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
       const tableNames = [...new Set(input.map(i => i.table_name))];
       tableNames.forEach(tableName => {
         tree.push({
+          schema_name: tableLookup[tableName].schema_name,
           table_name: tableLookup[tableName].name,
           quoted_table_name: tableLookup[tableName].quotedName,
           table_type: tableLookup[tableName].type as SchemaTableType,

@@ -2,6 +2,8 @@ import { RestHandler, rest } from 'msw';
 import {
   clusterInfoQueryResult,
   getTablesColumnsResult,
+  getTablesDDLQueryResult,
+  getViewsDDLQueryResult,
   queryResult,
   schemasQueryResult,
   shardsQueryResult,
@@ -14,6 +16,8 @@ import {
   clusterInfoQuery,
   getPartitionedTablesQuery,
   getTablesColumnsQuery,
+  getTablesDDLQuery,
+  getViewsDDLQuery,
   nodesQuery,
   shardsQuery,
 } from 'constants/queries';
@@ -37,6 +41,12 @@ const executeQueryPost: RestHandler = rest.post(
         break;
       case getPartitionedTablesQuery(false):
         result = schemasQueryResult;
+        break;
+      case getTablesDDLQuery('new_schema', 'new_table'):
+        result = getTablesDDLQueryResult;
+        break;
+      case getViewsDDLQuery('new_schema', 'new_view'):
+        result = getViewsDDLQueryResult;
         break;
       case getTablesColumnsQuery:
         result = getTablesColumnsResult;
