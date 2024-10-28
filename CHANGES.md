@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dependabot bump @types/react from 18.3.3 to 18.3.12.
+
 ## 2024-10-25 - 0.15.8
 
 - Upgrade @cratedb/cratedb-sqlparse to the latest version.
