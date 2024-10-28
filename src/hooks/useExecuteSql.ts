@@ -29,7 +29,11 @@ export default function useExecuteSql() {
   const crateAcceptsJwt =
     onGcApiJwtExpire &&
     crateVersion !== undefined &&
-    compare(crateVersion, CRATE_AUTHENTICATE_VIA_JWT_MIN_VERSION, '>=');
+    compare(
+      crateVersion.includes('-') ? crateVersion.split('-')[1] : crateVersion,
+      CRATE_AUTHENTICATE_VIA_JWT_MIN_VERSION,
+      '>=',
+    );
 
   const executeSql = async (query: string): Promise<ExecuteSqlResult> => {
     // retrieve existing token from sessionstorage + refresh if necessary, or
