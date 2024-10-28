@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## 2024-10-28 - 0.15.9
+
 - Dependabot bump @types/react from 18.3.3 to 18.3.12.
 - Dependabot bump tailwind-merge from 2.4.0 to 2.5.4.
+- Fix bug with version comparison on a non-stable build.
 
 ## 2024-10-25 - 0.15.8
 
