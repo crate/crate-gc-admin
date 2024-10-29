@@ -9,7 +9,8 @@ export const getTablesColumnsQuery = `
     QUOTE_IDENT(c.table_name) AS quoted_table_name,
     QUOTE_IDENT(c.column_name) AS quoted_column_name,
     c.data_type,
-    t.table_type
+    t.table_type,
+    column_details['path'] AS path_array
   FROM
     "information_schema"."columns" c
   JOIN

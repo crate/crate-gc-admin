@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-29 - 0.16.1
+
+- Hide non top-level columns in DQL statement.
+
 ## 2024-10-29 - 0.16.0
 
 - Add option to generate DQL and DDL statements.
