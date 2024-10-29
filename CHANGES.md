@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-10-29 - 0.16.2
+
+- Fix DDL/DQL format query to a try-format method.
+
 ## 2024-10-29 - 0.16.1
 
 - Hide non top-level columns in DQL statement.

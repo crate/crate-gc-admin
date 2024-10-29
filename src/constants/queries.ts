@@ -120,4 +120,4 @@ export const getViewsDDLQuery = (schema: string, view: string) =>
             and table_name = '${view}'
         ), 
         ')'
-    );`;
+    ) AS create_view;`;
