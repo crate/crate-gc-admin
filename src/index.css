@@ -38,6 +38,9 @@
 .ant-dropdown-menu-item:hover {
   background-color: inherit;
 }
+.ant-dropdown-menu .ant-dropdown-menu-item-group-list .ant-dropdown-menu-item {
+  padding: 0px 10px;
+}
 
 /* hover menu when menu is collapsed */
 .ant-menu-inline-collapsed-tooltip .ant-tooltip-inner .anticon {

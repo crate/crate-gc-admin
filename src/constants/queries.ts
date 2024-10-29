@@ -101,3 +101,22 @@ export const shardsQuery = `
     routing_state,
     relocating_node,
     "primary"`;
+
+export const getTablesDDLQuery = (schema: string, table: string) =>
+  `SHOW CREATE TABLE "${schema}"."${table}"`;
+
+export const getViewsDDLQuery = (schema: string, view: string) =>
+  `SELECT
+    concat(
+      'CREATE OR REPLACE VIEW "${schema}"."${view}" AS (',
+        (
+          SELECT
+            view_definition
+          FROM
+            information_schema.views
+          WHERE
+            table_schema = '${schema}'
+            and table_name = '${view}'
+        ), 
+        ')'
+    );`;

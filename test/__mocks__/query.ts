@@ -266,3 +266,25 @@ export const shardsQueryResult = (shards: ShardInfo[]): QueryResult => {
 };
 
 export const getTablesColumnsResult = schemaTableColumnMock;
+
+export const getViewsDDLQueryResult = {
+  cols: [
+    'concat(\'CREATE OR REPLACE VIEW "new_schema"."new_view" AS (\', (SELECT view_definition FROM (information_schema.views)), \')\')',
+  ],
+  col_types: [4],
+  rows: [['CREATE OR REPLACE VIEW "doc"."test_view" AS (SELECT 1\n\n)']],
+  rowcount: 1,
+  duration: 1.872847,
+};
+
+export const getTablesDDLQueryResult = {
+  cols: ['SHOW CREATE TABLE new_schema.new_table'],
+  col_types: [4],
+  rows: [
+    [
+      'CREATE TABLE IF NOT EXISTS "new_schema"."new_table" (\n   "id" INTEGER\n)\nCLUSTERED INTO 4 SHARDS\nWITH (\n   "allocation.max_retries" = 5,\n   "blocks.metadata" = false,\n   "blocks.read" = false,\n   "blocks.read_only" = false,\n   "blocks.read_only_allow_delete" = false,\n   "blocks.write" = false,\n   codec = \'default\',\n   column_policy = \'strict\',\n   "mapping.total_fields.limit" = 1000,\n   max_ngram_diff = 1,\n   max_shingle_diff = 3,\n   number_of_replicas = \'0-1\',\n   "routing.allocation.enable" = \'all\',\n   "routing.allocation.total_shards_per_node" = -1,\n   "store.type" = \'fs\',\n   "translog.durability" = \'REQUEST\',\n   "translog.flush_threshold_size" = 536870912,\n   "translog.sync_interval" = 5000,\n   "unassigned.node_left.delayed_timeout" = 60000,\n   "write.wait_for_active_shards" = \'1\'\n)',
+    ],
+  ],
+  rowcount: 1,
+  duration: 0.683478,
+};

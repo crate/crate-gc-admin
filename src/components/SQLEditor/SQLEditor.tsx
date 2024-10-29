@@ -1,41 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
-import { Checkbox, Tree } from 'antd';
-import {
-  ApartmentOutlined,
-  CaretRightOutlined,
-  CloseCircleFilled,
-  CompassOutlined,
-  FilterOutlined,
-  FormatPainterOutlined,
-  SearchOutlined,
-  TableOutlined,
-} from '@ant-design/icons';
+import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import './mode-cratedb';
 import { format as formatSQL } from 'sql-formatter';
 import { Ace } from 'ace-builds';
-import {
-  Button,
-  CopyToClipboard,
-  Loader,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Text,
-} from 'components';
+import { Button } from 'components';
 import { cn } from 'utils';
 import { annotate } from './annotationUtils';
 import { QueryStatus } from 'types/query';
-import {
-  useGCContext,
-  useSchemaTreeContext,
-  Schema,
-  SchemaTable,
-  SchemaTableColumn,
-} from 'contexts';
+import { useGCContext, useSchemaTreeContext } from 'contexts';
+import SQLEditorSchemaTree from './SQLEditorSchemaTree';
 
 export type SQLEditorProps = {
   value?: string | undefined | null;
@@ -52,12 +29,6 @@ export type SQLEditorProps = {
   title?: React.ReactNode;
 };
 
-type AntDesignTreeItem = {
-  title: React.ReactNode;
-  key: string;
-  children?: AntDesignTreeItem[];
-};
-
 const getInitialValue = (
   value: string | null | undefined,
   dataFromLocalStorage: string | null | undefined,
@@ -65,13 +36,6 @@ const getInitialValue = (
   if (typeof value !== 'undefined' && value !== null) {
     return value;
   } else return dataFromLocalStorage || '';
-};
-
-const FILTER_TYPES = {
-  TABLE: 'table',
-  VIEW: 'view',
-  FOREIGN: 'foreign',
-  SYSTEM: 'system',
 };
 
 function SQLEditor({
@@ -89,7 +53,7 @@ function SQLEditor({
   title,
 }: SQLEditorProps) {
   const { clusterId } = useGCContext();
-  const { schemaTree, refreshSchemaTree } = useSchemaTreeContext();
+  const { refreshSchemaTree } = useSchemaTreeContext();
 
   const SQL_EDITOR_CONTENT_KEY =
     localStorageKey && `crate.gc.admin.${localStorageKey}.${clusterId || ''}`;
@@ -104,13 +68,6 @@ function SQLEditor({
     ? localStorage.getItem(SQL_EDITOR_CONTENT_KEY)
     : undefined;
   const [ace, setAce] = useState<Ace.Editor | undefined>(undefined);
-  const [treeFilterSearch, setTreeFilterSearch] = useState<string>('');
-  const [treeFilterType, setTreeFilterType] = useState<string[]>([
-    FILTER_TYPES.TABLE,
-    FILTER_TYPES.VIEW,
-    FILTER_TYPES.FOREIGN,
-    FILTER_TYPES.SYSTEM,
-  ]);
 
   const isLocalStorageUsed = useMemo(() => {
     return (
@@ -291,227 +248,10 @@ function SQLEditor({
     );
   };
 
-  const drawFilterCheckbox = (label: string, type: string) => (
-    <label className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap">
-      <Checkbox
-        checked={treeFilterType.includes(type)}
-        onChange={() => {
-          updateFilterTypes(type);
-        }}
-        data-testid={`filter-checkbox-${type}`}
-      />
-      <span className="opacity-70">{label}</span>
-    </label>
-  );
-
-  const updateFilterTypes = (type: string) => {
-    if (treeFilterType.includes(type)) {
-      const types = [...treeFilterType].filter(t => t !== type);
-      if (types.length > 0) {
-        setTreeFilterType(types);
-      }
-    } else {
-      setTreeFilterType([...treeFilterType, type]);
-    }
-  };
-
-  const filterTreeData = (filteredSchemaTree: Schema[]): Schema[] => {
-    // if no filters are applied, return the full tree
-    if (treeFilterSearch === '' && treeFilterType.length === 4) {
-      return filteredSchemaTree;
-    }
-
-    // filter: system tables
-    if (!treeFilterType.includes(FILTER_TYPES.SYSTEM)) {
-      filteredSchemaTree = filteredSchemaTree.map(schema => ({
-        ...schema,
-        tables: schema.tables.filter(table => !table.is_system_table),
-      }));
-    }
-
-    // filter: tables
-    if (!treeFilterType.includes(FILTER_TYPES.TABLE)) {
-      filteredSchemaTree = filteredSchemaTree.map(schema => ({
-        ...schema,
-        tables: schema.tables.filter(table => table.table_type !== 'BASE TABLE'),
-      }));
-    }
-
-    // filter: foreign tables
-    if (!treeFilterType.includes(FILTER_TYPES.FOREIGN)) {
-      filteredSchemaTree = filteredSchemaTree.map(schema => ({
-        ...schema,
-        tables: schema.tables.filter(table => table.table_type !== 'FOREIGN'),
-      }));
-    }
-
-    // filter: views
-    if (!treeFilterType.includes(FILTER_TYPES.VIEW)) {
-      filteredSchemaTree = filteredSchemaTree.map(schema => ({
-        ...schema,
-        tables: schema.tables.filter(table => table.table_type !== 'VIEW'),
-      }));
-    }
-
-    // filter: search string
-    if (treeFilterSearch !== '') {
-      const searchString = treeFilterSearch.toLowerCase();
-      filteredSchemaTree = filteredSchemaTree.map(schema => ({
-        ...schema,
-        tables: schema.tables.filter(table =>
-          table.path.toLowerCase().includes(searchString),
-        ),
-      }));
-    }
-
-    // tidy up: remove all empty schemas
-    return filteredSchemaTree.filter(schema => schema.tables.length > 0);
-  };
-
-  const drawTreeData = (filteredSchemaTree: Schema[]): AntDesignTreeItem[] => {
-    const drawColumn = (column: SchemaTableColumn) => (
-      <span data-testid={column.path}>
-        <CopyToClipboard textToCopy={column.quoted_column_name}>
-          {column.column_name}
-        </CopyToClipboard>
-        <Text pale className="ml-1 inline text-xs italic !leading-3">
-          {column.data_type}
-        </Text>
-      </span>
-    );
-
-    const drawTableIcon = (tableType: string) => {
-      switch (tableType) {
-        case 'FOREIGN':
-          return <CompassOutlined className="mr-1 size-3 opacity-50" />;
-        case 'VIEW':
-          return <SearchOutlined className="mr-1 size-3 opacity-50" />;
-        default:
-          return <TableOutlined className="mr-1 size-3 opacity-50" />;
-      }
-    };
-
-    const drawTableDescription = (tableType: string) => {
-      switch (tableType) {
-        case 'FOREIGN':
-          return <div>foreign table</div>;
-        case 'VIEW':
-          return <div>view</div>;
-        default:
-          return <div>table</div>;
-      }
-    };
-
-    const drawSchemaRow = (schema: Schema) => (
-      <span
-        className="flex cursor-default !leading-3"
-        data-testid={`schema-${schema.schema_name}`}
-      >
-        <ApartmentOutlined className="mr-1.5 size-3 opacity-50" />
-        {schema.schema_name}
-        {schema.tables.find(table => table.is_system_table) && (
-          <Text className="ml-1 inline text-xs italic !leading-3" pale>
-            system
-          </Text>
-        )}
-      </span>
-    );
-
-    const drawTableRow = (table: SchemaTable) => (
-      <span className="flex items-center" data-testid={table.path}>
-        {drawTableIcon(table.table_type)}
-        <CopyToClipboard textToCopy={table.quoted_path}>
-          {table.table_name}
-        </CopyToClipboard>
-        <Text pale className="ml-1 inline text-xs italic !leading-3">
-          {drawTableDescription(table.table_type)}
-        </Text>
-      </span>
-    );
-
-    return filteredSchemaTree.map(schema => ({
-      title: drawSchemaRow(schema),
-      key: schema.path,
-      children: schema.tables.map(table => ({
-        title: drawTableRow(table),
-        key: table.path,
-        children: table.columns.map(column => ({
-          title: drawColumn(column),
-          key: column.path,
-        })),
-      })),
-    }));
-  };
-
-  const filteredSchemaTree = filterTreeData(schemaTree);
-
   return (
     <PanelGroup direction="horizontal">
       <Panel>
-        {schemaTree.length > 0 ? (
-          <div className="flex h-full flex-col">
-            <div
-              className="min-w-32 shrink-0 border-b px-1 py-1"
-              data-testid="object-filter-panel"
-            >
-              <div className="flex items-center gap-1">
-                <div className="flex grow select-none items-center rounded border-2 pl-2 pr-1">
-                  <input
-                    type="text"
-                    placeholder="Filter"
-                    className="w-full text-sm outline-none"
-                    value={treeFilterSearch}
-                    onChange={e => setTreeFilterSearch(e.target.value)}
-                    data-testid="object-filter-input"
-                  />
-                  {treeFilterSearch && (
-                    <CloseCircleFilled
-                      className="text opacity-25 hover:text-crate-blue hover:opacity-100"
-                      onClick={() => setTreeFilterSearch('')}
-                    />
-                  )}
-                </div>
-                <Popover>
-                  <PopoverTrigger>
-                    <div
-                      className={`group h-5 w-5 rounded ${treeFilterType.length === 4 ? 'text-black' : 'bg-crate-blue text-white'} `}
-                    >
-                      <FilterOutlined
-                        className="opacity-80 group-hover:opacity-100"
-                        data-testid="show-filter-options-icon"
-                      />
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent align="end" className="select-none space-y-1">
-                    {drawFilterCheckbox('Tables', FILTER_TYPES.TABLE)}
-                    {drawFilterCheckbox('Views', FILTER_TYPES.VIEW)}
-                    {drawFilterCheckbox('Foreign tables', FILTER_TYPES.FOREIGN)}
-                    <div className="py-1">
-                      <hr />
-                    </div>
-                    {drawFilterCheckbox('System schemas', FILTER_TYPES.SYSTEM)}
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-            <div className="ant-tree-tiny grow overflow-auto px-1 py-2">
-              {filteredSchemaTree.length > 0 ? (
-                <Tree
-                  data-testid="tables-tree"
-                  selectable={false}
-                  showIcon
-                  treeData={drawTreeData(filteredSchemaTree)}
-                />
-              ) : (
-                <div className="px-2 text-center text-sm text-crate-border-mid">
-                  No data found
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <Loader />
-        )}
+        <SQLEditorSchemaTree />
       </Panel>
       <PanelResizeHandle className="flex w-1 flex-col justify-center bg-neutral-200 hover:bg-crate-blue">
         <div className="h-10 w-full bg-crate-blue" />
