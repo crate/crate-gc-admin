@@ -12,23 +12,29 @@ import {
   getTablesDDLQueryResult,
   getViewsDDLQueryResult,
 } from 'test/__mocks__/query';
+import { SchemaDescription } from 'contexts';
 
 const getSchemaTableColumns = () => {
-  const schemaTableColumnsParsed = schemaTableColumnMock.rows.map(r => ({
-    table_schema: r[0],
-    table_name: r[1],
-    column_name: r[2],
-    quoted_table_schema: r[3],
-    quoted_table_name: r[4],
-    quoted_column_name: r[5],
-    data_type: r[6],
-  }));
+  const schemaTableColumnsParsed = schemaTableColumnMock.rows.map(
+    r =>
+      ({
+        table_schema: r[0] as string,
+        table_name: r[1] as string,
+        column_name: r[2] as string,
+        quoted_table_schema: r[3] as string,
+        quoted_table_name: r[4] as string,
+        quoted_column_name: r[5] as string,
+        data_type: r[6] as string,
+        table_type: r[7] as string,
+        path_array: r[8] as string[],
+      }) satisfies SchemaDescription,
+  );
 
   const groupedBySchema = _.groupBy(schemaTableColumnsParsed, 'table_schema');
 
   return Object.keys(groupedBySchema).map(schema => {
     const schemaTables = groupedBySchema[schema];
-    const tables = [...new Set(schemaTables.map(i => i.table_name))];
+    const tables = [...new Set(schemaTables.map(i => i.table_name as string))];
 
     return {
       schemaName: schema,

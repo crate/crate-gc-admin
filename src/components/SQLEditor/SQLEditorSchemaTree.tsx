@@ -209,7 +209,10 @@ function SQLEditorSchemaTree() {
 
       const copySelectStatement = () => {
         // generate DQL
-        const dqlStatement = `SELECT ${table.columns.map(el => el.quoted_column_name).join(', ')} FROM ${table.quoted_path} LIMIT 100;`;
+        const dqlStatement = `SELECT ${table.columns
+          .filter(col => col.path_array.length === 0)
+          .map(el => el.quoted_column_name)
+          .join(', ')} FROM ${table.quoted_path} LIMIT 100;`;
 
         // format and copy
         navigator.clipboard.writeText(

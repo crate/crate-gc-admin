@@ -9,6 +9,8 @@ export const schemaTableColumnMock = {
     'quoted_table_name',
     'quoted_column_name',
     'data_type',
+    'table_type',
+    'path_array',
   ],
   col_types: [4, 4, 4, 4, 4, 4, 4],
   rows: [
@@ -21,6 +23,7 @@ export const schemaTableColumnMock = {
       'version_num',
       'text',
       'BASE TABLE',
+      [],
     ],
     [
       'gc',
@@ -31,6 +34,7 @@ export const schemaTableColumnMock = {
       'id',
       'text',
       'BASE TABLE',
+      [],
     ],
     [
       'information_schema',
@@ -41,6 +45,7 @@ export const schemaTableColumnMock = {
       'character_repertoire',
       'text',
       'BASE TABLE',
+      [],
     ],
     [
       'information_schema',
@@ -51,6 +56,7 @@ export const schemaTableColumnMock = {
       'character_set_catalog',
       'text',
       'BASE TABLE',
+      [],
     ],
     [
       'new_schema',
@@ -61,6 +67,7 @@ export const schemaTableColumnMock = {
       'id',
       'bigint',
       'BASE TABLE',
+      [],
     ],
     [
       'new_schema',
@@ -71,6 +78,7 @@ export const schemaTableColumnMock = {
       'version_num',
       'text',
       'VIEW',
+      [],
     ],
     [
       'pg_catalog',
@@ -81,6 +89,7 @@ export const schemaTableColumnMock = {
       'amhandler',
       'regproc',
       'BASE TABLE',
+      [],
     ],
     [
       'pg_catalog',
@@ -91,6 +100,7 @@ export const schemaTableColumnMock = {
       'amname',
       'text',
       'BASE TABLE',
+      [],
     ],
     [
       'sys',
@@ -101,6 +111,7 @@ export const schemaTableColumnMock = {
       'current_state',
       'text',
       'BASE TABLE',
+      [],
     ],
     [
       'sys',
@@ -111,6 +122,7 @@ export const schemaTableColumnMock = {
       'decisions',
       'object_array',
       'BASE TABLE',
+      [],
     ],
     [
       'sys',
@@ -121,6 +133,7 @@ export const schemaTableColumnMock = {
       "decisions['explanations']",
       'text_array_array',
       'BASE TABLE',
+      ['decisions'],
     ],
   ],
   rowcount: 10,

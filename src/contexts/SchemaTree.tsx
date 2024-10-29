@@ -6,7 +6,7 @@ import { getTablesColumnsQuery } from 'constants/queries';
 const REFRESH_INTERVAL_SECONDS = 60;
 
 // a schema description row, as returned direct from the DB
-type SchemaDescription = {
+export type SchemaDescription = {
   table_schema: string;
   table_name: string;
   column_name: string;
@@ -15,6 +15,7 @@ type SchemaDescription = {
   quoted_column_name: string;
   data_type: string;
   table_type: string;
+  path_array: string[];
 };
 
 export type SchemaTableColumn = {
@@ -22,6 +23,7 @@ export type SchemaTableColumn = {
   quoted_column_name: string;
   data_type: string;
   path: string;
+  path_array: string[];
   quoted_path: string;
 };
 
@@ -107,13 +109,17 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
           is_system_table: tableLookup[tableName].is_system_table,
           columns: input
             .filter(i => i.table_name === tableName)
-            .map(column => ({
-              column_name: column.column_name,
-              quoted_column_name: column.quoted_column_name,
-              data_type: column.data_type,
-              path: `${tableLookup[tableName].path}.${column.column_name}`,
-              quoted_path: `${tableLookup[tableName].quotedPath}.${column.quoted_column_name}`,
-            })),
+            .map(
+              column =>
+                ({
+                  column_name: column.column_name,
+                  quoted_column_name: column.quoted_column_name,
+                  data_type: column.data_type,
+                  path: `${tableLookup[tableName].path}.${column.column_name}`,
+                  path_array: column.path_array,
+                  quoted_path: `${tableLookup[tableName].quotedPath}.${column.quoted_column_name}`,
+                }) satisfies SchemaTableColumn,
+            ),
         });
       });
 
@@ -151,16 +157,20 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
     setLastSync(new Date().valueOf());
     const res = await executeSql(getTablesColumnsQuery);
     if (res.data && !('error' in res.data) && !Array.isArray(res.data)) {
-      cols = res.data.rows.map(r => ({
-        table_schema: r[0],
-        table_name: r[1],
-        column_name: r[2],
-        quoted_table_schema: r[3],
-        quoted_table_name: r[4],
-        quoted_column_name: r[5],
-        data_type: r[6],
-        table_type: r[7],
-      }));
+      cols = res.data.rows.map(
+        r =>
+          ({
+            table_schema: r[0],
+            table_name: r[1],
+            column_name: r[2],
+            quoted_table_schema: r[3],
+            quoted_table_name: r[4],
+            quoted_column_name: r[5],
+            data_type: r[6],
+            table_type: r[7],
+            path_array: r[8],
+          }) satisfies SchemaDescription,
+      );
     }
 
     setSchemaTree(constructSchemaTreeFromFlatList(cols));
