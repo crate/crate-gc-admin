@@ -22,7 +22,7 @@ import {
 import useExecuteSql from 'hooks/useExecuteSql';
 import useMessage from 'hooks/useMessage';
 import { useState } from 'react';
-import { format as formatSQL } from 'sql-formatter';
+import { tryFormatSql } from 'utils';
 
 type AntDesignTreeItem = {
   title: React.ReactNode;
@@ -196,11 +196,7 @@ function SQLEditorSchemaTree() {
           const ddlStatement = `${ddlResult.data.rows[0][0]};`;
 
           // format and copy
-          navigator.clipboard.writeText(
-            formatSQL(ddlStatement, {
-              language: 'postgresql',
-            }),
-          );
+          navigator.clipboard.writeText(tryFormatSql(ddlStatement));
           showSuccessMessage('Copied');
         } else {
           showErrorMessage('Error genering DDL statement.');
@@ -215,11 +211,7 @@ function SQLEditorSchemaTree() {
           .join(', ')} FROM ${table.quoted_path} LIMIT 100;`;
 
         // format and copy
-        navigator.clipboard.writeText(
-          formatSQL(dqlStatement, {
-            language: 'postgresql',
-          }),
-        );
+        navigator.clipboard.writeText(tryFormatSql(dqlStatement));
         showSuccessMessage('Copied');
       };
 
