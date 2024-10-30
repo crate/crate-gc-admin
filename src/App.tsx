@@ -1,71 +1,63 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { bottomNavigation, topNavigation } from 'constants/navigation';
 import routes from 'constants/routes';
-import { useMemo, useState } from 'react';
-import {
-  ConnectionStatus,
-  GCContextProvider,
-  SchemaTreeContextProvider,
-} from 'contexts';
+import { useEffect } from 'react';
+import { ConnectionStatus } from 'types';
 import { Layout, StatusBar, StatsUpdater } from 'components';
 import logo from './assets/logo.svg';
 import useGcApi from 'hooks/useGcApi';
 import { apiGet } from 'utils/api';
-import { GRAND_CENTRAL_SESSION_TOKEN_KEY } from 'constants/session';
 import NotificationHandler from 'components/NotificationHandler';
 import { root } from 'constants/paths';
+import useJWTManagerStore from 'state/jwtManager';
 
 function App() {
-  const [gcStatus, setGCStatus] = useState(ConnectionStatus.PENDING);
+  const hasToken = useJWTManagerStore(state => state.hasToken);
+  const setGcStatus = useJWTManagerStore(state => state.setGcStatus);
   const gcApi = useGcApi();
 
-  useMemo(() => {
+  useEffect(() => {
+    if (!hasToken()) {
+      setGcStatus(ConnectionStatus.NOT_LOGGED_IN);
+      return;
+    }
+
     apiGet(gcApi, `/api/`)
       .then(res => {
         if (res.status == 200) {
-          setGCStatus(ConnectionStatus.CONNECTED);
+          setGcStatus(ConnectionStatus.CONNECTED);
         } else if (res.status == 401) {
-          setGCStatus(ConnectionStatus.NOT_LOGGED_IN);
+          setGcStatus(ConnectionStatus.NOT_LOGGED_IN);
         } else {
-          setGCStatus(ConnectionStatus.ERROR);
+          setGcStatus(ConnectionStatus.ERROR);
         }
       })
       .catch(() => {
-        setGCStatus(ConnectionStatus.ERROR);
+        setGcStatus(ConnectionStatus.ERROR);
       });
   }, []);
 
-  const gcUrl = process.env.REACT_APP_GRAND_CENTRAL_URL;
-  const crateUrl = process.env.REACT_APP_CRATE_URL;
-
   return (
-    <GCContextProvider
-      gcStatus={gcStatus}
-      gcUrl={gcUrl}
-      crateUrl={crateUrl}
-      sessionTokenKey={GRAND_CENTRAL_SESSION_TOKEN_KEY}
-    >
-      <SchemaTreeContextProvider>
-        <StatsUpdater />
-        <Layout
-          topbarLogo={
-            <Link to={root.build()}>
-              <img alt="CrateDB logo" src={logo} />
-            </Link>
-          }
-          topbarContent={<StatusBar />}
-          bottomNavigation={bottomNavigation}
-          topNavigation={topNavigation}
-        >
-          <Routes>
-            {routes.map(route => (
-              <Route key={route.path} path={route.path} element={route.element} />
-            ))}
-          </Routes>
-        </Layout>
-        <NotificationHandler />
-      </SchemaTreeContextProvider>
-    </GCContextProvider>
+    <>
+      <StatsUpdater />
+      <Layout
+        topbarLogo={
+          <Link to={root.build()}>
+            <img alt="CrateDB logo" src={logo} />
+          </Link>
+        }
+        topbarContent={<StatusBar />}
+        bottomNavigation={bottomNavigation}
+        topNavigation={topNavigation}
+      >
+        <Routes>
+          {routes.map(route => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+        </Routes>
+      </Layout>
+      <NotificationHandler />
+    </>
   );
 }
 

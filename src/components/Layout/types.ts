@@ -1,10 +1,4 @@
-export enum ConnectionStatus {
-  CONNECTED,
-  NOT_CONFIGURED,
-  NOT_LOGGED_IN,
-  ERROR,
-  PENDING,
-}
+import { ConnectionStatus } from 'types';
 
 export type BurgerProps = {
   navIsExpanded: boolean;

@@ -1,4 +1,5 @@
-import { ConnectionStatus, useGCContext } from 'contexts';
+import { ConnectionStatus } from 'types';
+import useJWTManagerStore from 'state/jwtManager';
 
 function renderStatus(status: ConnectionStatus) {
   const prefix = 'GC';
@@ -27,7 +28,7 @@ function renderStatus(status: ConnectionStatus) {
 }
 
 function GCStatusIndicator() {
-  const { gcStatus } = useGCContext();
+  const gcStatus = useJWTManagerStore(state => state.gcStatus);
 
   return renderStatus(gcStatus);
 }

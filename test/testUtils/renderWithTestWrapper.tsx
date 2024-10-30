@@ -1,13 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import { render as rtlRender, screen as rtlScreen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
-import {
-  ConnectionStatus,
-  GCContextProvider,
-  SchemaTreeContextProvider,
-} from 'contexts';
 import { SWRConfig } from 'swr';
-import { GRAND_CENTRAL_SESSION_TOKEN_KEY } from 'constants/session';
 
 type RenderType = {
   user: UserEvent;
@@ -16,8 +10,6 @@ type RenderType = {
 
 const render = (ui: React.ReactElement, { ...options } = {}): RenderType => {
   const TestWrapper = ({ children }: PropsWithChildren) => {
-    const gcUrl = '';
-
     return (
       <main>
         <SWRConfig
@@ -30,15 +22,7 @@ const render = (ui: React.ReactElement, { ...options } = {}): RenderType => {
             },
           }}
         >
-          <GCContextProvider
-            gcUrl={gcUrl}
-            crateUrl={'CRATE_URL'}
-            gcStatus={ConnectionStatus.CONNECTED}
-            headings
-            sessionTokenKey={GRAND_CENTRAL_SESSION_TOKEN_KEY}
-          >
-            <SchemaTreeContextProvider>{children}</SchemaTreeContextProvider>
-          </GCContextProvider>
+          {children}
         </SWRConfig>
       </main>
     );

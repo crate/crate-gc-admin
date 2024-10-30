@@ -1,14 +1,15 @@
 import React from 'react';
 import { Result } from 'antd';
 import Button from 'components/Button';
-import { ConnectionStatus, useGCContext } from 'contexts';
+import { ConnectionStatus } from 'types';
+import useJWTManagerStore from 'state/jwtManager';
 
 type EnterpriseScreenProps = {
   children: React.ReactElement;
 };
 
 function EnterpriseScreen({ children }: EnterpriseScreenProps) {
-  const { gcStatus } = useGCContext();
+  const gcStatus = useJWTManagerStore(state => state.gcStatus);
   if (gcStatus == ConnectionStatus.CONNECTED) {
     return children;
   }

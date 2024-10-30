@@ -6,8 +6,9 @@ import {
   UserOutlined,
   ClusterOutlined,
   CalendarOutlined,
+  PieChartOutlined,
 } from '@ant-design/icons';
-import { automation, help, root, sql, tables, users } from './paths';
+import { automation, help, root, sql, tables, tablesShards, users } from './paths';
 
 export const topNavigation = [
   {
@@ -26,6 +27,12 @@ export const topNavigation = [
     icon: <DatabaseOutlined />,
     label: <span>Tables</span>,
     path: tables.path,
+    type: 'internal' as const,
+  },
+  {
+    icon: <PieChartOutlined />,
+    label: <span>Tables Shards</span>,
+    path: tablesShards.path,
     type: 'internal' as const,
   },
   {

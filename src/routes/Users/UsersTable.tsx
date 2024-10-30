@@ -1,5 +1,5 @@
 import { DataTable, GCSpin, Text } from 'components';
-import { useGetUsersRoles } from 'hooks/swrHooks';
+import { useUsersRoles } from 'src/swr/jwt';
 import { ColumnDef } from '@tanstack/react-table';
 import { TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { UserInfo } from 'types/cratedb';
@@ -7,7 +7,7 @@ import { Tag, Tooltip } from 'antd';
 import { CRATEDB_PRIVILEGES_DOCS } from 'constants/defaults';
 
 function UsersTable() {
-  const { data: usersRoles } = useGetUsersRoles();
+  const { data: usersRoles } = useUsersRoles();
 
   const columns: ColumnDef<UserInfo>[] = [
     {

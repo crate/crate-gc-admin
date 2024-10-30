@@ -3,14 +3,14 @@ import { Spin } from 'antd';
 
 export type GCSpinParams = PropsWithChildren<{
   spinning: boolean;
-  spinnedTestId?: string;
+  spinnerTestId?: string;
 }>;
 
-function GCSpin({ children, spinning, spinnedTestId = 'spinner' }: GCSpinParams) {
+function GCSpin({ children, spinning, spinnerTestId = 'spinner' }: GCSpinParams) {
   if (!spinning) {
     return children;
   }
-  return <Spin data-testid={spinnedTestId} />;
+  return <Spin data-testid={spinnerTestId} />;
 }
 
 export default GCSpin;

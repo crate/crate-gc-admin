@@ -1,9 +1,7 @@
-import React, { PropsWithChildren, useContext, useEffect, useState } from 'react';
-import useExecuteSql from 'hooks/useExecuteSql';
+import useSWR from 'swr';
+import swrJWTFetch from '../swrJWTFetch';
 import { SYSTEM_SCHEMAS } from 'constants/database';
-import { getTablesColumnsQuery } from 'constants/queries';
-
-const REFRESH_INTERVAL_SECONDS = 60;
+import { QueryResultSuccess } from 'types/query';
 
 // a schema description row, as returned direct from the DB
 export type SchemaDescription = {
@@ -48,23 +46,7 @@ export type Schema = {
   tables: SchemaTable[];
 };
 
-type SchemaTreeContextType = {
-  schemaTree: Schema[];
-  refreshSchemaTree: () => void;
-};
-
-const defaultProps: SchemaTreeContextType = {
-  schemaTree: [],
-  refreshSchemaTree: () => {},
-};
-
-const SchemaTreeContext = React.createContext(defaultProps);
-
-export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
-  const executeSql = useExecuteSql();
-  const [lastSync, setLastSync] = useState<number>(0);
-  const [schemaTree, setSchemaTree] = useState<Schema[]>([]);
-
+export const postFetch = (data: QueryResultSuccess): Schema[] => {
   const constructSchemaTreeFromFlatList = (input: SchemaDescription[]) => {
     const constructTables = (input: SchemaDescription[]): SchemaTable[] => {
       const tree: SchemaTable[] = [];
@@ -151,59 +133,48 @@ export const SchemaTreeContextProvider = ({ children }: PropsWithChildren) => {
     return constructSchemas(input);
   };
 
-  const retrieveSchemaFromCluster = async () => {
-    let cols: SchemaDescription[] = [];
-
-    setLastSync(new Date().valueOf());
-    const res = await executeSql(getTablesColumnsQuery);
-    if (res.data && !('error' in res.data) && !Array.isArray(res.data)) {
-      cols = res.data.rows.map(
-        r =>
-          ({
-            table_schema: r[0],
-            table_name: r[1],
-            column_name: r[2],
-            quoted_table_schema: r[3],
-            quoted_table_name: r[4],
-            quoted_column_name: r[5],
-            data_type: r[6],
-            table_type: r[7],
-            path_array: r[8],
-          }) satisfies SchemaDescription,
-      );
-    }
-
-    setSchemaTree(constructSchemaTreeFromFlatList(cols));
-  };
-
-  const refreshSchemaTree = () => {
-    retrieveSchemaFromCluster();
-  };
-
-  // populate the tree on mount
-  useEffect(() => {
-    retrieveSchemaFromCluster();
-  }, []);
-
-  // manage the interval timer
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const secondsSinceLastSync = (new Date().valueOf() - lastSync) / 1000;
-      if (secondsSinceLastSync > REFRESH_INTERVAL_SECONDS) {
-        retrieveSchemaFromCluster();
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [lastSync]);
-
-  return (
-    <SchemaTreeContext.Provider value={{ schemaTree, refreshSchemaTree }}>
-      {children}
-    </SchemaTreeContext.Provider>
+  return constructSchemaTreeFromFlatList(
+    data.rows.map(r => ({
+      table_schema: r[0],
+      table_name: r[1],
+      column_name: r[2],
+      quoted_table_schema: r[3],
+      quoted_table_name: r[4],
+      quoted_column_name: r[5],
+      data_type: r[6],
+      table_type: r[7],
+      path_array: r[8],
+    })),
   );
 };
 
-export const useSchemaTreeContext = () => {
-  return useContext(SchemaTreeContext);
+const QUERY = `
+  SELECT
+    c.table_schema,
+    c.table_name,
+    c.column_name,
+    QUOTE_IDENT(c.table_schema) AS quoted_table_schema,
+    QUOTE_IDENT(c.table_name) AS quoted_table_name,
+    QUOTE_IDENT(c.column_name) AS quoted_column_name,
+    c.data_type,
+    t.table_type,
+    column_details['path'] AS path_array
+  FROM
+    "information_schema"."columns" c
+  JOIN
+    "information_schema"."tables" t ON c.table_schema = t.table_schema AND c.table_name = t.table_name
+  ORDER BY
+    table_schema,
+    table_name,
+    ordinal_position
+`;
+
+const useSchemaTree = (clusterId?: string) => {
+  return useSWR<Schema[]>(
+    [`/use-schema-tree/${clusterId}`, clusterId],
+    ([url]: [string]) => swrJWTFetch(url, QUERY, postFetch),
+    { refreshInterval: 2 * 60 * 1000 },
+  );
 };
+
+export default useSchemaTree;

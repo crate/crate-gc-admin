@@ -1,4 +1,3 @@
-import { useGCContext } from 'contexts';
 import { Route, Routes } from 'react-router-dom';
 import { Heading, Text } from 'components';
 import {
@@ -14,6 +13,7 @@ import {
   automationEditJob,
   automationEditPolicy,
 } from 'constants/paths';
+import useJWTManagerStore from 'state/jwtManager';
 
 type AutomationProps = {
   onCreateJob?: () => void;
@@ -32,11 +32,11 @@ export default function Automation({
   onDeletePolicy,
   onEditPolicy,
 }: AutomationProps) {
-  const { headings } = useGCContext();
+  const isLocalConnection = useJWTManagerStore(state => state.isLocalConnection);
 
   return (
     <div className="flex h-full flex-col">
-      {headings && (
+      {isLocalConnection && (
         <>
           <Heading level={Heading.levels.h1}>Automation</Heading>
           <Text>Run SQL queries at regular intervals.</Text>

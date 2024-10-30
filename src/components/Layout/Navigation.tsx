@@ -1,4 +1,5 @@
-import { ConnectionStatus, NavigationProps, NavigationLinkProps } from './types';
+import { ConnectionStatus } from 'types';
+import { NavigationProps, NavigationLinkProps } from './types';
 import { NavLink } from 'react-router-dom';
 import {
   ArrowUpOutlined,

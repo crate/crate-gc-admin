@@ -1,18 +1,19 @@
-import { useGetAllocations, useGetCluster, useGetQueryStats } from 'hooks/swrHooks';
+import { useAllocations, useClusterInfo, useQueryStats } from 'src/swr/jwt';
 import { GCSpin, Heading, GCChart } from 'components';
 import { Statistic, Tag } from 'antd';
+import { STATS_PERIOD } from 'components/StatsUpdater/StatsUpdater';
 import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
 import { formatHumanReadable, formatNum } from 'utils/numbers';
 import useSessionStore from 'state/session';
-import { STATS_PERIOD } from 'components/StatsUpdater/StatsUpdater';
+import useJWTManagerStore from 'state/jwtManager';
 
 function Overview() {
+  const clusterId = useJWTManagerStore(state => state.clusterId);
   const { load } = useSessionStore();
 
-  const { data: cluster } = useGetCluster();
-
-  const { data: allocations } = useGetAllocations();
-  const { data: queryStats } = useGetQueryStats();
+  const { data: cluster } = useClusterInfo(clusterId);
+  const { data: allocations } = useAllocations();
+  const { data: queryStats } = useQueryStats(clusterId);
 
   const clusterStatus = getClusterStatus(allocations);
 

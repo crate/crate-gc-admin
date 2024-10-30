@@ -35,7 +35,7 @@ describe('The GCSpin component', () => {
 
   it('will use specified test id', () => {
     setup({
-      spinnedTestId: 'custom-test-id',
+      spinnerTestId: 'custom-test-id',
     });
 
     expect(screen.getByTestId('custom-test-id')).toBeInTheDocument();

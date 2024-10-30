@@ -101,7 +101,7 @@ export default function useExecuteMultiSql() {
       updateQueryStatus(id, currentQueryStatus, queryIndex, 'EXECUTING');
 
       // call API
-      const response = await executeSql(singleQuery.query);
+      const response = await executeSql(singleQuery.query, '/console-query');
       const data = {
         ...response.data,
         original_query: singleQuery,

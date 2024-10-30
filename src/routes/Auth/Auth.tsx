@@ -1,42 +1,37 @@
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { GCSpin, NoDataView } from 'components';
-import { useMemo, useState } from 'react';
-import useGCLogin from 'hooks/useGCLogin';
-import { useGCContext } from 'contexts';
+import useJWTManagerStore from 'state/jwtManager';
 
 function Auth() {
-  const { gcUrl, sessionTokenKey } = useGCContext();
-
-  const gcLogin = useGCLogin();
-
+  const login = useJWTManagerStore(state => state.login);
+  const [searchParams] = useSearchParams();
   const [status, setStatus] = useState<boolean | undefined>(undefined);
 
-  const specifiedToken = new URLSearchParams(location.search).get('token');
-  const specifiedRefreshToken = new URLSearchParams(location.search).get('refresh');
+  // get tokens from the url
+  const specifiedToken = searchParams.get('token');
+  const specifiedRefreshToken = searchParams.get('refresh');
 
-  useMemo(() => {
+  const doLogin = async () => {
+    const result = await login(specifiedToken!, specifiedRefreshToken || undefined);
+    setStatus(result);
+    if (result) {
+      window.location.assign('/');
+    }
+  };
+
+  useEffect(() => {
     if (!specifiedToken) {
       setStatus(false);
       return;
     }
-    gcLogin({
-      token: specifiedToken,
-      refresh: specifiedRefreshToken,
-      gcUrl: gcUrl!,
-      sessionTokenKey,
-    }).then(success => {
-      if (success) {
-        setStatus(true);
-        window.location.assign('/');
-      } else {
-        setStatus(false);
-      }
-    });
+    doLogin();
   }, [specifiedToken]);
 
   return (
     <GCSpin spinning={status === undefined}>
       {status === false && (
-        <NoDataView description="Could not authenticate to Grand Central: Invalid or no token" />
+        <NoDataView description="Could not authenticate to Grand Central: Invalid or missing token" />
       )}
     </GCSpin>
   );

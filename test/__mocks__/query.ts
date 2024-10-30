@@ -272,7 +272,7 @@ export const getViewsDDLQueryResult = {
     'concat(\'CREATE OR REPLACE VIEW "new_schema"."new_view" AS (\', (SELECT view_definition FROM (information_schema.views)), \')\')',
   ],
   col_types: [4],
-  rows: [['CREATE OR REPLACE VIEW "doc"."test_view" AS (SELECT 1\n\n)']],
+  rows: [['CREATE OR REPLACE VIEW "new_schema"."test_view" AS (SELECT 1\n\n)']],
   rowcount: 1,
   duration: 1.872847,
 };
