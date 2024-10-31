@@ -12,6 +12,7 @@
 - Dependabot: bump react-resizable-panels from 2.0.20 to 2.1.6.
 - Dependabot: bump @types/lodash from 4.17.6 to 4.17.13.
 - Dependabot: bump @types/node from 16.18.101 to 22.8.5.
+- Dependabot: bump node from 18.16.0-slim to 23.1.0-slim.
 
 ## 2024-10-29 - 0.16.2
 
