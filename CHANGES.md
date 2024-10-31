@@ -6,6 +6,7 @@
 - Dependabot: bump axios from 1.7.2 to 1.7.4.
 - Dependabot: bump nginx from 1.25.3 to 1.27.2.
 - Dependabot: bump @types/react-dom from 18.3.0 to 18.3.1.
+- Dependabot: bump @radix-ui/react-dropdown-menu from 2.1.1 to 2.1.2.
 
 ## 2024-10-29 - 0.16.2
 
