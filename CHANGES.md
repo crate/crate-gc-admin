@@ -5,6 +5,7 @@
 - Dependabot: bump vite from 5.3.3 to 5.3.6.
 - Dependabot: bump axios from 1.7.2 to 1.7.4.
 - Dependabot: bump nginx from 1.25.3 to 1.27.2.
+- Dependabot: bump @types/react-dom from 18.3.0 to 18.3.1.
 
 ## 2024-10-29 - 0.16.2
 
