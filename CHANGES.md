@@ -9,6 +9,7 @@
 - Dependabot: bump @radix-ui/react-dropdown-menu from 2.1.1 to 2.1.2.
 - Dependabot: bump @radix-ui/react-popover from 1.1.1 to 1.1.2.
 - Dependabot: bump @types/jest from 29.5.12 to 29.5.14.
+- Dependabot: bump react-resizable-panels from 2.0.20 to 2.1.6.
 
 ## 2024-10-29 - 0.16.2
 
