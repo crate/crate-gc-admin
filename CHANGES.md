@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Dependabot: bump vite from 5.3.3 to 5.3.6.
+- Dependabot: bump axios from 1.7.2 to 1.7.4.
 
 ## 2024-10-29 - 0.16.2
 
