@@ -121,3 +121,50 @@ export const getViewsDDLQuery = (schema: string, view: string) =>
         ), 
         ')'
     ) AS create_view;`;
+
+export const usersQuery = `
+SELECT 
+    ur.type,
+    ur.name, 
+    ur.password_set,
+    ur.jwt_set,
+    ur.granted_roles,
+    COALESCE(p.privileges, []) "privileges",
+    ur.superuser
+  FROM 
+    (
+      select
+        'user' "type",
+        u.name,
+        u.granted_roles,
+        u.password IS NOT NULL "password_set",
+        u.jwt IS NOT NULL "jwt_set",
+        u.superuser
+      from
+        sys.users u
+      UNION ALL
+      select
+        'role' "type",
+        r.name,
+        r.granted_roles,
+        false "password_set",
+        false "jwt_set",
+        false "superuser"
+      from
+        sys.roles r
+    ) ur 
+      LEFT JOIN 
+    (
+      SELECT
+        p1.grantee grantee,
+        array_agg({
+        "class" = p1.class,
+        "ident" = p1.ident,
+        "state" = p1.state,
+        "type" = p1.type
+        }) as privileges
+      FROM
+        sys.privileges p1 GROUP BY grantee
+    ) p ON ur.name = p.grantee
+    ORDER BY ur.type DESC, ur.name ASC;
+`;

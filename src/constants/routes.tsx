@@ -1,4 +1,4 @@
-import { Auth, Help, Overview, SQLConsole, Tables, Users, Nodes } from 'routes';
+import { Auth, Help, Overview, SQLConsole, Tables, Nodes, Users } from 'routes';
 import { EnterpriseScreen } from 'components';
 import { Route } from 'types';
 import { auth, automation, help, nodes, root, sql, tables, users } from './paths';

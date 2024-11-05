@@ -7,7 +7,7 @@ import {
   ShardInfo,
   TableInfo,
   TableListEntry,
-  User,
+  UserInfo,
 } from 'types/cratedb';
 import useExecuteSql from 'hooks/useExecuteSql';
 import {
@@ -15,13 +15,29 @@ import {
   getPartitionedTablesQuery,
   nodesQuery,
   shardsQuery,
+  usersQuery,
 } from 'constants/queries';
+import { QueryResultSuccess } from 'types/query';
 
-export const useGetUsersQuery = () => {
+export const postFetchUsers = (data: QueryResultSuccess): UserInfo[] => {
+  return data.rows.map(row => {
+    return {
+      type: row[0],
+      name: row[1],
+      password_set: row[2],
+      jwt_set: row[3],
+      granted_roles: row[4],
+      privileges: row[5],
+      superuser: row[6],
+    };
+  });
+};
+
+export const useGetUsersRolesQuery = () => {
   const executeSql = useExecuteSql();
 
-  const getUsers = async (): Promise<User[]> => {
-    const res = await executeSql('SELECT name, superuser FROM sys.users');
+  const getUsersRolesInfo = async (): Promise<UserInfo[]> => {
+    const res = await executeSql(usersQuery);
     if (!res.data || Array.isArray(res.data)) {
       return [];
     }
@@ -30,15 +46,10 @@ export const useGetUsersQuery = () => {
       throw res.data.error;
     }
 
-    return res.data.rows.map(row => {
-      return {
-        name: row[0],
-        superuser: row[1],
-      };
-    });
+    return postFetchUsers(res.data);
   };
 
-  return getUsers;
+  return getUsersRolesInfo;
 };
 
 export const useGetUserPermissionsQuery = () => {

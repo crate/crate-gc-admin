@@ -3,6 +3,7 @@ import {
   clusterInfoQueryResult,
   getTablesColumnsResult,
   getTablesDDLQueryResult,
+  getUsersQueryResult,
   getViewsDDLQueryResult,
   queryResult,
   schemasQueryResult,
@@ -20,6 +21,7 @@ import {
   getViewsDDLQuery,
   nodesQuery,
   shardsQuery,
+  usersQuery,
 } from 'constants/queries';
 
 const executeQueryPost: RestHandler = rest.post(
@@ -50,6 +52,9 @@ const executeQueryPost: RestHandler = rest.post(
         break;
       case getTablesColumnsQuery:
         result = getTablesColumnsResult;
+        break;
+      case usersQuery:
+        result = getUsersQueryResult;
         break;
       default:
         result = queryResult;
