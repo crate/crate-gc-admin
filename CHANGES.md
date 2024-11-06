@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-11-06 - 0.17.0
+
 - Dependabot: bump vite from 5.3.3 to 5.3.6.
 - Dependabot: bump axios from 1.7.2 to 1.7.4.
 - Dependabot: bump nginx from 1.25.3 to 1.27.2.
@@ -13,6 +15,7 @@
 - Dependabot: bump @types/lodash from 4.17.6 to 4.17.13.
 - Dependabot: bump @types/node from 16.18.101 to 22.8.5.
 - Dependabot: bump node from 18.16.0-slim to 23.1.0-slim.
+- Add Users / Permissions View.
 
 ## 2024-10-29 - 0.16.2
 

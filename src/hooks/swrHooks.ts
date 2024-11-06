@@ -23,6 +23,7 @@ import {
   useGetQueryStatsQuery,
   useGetPartitionedTablesQuery,
   useGetUserPermissionsQuery,
+  useGetUsersRolesQuery,
 } from 'hooks/queryHooks';
 import { useGCContext } from 'contexts';
 
@@ -241,6 +242,18 @@ export const useGCGetPoliciesLogs = () => {
     swrFetch,
     {
       refreshInterval: 30 * 1000,
+    },
+  );
+};
+
+export const useGetUsersRoles = () => {
+  const getUsers = useGetUsersRolesQuery();
+  return useSWR(
+    // We do not use the url as the swr key, because we'll have many of these SWR fetches from the same url
+    `swr-fetch-users-roles`,
+    () => getUsers(),
+    {
+      refreshInterval: 5000,
     },
   );
 };

@@ -87,8 +87,23 @@ export type ClusterInfo = {
   settings: ClusterSettings;
 };
 
-export type User = {
+export type UserInfoPrivileges = {
+  class: string;
+  ident: null | string;
+  state: 'GRANT' | 'DENY';
+  type: string;
+};
+export type UserInfoGrantedRoles = {
+  role: string;
+  grantor: string;
+};
+export type UserInfo = {
+  type: 'user' | 'role';
   name: string;
+  password_set: boolean;
+  jwt_set: boolean;
+  granted_roles: UserInfoGrantedRoles[];
+  privileges: UserInfoPrivileges[];
   superuser: boolean;
 };
 

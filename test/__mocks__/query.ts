@@ -288,3 +288,121 @@ export const getTablesDDLQueryResult = {
   rowcount: 1,
   duration: 0.683478,
 };
+
+export const getUsersQueryResult = {
+  cols: [
+    'type',
+    'name',
+    'password_set',
+    'jwt_set',
+    'granted_roles',
+    'privileges',
+    'superuser',
+  ],
+  col_types: [4, 4, 3, 3, [100, 12], [100, 12], 3],
+  rows: [
+    ['user', 'crate', false, false, [], [], true],
+    [
+      'user',
+      'john',
+      false,
+      true,
+      [
+        {
+          role: 'rolename',
+          grantor: 'crate',
+        },
+        {
+          role: 'rolename2',
+          grantor: 'crate',
+        },
+        {
+          role: 'rolename3',
+          grantor: 'crate',
+        },
+        {
+          role: 'rolename4',
+          grantor: 'crate',
+        },
+        {
+          role: 'rolename5',
+          grantor: 'crate',
+        },
+        {
+          role: 'rolename6',
+          grantor: 'crate',
+        },
+      ],
+      [],
+      false,
+    ],
+    [
+      'user',
+      'my_user',
+      false,
+      false,
+      [],
+      [
+        {
+          class: 'CLUSTER',
+          ident: null,
+          state: 'GRANT',
+          type: 'AL',
+        },
+        {
+          class: 'SCHEMA',
+          ident: 'my_schema',
+          state: 'GRANT',
+          type: 'DQL',
+        },
+        {
+          class: 'TABLE',
+          ident: 'doc.a',
+          state: 'DENY',
+          type: 'DML',
+        },
+      ],
+      false,
+    ],
+    [
+      'user',
+      'my_user_password',
+      true,
+      false,
+      [],
+      [
+        {
+          class: 'CLUSTER',
+          ident: null,
+          state: 'GRANT',
+          type: 'DDL',
+        },
+      ],
+      false,
+    ],
+    ['user', 'test_user', true, true, [], [], false],
+    [
+      'role',
+      'rolename',
+      false,
+      false,
+      [],
+      [
+        {
+          class: 'CLUSTER',
+          ident: null,
+          state: 'GRANT',
+          type: 'AL',
+        },
+      ],
+      false,
+    ],
+    ['role', 'rolename2', false, false, [], [], false],
+    ['role', 'rolename3', false, false, [], [], false],
+    ['role', 'rolename4', false, false, [], [], false],
+    ['role', 'rolename5', false, false, [], [], false],
+    ['role', 'rolename6', false, false, [], [], false],
+  ],
+  rowcount: 11,
+  duration: 1.869178,
+};
