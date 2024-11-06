@@ -1,4 +1,4 @@
-import { SYSTEM_SCHEMAS } from 'constants/database';
+import { SYSTEM_SCHEMAS, SYSTEM_USERS } from 'constants/database';
 import {
   Allocation,
   ClusterInfo,
@@ -29,6 +29,7 @@ export const postFetchUsers = (data: QueryResultSuccess): UserInfo[] => {
       granted_roles: row[4],
       privileges: row[5],
       superuser: row[6],
+      is_system_user: SYSTEM_USERS.includes(row[1]),
     };
   });
 };

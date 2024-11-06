@@ -5,11 +5,12 @@ import { getUsersQueryResult } from 'test/__mocks__/query';
 import { CRATEDB_PRIVILEGES_DOCS } from 'constants/defaults';
 
 const users = postFetchUsers(getUsersQueryResult);
-const SUPERUSER_INDEX = 0;
-const USER_GRANTED_ROLES_INDEX = 1;
-const USER_WITH_GRANTED_DENIED_PRIVILEGES_INDEX = 2;
-const FULL_AUTH_USER_INDEX = 4;
-const ROLE_INDEX = 5;
+const SYSTEM_USER = 1;
+const SUPERUSER_INDEX = 1;
+const USER_GRANTED_ROLES_INDEX = 2;
+const USER_WITH_GRANTED_DENIED_PRIVILEGES_INDEX = 3;
+const FULL_AUTH_USER_INDEX = 5;
+const ROLE_INDEX = 6;
 
 const setup = () => {
   return render(<UsersTable />);
@@ -62,6 +63,14 @@ describe('The UsersTable component', () => {
 
       expect(within(roleRow).getByTestId('role-icon')).toBeInTheDocument();
     });
+
+    it('shows "system" for system users', async () => {
+      setup();
+      await waitForTableRender();
+      const userRow = screen.getAllByRole('row')[SYSTEM_USER + 1];
+
+      expect(within(userRow).getByText('system')).toBeInTheDocument();
+    });
   });
 
   describe('the "Authentication" cell', () => {
@@ -82,9 +91,9 @@ describe('The UsersTable component', () => {
       const user = users[USER_GRANTED_ROLES_INDEX];
       const userRow = screen.getAllByRole('row')[USER_GRANTED_ROLES_INDEX + 1];
 
-      expect(
-        within(userRow).getByText(user.granted_roles.map(gr => gr.role).join(', ')),
-      ).toBeInTheDocument();
+      user.granted_roles.forEach(gr => {
+        expect(within(userRow).getByText(gr.role)).toBeInTheDocument();
+      });
     });
   });
 

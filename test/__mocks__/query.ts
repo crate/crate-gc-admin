@@ -301,6 +301,58 @@ export const getUsersQueryResult = {
   ],
   col_types: [4, 4, 3, 3, [100, 12], [100, 12], 3],
   rows: [
+    [
+      'user',
+      'alex',
+      false,
+      false,
+      [],
+      [
+        {
+          class: 'CLUSTER',
+          ident: null,
+          state: 'GRANT',
+          type: 'AL',
+        },
+        {
+          class: 'CLUSTER',
+          ident: null,
+          state: 'GRANT',
+          type: 'DDL',
+        },
+        {
+          class: 'CLUSTER',
+          ident: null,
+          state: 'GRANT',
+          type: 'DQL',
+        },
+        {
+          class: 'SCHEMA',
+          ident: 'doc',
+          state: 'GRANT',
+          type: 'DQL',
+        },
+        {
+          class: 'TABLE',
+          ident: 'doc.a',
+          state: 'GRANT',
+          type: 'DML',
+        },
+        {
+          class: 'VIEW',
+          ident: 'doc.aaview',
+          state: 'GRANT',
+          type: 'DML',
+        },
+        {
+          class: 'VIEW',
+          ident: 'doc.view',
+          state: 'GRANT',
+          type: 'DML',
+        },
+      ],
+      false,
+    ],
     ['user', 'crate', false, false, [], [], true],
     [
       'user',
@@ -403,6 +455,6 @@ export const getUsersQueryResult = {
     ['role', 'rolename5', false, false, [], [], false],
     ['role', 'rolename6', false, false, [], [], false],
   ],
-  rowcount: 11,
-  duration: 1.869178,
+  rowcount: 12,
+  duration: 12.049209,
 };
