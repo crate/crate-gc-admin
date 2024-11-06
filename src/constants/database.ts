@@ -1,4 +1,5 @@
 export const SYSTEM_SCHEMAS = ['information_schema', 'sys', 'pg_catalog', 'gc'];
+export const SYSTEM_USERS = ['crate', 'system', 'gc_admin'];
 
 // This RegExp is for validating SET_REPLICAS values
 // and it accepts:

@@ -105,6 +105,7 @@ export type UserInfo = {
   granted_roles: UserInfoGrantedRoles[];
   privileges: UserInfoPrivileges[];
   superuser: boolean;
+  is_system_user: boolean;
 };
 
 export type TableListEntry = {

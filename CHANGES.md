@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-11-06 - 0.17.1
+
+- Misc minor fixes to Users view.
+
 ## 2024-11-06 - 0.17.0
 
 - Dependabot: bump vite from 5.3.3 to 5.3.6.

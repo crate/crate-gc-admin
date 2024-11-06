@@ -164,7 +164,7 @@ SELECT
         "type" = p1.type
         }) as privileges
       FROM
-        sys.privileges p1 GROUP BY grantee
+        (SELECT * from sys.privileges ORDER BY grantee, class, ident, state DESC, type) p1 GROUP BY grantee
     ) p ON ur.name = p.grantee
     ORDER BY ur.type DESC, ur.name ASC;
 `;

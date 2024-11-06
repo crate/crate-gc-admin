@@ -6,13 +6,6 @@ import { UserInfo } from 'types/cratedb';
 import { Tag, Tooltip } from 'antd';
 import { CRATEDB_PRIVILEGES_DOCS } from 'constants/defaults';
 
-const PRIVILEGES_SORT_VALUES: Record<string, number> = {
-  CLUSTER: 1,
-  SCHEMA: 2,
-  TABLE: 3,
-  VIEW: 4,
-};
-
 function UsersTable() {
   const { data: usersRoles } = useGetUsersRoles();
 
@@ -80,47 +73,62 @@ function UsersTable() {
           )}
         </Tooltip>{' '}
         {user.name}
+        {user.is_system_user && (
+          <Text className="ml-1 inline text-xs italic !leading-3" pale>
+            system
+          </Text>
+        )}
       </Text>
     );
   };
 
   const renderAuthentication = (user: UserInfo) => {
+    if (!user.password_set && !user.jwt_set) {
+      return <Text>-</Text>;
+    }
     return (
       <div>
-        {user.password_set ? <Tag color="green">Password</Tag> : null}
-        {user.jwt_set ? <Tag color="blue">JWT</Tag> : null}
+        {user.password_set && <Tag color="green">Password</Tag>}
+        {user.jwt_set && <Tag color="blue">JWT</Tag>}
       </div>
     );
   };
 
   const renderGrantedRoles = (user: UserInfo) => {
-    return <Text>{user.granted_roles.map(gr => gr.role).join(', ')}</Text>;
+    if (user.granted_roles.length === 0) {
+      return <Text>-</Text>;
+    }
+    return (
+      <div>
+        {user.granted_roles.map((gr, index) => {
+          return (
+            <code key={index} className="block">
+              {gr.role}
+            </code>
+          );
+        })}
+      </div>
+    );
   };
 
   const renderPrivileges = (user: UserInfo, state: 'GRANT' | 'DENY') => {
-    const privileges = user.privileges
-      .filter(p => p.state === state)
-      .sort((a, b) => {
-        if (a.class === b.class) {
-          return (a.ident || '').localeCompare(b.ident || '');
-        } else
-          return PRIVILEGES_SORT_VALUES[a.class] - PRIVILEGES_SORT_VALUES[b.class];
-      });
+    const showSuperuser = state === 'GRANT' && user.superuser;
+    const privileges = user.privileges.filter(p => p.state === state);
+
+    if (privileges.length === 0 && !showSuperuser) {
+      return <Text>-</Text>;
+    }
 
     return (
       <div>
         {state === 'GRANT' && user.superuser && (
-          <div>
-            <code>SUPERUSER</code>
-          </div>
+          <code className="block">SUPERUSER</code>
         )}
         {privileges.map((el, index) => {
           return (
-            <div>
-              <code key={index}>
-                {el.type} ON {el.class} {el.ident}
-              </code>
-            </div>
+            <code key={index} className="block">
+              {el.type} ON {el.class} {el.ident}
+            </code>
           );
         })}
       </div>
