@@ -7,12 +7,15 @@ export type VerticalProgressProps = {
 export const VERTICAL_PROGRESS_BARS = 10;
 
 function VerticalProgress({ max, current, testId }: VerticalProgressProps) {
-  const normalized = Math.floor((current / max) * VERTICAL_PROGRESS_BARS);
+  const normalized = Math.floor(
+    (Math.min(current, max) / max) * VERTICAL_PROGRESS_BARS,
+  );
   const missing =
     normalized < VERTICAL_PROGRESS_BARS
       ? new Array(VERTICAL_PROGRESS_BARS - normalized).fill('')
-      : [''];
+      : [];
   const filled = new Array(normalized).fill('');
+
   return (
     <div className="h-full" data-testid={testId}>
       {missing.map((_, index) => {
