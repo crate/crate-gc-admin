@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dependabot: remove unused package (@radix-ui/react-collapsible)
+
 ## 2024-11-06 - 0.17.1
 
 - Misc minor fixes to Users view.
