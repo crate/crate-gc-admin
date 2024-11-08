@@ -7,6 +7,7 @@
 - Dependabot: bump ace-builds from 1.35.2 to 1.36.4.
 - Dependabot: bump vite from 5.3.6 to 5.4.10.
 - Dependabot: bump vite-plugin-dts from 3.9.1 to 4.3.0.
+- Dependabot: bump react-icons from 5.2.1 to 5.3.0.
 
 ## 2024-11-06 - 0.17.1
 
