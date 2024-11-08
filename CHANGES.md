@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Dependabot: remove unused package (@radix-ui/react-collapsible)
+- Dependabot: remove unused package (@radix-ui/react-collapsible).
+- Dependabot: bump @types/papaparse from 5.3.14 to 5.3.15.
 
 ## 2024-11-06 - 0.17.1
 
