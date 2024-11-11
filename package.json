@@ -40,7 +40,7 @@
     "@tanstack/match-sorter-utils": "^8.11.8",
     "@tanstack/react-table": "^8.11.8",
     "ace-builds": "^1.36.4",
-    "antd": "^4.24.14",
+    "antd": "^5.21.6",
     "axios": "^1.7.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
