@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dependabot: bump react-router-dom from 6.24.1 to 6.28.0.
+
 ## 2024-11-11 - 0.17.2
 
 - Dependabot: remove unused package (@radix-ui/react-collapsible).
