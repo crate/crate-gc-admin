@@ -367,7 +367,7 @@ function SQLEditor({
           <div className="p-0">
             {errorMessage}
             <div className="flex w-full items-center justify-between px-2 py-1.5">
-              <div className="flex items-center gap-2 ">
+              <div className="flex items-center gap-2">
                 {showRunButton && (
                   <Button kind="primary" size="small" onClick={() => exec()}>
                     <CaretRightOutlined className="mr-2" />

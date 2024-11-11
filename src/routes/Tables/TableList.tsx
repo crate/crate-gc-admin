@@ -244,7 +244,7 @@ function TableList({
   }
   return (
     <div className="flex h-full select-none flex-col border-r bg-crate-body-background">
-      <div className="flex h-14  bg-white md:border-r md:border-r-neutral-200">
+      <div className="flex h-14 bg-white md:border-r md:border-r-neutral-200">
         {/* filter input box */}
         <div className="basis-full border-r border-r-neutral-200 p-2">
           <div
