@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-11-11 - 0.17.2
+
 - Dependabot: remove unused package (@radix-ui/react-collapsible).
 - Dependabot: bump @types/papaparse from 5.3.14 to 5.3.15.
 - Dependabot: bump ace-builds from 1.35.2 to 1.36.4.
@@ -9,6 +11,7 @@
 - Dependabot: bump vite-plugin-dts from 3.9.1 to 4.3.0.
 - Dependabot: bump react-icons from 5.2.1 to 5.3.0.
 - Upgrade @cratedb/cratedb-sqlparse to the latest version.
+- Fix bug on VerticalProgress component when current value is greather than max value.
 
 ## 2024-11-06 - 0.17.1
 

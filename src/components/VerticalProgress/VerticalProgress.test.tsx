@@ -61,4 +61,25 @@ describe('The VerticalProgress component', () => {
       expect(screen.getByTestId('custom-test-id')).not.toBeNull();
     });
   });
+
+  describe('when current is greather than max', () => {
+    it('shows a full vertical bar', () => {
+      setup({
+        current: 10,
+        max: 7,
+      });
+
+      const numberOfNonFilled = 0;
+      const numberOfFilled = VERTICAL_PROGRESS_BARS;
+
+      const wrapper = screen.getByTestId('vertical-progress');
+
+      expect(wrapper.getElementsByClassName('bg-gray-300')).toHaveLength(
+        numberOfNonFilled,
+      );
+      expect(wrapper.getElementsByClassName('bg-crate-blue')).toHaveLength(
+        numberOfFilled,
+      );
+    });
+  });
 });
