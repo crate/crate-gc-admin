@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Dependabot: bump react-router-dom from 6.24.1 to 6.28.0.
+- Dependabot: bump prettier from 3.3.2 to 3.3.3.
 
 ## 2024-11-11 - 0.17.2
 
