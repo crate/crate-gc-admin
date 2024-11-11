@@ -283,7 +283,7 @@ const Ellipsis = ({
     <span className="absolute transition-opacity duration-200 group-hover:opacity-0">
       •••
     </span>
-    <span className="absolute opacity-0  transition-opacity duration-200 group-hover:opacity-100">
+    <span className="absolute opacity-0 transition-opacity duration-200 group-hover:opacity-100">
       <Button kind={CrateButton.kinds.TERTIARY} onClick={onClick}>
         {direction === 'right' ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
       </Button>
