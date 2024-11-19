@@ -8,4 +8,5 @@ export { default as SQLConsole } from './SQLConsole';
 export { default as Tables } from './Tables';
 export { default as TablesShards } from './TablesShards/TablesShards';
 export { default as TablesShardsMetrics } from './TablesShards/TablesShardsMetrics';
-export { default as Users } from './Users';
+export { default as Users } from './Users/Users';
+export { default as UsersTable } from './Users/UsersTable';
