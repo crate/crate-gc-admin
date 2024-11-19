@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { useGetPartitionedTables } from 'hooks/swrHooks';
+import { useTables } from 'src/swr/jwt';
 import useGcApi from 'hooks/useGcApi';
 import { useEffect, useState } from 'react';
 import {
@@ -10,6 +10,7 @@ import {
 import { apiPost } from 'utils';
 import { mapTableListEntriesToTreeItem } from '../tablePoliciesUtils/tableTree';
 import { isTargetDeleted } from '../tablePoliciesUtils/policies';
+import useJWTManagerStore from 'state/jwtManager';
 
 const getEligibleColumns = async (
   gcApi: AxiosInstance,
@@ -37,13 +38,15 @@ type UseTimeColumnsProps = {
   columnName: string;
   clearColumnName: () => void;
 };
+
 export default function useEligibleColumns({
   targets,
   columnName,
   clearColumnName,
 }: UseTimeColumnsProps) {
+  const clusterId = useJWTManagerStore(state => state.clusterId);
   const gcApi = useGcApi();
-  const { data: tables, isLoading: loadingTables } = useGetPartitionedTables(false);
+  const { data: tables, isLoading: loadingTables } = useTables(clusterId);
   const [eligibleColumns, setEligibleColumns] = useState<TimeColumns>([]);
   const [showColumnsWarning, setShowColumnsWarning] = useState(false);
   const [loadingColumns, setLoadingColumns] = useState(true);
@@ -60,12 +63,10 @@ export default function useEligibleColumns({
   useEffect(() => {
     // Update eligible columns if targets changes
     if (targets.length === 0) {
-      setLoadingColumns(false);
       setEligibleColumns([]);
     } else {
       setLoadingColumns(true);
       getEligibleColumns(gcApi, targets).then(columns => {
-        setLoadingColumns(false);
         if (columns !== null) {
           const eligibleColumns = Object.keys(columns.eligible_columns).map(
             columnName => {
@@ -82,6 +83,7 @@ export default function useEligibleColumns({
         }
       });
     }
+    setLoadingColumns(false);
   }, [targets]);
 
   useEffect(() => {
@@ -131,7 +133,7 @@ export default function useEligibleColumns({
       });
 
     setShowColumnsWarning(!isValid);
-  }, [targets, columnName, loadingColumns]);
+  }, [tables, targets, columnName, loadingColumns]);
 
   return {
     eligibleColumns,

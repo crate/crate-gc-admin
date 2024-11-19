@@ -1,8 +1,27 @@
-import { Auth, Help, Overview, SQLConsole, Tables, Nodes, Users } from 'routes';
+import {
+  Auth,
+  Automation,
+  Help,
+  Nodes,
+  Overview,
+  SQLConsole,
+  Tables,
+  TablesShards,
+  Users,
+} from 'routes';
 import { EnterpriseScreen } from 'components';
 import { Route } from 'types';
-import { auth, automation, help, nodes, root, sql, tables, users } from './paths';
-import Automation from 'routes/Automation';
+import {
+  auth,
+  automation,
+  help,
+  nodes,
+  root,
+  sql,
+  tables,
+  tablesShards,
+  users,
+} from './paths';
 
 const routes: Route[] = [
   {
@@ -46,6 +65,12 @@ const routes: Route[] = [
     ),
     label: 'Automation',
     key: 'automation',
+  },
+  {
+    path: tablesShards.path,
+    element: <TablesShards />,
+    label: 'Shards',
+    key: 'tablesShards',
   },
   {
     path: tables.path,

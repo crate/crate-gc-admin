@@ -1,3 +1,5 @@
+import { ValueOf } from 'src/types/utils';
+
 export const SYSTEM_SCHEMAS = ['information_schema', 'sys', 'pg_catalog', 'gc'];
 export const SYSTEM_USERS = ['crate', 'system', 'gc_admin'];
 
@@ -19,3 +21,10 @@ export const NODE_STATUS_THRESHOLD = {
 // it is possible to manually enable it on 5.7.2+ cloud clusters, but at
 // this time, this has not been done.
 export const CRATE_AUTHENTICATE_VIA_JWT_MIN_VERSION = '5.8.2';
+
+export const TABLE_HEALTH_STATES = {
+  GREEN: 'GREEN',
+  YELLOW: 'YELLOW',
+  RED: 'RED',
+} as const;
+export type TableHealthState = ValueOf<typeof TABLE_HEALTH_STATES>;

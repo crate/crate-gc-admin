@@ -1,6 +1,6 @@
-import { useGetNodeStatus } from 'hooks/swrHooks';
 import { useEffect, useState } from 'react';
 import useSessionStore from 'state/session';
+import { useClusterNodeStatus } from '../../swr/jwt';
 import { NodeStatusInfo } from 'types/cratedb';
 
 export const STATS_PERIOD = 15 * 60 * 1000;
@@ -13,7 +13,7 @@ function StatsUpdater() {
   This is so that we keep updating them in the background
    */
   const { load, fsStats } = useSessionStore();
-  const { data: nodes } = useGetNodeStatus();
+  const { data: nodes } = useClusterNodeStatus();
   const [previous, setPrevious] = useState<NodeStatusInfo[] | undefined>();
 
   const updateLoad = (nodes: NodeStatusInfo[]) => {

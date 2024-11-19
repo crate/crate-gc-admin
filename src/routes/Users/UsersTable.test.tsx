@@ -1,10 +1,11 @@
 import { render, screen, within } from 'test/testUtils';
 import UsersTable from './UsersTable';
-import { postFetchUsers } from 'hooks/queryHooks';
-import { getUsersQueryResult } from 'test/__mocks__/query';
 import { CRATEDB_PRIVILEGES_DOCS } from 'constants/defaults';
+import { UserInfo } from 'types/cratedb';
+import { useUsersRolesMock } from 'test/__mocks__/useUsersRolesMock';
+import { postFetch } from 'src/swr/jwt/useUsersRoles';
 
-const users = postFetchUsers(getUsersQueryResult);
+const users: UserInfo[] = postFetch(useUsersRolesMock);
 const SYSTEM_USER = 1;
 const SUPERUSER_INDEX = 1;
 const USER_GRANTED_ROLES_INDEX = 2;

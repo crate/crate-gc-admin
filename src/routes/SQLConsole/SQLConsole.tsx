@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { NoDataView, SQLEditor, SQLHistory, SQLResults } from 'components';
 import useExecuteMultiSql from 'hooks/useExecuteMultiSql';
-import { useGCContext } from 'contexts';
+import useJWTManagerStore from 'state/jwtManager';
 
 type SQLConsoleProps = {
   onQuery?: () => void;
@@ -17,7 +17,7 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
   const [rerender, setRerender] = useState(false);
   const outerHeight = useRef(null);
   const innerHeight = useRef(null);
-  const { clusterId } = useGCContext();
+  const clusterId = useJWTManagerStore(state => state.clusterId);
 
   // if a query is specified in the URL, place it in the editor
   useEffect(() => {

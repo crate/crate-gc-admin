@@ -1,18 +1,20 @@
 import { render, screen } from '../../../test/testUtils';
-import Nodes from '.';
-import { clusterNode } from 'test/__mocks__/nodes';
-import server, { customExecuteQueryResponse } from 'test/msw';
-import { singleNodesQueryResult } from 'test/__mocks__/query';
-import { NodeStatusInfo } from 'types/cratedb';
+import NodesMetrics from '.';
+import server from 'test/msw';
 import { NODE_STATUS_THRESHOLD } from 'constants/database';
 import prettyBytes from 'pretty-bytes';
 import { VERTICAL_PROGRESS_BARS } from 'components/VerticalProgress/VerticalProgress';
 import { formatNum } from 'utils';
-import { shards } from 'test/__mocks__/shards';
 import useSessionStore from 'src/state/session';
+import { rest } from 'msw';
+import { useClusterNodeStatusMock } from 'test/__mocks__/useClusterNodeStatusMock';
+import { clusterNode } from 'test/__mocks__/nodes';
+import { useShardsMock } from 'test/__mocks__/useShardsMock';
+import { postFetch } from 'src/swr/jwt/useShards';
+import { QueryResultSuccess } from 'types/query';
 
 const setup = () => {
-  return render(<Nodes />);
+  return render(<NodesMetrics />);
 };
 
 const waitForTableRender = async () => {
@@ -21,42 +23,44 @@ const waitForTableRender = async () => {
 
 const { fsStats } = useSessionStore.getState();
 
-const changeStats = (
-  node: NodeStatusInfo,
-  fsUsedPercent: number,
-  heapUsedPercent: number,
-) => {
-  return {
-    ...node,
-    fs: {
-      ...node.fs,
-      total: {
-        ...node.fs.total,
-        used: (fsUsedPercent / 100) * node.fs.total.size,
-      },
-    },
-    heap: {
-      ...node.heap,
-      used: (heapUsedPercent / 100) * node.heap.max,
+const changeStats = (fsUsedPercent: number, heapUsedPercent: number) => {
+  // would be nicer to use structuredClone here...
+  const resultsMock: QueryResultSuccess = JSON.parse(
+    JSON.stringify(useClusterNodeStatusMock),
+  );
+
+  // heap
+  resultsMock.rows[0][3] = {
+    ...resultsMock.rows[0][3],
+    used: (heapUsedPercent / 100) * resultsMock.rows[0][3].max,
+  };
+
+  // fs
+  resultsMock.rows[0][4] = {
+    ...resultsMock.rows[0][4],
+    total: {
+      ...resultsMock.rows[0][4].total,
+      used: (fsUsedPercent / 100) * resultsMock.rows[0][4].total.size,
     },
   };
+
+  return resultsMock;
 };
 
-const notMasterNode: NodeStatusInfo = {
-  ...clusterNode,
-  id: 'NOT_MASTER_NODE',
-};
-const unreachableNode: NodeStatusInfo = changeStats(clusterNode, 0, 0);
-const warningNode: NodeStatusInfo = changeStats(
-  clusterNode,
+const notMasterNode = JSON.parse(JSON.stringify(useClusterNodeStatusMock));
+notMasterNode.rows[0][0] = 'NOT_MASTER_NODE';
+
+const unreachableNode = changeStats(0, 0);
+const warningNode = changeStats(
   NODE_STATUS_THRESHOLD.WARNING + 1,
   NODE_STATUS_THRESHOLD.WARNING + 1,
 );
-const criticalNode: NodeStatusInfo = changeStats(
-  clusterNode,
+const criticalNode = changeStats(
   NODE_STATUS_THRESHOLD.CRITICAL + 1,
   NODE_STATUS_THRESHOLD.CRITICAL + 1,
 );
+
+const shards = postFetch(useShardsMock);
 
 describe('The Nodes component', () => {
   it('renders a loader while loading the nodes', async () => {
@@ -114,7 +118,6 @@ describe('The Nodes component', () => {
       await waitForTableRender();
 
       const attributes = Object.keys(clusterNode.attributes);
-
       expect(attributes.length).toBeGreaterThan(0);
 
       attributes.forEach(el => {
@@ -135,43 +138,88 @@ describe('The Nodes component', () => {
 
       it('is not shown if the node is not master', async () => {
         server.use(
-          customExecuteQueryResponse(singleNodesQueryResult(notMasterNode)),
+          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
+            const url = new URL(req.url);
+            const ident = url.searchParams.get('ident');
+
+            if (ident === '/use-cluster-node-status/undefined') {
+              return res(ctx.json(notMasterNode));
+            }
+          }),
         );
+
         setup();
 
         await waitForTableRender();
 
         expect(screen.queryByTestId('master-node')).not.toBeInTheDocument();
+
+        server.restoreHandlers();
       });
     });
 
     describe('the status light', () => {
-      it('shows unreachable status light when node is in unreachable status', async () => {
+      it('shows the unreachable status light when node is in unreachable status', async () => {
         server.use(
-          customExecuteQueryResponse(singleNodesQueryResult(unreachableNode)),
+          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
+            const url = new URL(req.url);
+            const ident = url.searchParams.get('ident');
+
+            if (ident === '/use-cluster-node-status/undefined') {
+              return res(ctx.json(unreachableNode));
+            }
+          }),
         );
+
         setup();
 
         await waitForTableRender();
 
         expect(screen.getByTestId('unreachable-node')).toBeInTheDocument();
+
+        server.restoreHandlers();
       });
+
       it('shows the warning status light when node is in warning status', async () => {
-        server.use(customExecuteQueryResponse(singleNodesQueryResult(warningNode)));
+        server.use(
+          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
+            const url = new URL(req.url);
+            const ident = url.searchParams.get('ident');
+
+            if (ident === '/use-cluster-node-status/undefined') {
+              return res(ctx.json(warningNode));
+            }
+          }),
+        );
+
         setup();
 
         await waitForTableRender();
 
         expect(screen.getByTestId('warning-node')).toBeInTheDocument();
+
+        server.restoreHandlers();
       });
 
       it('shows the critical status light when node is in critical status', async () => {
-        server.use(customExecuteQueryResponse(singleNodesQueryResult(criticalNode)));
+        server.use(
+          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
+            const url = new URL(req.url);
+            const ident = url.searchParams.get('ident');
+
+            if (ident === '/use-cluster-node-status/undefined') {
+              return res(ctx.json(criticalNode));
+            }
+          }),
+        );
+
         setup();
 
         await waitForTableRender();
 
         expect(screen.getByTestId('critical-node')).toBeInTheDocument();
+
+        server.restoreHandlers();
       });
 
       it('shows the good status light when node is in good status', async () => {
@@ -221,7 +269,6 @@ describe('The Nodes component', () => {
       expect(screen.getByTestId('load-progress')).toBeInTheDocument();
 
       const verticalProgress = screen.getByTestId('load-progress');
-
       expect(verticalProgress.getElementsByClassName('bg-crate-blue')).toHaveLength(
         filled,
       );
@@ -267,11 +314,9 @@ describe('The Nodes component', () => {
       const max = clusterNode.heap.max;
       const current = clusterNode.heap.used;
       const filled = Math.floor((current / max) * VERTICAL_PROGRESS_BARS);
-
       expect(screen.getByTestId('heap-progress')).toBeInTheDocument();
 
       const verticalProgress = screen.getByTestId('heap-progress');
-
       expect(verticalProgress.getElementsByClassName('bg-crate-blue')).toHaveLength(
         filled,
       );
@@ -424,9 +469,11 @@ describe('The Nodes component', () => {
 
       await waitForTableRender();
 
-      const startedShards = shards.filter(
-        s => s.node_id == clusterNode.id && s.routing_state == 'STARTED',
-      ).length;
+      const startedShards = shards
+        .filter(s => s.node_id == clusterNode.id && s.routing_state == 'STARTED')
+        .reduce((prev, next) => {
+          return prev + next.number_of_shards;
+        }, 0);
 
       expect(screen.getByTestId('started-shards')).toHaveTextContent(
         startedShards.toString(),
@@ -438,9 +485,11 @@ describe('The Nodes component', () => {
 
       await waitForTableRender();
 
-      const relocatingShards = shards.filter(
-        s => s.node_id == clusterNode.id && s.routing_state == 'RELOCATING',
-      ).length;
+      const relocatingShards = shards
+        .filter(s => s.node_id == clusterNode.id && s.routing_state == 'RELOCATING')
+        .reduce((prev, next) => {
+          return prev + next.number_of_shards;
+        }, 0);
 
       expect(screen.getByTestId('relocating-shards')).toHaveTextContent(
         relocatingShards.toString(),

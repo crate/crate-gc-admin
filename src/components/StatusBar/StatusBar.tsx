@@ -1,11 +1,10 @@
 import {
-  useGetAllocations,
-  useGetCluster,
-  useGetCurrentUser,
-  useGetNodeStatus,
-  useGetShards,
-  useGetTables,
-} from 'hooks/swrHooks';
+  useAllocations,
+  useClusterNodeStatus,
+  useCurrentUser,
+  useClusterInfo,
+  useShards,
+} from 'src/swr/jwt';
 import StatusLight from 'components/StatusLight';
 import { CloseOutlined, DownOutlined } from '@ant-design/icons';
 import { formatNum } from 'utils/numbers';
@@ -14,16 +13,17 @@ import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
 import GCSpin from 'components/GCSpin';
 import logo from '../../assets/logo.svg';
 import useSessionStore from 'state/session';
+import useJWTManagerStore from 'state/jwtManager';
 
 function StatusBar() {
+  const clusterId = useJWTManagerStore(state => state.clusterId);
   const [mobileVisible, setMobileVisible] = useState(false);
   const { load } = useSessionStore();
-  const { data: nodeStatus } = useGetNodeStatus();
-  const { data: currentUser } = useGetCurrentUser();
-  const { data: cluster } = useGetCluster();
-  const { data: tables } = useGetTables();
-  const { data: shards } = useGetShards();
-  const { data: allocations } = useGetAllocations();
+  const { data: nodeStatus } = useClusterNodeStatus();
+  const { data: currentUser } = useCurrentUser();
+  const { data: cluster } = useClusterInfo(clusterId);
+  const { data: shards } = useShards(clusterId);
+  const { data: allocations } = useAllocations();
 
   // hide the mobile overlay on any window resize
   useEffect(() => {
@@ -71,7 +71,7 @@ function StatusBar() {
   };
 
   const getDataStatus = () => {
-    if (!shards || !tables) {
+    if (!shards) {
       return <StatusLight color={StatusLight.colors.GRAY} message="Unknown" />;
     }
     const clusterStatus = getClusterStatus(allocations);

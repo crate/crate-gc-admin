@@ -34,3 +34,6 @@ export const nodes = new Path('/nodes');
 
 // users
 export const users = new Path('/users');
+
+// tables shards
+export const tablesShards = new Path('/shards');

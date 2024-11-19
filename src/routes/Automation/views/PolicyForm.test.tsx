@@ -140,18 +140,17 @@ describe('The "PolicyForm" component', () => {
     });
 
     it('loads time columns when value changes', async () => {
-      const getEligibleColumnsRequest = getRequestSpy(
-        'POST',
-        '/api/policies/eligible-columns/',
-      );
       const { user } = setupAdd();
       await waitForFormRender();
 
       const tablesTree = screen.getByTestId('tables-tree');
       await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
 
-      // API should be called
-      expect(getEligibleColumnsRequest).toHaveBeenCalled();
+      // Wait eligible columns API response (i.e. select to be enabled)
+      await waitFor(() => {
+        expect(screen.getByName('select-column-name')).toBeEnabled();
+      });
+
       // Select should not be disabled
       expect(screen.getByName('select-column-name')).not.toBeDisabled();
       // Warning should not be present
@@ -201,6 +200,11 @@ describe('The "PolicyForm" component', () => {
 
       const tablesTree = screen.getByTestId('tables-tree');
       await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
+
+      // Wait eligible columns API response (i.e. select to be enabled)
+      await waitFor(() => {
+        expect(screen.getByName('select-column-name')).toBeEnabled();
+      });
 
       await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 
@@ -253,6 +257,8 @@ describe('The "PolicyForm" component', () => {
       await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
 
       expect(screen.getByName('select-column-name')).toBeDisabled();
+
+      server.resetHandlers();
     });
 
     it('shows a warning if selected column is not part of all the targets', async () => {
@@ -269,10 +275,18 @@ describe('The "PolicyForm" component', () => {
 
       const tablesTree = screen.getByTestId('tables-tree');
       await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
+
+      // Wait eligible columns API response (i.e. select to be enabled)
+      await waitFor(() => {
+        expect(screen.getByName('select-column-name')).toBeEnabled();
+      });
+
       await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 
       expect(screen.getByName('select-column-name')).not.toBeDisabled();
       expect(screen.queryByTestId('column-warning')).toBeInTheDocument();
+
+      server.resetHandlers();
     });
   });
 
@@ -441,6 +455,11 @@ describe('The "PolicyForm" component', () => {
       const tablesTree = screen.getByTestId('tables-tree');
       await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
 
+      // Wait eligible columns API response (i.e. select to be enabled)
+      await waitFor(() => {
+        expect(screen.getByName('select-column-name')).toBeEnabled();
+      });
+
       // fill partitioning
       await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 
@@ -455,6 +474,11 @@ describe('The "PolicyForm" component', () => {
       // fill targets
       const tablesTree = screen.getByTestId('tables-tree');
       await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
+
+      // Wait eligible columns API response (i.e. select to be enabled)
+      await waitFor(() => {
+        expect(screen.getByName('select-column-name')).toBeEnabled();
+      });
 
       // fill partitioning
       await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
@@ -484,14 +508,23 @@ describe('The "PolicyForm" component', () => {
   describe('when type is "add"', () => {
     describe('the "Save" button', () => {
       it('creates a new job and goes back to policies table', async () => {
-        const createPolicySpy = getRequestSpy('POST', '/api/policies/');
+        const createPolicySpy = getRequestSpy(
+          'POST',
+          'http://localhost:5050/api/policies/',
+        );
         const { user } = setupAdd();
         await waitForFormRender();
 
         await user.type(screen.getByLabelText(/Policy Name/), 'POLICY_NAME');
 
         const tablesTree = screen.getByTestId('tables-tree');
+
         await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
+
+        // Wait eligible columns API response (i.e. select to be enabled)
+        await waitFor(() => {
+          expect(screen.getByName('select-column-name')).toBeEnabled();
+        });
 
         await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 
@@ -516,6 +549,11 @@ describe('The "PolicyForm" component', () => {
 
         const tablesTree = screen.getByTestId('tables-tree');
         await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
+
+        // Wait eligible columns API response (i.e. select to be enabled)
+        await waitFor(() => {
+          expect(screen.getByName('select-column-name')).toBeEnabled();
+        });
 
         await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 
@@ -606,11 +644,19 @@ describe('The "PolicyForm" component', () => {
 
     describe('the "Save" button', () => {
       it('updates the policy and goes back to policies table', async () => {
-        const updatePolicySpy = getRequestSpy('PUT', '/api/policies/:policyId');
+        const updatePolicySpy = getRequestSpy(
+          'PUT',
+          'http://localhost:5050/api/policies/:policyId',
+        );
         const { user } = setupEdit(policy);
         await waitForFormRender();
 
         await user.type(screen.getByLabelText(/Policy Name/), 'POLICY_NAME_UPDATED');
+
+        // Wait eligible columns API response (i.e. select to be enabled)
+        await waitFor(() => {
+          expect(screen.getByName('select-column-name')).toBeEnabled();
+        });
 
         await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 
@@ -635,6 +681,11 @@ describe('The "PolicyForm" component', () => {
         await waitForFormRender();
 
         await user.type(screen.getByLabelText(/Policy Name/), 'POLICY_NAME_UPDATED');
+
+        // Wait eligible columns API response (i.e. select to be enabled)
+        await waitFor(() => {
+          expect(screen.getByName('select-column-name')).toBeEnabled();
+        });
 
         await user.selectOptions(screen.getByName('select-column-name')!, ['part']);
 

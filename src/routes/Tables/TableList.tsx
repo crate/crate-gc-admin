@@ -8,12 +8,13 @@ import {
 import prettyBytes from 'pretty-bytes';
 import { StatusLight } from 'components';
 import { formatHumanReadable } from 'utils/numbers';
-import { useGetShards, useGetTables, useGetAllocations } from 'hooks/swrHooks';
+import { useAllocations, useShards, useTables } from 'src/swr/jwt';
 import {
   tablesWithMissingPrimaryReplicas,
   tablesWithUnassignedShards,
 } from 'utils/statusChecks';
 import { TableListEntry } from 'types/cratedb';
+import useJWTManagerStore from 'state/jwtManager';
 
 function TableList({
   setActiveTable,
@@ -22,13 +23,14 @@ function TableList({
   setActiveTable: (table: TableListEntry | undefined) => void;
   systemSchemas: string[];
 }) {
+  const clusterId = useJWTManagerStore(state => state.clusterId);
   const [expandedSchemas, setExpandedSchemas] = useState<string[] | undefined>();
   const [schemas, setSchemas] = useState<string[]>([]);
   const [filter, setFilter] = useState<string>('');
   const [filterFocused, setFilterFocused] = useState<boolean>(false);
-  const { data: tables } = useGetTables();
-  const { data: shards } = useGetShards();
-  const { data: allocations } = useGetAllocations();
+  const { data: tables } = useTables(clusterId);
+  const { data: shards } = useShards(clusterId);
+  const { data: allocations } = useAllocations();
   const missingReplicasTables = tablesWithMissingPrimaryReplicas(allocations);
   const unassignedShardTables = tablesWithUnassignedShards(allocations);
 

@@ -13,16 +13,12 @@ import Loader from 'components/Loader';
 import Popover, { PopoverContent, PopoverTrigger } from 'components/Popover';
 import Text from 'components/Text';
 import { getTablesDDLQuery, getViewsDDLQuery } from 'constants/queries';
-import {
-  Schema,
-  SchemaTable,
-  SchemaTableColumn,
-  useSchemaTreeContext,
-} from 'contexts';
 import useExecuteSql from 'hooks/useExecuteSql';
 import useMessage from 'hooks/useMessage';
 import { useState } from 'react';
+import { useSchemaTree, Schema, SchemaTable, SchemaTableColumn } from 'src/swr/jwt';
 import { tryFormatSql } from 'utils';
+import useJWTManagerStore from 'state/jwtManager';
 
 type AntDesignTreeItem = {
   title: React.ReactNode;
@@ -38,7 +34,9 @@ const FILTER_TYPES = {
 } as const;
 
 function SQLEditorSchemaTree() {
-  const { schemaTree } = useSchemaTreeContext();
+  const clusterId = useJWTManagerStore(state => state.clusterId);
+  const { data: schemaTree } = useSchemaTree(clusterId);
+
   const executeSql = useExecuteSql();
   const { showLoadingMessage, showErrorMessage, showSuccessMessage } = useMessage();
 
@@ -185,6 +183,7 @@ function SQLEditorSchemaTree() {
           table.table_type === 'VIEW'
             ? getViewsDDLQuery(table.schema_name, table.table_name)
             : getTablesDDLQuery(table.schema_name, table.table_name),
+          table.table_type === 'VIEW' ? '/ddl-view-query' : '/ddl-table-query',
         );
 
         // check error
@@ -297,9 +296,12 @@ function SQLEditorSchemaTree() {
     }));
   };
 
-  const filteredSchemaTree = filterTreeData(schemaTree);
+  if (!schemaTree) {
+    return <Loader />;
+  }
 
-  return schemaTree.length > 0 ? (
+  const filteredSchemaTree = filterTreeData(schemaTree);
+  return (
     <div className="flex h-full flex-col">
       <div
         className="min-w-32 shrink-0 border-b px-1 py-1"
@@ -360,8 +362,6 @@ function SQLEditorSchemaTree() {
         )}
       </div>
     </div>
-  ) : (
-    <Loader />
   );
 }
 

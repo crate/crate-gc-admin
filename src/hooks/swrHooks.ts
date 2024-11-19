@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import swrCORSFetch from 'utils/swrCORSFetch';
+import swrCORSFetch from 'src/swr/swrCORSFetch';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'utils/api';
 import {
@@ -13,28 +13,17 @@ import {
   TaskLog,
 } from 'types';
 import useGcApi from 'hooks/useGcApi';
-import {
-  useGetClusterInfoQuery,
-  useGetNodesQuery,
-  useGetCurrentUserQuery,
-  useGetTablesQuery,
-  useGetShardsQuery,
-  useGetAllocationsQuery,
-  useGetQueryStatsQuery,
-  useGetPartitionedTablesQuery,
-  useGetUserPermissionsQuery,
-  useGetUsersRolesQuery,
-} from 'hooks/queryHooks';
-import { useGCContext } from 'contexts';
+import useJWTManagerStore from 'state/jwtManager';
 
 const gcApiKeyBuilder = (key: string) => {
-  const { gcUrl } = useGCContext();
+  const gcUrl = useJWTManagerStore(state => state.gcUrl);
   return `${gcUrl}${key}`;
 };
 
 export const useGCGetScheduledJobs = () => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
+
   return useSWR<Job[]>(gcApiKeyBuilder(`/api/scheduled-jobs/`), swrFetch, {
     refreshInterval: 30 * 1000,
   });
@@ -50,6 +39,7 @@ export const useGCGetScheduledJob = (jobId: string) => {
 export const useGCGetScheduledJobLogs = (job: Job) => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
+
   return useSWR<JobLog[]>(
     gcApiKeyBuilder(`/api/scheduled-jobs/${job.id}/log`),
     swrFetch,
@@ -62,6 +52,7 @@ export const useGCGetScheduledJobLogs = (job: Job) => {
 export const useGCGetScheduledJobsLogs = () => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
+
   return useSWR<JobLogWithName[]>(
     gcApiKeyBuilder(`/api/scheduled-jobs/logs?limit=100`),
     swrFetch,
@@ -74,6 +65,7 @@ export const useGCGetScheduledJobsLogs = () => {
 export const useGCGetScheduledJobsAllLogs = () => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
+
   return useSWR<TaskLog[]>(
     gcApiKeyBuilder(`/api/scheduled-jobs/all/logs?limit=100`),
     swrFetch,
@@ -137,85 +129,6 @@ export const useGCGetPolicy = (policyId: string) => {
   return useSWR<Policy>(gcApiKeyBuilder(`/api/policies/${policyId}`), swrFetch);
 };
 
-export const useGetNodeStatus = () => {
-  const getNodes = useGetNodesQuery();
-  return useSWR(
-    // We do not use the url as the swr key, because we'll have many of these SWR fetches from the same url
-    `swr-fetch-node-info`,
-    () => getNodes(),
-    {
-      refreshInterval: 5000,
-    },
-  );
-};
-
-export const useGetCluster = () => {
-  const getClusterInfo = useGetClusterInfoQuery();
-  return useSWR(
-    // We do not use the url as the swr key, because we'll have many of these SWR fetches from the same url
-    `swr-fetch-cluster-info`,
-    () => getClusterInfo(),
-    {
-      refreshInterval: 5000,
-    },
-  );
-};
-
-export const useGetCurrentUser = () => {
-  const getCurrentUser = useGetCurrentUserQuery();
-  return useSWR(`swr-fetch-user`, () => getCurrentUser());
-};
-
-export const useGetTables = (includeSystemTables: boolean = true) => {
-  const getTables = useGetTablesQuery(includeSystemTables);
-  return useSWR(
-    `swr-fetch-tables-${includeSystemTables ? 'all' : 'non-system'}`,
-    () => getTables(),
-    {
-      refreshInterval: 5000,
-    },
-  );
-};
-
-export const useGetPartitionedTables = (includeSystemTables: boolean = true) => {
-  const getTables = useGetPartitionedTablesQuery(includeSystemTables);
-  return useSWR(
-    `swr-fetch-partitioned-tables-${includeSystemTables ? 'all' : 'non-system'}`,
-    () => getTables(),
-    {
-      refreshInterval: 5000,
-    },
-  );
-};
-
-export const useGetShards = () => {
-  const getShards = useGetShardsQuery();
-  return useSWR(`swr-fetch-shards`, () => getShards(), {
-    refreshInterval: 5000,
-  });
-};
-
-export const useGetAllocations = () => {
-  const getAllocations = useGetAllocationsQuery();
-  return useSWR(`swr-fetch-allocations`, () => getAllocations(), {
-    refreshInterval: 5000,
-  });
-};
-
-export const useGetQueryStats = () => {
-  const getQueryStats = useGetQueryStatsQuery();
-  return useSWR(`swr-fetch-query-stats`, () => getQueryStats(), {
-    refreshInterval: 5000,
-  });
-};
-
-export const useGetUserPermissions = (username: string) => {
-  const getUserPermissionsQuery = useGetUserPermissionsQuery();
-  return useSWR(`swr-fetch-user-permissions`, () =>
-    getUserPermissionsQuery(username),
-  );
-};
-
 export const useGCGetPolicies = () => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
@@ -228,6 +141,7 @@ export const useGCGetPolicies = () => {
 export const useGCGetSchemas = (includeTables: boolean = true) => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
+
   return useSWR<Policy[]>(
     gcApiKeyBuilder(`/api/data/schemas/?include_tables=${includeTables}`),
     swrFetch,
@@ -237,23 +151,12 @@ export const useGCGetSchemas = (includeTables: boolean = true) => {
 export const useGCGetPoliciesLogs = () => {
   const gcApi = useGcApi();
   const swrFetch = swrCORSFetch(gcApi);
+
   return useSWR<PolicyLogWithName[]>(
     gcApiKeyBuilder(`/api/policies/logs?limit=100`),
     swrFetch,
     {
       refreshInterval: 30 * 1000,
-    },
-  );
-};
-
-export const useGetUsersRoles = () => {
-  const getUsers = useGetUsersRolesQuery();
-  return useSWR(
-    // We do not use the url as the swr key, because we'll have many of these SWR fetches from the same url
-    `swr-fetch-users-roles`,
-    () => getUsers(),
-    {
-      refreshInterval: 5000,
     },
   );
 };

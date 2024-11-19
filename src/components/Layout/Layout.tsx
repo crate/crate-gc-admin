@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { LayoutProps } from './types';
 import Navigation from './Navigation';
 import TopBar from './TopBar';
-import { useGCContext } from 'contexts';
+import useJWTManagerStore from 'state/jwtManager';
 
 function Layout({
   bottomNavigation,
@@ -16,7 +16,7 @@ function Layout({
   // but it would be just a case of passing the parameter should it be
   // needed in future
   const [navIsExpanded, setNavIsExpanded] = useState(true);
-  const { gcStatus } = useGCContext();
+  const gcStatus = useJWTManagerStore(state => state.gcStatus);
 
   return (
     <div className="absolute bottom-0 top-0 flex min-h-dvh w-full flex-col">

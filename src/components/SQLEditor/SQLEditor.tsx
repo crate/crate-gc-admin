@@ -11,8 +11,9 @@ import { Button } from 'components';
 import { cn } from 'utils';
 import { annotate } from './annotationUtils';
 import { QueryStatus } from 'types/query';
-import { useGCContext, useSchemaTreeContext } from 'contexts';
 import SQLEditorSchemaTree from './SQLEditorSchemaTree';
+import { useSchemaTree } from 'src/swr/jwt';
+import useJWTManagerStore from 'state/jwtManager';
 
 export type SQLEditorProps = {
   value?: string | undefined | null;
@@ -52,8 +53,8 @@ function SQLEditor({
   onViewHistory,
   title,
 }: SQLEditorProps) {
-  const { clusterId } = useGCContext();
-  const { refreshSchemaTree } = useSchemaTreeContext();
+  const clusterId = useJWTManagerStore(state => state.clusterId);
+  const { mutate: mutateSchemaTree } = useSchemaTree(clusterId);
 
   const SQL_EDITOR_CONTENT_KEY =
     localStorageKey && `crate.gc.admin.${localStorageKey}.${clusterId || ''}`;
@@ -112,7 +113,7 @@ function SQLEditor({
 
     // refresh the schema tree if we believe the schema has changed
     if (results && resultsIncludeSuccessfulDDLQuery(results)) {
-      refreshSchemaTree();
+      mutateSchemaTree();
     }
 
     // Compute and set Ace Editor annotations

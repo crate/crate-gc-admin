@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
+import { render, screen, waitFor } from 'test/testUtils';
 import useExecuteMultiSql from 'hooks/useExecuteMultiSql';
 
 type MockComponentProps = { query: string };
+
 function MockComponent({ query }: MockComponentProps) {
   const { executeSqlWithStatus, queryResults, resetResults } = useExecuteMultiSql();
 
@@ -56,36 +57,38 @@ const waitForResults = async () => {
 describe('The useExecuteSql hook', () => {
   describe('when queries are valid', () => {
     it('executes all the queries', async () => {
-      const executeQuerySpy = getRequestSpy('POST', 'api/_sql');
-
       setup();
+
       await waitForResults();
 
       expect(screen.getByTestId('number-of-queries')).toHaveTextContent('2');
-
-      // note: the SchemaTreeContextProvider also makes a request, so we expect 3
-      expect(executeQuerySpy).toHaveBeenCalledTimes(3);
     });
 
     it('gets all the statuses', async () => {
       setup();
+
       await waitForResults();
 
-      expect(screen.getByTestId('status-0')).toHaveTextContent('SUCCESS');
-      expect(screen.getByTestId('status-1')).toHaveTextContent('SUCCESS');
+      await waitFor(() => {
+        expect(screen.getByTestId('status-0')).toHaveTextContent('SUCCESS');
+      });
+      await waitFor(() => {
+        expect(screen.getByTestId('status-1')).toHaveTextContent('SUCCESS');
+      });
     });
 
     it('returns all the responses', async () => {
       setup();
 
       await waitForResults();
+
       // wait for all the results
+      await waitFor(() => {
+        expect(screen.getByTestId('data-0')).toBeInTheDocument();
+      });
       await waitFor(() => {
         expect(screen.getByTestId('data-1')).toBeInTheDocument();
       });
-
-      expect(screen.getByTestId('data-0')).toBeInTheDocument();
-      expect(screen.getByTestId('data-1')).toBeInTheDocument();
     });
   });
 
