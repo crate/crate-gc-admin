@@ -1,6 +1,6 @@
 {
   "name": "@crate.io/crate-gc-admin",
-  "version": "0.18.1",
+  "version": "0.18.2",
   "author": "crate.io",
   "private": false,
   "type": "module",
@@ -70,7 +70,7 @@
     "web-vitals": "^2.1.0",
     "word-wrap": "^1.2.5",
     "zod": "^3.22.4",
-    "zustand": "^4.4.7"
+    "zustand": "5.0.1"
   },
   "scripts": {
     "start": "vite",

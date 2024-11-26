@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-11-26 - 0.18.2
+
+- Dependabot: bump zustand from 4.4.7 to 5.0.1.
+
 ## 2024-11-19 - 0.18.1
 
 - Fixed missing UsersTable export.
