@@ -26,7 +26,7 @@ function StatusLight({
     <div data-testid={testId}>
       {tooltip ? (
         <Tooltip
-          arrowPointAtCenter
+          arrow={{ pointAtCenter: true }}
           color="#fff"
           overlayStyle={{ maxWidth: '400px' }}
           placement="topLeft"

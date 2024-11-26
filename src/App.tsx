@@ -3,7 +3,7 @@ import { bottomNavigation, topNavigation } from 'constants/navigation';
 import routes from 'constants/routes';
 import { useEffect } from 'react';
 import { ConnectionStatus } from 'types';
-import { Layout, StatusBar, StatsUpdater } from 'components';
+import { Layout, StatusBar, StatsUpdater, GcAdminAntdProvider } from 'components';
 import logo from './assets/logo.svg';
 import useGcApi from 'hooks/useGcApi';
 import { apiGet } from 'utils/api';
@@ -38,7 +38,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <GcAdminAntdProvider>
       <StatsUpdater />
       <Layout
         topbarLogo={
@@ -57,7 +57,7 @@ function App() {
         </Routes>
       </Layout>
       <NotificationHandler />
-    </>
+    </GcAdminAntdProvider>
   );
 }
 

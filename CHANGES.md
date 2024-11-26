@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-11-29 - 0.19.2
+
+- Dependabot: bump antd from 4.24.16 to 5.22.2.
+
 ## 2024-11-29 - 0.19.1
 
 - Fixed a bug where the wrong API URL was used for legacy clusters.

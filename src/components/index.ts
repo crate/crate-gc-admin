@@ -15,6 +15,7 @@ export { default as DisplayUTCDate } from './DisplayUTCDate';
 export { default as DropdownMenu } from './DropdownMenu';
 export { default as EnterpriseScreen } from './EnterpriseScreen';
 export { default as Form } from './Form';
+export { default as GcAdminAntdProvider } from './GcAdminAntdProvider';
 export { default as GCChart } from './GCChart';
 export { default as GCSpin } from './GCSpin';
 export { default as GCStatusIndicator } from './GCStatusIndicator';
