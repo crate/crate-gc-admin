@@ -116,7 +116,7 @@ function SQLEditorSchemaTree() {
       filteredSchemaTree = filteredSchemaTree.map(schema => ({
         ...schema,
         tables: schema.tables.filter(table =>
-          table.path.toLowerCase().includes(searchString),
+          table.path.join('.').toLowerCase().includes(searchString),
         ),
       }));
     }
@@ -126,16 +126,22 @@ function SQLEditorSchemaTree() {
   };
 
   const drawTreeData = (filteredSchemaTree: Schema[]): AntDesignTreeItem[] => {
-    const drawColumn = (column: SchemaTableColumn) => (
-      <span data-testid={column.path}>
-        <CopyToClipboard textToCopy={column.quoted_column_name}>
-          {column.column_name}
-        </CopyToClipboard>
-        <Text pale className="ml-1 inline text-xs italic !leading-3">
-          {column.data_type}
-        </Text>
-      </span>
-    );
+    const drawColumns = (columns: SchemaTableColumn[]): AntDesignTreeItem[] => {
+      return columns.map(column => ({
+        title: (
+          <span data-testid={column.path.join('.')}>
+            <CopyToClipboard textToCopy={column.column_name}>
+              {column.column_name}
+            </CopyToClipboard>
+            <Text pale className="ml-1 inline text-xs italic !leading-3">
+              {column.data_type}
+            </Text>
+          </span>
+        ),
+        key: column.path.join('.'),
+        children: column.children ? drawColumns(column.children) : undefined,
+      }));
+    };
 
     const drawTableIcon = (tableType: string) => {
       switch (tableType) {
@@ -205,9 +211,8 @@ function SQLEditorSchemaTree() {
       const copySelectStatement = () => {
         // generate DQL
         const dqlStatement = `SELECT ${table.columns
-          .filter(col => col.path_array.length === 0)
-          .map(el => el.quoted_column_name)
-          .join(', ')} FROM ${table.quoted_path} LIMIT 100;`;
+          .map(el => el.column_name)
+          .join(', ')} FROM ${table.path.join('.')} LIMIT 100;`;
 
         // format and copy
         navigator.clipboard.writeText(tryFormatSql(dqlStatement));
@@ -270,9 +275,9 @@ function SQLEditorSchemaTree() {
         }}
         trigger={['contextMenu']}
       >
-        <span className="flex items-center" data-testid={table.path}>
+        <span className="flex items-center" data-testid={table.path.join('.')}>
           {drawTableIcon(table.table_type)}
-          <CopyToClipboard textToCopy={table.quoted_path}>
+          <CopyToClipboard textToCopy={table.path.join('.')}>
             {table.table_name}
           </CopyToClipboard>
           <Text pale className="ml-1 inline text-xs italic !leading-3">
@@ -284,14 +289,11 @@ function SQLEditorSchemaTree() {
 
     return filteredSchemaTree.map(schema => ({
       title: drawSchemaRow(schema),
-      key: schema.path,
+      key: schema.path[0],
       children: schema.tables.map(table => ({
         title: drawTableRow(table),
-        key: table.path,
-        children: table.columns.map(column => ({
-          title: drawColumn(column),
-          key: column.path,
-        })),
+        key: table.path.join('.'),
+        children: drawColumns(table.columns),
       })),
     }));
   };
@@ -301,6 +303,7 @@ function SQLEditorSchemaTree() {
   }
 
   const filteredSchemaTree = filterTreeData(schemaTree);
+
   return (
     <div className="flex h-full flex-col">
       <div

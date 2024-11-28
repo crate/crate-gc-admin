@@ -4,25 +4,19 @@ import { SYSTEM_SCHEMAS } from 'constants/database';
 import { QueryResultSuccess } from 'types/query';
 
 // a schema description row, as returned direct from the DB
-export type SchemaDescription = {
+type SchemaDescription = {
   table_schema: string;
   table_name: string;
-  column_name: string;
-  quoted_table_schema: string;
-  quoted_table_name: string;
-  quoted_column_name: string;
-  data_type: string;
   table_type: string;
-  path_array: string[];
+  column_paths: string[];
+  data_types: string[];
 };
 
 export type SchemaTableColumn = {
+  children?: SchemaTableColumn[];
   column_name: string;
-  quoted_column_name: string;
   data_type: string;
-  path: string;
-  path_array: string[];
-  quoted_path: string;
+  path: string[];
 };
 
 type SchemaTableType = 'BASE TABLE' | 'VIEW' | 'FOREIGN';
@@ -31,81 +25,105 @@ export type SchemaTable = {
   schema_name: string;
   table_name: string;
   table_type: SchemaTableType;
-  quoted_table_name: string;
-  path: string;
-  quoted_path: string;
+  path: string[];
   columns: SchemaTableColumn[];
   is_system_table: boolean;
 };
 
 export type Schema = {
   schema_name: string;
-  quoted_schema_name: string;
-  path: string;
-  quoted_path: string;
+  path: string[];
   tables: SchemaTable[];
 };
 
 export const postFetch = (data: QueryResultSuccess): Schema[] => {
   const constructSchemaTreeFromFlatList = (input: SchemaDescription[]) => {
-    const constructTables = (input: SchemaDescription[]): SchemaTable[] => {
-      const tree: SchemaTable[] = [];
+    const formatDataType = (dataType: string) => {
+      while (dataType.includes('_array')) {
+        dataType = `array(${dataType.replace('_array', '')})`;
+      }
 
-      // for convenience, create a lookup dict of the tables/columns in this schema
-      const tableLookup: {
-        [key: string]: {
-          schema_name: string;
-          name: string;
-          quotedName: string;
-          type: string;
-          path: string;
-          quotedPath: string;
-          is_system_table: boolean;
-        };
-      } = input.reduce((prev, next) => {
-        return {
-          ...prev,
-          [next.table_name]: {
-            name: next.table_name,
-            schema_name: next.table_schema,
-            quotedName: next.quoted_table_name,
-            type: next.table_type,
-            path: `${next.table_schema}.${next.table_name}`,
-            quotedPath: `${next.quoted_table_schema}.${next.quoted_table_name}`,
-            schema: next.table_schema,
-            is_system_table: SYSTEM_SCHEMAS.includes(next.table_schema),
-          },
-        };
-      }, {});
+      return dataType;
+    };
 
-      // loop through array of tables
-      const tableNames = [...new Set(input.map(i => i.table_name))];
-      tableNames.forEach(tableName => {
-        tree.push({
-          schema_name: tableLookup[tableName].schema_name,
-          table_name: tableLookup[tableName].name,
-          quoted_table_name: tableLookup[tableName].quotedName,
-          table_type: tableLookup[tableName].type as SchemaTableType,
-          path: tableLookup[tableName].path,
-          quoted_path: tableLookup[tableName].quotedPath,
-          is_system_table: tableLookup[tableName].is_system_table,
-          columns: input
-            .filter(i => i.table_name === tableName)
-            .map(
-              column =>
-                ({
-                  column_name: column.column_name,
-                  quoted_column_name: column.quoted_column_name,
-                  data_type: column.data_type,
-                  path: `${tableLookup[tableName].path}.${column.column_name}`,
-                  path_array: column.path_array,
-                  quoted_path: `${tableLookup[tableName].quotedPath}.${column.quoted_column_name}`,
-                }) satisfies SchemaTableColumn,
-            ),
-        });
+    const constructColumns = (
+      input: SchemaDescription,
+      path: string[],
+    ): SchemaTableColumn[] => {
+      // we need to convert a data structure consisting of 3 separate arrays,
+      // into a nested tree structure. this is harder than it looks, but the
+      // following code is fairly efficient.
+      //
+      // first, it makes a temporary list of all the columns (nodeList) and
+      // their parent indexes, then uses that list to recursively build the
+      // tree via the getNestedColumns() functionbelow.
+      const nodeList = input.column_paths
+        .map((_, i) => {
+          const paths = [...input.column_paths[i]];
+          return {
+            data_type: formatDataType(input.data_types[i]),
+            path: paths.slice(0, -1),
+            name: paths.slice(-1)[0],
+            index: i,
+          };
+        })
+        .map(t => ({
+          ...t,
+          path_string: t.path.join('.'),
+          parent_index: -1,
+        }));
+
+      nodeList.forEach(name => {
+        if (name.path.length > 0) {
+          const nodeName = name.path[name.path.length - 1];
+          const nodePathString = name.path.slice(0, -1).join('.');
+          name.parent_index = nodeList.findIndex(
+            x =>
+              x.path.length === name.path.length - 1 &&
+              x.name === nodeName &&
+              x.path_string === nodePathString,
+          );
+        }
       });
 
-      return tree;
+      const getNestedColumns = (
+        parentIndex: number,
+        childPath: string[],
+      ): SchemaTableColumn[] => {
+        return nodeList
+          .filter(node => node.parent_index === parentIndex)
+          .map(node => {
+            const path = childPath.concat([node.name]);
+            const childNodes = getNestedColumns(node.index, path);
+
+            const output: SchemaTableColumn = {
+              column_name: node.name,
+              data_type: node.data_type,
+              path: path,
+            };
+            if (childNodes) {
+              output['children'] = childNodes;
+            }
+            return output;
+          });
+      };
+
+      return getNestedColumns(-1, path);
+    };
+
+    const constructTables = (input: SchemaDescription[]): SchemaTable[] => {
+      return input.map(row => {
+        const path = [row.table_schema, row.table_name];
+
+        return {
+          columns: constructColumns(row, path),
+          is_system_table: SYSTEM_SCHEMAS.includes(row.table_schema),
+          path: path,
+          schema_name: row.table_schema,
+          table_name: row.table_name,
+          table_type: row.table_type as SchemaTableType,
+        };
+      });
     };
 
     const constructSchemas = (input: SchemaDescription[]): Schema[] => {
@@ -114,15 +132,9 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
       // loop through array of unique schema names
       const schemaNames = [...new Set(input.map(i => i.table_schema))];
       schemaNames.forEach(schemaName => {
-        const quotedSchemaName = input.find(
-          i => i.table_schema === schemaName,
-        )!.quoted_table_schema;
-
         tree.push({
           schema_name: schemaName,
-          quoted_schema_name: quotedSchemaName,
-          path: schemaName,
-          quoted_path: quotedSchemaName,
+          path: [schemaName],
           tables: constructTables(input.filter(i => i.table_schema === schemaName)),
         });
       });
@@ -134,39 +146,38 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
   };
 
   return constructSchemaTreeFromFlatList(
-    data.rows.map(r => ({
-      table_schema: r[0],
-      table_name: r[1],
-      column_name: r[2],
-      quoted_table_schema: r[3],
-      quoted_table_name: r[4],
-      quoted_column_name: r[5],
-      data_type: r[6],
-      table_type: r[7],
-      path_array: r[8],
+    data.rows.map(row => ({
+      table_schema: row[0],
+      table_name: row[1],
+      table_type: row[2],
+      column_paths: row[3],
+      data_types: row[4],
     })),
   );
 };
 
 const QUERY = `
+  WITH column_details AS (
+    SELECT
+      table_schema,
+      table_name,
+      ARRAY_AGG(QUOTE_IDENT(column_details['name']) || column_details['path']) column_paths,
+      ARRAY_AGG(data_type) data_types
+    FROM "information_schema"."columns"
+    GROUP BY table_schema, table_name
+  )
+
   SELECT
-    c.table_schema,
-    c.table_name,
-    c.column_name,
-    QUOTE_IDENT(c.table_schema) AS quoted_table_schema,
-    QUOTE_IDENT(c.table_name) AS quoted_table_name,
-    QUOTE_IDENT(c.column_name) AS quoted_column_name,
-    c.data_type,
+    QUOTE_IDENT(c.table_schema) AS table_schema,
+    QUOTE_IDENT(c.table_name) AS table_name,
     t.table_type,
-    column_details['path'] AS path_array
-  FROM
-    "information_schema"."columns" c
-  JOIN
-    "information_schema"."tables" t ON c.table_schema = t.table_schema AND c.table_name = t.table_name
-  ORDER BY
-    table_schema,
-    table_name,
-    ordinal_position
+    column_paths,
+    data_types
+  FROM column_details c
+  JOIN "information_schema"."tables" t
+    ON c.table_schema = t.table_schema
+  AND c.table_name = t.table_name
+  ORDER BY table_schema, table_name;
 `;
 
 const useSchemaTree = (clusterId?: string) => {

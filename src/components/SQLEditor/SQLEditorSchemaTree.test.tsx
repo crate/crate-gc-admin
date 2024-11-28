@@ -21,7 +21,6 @@ const triggerTreeItem = async (
     .getByText(text)
     .closest('.ant-tree-treenode')
     ?.getElementsByClassName('ant-tree-switcher')[0];
-
   await user.click(triggerIcon!);
   if (textToWait) {
     // wait for first element
@@ -233,6 +232,50 @@ describe('The SQLEditorSchemaTree component', () => {
         expect(within(wrapper).getByText(column.column_name)).toBeInTheDocument();
         expect(within(wrapper).getByText(column.data_type)).toBeInTheDocument();
       });
+    });
+
+    it('object columns are nested', async () => {
+      const { user } = await setup();
+
+      const schema = schemaTableColumns[1]; // information_schema
+      const table = schema.tables[1]; // table_partitions
+      const column = table.columns[5]; // settings
+      const children = table.columns[5].children!; // blocks, codec, mapping, etc.
+
+      // open schema tree
+      await triggerTreeItem(user, schema.schema_name, schema.tables[1].table_name);
+      // open table tree
+      await triggerTreeItem(user, table.table_name, table.columns[5].column_name);
+      // open column tree
+      await triggerTreeItem(user, column.column_name, children[0].column_name);
+
+      children.forEach(childColumn => {
+        expect(
+          screen.getByTestId(
+            `${schema.schema_name}.${table.table_name}.${column.column_name}.${childColumn.column_name}`,
+          ),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('shows a different data type when the columns is an array', async () => {
+      const { user } = await setup();
+
+      const schema = schemaTableColumns[0]; // gc
+      const table = schema.tables[1]; // scheduled_jobs
+      const column = table.columns[6]; // sql_queries
+
+      // open schema tree
+      await triggerTreeItem(user, schema.schema_name, table.table_name);
+      // open table tree
+      await triggerTreeItem(user, table.table_name, column.column_name);
+
+      const wrapper = screen.getByTestId(
+        `${schema.schema_name}.${table.table_name}.${column.column_name}`,
+      );
+
+      // alternate text for array types
+      expect(within(wrapper).getByText('array(text)')).toBeInTheDocument();
     });
 
     it('clicking on column names copies the name', async () => {
