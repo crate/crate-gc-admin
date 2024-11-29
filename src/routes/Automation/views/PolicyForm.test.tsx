@@ -229,11 +229,13 @@ describe('The "PolicyForm" component', () => {
       const { user } = setupAdd();
       await waitForFormRender();
 
-      const tablesTree = screen.getByTestId('tables-tree');
+      const tablesTree = await screen.getByTestId('tables-tree');
       await checkTreeItem(tablesTree, 'policy_tests.parted_table', user);
 
       // Select should not be disabled
-      expect(screen.getByName('select-column-name')).not.toBeDisabled();
+      await waitFor(() => {
+        expect(screen.getByName('select-column-name')).not.toBeDisabled();
+      });
       // Warning should not be present
       expect(screen.queryByTestId('column-warning')).not.toBeInTheDocument();
       // Elements should be in the select

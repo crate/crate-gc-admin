@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix flaky PolicyForm test.
+
 ## 2024-11-26 - 0.19.0
 
 - Updated the schema tree to be more efficient and have nested columns.
