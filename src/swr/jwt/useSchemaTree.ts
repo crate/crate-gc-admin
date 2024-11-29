@@ -161,7 +161,7 @@ const QUERY = `
     SELECT
       table_schema,
       table_name,
-      ARRAY_AGG(QUOTE_IDENT(column_details['name']) || column_details['path']) column_paths,
+      ARRAY_AGG([QUOTE_IDENT(column_details['name'])] || column_details['path']) column_paths,
       ARRAY_AGG(data_type) data_types
     FROM "information_schema"."columns"
     GROUP BY table_schema, table_name

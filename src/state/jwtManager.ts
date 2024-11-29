@@ -89,7 +89,7 @@ const useJWTManagerStore = create<JWTManagerStore>((set, get) => ({
   },
 
   getUrl: (identifier?: string) => {
-    let url = `${get().clusterUrl}/api/_sql?error_trace&types`;
+    let url = `${get().gcUrl}/api/_sql?error_trace&types`;
     if (get().isLocalConnection || get().isJWTEnabled) {
       url = `${get().clusterUrl}/_sql?error_trace&types`;
     }
