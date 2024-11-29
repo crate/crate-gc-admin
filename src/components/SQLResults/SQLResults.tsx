@@ -57,7 +57,7 @@ function SQLResults({ results, format }: Params) {
                 length: 50,
               })}
             >
-              <div className="flex items-center justify-between gap-1.5">
+              <div className="flex items-center justify-between gap-1.5 text-sm">
                 <span>Result {i}</span>
                 {queryResult.status === 'EXECUTING' ? (
                   <Loader size={Loader.sizes.SMALL} />

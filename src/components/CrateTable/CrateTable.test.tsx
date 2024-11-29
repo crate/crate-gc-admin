@@ -64,7 +64,7 @@ describe('The CrateTable component', () => {
   it('displays the default empty text if there is an empty list as data source and no empty text', () => {
     setup({ dataSource: [], emptyText: undefined });
 
-    expect(screen.getAllByText('No data')).toHaveLength(2);
+    expect(screen.getAllByText('No data')).toHaveLength(3);
   });
 
   it('displays an expand icon', () => {

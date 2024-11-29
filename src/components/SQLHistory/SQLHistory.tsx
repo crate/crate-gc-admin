@@ -94,7 +94,9 @@ function SQLHistory({
 
   return (
     <Modal
-      bodyStyle={{ maxHeight: '75dvh', overflowY: 'auto' }}
+      styles={{
+        body: { maxHeight: '75dvh', overflowY: 'auto' },
+      }}
       footer={
         <div className="flex justify-end">
           <Button
