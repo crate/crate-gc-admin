@@ -2264,10 +2264,10 @@ abab@^2.0.6:
   resolved "https://registry.npmjs.org/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"
   integrity sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==
 
-ace-builds@^1.36.4, ace-builds@^1.4.14:
-  version "1.36.4"
-  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.36.4.tgz#c859de4a7701aa86a1e708d38cebe66807d0d84c"
-  integrity sha512-eE+iAsLRfNsq30yd34cezKSob6/N9mQatWs44Bp5LUDgKZ3rJtQds/YtcbnwbEWMTe7yCIxG/Cfezd4BsKIiFg==
+ace-builds@^1.36.3, ace-builds@^1.36.4:
+  version "1.36.5"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.36.5.tgz#ae9cc7a32eccc2f484926131c00545cd6b78a6a6"
+  integrity sha512-mZ5KVanRT6nLRDLqtG/1YQQLX/gZVC/v526cm1Ru/MTSlrbweSmqv2ZT0d2GaHpJq035MwCMIrj+LgDAUnDXrg==
 
 acorn-globals@^7.0.0:
   version "7.0.1"
@@ -6168,7 +6168,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -6635,16 +6635,16 @@ rc-virtual-list@^3.5.1:
     rc-resize-observer "^1.0.0"
     rc-util "^5.36.0"
 
-react-ace@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.npmjs.org/react-ace/-/react-ace-10.1.0.tgz#d348eac2b16475231779070b6cd16768deed565f"
-  integrity sha512-VkvUjZNhdYTuKOKQpMIZi7uzZZVgzCjM7cLYu6F64V0mejY8a2XTyPUIMszC6A4trbeMIHbK5fYFcT/wkP/8VA==
+react-ace@^13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/react-ace/-/react-ace-13.0.0.tgz#e69c2aa4ccf1a81c758adba9ba2b4b3e3d929a69"
+  integrity sha512-PPk2O/ArHzDtbnK82QImfHYXwuiitRgHJf5AxwMQh9zciojbWsPmKJm1tMgWOYLCtGEz8/Dh3MxRxrXe7QcstQ==
   dependencies:
-    ace-builds "^1.4.14"
+    ace-builds "^1.36.3"
     diff-match-patch "^1.0.5"
     lodash.get "^4.4.2"
     lodash.isequal "^4.5.0"
-    prop-types "^15.7.2"
+    prop-types "^15.8.1"
 
 react-dom@^18.2.0:
   version "18.3.1"
