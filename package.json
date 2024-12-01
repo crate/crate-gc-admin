@@ -39,7 +39,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.1.0",
     "@tanstack/match-sorter-utils": "^8.11.8",
-    "@tanstack/react-table": "^8.11.8",
+    "@tanstack/react-table": "^8.20.5",
     "ace-builds": "^1.36.4",
     "antd": "^5.22.2",
     "axios": "^1.7.4",
