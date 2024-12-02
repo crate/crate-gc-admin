@@ -3,6 +3,8 @@ import {
   CloseCircleFilled,
   CompassOutlined,
   FilterOutlined,
+  LoadingOutlined,
+  ReloadOutlined,
   SearchOutlined,
   TableOutlined,
 } from '@ant-design/icons';
@@ -35,7 +37,11 @@ const FILTER_TYPES = {
 
 function SQLEditorSchemaTree() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
-  const { data: schemaTree } = useSchemaTree(clusterId);
+  const {
+    data: schemaTree,
+    mutate: mutateSchemaTree,
+    isValidating: schemaTreeIsValidating,
+  } = useSchemaTree(clusterId);
 
   const executeSql = useExecuteSql();
   const { showLoadingMessage, showErrorMessage, showSuccessMessage } = useMessage();
@@ -348,6 +354,18 @@ function SQLEditorSchemaTree() {
               {drawFilterCheckbox('System schemas', FILTER_TYPES.SYSTEM)}
             </PopoverContent>
           </Popover>
+          {schemaTreeIsValidating ? (
+            <LoadingOutlined data-testid="reload-spinner" />
+          ) : (
+            <button
+              onClick={() => {
+                mutateSchemaTree();
+              }}
+              data-testid="reload-button"
+            >
+              <ReloadOutlined />
+            </button>
+          )}
         </div>
       </div>
       <div className="ant-tree-tiny grow overflow-auto px-1 py-2">

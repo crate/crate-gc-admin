@@ -384,4 +384,12 @@ describe('The SQLEditorSchemaTree component', () => {
       expect(screen.queryByText('sys')).not.toBeInTheDocument();
     });
   });
+
+  describe('reloading the tree', () => {
+    it('displays a reload button', async () => {
+      await setup();
+
+      expect(await screen.findByTestId('reload-button')).toBeInTheDocument();
+    });
+  });
 });
