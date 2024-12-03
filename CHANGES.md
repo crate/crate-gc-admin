@@ -7,6 +7,16 @@
 - Dependabot: bump nginx from 1.27.2 to 1.27.3
 - Dependabot: bump node from 23.1.0-slim to 23.3.0-slim
 - Update SQL console history to show most recent 50 queries first.
+- Dependabot: bump @ant-design/icons from 5.5.1 to 5.5.2.
+- Dependabot: bump prettier-plugin-tailwindcss from 0.6.8 to 0.6.9.
+- Dependabot: bump sql-formatter from 15.3.2 to 15.4.6.
+- Dependabot: bump cronstrue from 2.50.0 to 2.52.0.
+- Dependabot: bump @tanstack/react-table from 8.19.2 to 8.20.5.
+- Dependabot: bump @tanstack/match-sorter-utils from 8.15.1 to 8.19.4.
+- Dependabot: bump autoprefixer from 10.4.19 to 10.4.20.
+- Dependabot: bump @types/node from 22.8.5 to 22.10.1.
+- Dependabot: bump @hookform/resolvers from 3.9.0 to 3.9.1.
+- Dependabot: bump react-ace from 10.1.0 to 13.0.0.
 
 ## 2024-11-29 - 0.19.2
 
