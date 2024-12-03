@@ -6,6 +6,7 @@
 - Update text copied to clipboard when clicking a SQL column name.
 - Dependabot: bump nginx from 1.27.2 to 1.27.3
 - Dependabot: bump node from 23.1.0-slim to 23.3.0-slim
+- Update SQL console history to show most recent 50 queries first.
 
 ## 2024-11-29 - 0.19.2
 
