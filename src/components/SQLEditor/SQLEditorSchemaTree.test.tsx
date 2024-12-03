@@ -297,6 +297,30 @@ describe('The SQLEditorSchemaTree component', () => {
       const clipboardText = await navigator.clipboard.readText();
       expect(clipboardText).toBe(column.column_name);
     });
+
+    it('clicking on subcolumn names copies the name', async () => {
+      const { user } = await setup();
+
+      const schema = schemaTableColumns[4];
+      const table = schema.tables[2];
+      const column = table.columns[0];
+      const subColumn = column.children![0];
+
+      // open schema tree
+      await triggerTreeItem(user, schema.schema_name, table.table_name);
+      // open table tree
+      await triggerTreeItem(user, table.table_name, column.column_name);
+      await triggerTreeItem(user, column.column_name, subColumn.column_name);
+
+      // click on name
+      await user.click(screen.getByText(subColumn.column_name));
+
+      // should have been copied
+      const clipboardText = await navigator.clipboard.readText();
+      expect(clipboardText).toBe(
+        `${column.column_name}['${subColumn.column_name}']`,
+      );
+    });
   });
 
   describe('filtering via the search input', () => {

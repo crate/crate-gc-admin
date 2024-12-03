@@ -133,11 +133,20 @@ function SQLEditorSchemaTree() {
 
   const drawTreeData = (filteredSchemaTree: Schema[]): AntDesignTreeItem[] => {
     const drawColumns = (columns: SchemaTableColumn[]): AntDesignTreeItem[] => {
+      const quoteColumnName = (path: string[]) =>
+        path[2] +
+        path
+          .slice(3)
+          .map((identifier: string) => `['${identifier}']`)
+          .join('');
+
       return columns.map(column => ({
         title: (
           <span data-testid={column.path.join('.')}>
-            <CopyToClipboard textToCopy={column.column_name}>
-              {column.column_name}
+            <CopyToClipboard
+              textToCopy={quoteColumnName(column.path as string[]) as string}
+            >
+              {column.unquoted_column_name}
             </CopyToClipboard>
             <Text pale className="ml-1 inline text-xs italic !leading-3">
               {column.data_type}
@@ -177,7 +186,7 @@ function SQLEditorSchemaTree() {
         data-testid={`schema-${schema.schema_name}`}
       >
         <ApartmentOutlined className="mr-1.5 size-3 opacity-50" />
-        {schema.schema_name}
+        {schema.unquoted_schema_name}
         {schema.tables.find(table => table.is_system_table) && (
           <Text className="ml-1 inline text-xs italic !leading-3" pale>
             system
@@ -284,7 +293,7 @@ function SQLEditorSchemaTree() {
         <span className="flex items-center" data-testid={table.path.join('.')}>
           {drawTableIcon(table.table_type)}
           <CopyToClipboard textToCopy={table.path.join('.')}>
-            {table.table_name}
+            {table.unquoted_table_name}
           </CopyToClipboard>
           <Text pale className="ml-1 inline text-xs italic !leading-3">
             {drawTableDescription(table.table_type)}

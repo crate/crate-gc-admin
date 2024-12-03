@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add a refresh button to the SQL console schema tree.
+- Update text copied to clipboard when clicking a SQL column name.
 
 ## 2024-11-29 - 0.19.2
 
