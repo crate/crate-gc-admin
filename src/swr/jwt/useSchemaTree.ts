@@ -17,6 +17,7 @@ export type SchemaTableColumn = {
   column_name: string;
   data_type: string;
   path: string[];
+  unquoted_column_name: string;
 };
 
 type SchemaTableType = 'BASE TABLE' | 'VIEW' | 'FOREIGN';
@@ -28,12 +29,14 @@ export type SchemaTable = {
   path: string[];
   columns: SchemaTableColumn[];
   is_system_table: boolean;
+  unquoted_table_name: string;
 };
 
 export type Schema = {
   schema_name: string;
   path: string[];
   tables: SchemaTable[];
+  unquoted_schema_name: string;
 };
 
 export const postFetch = (data: QueryResultSuccess): Schema[] => {
@@ -100,6 +103,7 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
               column_name: node.name,
               data_type: node.data_type,
               path: path,
+              unquoted_column_name: node.name.replace(/^"|"$/g, ''),
             };
             if (childNodes) {
               output['children'] = childNodes;
@@ -112,18 +116,21 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
     };
 
     const constructTables = (input: SchemaDescription[]): SchemaTable[] => {
-      return input.map(row => {
-        const path = [row.table_schema, row.table_name];
+      return input
+        .map(row => {
+          const path = [row.table_schema, row.table_name];
 
-        return {
-          columns: constructColumns(row, path),
-          is_system_table: SYSTEM_SCHEMAS.includes(row.table_schema),
-          path: path,
-          schema_name: row.table_schema,
-          table_name: row.table_name,
-          table_type: row.table_type as SchemaTableType,
-        };
-      });
+          return {
+            columns: constructColumns(row, path),
+            is_system_table: SYSTEM_SCHEMAS.includes(row.table_schema),
+            path: path,
+            schema_name: row.table_schema,
+            table_name: row.table_name,
+            table_type: row.table_type as SchemaTableType,
+            unquoted_table_name: row.table_name.replace(/^"|"$/g, ''),
+          };
+        })
+        .sort((a, b) => a.unquoted_table_name.localeCompare(b.unquoted_table_name));
     };
 
     const constructSchemas = (input: SchemaDescription[]): Schema[] => {
@@ -136,10 +143,13 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
           schema_name: schemaName,
           path: [schemaName],
           tables: constructTables(input.filter(i => i.table_schema === schemaName)),
+          unquoted_schema_name: schemaName.replace(/^"|"$/g, ''),
         });
       });
 
-      return tree;
+      return tree.sort((a, b) =>
+        a.unquoted_schema_name.localeCompare(b.unquoted_schema_name),
+      );
     };
 
     return constructSchemas(input);
@@ -184,7 +194,7 @@ const useSchemaTree = (clusterId?: string) => {
   return useSWR<Schema[]>(
     [`/use-schema-tree/${clusterId}`, clusterId],
     ([url]: [string]) => swrJWTFetch(url, QUERY, postFetch),
-    { refreshInterval: 2 * 60 * 1000 },
+    {},
   );
 };
 
