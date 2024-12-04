@@ -20,6 +20,7 @@ function SQLHistory({
   displayHistoryItem,
   setShowHistory,
 }: SQLHistoryProps) {
+  const ENTRIES_TO_SHOW = 50;
   const LINES_TO_SHOW = 3;
   const [expandedQueries, setExpandedQueries] = useState<number[]>([]);
 
@@ -65,32 +66,35 @@ function SQLHistory({
     );
   };
 
-  const tableData = history.map((query: string, index: number) => {
-    return {
-      key: `query_${index}`,
-      query: drawQuery(query, index),
-      manage: (
-        <div className="flex gap-4">
-          <CopyToClipboard textToCopy={query}>
-            <CopyOutlined className="text-crate-blue" />
-          </CopyToClipboard>
-          <button
-            onClick={() => {
-              setExpandedQueries(
-                expandedQueries
-                  .filter(i => i !== index)
-                  .map(i => (i > index ? i - 1 : i)),
-              );
-              removeHistoryItem(index);
-            }}
-            type="button"
-          >
-            <DeleteOutlined className="text-crate-blue" />
-          </button>
-        </div>
-      ),
-    };
-  });
+  const tableData = history
+    .map((query: string, index: number) => {
+      return {
+        key: `query_${index}`,
+        query: drawQuery(query, index),
+        manage: (
+          <div className="flex gap-4">
+            <CopyToClipboard textToCopy={query}>
+              <CopyOutlined className="text-crate-blue" />
+            </CopyToClipboard>
+            <button
+              onClick={() => {
+                setExpandedQueries(
+                  expandedQueries
+                    .filter(i => i !== index)
+                    .map(i => (i > index ? i - 1 : i)),
+                );
+                removeHistoryItem(index);
+              }}
+              type="button"
+            >
+              <DeleteOutlined className="text-crate-blue" />
+            </button>
+          </div>
+        ),
+      };
+    })
+    .reverse()
+    .slice(0, ENTRIES_TO_SHOW);
 
   return (
     <Modal
@@ -131,7 +135,7 @@ function SQLHistory({
             { dataIndex: 'manage', key: 'manage' },
           ]}
           dataSource={tableData}
-          pagination={{ defaultPageSize: 20, position: ['bottomRight'] }}
+          pagination={false}
           scroll={{
             x: 'max-content',
           }}
