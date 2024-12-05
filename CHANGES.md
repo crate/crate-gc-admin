@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2024-12-05 - 0.19.3
+
 - Add a refresh button to the SQL console schema tree.
 - Update text copied to clipboard when clicking a SQL column name.
 - Dependabot: bump nginx from 1.27.2 to 1.27.3
