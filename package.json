@@ -1,7 +1,7 @@
 {
-  "name": "@crate.io/crate-gc-admin",
-  "version": "0.19.3",
-  "author": "crate.io",
+  "name": "@cratedb/crate-gc-admin",
+  "version": "0.19.4",
+  "author": "cratedb",
   "private": false,
   "type": "module",
   "main": "dist/index.umd.js",

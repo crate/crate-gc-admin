@@ -36,7 +36,7 @@ CrateDB Cloud.
 
 To install this library you have to run the following command:
 
-    yarn add @crate.io/crate-gc-admin
+    yarn add @cratedb/crate-gc-admin
 
 Then, if you are using tailwind, edit your `tailwind.config` file and
 add the following:
@@ -44,13 +44,13 @@ add the following:
     ...
     content: [
       ...
-      './node_modules/@crate.io/crate-gc-admin/**/*.{js,jsx,ts,tsx}'
+      './node_modules/@cratedb/crate-gc-admin/**/*.{js,jsx,ts,tsx}'
     ]
     ...
 
 and edit your index.css to import library style:
 
-    @import '@crate.io/crate-gc-admin/style.css';
+    @import '@cratedb/crate-gc-admin/style.css';
 
 ## Publish a new version
 
