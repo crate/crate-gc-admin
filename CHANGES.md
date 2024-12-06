@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-12-06 - 0.19.4
+
+- Migrate package from @crate.io to @cratedb on npm.
+
 ## 2024-12-05 - 0.19.3
 
 - Add a refresh button to the SQL console schema tree.
