@@ -364,9 +364,10 @@ function SQLEditorSchemaTree() {
             </PopoverContent>
           </Popover>
           {schemaTreeIsValidating ? (
-            <LoadingOutlined data-testid="reload-spinner" />
+            <LoadingOutlined className="mr-1" data-testid="reload-spinner" />
           ) : (
             <button
+              className="mr-1"
               onClick={() => {
                 mutateSchemaTree();
               }}

@@ -88,7 +88,7 @@ function SQLEditor({
       results.filter(
         result =>
           result.status === 'SUCCESS' &&
-          DDL_QUERIES.includes(result.result?.original_query?.type),
+          DDL_QUERIES.includes(result.result?.original_query?.type.toLowerCase()),
       ).length > 0
     );
   };
