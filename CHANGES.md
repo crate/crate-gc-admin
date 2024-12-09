@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2024-12-09 - 0.19.5
+
+- Improve spacing on schema tree buttons.
+- Fix case-sensitive error where schema refresh doesn't always occur.
+
 ## 2024-12-06 - 0.19.4
 
 - Migrate package from @crate.io to @cratedb on npm.
