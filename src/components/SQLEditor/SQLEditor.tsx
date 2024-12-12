@@ -28,6 +28,7 @@ export type SQLEditorProps = {
   setShowHistory?: (show: boolean) => void;
   onViewHistory?: () => void;
   title?: React.ReactNode;
+  clusterId?: string;
 };
 
 const getInitialValue = (
@@ -52,18 +53,19 @@ function SQLEditor({
   setShowHistory,
   onViewHistory,
   title,
+  clusterId,
 }: SQLEditorProps) {
-  const clusterId = useJWTManagerStore(state => state.clusterId);
   const { mutate: mutateSchemaTree } = useSchemaTree(clusterId);
 
+  const getClusterKey = useJWTManagerStore(state => state.getClusterKey);
+  const clusterKey = getClusterKey(clusterId);
   const SQL_EDITOR_CONTENT_KEY =
-    localStorageKey && `crate.gc.admin.${localStorageKey}.${clusterId || ''}`;
+    localStorageKey && `crate.gc.admin.${localStorageKey}.${clusterKey}`;
   const SQL_HISTORY_CONTENT_KEY =
-    localStorageKey &&
-    `crate.gc.admin.${localStorageKey}-history.${clusterId || ''}`;
+    localStorageKey && `crate.gc.admin.${localStorageKey}-history.${clusterKey}`;
   const SQL_HISTORY_TEMP_CONTENT_KEY =
     localStorageKey &&
-    `crate.gc.admin.${localStorageKey}-history-temp.${clusterId || ''}`;
+    `crate.gc.admin.${localStorageKey}-history-temp.${clusterKey}`;
 
   const dataFromLocalStorage = SQL_EDITOR_CONTENT_KEY
     ? localStorage.getItem(SQL_EDITOR_CONTENT_KEY)
@@ -252,7 +254,7 @@ function SQLEditor({
   return (
     <PanelGroup direction="horizontal">
       <Panel>
-        <SQLEditorSchemaTree />
+        <SQLEditorSchemaTree clusterId={clusterId} />
       </Panel>
       <PanelResizeHandle className="flex w-1 flex-col justify-center bg-neutral-200 hover:bg-crate-blue">
         <div className="h-10 w-full bg-crate-blue" />

@@ -9,7 +9,7 @@ type EnterpriseScreenProps = {
 };
 
 function EnterpriseScreen({ children }: EnterpriseScreenProps) {
-  const gcStatus = useJWTManagerStore(state => state.gcStatus);
+  const gcStatus = useJWTManagerStore(state => state.clusters.default.gcStatus); // only used in adminui, hence the hardcoded "default" clusterId
   if (gcStatus == ConnectionStatus.CONNECTED) {
     return children;
   }

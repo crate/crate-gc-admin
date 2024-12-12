@@ -20,7 +20,6 @@ import useMessage from 'hooks/useMessage';
 import { useState } from 'react';
 import { useSchemaTree, Schema, SchemaTable, SchemaTableColumn } from 'src/swr/jwt';
 import { tryFormatSql } from 'utils';
-import useJWTManagerStore from 'state/jwtManager';
 
 type AntDesignTreeItem = {
   title: React.ReactNode;
@@ -35,8 +34,11 @@ const FILTER_TYPES = {
   SYSTEM: 'system',
 } as const;
 
-function SQLEditorSchemaTree() {
-  const clusterId = useJWTManagerStore(state => state.clusterId);
+export type SQLEditorSchemaTreeProps = {
+  clusterId?: string;
+};
+
+function SQLEditorSchemaTree({ clusterId }: SQLEditorSchemaTreeProps) {
   const {
     data: schemaTree,
     mutate: mutateSchemaTree,

@@ -13,7 +13,11 @@ function Auth() {
   const specifiedRefreshToken = searchParams.get('refresh');
 
   const doLogin = async () => {
-    const result = await login(specifiedToken!, specifiedRefreshToken || undefined);
+    const result = await login(
+      undefined, // todo
+      specifiedToken!,
+      specifiedRefreshToken || undefined,
+    );
     setStatus(result);
     if (result) {
       window.location.assign('/');

@@ -16,7 +16,7 @@ function Layout({
   // but it would be just a case of passing the parameter should it be
   // needed in future
   const [navIsExpanded, setNavIsExpanded] = useState(true);
-  const gcStatus = useJWTManagerStore(state => state.gcStatus);
+  const gcStatus = useJWTManagerStore(state => state.clusters.default.gcStatus); // only used in adminui, hence the hardcoded "default" clusterId
 
   return (
     <div className="absolute bottom-0 top-0 flex min-h-dvh w-full flex-col">

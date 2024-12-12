@@ -28,7 +28,7 @@ function renderStatus(status: ConnectionStatus) {
 }
 
 function GCStatusIndicator() {
-  const gcStatus = useJWTManagerStore(state => state.gcStatus);
+  const gcStatus = useJWTManagerStore(state => state.clusters.default.gcStatus); // only used in adminui, hence the hardcoded "default" clusterId
 
   return renderStatus(gcStatus);
 }

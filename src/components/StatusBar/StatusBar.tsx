@@ -13,16 +13,16 @@ import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
 import GCSpin from 'components/GCSpin';
 import logo from '../../assets/logo.svg';
 import useSessionStore from 'state/session';
-import useJWTManagerStore from 'state/jwtManager';
+// import useJWTManagerStore from 'state/jwtManager';
 
 function StatusBar() {
-  const clusterId = useJWTManagerStore(state => state.clusterId);
+  // const clusterId = useJWTManagerStore(state => state.clusterId);
   const [mobileVisible, setMobileVisible] = useState(false);
   const { load } = useSessionStore();
   const { data: nodeStatus } = useClusterNodeStatus();
   const { data: currentUser } = useCurrentUser();
-  const { data: cluster } = useClusterInfo(clusterId);
-  const { data: shards } = useShards(clusterId);
+  const { data: cluster } = useClusterInfo('default');
+  const { data: shards } = useShards('default');
   const { data: allocations } = useAllocations();
 
   // hide the mobile overlay on any window resize

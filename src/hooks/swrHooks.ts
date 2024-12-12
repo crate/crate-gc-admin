@@ -16,8 +16,8 @@ import useGcApi from 'hooks/useGcApi';
 import useJWTManagerStore from 'state/jwtManager';
 
 const gcApiKeyBuilder = (key: string) => {
-  const gcUrl = useJWTManagerStore(state => state.gcUrl);
-  return `${gcUrl}${key}`;
+  const jwtClusters = useJWTManagerStore(state => state.clusters);
+  return `${jwtClusters.default.gcUrl}${key}`;
 };
 
 export const useGCGetScheduledJobs = () => {

@@ -32,6 +32,7 @@ export default function Automation({
   onDeletePolicy,
   onEditPolicy,
 }: AutomationProps) {
+  const jwtClusters = useJWTManagerStore(state => state.clusters);
   const isLocalConnection = useJWTManagerStore(state => state.isLocalConnection);
 
   return (

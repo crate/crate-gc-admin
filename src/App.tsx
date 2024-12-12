@@ -3,7 +3,7 @@ import { bottomNavigation, topNavigation } from 'constants/navigation';
 import routes from 'constants/routes';
 import { useEffect } from 'react';
 import { ConnectionStatus } from 'types';
-import { Layout, StatusBar, StatsUpdater, GcAdminAntdProvider } from 'components';
+import { Layout, StatsUpdater, StatusBar, GcAdminAntdProvider } from 'components';
 import logo from './assets/logo.svg';
 import useGcApi from 'hooks/useGcApi';
 import { apiGet } from 'utils/api';
@@ -14,6 +14,7 @@ import useJWTManagerStore from 'state/jwtManager';
 function App() {
   const hasToken = useJWTManagerStore(state => state.hasToken);
   const setGcStatus = useJWTManagerStore(state => state.setGcStatus);
+  const debugJWT = useJWTManagerStore(state => state.debug);
   const gcApi = useGcApi();
 
   useEffect(() => {
@@ -36,6 +37,8 @@ function App() {
         setGcStatus(ConnectionStatus.ERROR);
       });
   }, []);
+
+  debugJWT();
 
   return (
     <GcAdminAntdProvider>

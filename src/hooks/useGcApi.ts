@@ -2,11 +2,11 @@ import axios from 'axios';
 import useJWTManagerStore from 'state/jwtManager';
 
 export default function useGcApi() {
-  const gcUrl = useJWTManagerStore(state => state.gcUrl);
+  const jwtClusters = useJWTManagerStore(state => state.clusters);
   const getToken = useJWTManagerStore(state => state.getToken);
 
   const instance = axios.create({
-    baseURL: gcUrl,
+    baseURL: jwtClusters.default.gcUrl,
     withCredentials: true,
   });
 
