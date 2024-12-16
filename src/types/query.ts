@@ -32,6 +32,7 @@ export enum ColumnType {
   BIT = 25,
   JSON = 26,
   CHARACTER = 27,
+  FLOAT_VECTOR = 28,
   ARRAY = 100,
 }
 

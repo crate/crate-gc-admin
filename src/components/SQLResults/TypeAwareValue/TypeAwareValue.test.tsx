@@ -78,6 +78,13 @@ describe('The TypeAwareValue component', () => {
         'http://geojson.io/#data=data:application/json,{"coordinates":[[[16.344,48.137],[16.344,48.261],[16.462,48.261],[16.462,48.137],[16.344,48.137]]],"type":"Polygon"}',
       );
     });
+
+    it('will render a float vector', () => {
+      setup({ value: [1, 2], columnType: ColumnType.FLOAT_VECTOR });
+
+      const elem = screen.getByText('Array');
+      expect(elem.children[0]).toHaveTextContent('[2]');
+    });
   });
 
   describe('when a crate type is not specified', () => {
