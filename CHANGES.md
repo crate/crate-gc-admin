@@ -6,6 +6,7 @@
 
 - Improve spacing on schema tree buttons.
 - Fix case-sensitive error where schema refresh doesn't always occur.
+- Add scrollbar to SQL results tab bar when many resultsets are returned.
 
 ## 2024-12-06 - 0.19.4
 

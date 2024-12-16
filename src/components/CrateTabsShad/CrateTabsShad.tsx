@@ -48,15 +48,17 @@ function CrateTabsShad({
       value={activeTab}
       onValueChange={onTabChange}
     >
-      <TabsList
-        className={`min-h-10 ${hideWhenSingleTab && items.length === 1 ? 'hidden' : 'border-b'}`}
-      >
-        {items.map(item => (
-          <TabsTrigger key={item.key} value={item.key}>
-            {item.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="overflow-x-auto">
+        <TabsList
+          className={`min-h-10 ${hideWhenSingleTab && items.length === 1 ? 'hidden' : 'border-b'}`}
+        >
+          {items.map(item => (
+            <TabsTrigger key={item.key} value={item.key}>
+              {item.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
       {items.map(item => (
         <TabsContent
           key={item.key}
