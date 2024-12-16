@@ -65,6 +65,7 @@ function TypeAwareValue({
     case ColumnType.OBJECT:
     case ColumnType.ARRAY:
     case ColumnType.UNCHECKED_OBJECT:
+    case ColumnType.FLOAT_VECTOR:
       ret = <JSONTree json={value as object} />;
       break;
     case ColumnType.BOOLEAN:
