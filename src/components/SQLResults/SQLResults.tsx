@@ -58,7 +58,7 @@ function SQLResults({ results, format }: Params) {
               })}
             >
               <div className="flex items-center justify-between gap-1.5 text-sm">
-                <span>Result {i}</span>
+                <span className="whitespace-nowrap">Result {i}</span>
                 {queryResult.status === 'EXECUTING' ? (
                   <Loader size={Loader.sizes.SMALL} />
                 ) : queryResult.status === 'ERROR' ? (
