@@ -82,7 +82,7 @@ describe('The TypeAwareValue component', () => {
     it('will render a float vector', () => {
       setup({ value: [1, 2], columnType: ColumnType.FLOAT_VECTOR });
 
-      const elem = screen.getByText('Array');
+      const elem = screen.getByText('Vector');
       expect(elem.children[0]).toHaveTextContent('[2]');
     });
   });

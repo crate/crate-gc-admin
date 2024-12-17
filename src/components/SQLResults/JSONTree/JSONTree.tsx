@@ -5,11 +5,12 @@ import TypeAwareValue from '../TypeAwareValue/TypeAwareValue.tsx';
 
 export type JSONTreeParams = {
   json: object;
+  arrayLabel?: string;
 };
 
 const { DirectoryTree } = Tree;
 
-function JSONTree({ json }: JSONTreeParams) {
+function JSONTree({ json, arrayLabel = 'Array' }: JSONTreeParams) {
   const copyToClipboard = async (value: string) => {
     message.info({ content: 'Copied!' }, 1);
     await navigator.clipboard.writeText(value);
@@ -22,7 +23,7 @@ function JSONTree({ json }: JSONTreeParams) {
       const len = val.length;
       return (
         <span>
-          Array <span className="text-crate-blue">[{len}]</span>
+          {arrayLabel} <span className="text-crate-blue">[{len}]</span>
         </span>
       );
     } else if (typeof val === 'object') {
