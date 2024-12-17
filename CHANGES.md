@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-12-17 - 0.19.7
+
+- Improve FLOAT_VECTOR output in SQL results.
+
 ## 2024-12-16 - 0.19.6
 
 - Add scrollbar to SQL results tab bar when many resultsets are returned.

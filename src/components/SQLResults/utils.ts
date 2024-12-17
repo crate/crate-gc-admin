@@ -56,6 +56,8 @@ export const dbTypeToHumanReadable = (tp: ColumnType | ColumnType[] | undefined)
       return 'json';
     case ColumnType.CHARACTER:
       return 'char';
+    case ColumnType.FLOAT_VECTOR:
+      return 'float vector';
     case ColumnType.ARRAY:
       return 'array';
   }
