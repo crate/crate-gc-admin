@@ -346,7 +346,7 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
         </Button>
       </div>
 
-      <div className="overflow-x-a w-full">
+      <div className="overflow-auto">
         <DataTable
           elementsPerPage={JOBS_TABLE_PAGE_SIZE}
           data={(enrichedScheduledJobs ?? []).sort(sortByString('name'))}

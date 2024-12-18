@@ -23,6 +23,7 @@ function CrateTabsShad({
   stickyTabBar = false,
 }: CrateTabsShadProps) {
   const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
+  const hideTabs = hideWhenSingleTab && items.length === 1;
 
   const getDefaultTab = (): string => {
     if (initialActiveTab && items.map(item => item.key).includes(initialActiveTab)) {
@@ -48,10 +49,8 @@ function CrateTabsShad({
       value={activeTab}
       onValueChange={onTabChange}
     >
-      <div className="overflow-x-auto">
-        <TabsList
-          className={`min-h-10 ${hideWhenSingleTab && items.length === 1 ? 'hidden' : 'border-b'}`}
-        >
+      <div className={hideTabs ? '' : 'min-h-10 overflow-x-auto'}>
+        <TabsList className={`min-h-10 ${hideTabs ? 'hidden' : 'border-b'}`}>
           {items.map(item => (
             <TabsTrigger key={item.key} value={item.key}>
               {item.label}

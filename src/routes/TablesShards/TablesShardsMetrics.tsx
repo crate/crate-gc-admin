@@ -229,75 +229,80 @@ function TablesShardsMetrics() {
       </div>
 
       {/* table */}
-      <DataTable
-        columns={columns}
-        data={tablesShards.filter(row => healthFilter[row.health])}
-        className="relative w-full overflow-auto"
-        disablePagination
-        stickyHeader
-        customTableHeader={
-          <Table.Header className="sticky top-0 z-10 bg-white">
-            <Table.RowHeader className="!border-0">
-              <Table.Head className="align-bottom" rowSpan={2}>
-                Schema
-              </Table.Head>
-              <Table.Head className="align-bottom" rowSpan={2}>
-                Table / Partition name
-              </Table.Head>
-              <Table.Head className="align-bottom" rowSpan={2}>
-                <div className="flex items-center gap-2">
-                  <div>Health</div>
-                  <Popover>
-                    <PopoverTrigger>
-                      <FilterOutlined
-                        className="opacity-80 hover:opacity-100"
-                        data-testid="health-filter"
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent align="end" className="select-none space-y-1">
-                      {drawFilterCheckbox(
-                        <span>{TABLE_HEALTH_DESCRIPTIONS.GREEN}</span>,
-                        TABLE_HEALTH_STATES.GREEN,
-                      )}
-                      {drawFilterCheckbox(
-                        <span>{TABLE_HEALTH_DESCRIPTIONS.YELLOW}</span>,
-                        TABLE_HEALTH_STATES.YELLOW,
-                      )}
-                      {drawFilterCheckbox(
-                        <span>{TABLE_HEALTH_DESCRIPTIONS.RED}</span>,
-                        TABLE_HEALTH_STATES.RED,
-                      )}
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </Table.Head>
-              <Table.Head className="h-8 align-bottom" colSpan={2}>
-                Configuration
-              </Table.Head>
-              <Table.Head className="h-8 align-bottom" colSpan={3}>
-                Shards
-              </Table.Head>
-              <Table.Head className="align-bottom" rowSpan={2}>
-                Total records
-              </Table.Head>
-              <Table.Head className="align-bottom" rowSpan={2}>
-                Size
-              </Table.Head>
-            </Table.RowHeader>
-            <Table.RowHeader className="!border-0">
-              <Table.Head className="h-8 align-bottom">Shards</Table.Head>
-              <Table.Head className="h-8 align-bottom">Replicas</Table.Head>
-              <Table.Head className="h-8 align-bottom">Started</Table.Head>
-              <Table.Head className="h-8 align-bottom">Missing</Table.Head>
-              <Table.Head className="h-8 align-bottom">Underreplicated</Table.Head>
-            </Table.RowHeader>
-            {/* fake bottom border to fix the problem where table borders in a sticky header when border-collapse: collapse are not sticky */}
-            <tr className="!border-b-0">
-              <th className="h-[1px] !border-b-0 bg-neutral-200 p-0" colSpan={10} />
-            </tr>
-          </Table.Header>
-        }
-      />
+      <div className="w-full grow overflow-auto">
+        <DataTable
+          columns={columns}
+          data={tablesShards.filter(row => healthFilter[row.health])}
+          className="relative w-full overflow-auto"
+          disablePagination
+          stickyHeader
+          customTableHeader={
+            <Table.Header className="sticky top-0 z-10 bg-white">
+              <Table.RowHeader className="!border-0">
+                <Table.Head className="align-bottom" rowSpan={2}>
+                  Schema
+                </Table.Head>
+                <Table.Head className="align-bottom" rowSpan={2}>
+                  Table / Partition name
+                </Table.Head>
+                <Table.Head className="align-bottom" rowSpan={2}>
+                  <div className="flex items-center gap-2">
+                    <div>Health</div>
+                    <Popover>
+                      <PopoverTrigger>
+                        <FilterOutlined
+                          className="opacity-80 hover:opacity-100"
+                          data-testid="health-filter"
+                        />
+                      </PopoverTrigger>
+                      <PopoverContent align="end" className="select-none space-y-1">
+                        {drawFilterCheckbox(
+                          <span>{TABLE_HEALTH_DESCRIPTIONS.GREEN}</span>,
+                          TABLE_HEALTH_STATES.GREEN,
+                        )}
+                        {drawFilterCheckbox(
+                          <span>{TABLE_HEALTH_DESCRIPTIONS.YELLOW}</span>,
+                          TABLE_HEALTH_STATES.YELLOW,
+                        )}
+                        {drawFilterCheckbox(
+                          <span>{TABLE_HEALTH_DESCRIPTIONS.RED}</span>,
+                          TABLE_HEALTH_STATES.RED,
+                        )}
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </Table.Head>
+                <Table.Head className="h-8 align-bottom" colSpan={2}>
+                  Configuration
+                </Table.Head>
+                <Table.Head className="h-8 align-bottom" colSpan={3}>
+                  Shards
+                </Table.Head>
+                <Table.Head className="align-bottom" rowSpan={2}>
+                  Total records
+                </Table.Head>
+                <Table.Head className="align-bottom" rowSpan={2}>
+                  Size
+                </Table.Head>
+              </Table.RowHeader>
+              <Table.RowHeader className="!border-0">
+                <Table.Head className="h-8 align-bottom">Shards</Table.Head>
+                <Table.Head className="h-8 align-bottom">Replicas</Table.Head>
+                <Table.Head className="h-8 align-bottom">Started</Table.Head>
+                <Table.Head className="h-8 align-bottom">Missing</Table.Head>
+                <Table.Head className="h-8 align-bottom">Underreplicated</Table.Head>
+              </Table.RowHeader>
+              {/* fake bottom border to fix the problem where table borders in a sticky header when border-collapse: collapse are not sticky */}
+              <tr className="!border-b-0">
+                <th
+                  className="h-[1px] !border-b-0 bg-neutral-200 p-0"
+                  colSpan={10}
+                />
+              </tr>
+            </Table.Header>
+          }
+        />
+      </div>
     </div>
   );
 }

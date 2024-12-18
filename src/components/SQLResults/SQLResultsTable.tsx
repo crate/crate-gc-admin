@@ -306,7 +306,7 @@ function SQLResultsTable({ result }: Params) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden">
+    <div className="h-full overflow-auto">
       <DataTable
         {...(output as DataTableColumnData<unknown>)}
         elementsPerPage={100}
