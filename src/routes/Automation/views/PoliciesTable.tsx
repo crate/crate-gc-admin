@@ -298,7 +298,7 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
         </Button>
       </div>
 
-      <div className="overflow-x-a w-full">
+      <div className="overflow-auto">
         <DataTable
           elementsPerPage={POLICIES_TABLE_PAGE_SIZE}
           noResultsLabel="No policies found"

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-12-18 - 0.19.8
+
+- Tidy CSS and fix scrolling issues.
+
 ## 2024-12-17 - 0.19.7
 
 - Improve FLOAT_VECTOR output in SQL results.
