@@ -194,7 +194,7 @@ const useSchemaTree = (clusterId?: string) => {
   return useSWR<Schema[]>(
     [`/use-schema-tree/${clusterId}`, clusterId],
     ([url]: [string]) => swrJWTFetch(url, QUERY, postFetch),
-    {},
+    { revalidateIfStale: false, revalidateOnFocus: false },
   );
 };
 

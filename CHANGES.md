@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2024-12-19 - 0.19.9
+
+- No longer refresh schema tree when navigating back to the SQL editor.
+
 ## 2024-12-18 - 0.19.8
 
 - Tidy CSS and fix scrolling issues.
