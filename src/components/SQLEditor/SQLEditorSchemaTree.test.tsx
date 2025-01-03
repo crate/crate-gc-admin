@@ -85,6 +85,9 @@ describe('The SQLEditorSchemaTree component', () => {
 
     it('clicking on names copies the qualified table name', async () => {
       const { user } = await setup();
+      const writeTextMock = jest
+        .spyOn(navigator.clipboard, 'writeText')
+        .mockResolvedValue();
 
       const schema = schemaTableColumns.find(schema => schema.schema_name === 'gc')!;
       const table = schema.tables[0];
@@ -96,8 +99,9 @@ describe('The SQLEditorSchemaTree component', () => {
       await user.click(screen.getByText(table.table_name));
 
       // should have been copied
-      const clipboardText = await navigator.clipboard.readText();
-      expect(clipboardText).toBe(`${schema.schema_name}.${table.table_name}`);
+      expect(writeTextMock).toHaveBeenCalledWith(
+        `${schema.schema_name}.${table.table_name}`,
+      );
     });
 
     describe('the context menu', () => {
@@ -109,6 +113,9 @@ describe('The SQLEditorSchemaTree component', () => {
           const table = schema.tables[0];
 
           const { user } = await setup();
+          const writeTextMock = jest
+            .spyOn(navigator.clipboard, 'writeText')
+            .mockResolvedValue();
 
           // open schema tree
           await triggerTreeItem(
@@ -126,8 +133,7 @@ describe('The SQLEditorSchemaTree component', () => {
           // click on Copy Select button
           await user.click(screen.getByText(`Copy SELECT`));
 
-          const clipboardText = await navigator.clipboard.readText();
-          expect(clipboardText).toBe(
+          expect(writeTextMock).toHaveBeenCalledWith(
             formatSQL('SELECT version_num FROM gc.alembic_version LIMIT 100;', {
               language: 'postgresql',
             }),
@@ -145,6 +151,9 @@ describe('The SQLEditorSchemaTree component', () => {
           )!;
 
           const { user } = await setup();
+          const writeTextMock = jest
+            .spyOn(navigator.clipboard, 'writeText')
+            .mockResolvedValue();
 
           // open schema tree
           await triggerTreeItem(
@@ -162,8 +171,7 @@ describe('The SQLEditorSchemaTree component', () => {
           // click on Copy CREATE VIEW button
           await user.click(screen.getByText(`Copy CREATE VIEW`));
 
-          const clipboardText = await navigator.clipboard.readText();
-          expect(clipboardText).toBe(
+          expect(writeTextMock).toHaveBeenCalledWith(
             formatSQL(`${getViewsDDLQueryResult.rows[0][0]};`, {
               language: 'postgresql',
             }),
@@ -179,6 +187,9 @@ describe('The SQLEditorSchemaTree component', () => {
           )!;
 
           const { user } = await setup();
+          const writeTextMock = jest
+            .spyOn(navigator.clipboard, 'writeText')
+            .mockResolvedValue();
 
           // open schema tree
           await triggerTreeItem(
@@ -196,8 +207,7 @@ describe('The SQLEditorSchemaTree component', () => {
           // click on Copy CREATE TABLE button
           await user.click(screen.getByText(`Copy CREATE TABLE`));
 
-          const clipboardText = await navigator.clipboard.readText();
-          expect(clipboardText).toBe(
+          expect(writeTextMock).toHaveBeenCalledWith(
             formatSQL(`${getTablesDDLQueryResult.rows[0][0]};`, {
               language: 'postgresql',
             }),
@@ -280,6 +290,9 @@ describe('The SQLEditorSchemaTree component', () => {
 
     it('clicking on column names copies the name', async () => {
       const { user } = await setup();
+      const writeTextMock = jest
+        .spyOn(navigator.clipboard, 'writeText')
+        .mockResolvedValue();
 
       const schema = schemaTableColumns[0];
       const table = schema.tables[0];
@@ -294,12 +307,14 @@ describe('The SQLEditorSchemaTree component', () => {
       await user.click(screen.getByText(column.column_name));
 
       // should have been copied
-      const clipboardText = await navigator.clipboard.readText();
-      expect(clipboardText).toBe(column.column_name);
+      expect(writeTextMock).toHaveBeenCalledWith(column.column_name);
     });
 
     it('clicking on subcolumn names copies the name', async () => {
       const { user } = await setup();
+      const writeTextMock = jest
+        .spyOn(navigator.clipboard, 'writeText')
+        .mockResolvedValue();
 
       const schema = schemaTableColumns[4];
       const table = schema.tables[2];
@@ -316,8 +331,7 @@ describe('The SQLEditorSchemaTree component', () => {
       await user.click(screen.getByText(subColumn.column_name));
 
       // should have been copied
-      const clipboardText = await navigator.clipboard.readText();
-      expect(clipboardText).toBe(
+      expect(writeTextMock).toHaveBeenCalledWith(
         `${column.column_name}['${subColumn.column_name}']`,
       );
     });

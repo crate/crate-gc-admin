@@ -1,6 +1,6 @@
-import { DefaultBodyType, RestHandler, rest } from 'msw';
+import { DefaultBodyType, http, HttpHandler, HttpResponse } from 'msw';
 
-export type HandlerFactoryType = (respondWith: DefaultBodyType) => RestHandler;
+export type HandlerFactoryType = (respondWith: DefaultBodyType) => HttpHandler;
 
 type MSWHttpMethod = 'GET' | 'POST';
 
@@ -11,10 +11,10 @@ export default function handlerFactory(
   return (respondWith: DefaultBodyType) => {
     switch (method) {
       case 'GET': {
-        return rest.get(url, (_, res, ctx) => res(ctx.json(respondWith)));
+        return http.get(url, () => HttpResponse.json(respondWith));
       }
       case 'POST': {
-        return rest.post(url, (_, res, ctx) => res(ctx.json(respondWith)));
+        return http.post(url, () => HttpResponse.json(respondWith));
       }
     }
   };

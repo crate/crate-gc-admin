@@ -1,4 +1,4 @@
-import { RestHandler, rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import {
   getTablesColumnsResult,
   getTablesDDLQueryResult,
@@ -24,14 +24,11 @@ import {
   getViewsDDLQuery,
 } from 'constants/queries';
 
-const executeJWTQueryPost: RestHandler = rest.post(
+const executeJWTQueryPost = http.post(
   'http://localhost:4200/_sql',
-  async (req, res, ctx) => {
-    const ident = req.url.searchParams
-      .get('ident')
-      ?.split('/')
-      .slice(0, 2)
-      .join('/');
+  async ({ request }) => {
+    const url = new URL(request.url);
+    const ident = url.searchParams.get('ident')?.split('/').slice(0, 2).join('/');
     let result: null | object = null;
 
     switch (ident) {
@@ -84,37 +81,34 @@ const executeJWTQueryPost: RestHandler = rest.post(
         result = queryResult; // todo
     }
 
-    return res(ctx.status(200), ctx.json(result));
+    return HttpResponse.json(result);
   },
 );
 
-const executeQueryPost: RestHandler = rest.post(
-  '/api/_sql',
-  async (req, res, ctx) => {
-    const body = await req.json();
+const executeQueryPost = http.post('/api/_sql', async ({ request }) => {
+  const body = (await request.json()) as { stmt: string };
 
-    let result: null | object = null;
+  let result: null | object = null;
 
-    switch (body.stmt) {
-      case getTablesDDLQuery('new_schema', 'new_table'):
-        result = getTablesDDLQueryResult;
-        break;
-      case getViewsDDLQuery('new_schema', 'new_view'):
-        result = getViewsDDLQueryResult;
-        break;
-      case getTablesColumnsQuery:
-        result = getTablesColumnsResult;
-        break;
-      default:
-        result = queryResult;
-        break;
-    }
+  switch (body?.stmt) {
+    case getTablesDDLQuery('new_schema', 'new_table'):
+      result = getTablesDDLQueryResult;
+      break;
+    case getViewsDDLQuery('new_schema', 'new_view'):
+      result = getViewsDDLQueryResult;
+      break;
+    case getTablesColumnsQuery:
+      result = getTablesColumnsResult;
+      break;
+    default:
+      result = queryResult;
+      break;
+  }
 
-    return res(ctx.status(200), ctx.json(result));
-  },
-);
+  return HttpResponse.json(result);
+});
 
-export const executeJWTQueryHandlers: RestHandler[] = [executeJWTQueryPost];
-export const executeQueryHandlers: RestHandler[] = [executeQueryPost];
+export const executeJWTQueryHandlers = [executeJWTQueryPost];
+export const executeQueryHandlers = [executeQueryPost];
 
 export const customExecuteQueryResponse = handlerFactory('/api/_sql', 'POST');
