@@ -1,24 +1,18 @@
-import { rest, RestHandler } from 'msw';
+import { http, HttpResponse } from 'msw';
 
-const clusterJWT: RestHandler = rest.get(
-  '/api/v2/clusters/undefined/jwt',
-  (_, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        data: { cluster_id: 'my-local-test-cluster' },
-        status: 200,
-        success: true,
-      }),
-    );
-  },
-);
+const clusterJWT = http.get('/api/v2/clusters/undefined/jwt', () => {
+  return HttpResponse.json(
+    {
+      data: { cluster_id: 'my-local-test-cluster' },
+      status: 200,
+      success: true,
+    },
+    { status: 200 },
+  );
+});
 
-const clusterAuth: RestHandler = rest.get(
-  'http://localhost:5050/api/auth',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json({}));
-  },
-);
+const clusterAuth = http.get('http://localhost:5050/api/auth', () => {
+  return HttpResponse.json({}, { status: 200 });
+});
 
-export const jwtHandlers: RestHandler[] = [clusterJWT, clusterAuth];
+export const jwtHandlers = [clusterJWT, clusterAuth];
