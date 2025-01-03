@@ -31,7 +31,7 @@ export default {
     '.+\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(svg|png)$': '<rootDir>/test/__mocks__/empty-module.ts',
   },
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-fixed-jsdom',
   testEnvironmentOptions: {
     customExportConditions: [''],
   },

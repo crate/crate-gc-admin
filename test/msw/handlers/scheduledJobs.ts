@@ -1,4 +1,4 @@
-import { rest, RestHandler } from 'msw';
+import { http, HttpResponse } from 'msw';
 import handlerFactory from 'test/msw/handlerFactory';
 import scheduledJob from 'test/__mocks__/scheduledJob';
 import scheduledJobs from 'test/__mocks__/scheduledJobs';
@@ -7,63 +7,60 @@ import {
   scheduledJobLogsWithName,
 } from 'test/__mocks__/scheduledJobLogs';
 
-const getAllScheduledJobs: RestHandler = rest.get(
+const getAllScheduledJobs = http.get(
   'http://localhost:5050/api/scheduled-jobs/',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(scheduledJobs));
+  () => {
+    return HttpResponse.json(scheduledJobs);
   },
 );
 
-const createJobPost: RestHandler = rest.post(
-  'http://localhost:5050/api/scheduled-jobs/',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(scheduledJob));
-  },
-);
+const createJobPost = http.post('http://localhost:5050/api/scheduled-jobs/', () => {
+  return HttpResponse.json(scheduledJob);
+});
 
-const updateJobPut: RestHandler = rest.put(
+const updateJobPut = http.put(
   'http://localhost:5050/api/scheduled-jobs/:jobId',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(scheduledJob));
+  () => {
+    return HttpResponse.json(scheduledJob);
   },
 );
 
-const getScheduledJobLogs: RestHandler = rest.get(
+const getScheduledJobLogs = http.get(
   'http://localhost:5050/api/scheduled-jobs/:jobId/log',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(scheduledJobLogs));
+  () => {
+    return HttpResponse.json(scheduledJobLogs);
   },
 );
 
-const getAllScheduledJobLogs: RestHandler = rest.get(
+const getAllScheduledJobLogs = http.get(
   'http://localhost:5050/api/scheduled-jobs/logs',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(scheduledJobLogsWithName));
+  () => {
+    return HttpResponse.json(scheduledJobLogsWithName);
   },
 );
 
-const getAllLogs: RestHandler = rest.get(
+const getAllLogs = http.get(
   'http://localhost:5050/api/scheduled-jobs/all/logs',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(scheduledJobLogsWithName));
+  () => {
+    return HttpResponse.json(scheduledJobLogsWithName);
   },
 );
 
-const getScheduledJob: RestHandler = rest.get(
+const getScheduledJob = http.get(
   'http://localhost:5050/api/scheduled-jobs/:jobId',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(scheduledJob));
+  () => {
+    return HttpResponse.json(scheduledJob);
   },
 );
 
-const deleteScheduledJob: RestHandler = rest.delete(
+const deleteScheduledJob = http.delete(
   'http://localhost:5050/api/scheduled-jobs/:jobId',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(null));
+  () => {
+    return HttpResponse.json(null);
   },
 );
 
-export const scheduledJobHandlers: RestHandler[] = [
+export const scheduledJobHandlers = [
   getAllScheduledJobs,
   createJobPost,
   updateJobPut,
