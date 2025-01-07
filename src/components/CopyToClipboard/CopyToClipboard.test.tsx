@@ -30,11 +30,13 @@ describe('the CopyToClipboard component', () => {
   describe('when the user clicks the button', () => {
     it('copies the text to the clipboard', async () => {
       const { user } = setup();
+      const writeTextMock = jest
+        .spyOn(navigator.clipboard, 'writeText')
+        .mockResolvedValue();
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));
 
-      const clipboardText = await navigator.clipboard.readText();
-      expect(clipboardText).toBe('example-string');
+      expect(writeTextMock).toHaveBeenCalledWith('example-string');
     });
 
     it('displays a success message', async () => {

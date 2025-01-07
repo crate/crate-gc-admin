@@ -1,73 +1,61 @@
-import { RestHandler, rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import policies from 'test/__mocks__/policies';
 import { policiesLogs, policiesLogsWithName } from 'test/__mocks__/policiesLogs';
 import { policy, policyEligibleColumns, policyPreview } from 'test/__mocks__/policy';
 import handlerFactory from 'test/msw/handlerFactory';
 
-const getAllPolicy: RestHandler = rest.get(
-  'http://localhost:5050/api/policies/',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policies));
-  },
-);
+const getAllPolicy = http.get('http://localhost:5050/api/policies/', () => {
+  return HttpResponse.json(policies);
+});
 
-const getAllPoliciesLogs: RestHandler = rest.get(
+const getAllPoliciesLogs = http.get(
   'http://localhost:5050/api/policies/logs',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policiesLogsWithName));
+  () => {
+    return HttpResponse.json(policiesLogsWithName);
   },
 );
 
-const getPolicy: RestHandler = rest.get(
+const getPolicy = http.get('http://localhost:5050/api/policies/:policyId', () => {
+  return HttpResponse.json(policy);
+});
+
+const createPolicy = http.post('http://localhost:5050/api/policies/', () => {
+  return HttpResponse.json(policy);
+});
+
+const updatePolicy = http.put('http://localhost:5050/api/policies/:policyId', () => {
+  return HttpResponse.json(policy);
+});
+
+const deletePolicy = http.delete(
   'http://localhost:5050/api/policies/:policyId',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policy));
+  () => {
+    return HttpResponse.json(null);
   },
 );
 
-const createPolicy: RestHandler = rest.post(
-  'http://localhost:5050/api/policies/',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policy));
-  },
-);
-
-const updatePolicy: RestHandler = rest.put(
-  'http://localhost:5050/api/policies/:policyId',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policy));
-  },
-);
-
-const deletePolicy: RestHandler = rest.delete(
-  'http://localhost:5050/api/policies/:policyId',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(null));
-  },
-);
-
-const getPolicyLogs: RestHandler = rest.get(
+const getPolicyLogs = http.get(
   'http://localhost:5050/api/policies/:policyId/log',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policiesLogs));
+  () => {
+    return HttpResponse.json(policiesLogs);
   },
 );
 
-const getPolicyPreview: RestHandler = rest.post(
+const getPolicyPreview = http.post(
   'http://localhost:5050/api/policies/preview',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policyPreview));
+  () => {
+    return HttpResponse.json(policyPreview);
   },
 );
 
-const getEligibleColumn: RestHandler = rest.post(
+const getEligibleColumn = http.post(
   'http://localhost:5050/api/policies/eligible-columns/',
-  (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(policyEligibleColumns));
+  () => {
+    return HttpResponse.json(policyEligibleColumns);
   },
 );
 
-export const policiesHandlers: RestHandler[] = [
+export const policiesHandlers = [
   getAllPolicy,
   getAllPoliciesLogs,
   getPolicy,

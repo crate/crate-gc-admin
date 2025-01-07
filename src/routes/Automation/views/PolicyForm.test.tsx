@@ -596,9 +596,11 @@ describe('The "PolicyForm" component', () => {
       ).toBeTruthy();
 
       // Time Column
-      expect(screen.getByName('select-column-name')).toHaveValue(
-        policyInput.partitioning.column_name,
-      );
+      await waitFor(() => {
+        expect(screen.getByName('select-column-name')).toHaveValue(
+          policyInput.partitioning.column_name,
+        );
+      });
 
       // Partitioning condition
       expect(screen.getByName('select-operation')).toHaveValue(

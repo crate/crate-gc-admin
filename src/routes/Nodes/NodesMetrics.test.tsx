@@ -6,7 +6,7 @@ import prettyBytes from 'pretty-bytes';
 import { VERTICAL_PROGRESS_BARS } from 'components/VerticalProgress/VerticalProgress';
 import { formatNum } from 'utils';
 import useSessionStore from 'src/state/session';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { useClusterNodeStatusMock } from 'test/__mocks__/useClusterNodeStatusMock';
 import { clusterNode } from 'test/__mocks__/nodes';
 import { useShardsMock } from 'test/__mocks__/useShardsMock';
@@ -138,12 +138,12 @@ describe('The Nodes component', () => {
 
       it('is not shown if the node is not master', async () => {
         server.use(
-          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
-            const url = new URL(req.url);
+          http.post('http://localhost:4200/_sql', ({ request }) => {
+            const url = new URL(request.url);
             const ident = url.searchParams.get('ident');
 
             if (ident === '/use-cluster-node-status/undefined') {
-              return res(ctx.json(notMasterNode));
+              return HttpResponse.json(notMasterNode);
             }
           }),
         );
@@ -161,12 +161,12 @@ describe('The Nodes component', () => {
     describe('the status light', () => {
       it('shows the unreachable status light when node is in unreachable status', async () => {
         server.use(
-          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
-            const url = new URL(req.url);
+          http.post('http://localhost:4200/_sql', ({ request }) => {
+            const url = new URL(request.url);
             const ident = url.searchParams.get('ident');
 
             if (ident === '/use-cluster-node-status/undefined') {
-              return res(ctx.json(unreachableNode));
+              return HttpResponse.json(unreachableNode);
             }
           }),
         );
@@ -182,12 +182,12 @@ describe('The Nodes component', () => {
 
       it('shows the warning status light when node is in warning status', async () => {
         server.use(
-          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
-            const url = new URL(req.url);
+          http.post('http://localhost:4200/_sql', ({ request }) => {
+            const url = new URL(request.url);
             const ident = url.searchParams.get('ident');
 
             if (ident === '/use-cluster-node-status/undefined') {
-              return res(ctx.json(warningNode));
+              return HttpResponse.json(warningNode);
             }
           }),
         );
@@ -203,12 +203,12 @@ describe('The Nodes component', () => {
 
       it('shows the critical status light when node is in critical status', async () => {
         server.use(
-          rest.post('http://localhost:4200/_sql', (req, res, ctx) => {
-            const url = new URL(req.url);
+          http.post('http://localhost:4200/_sql', ({ request }) => {
+            const url = new URL(request.url);
             const ident = url.searchParams.get('ident');
 
             if (ident === '/use-cluster-node-status/undefined') {
-              return res(ctx.json(criticalNode));
+              return HttpResponse.json(criticalNode);
             }
           }),
         );
