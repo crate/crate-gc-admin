@@ -67,6 +67,9 @@ function TypeAwareValue({
     case ColumnType.UNCHECKED_OBJECT:
       ret = <JSONTree json={value as object} />;
       break;
+    case ColumnType.ROW:
+      ret = <JSONTree json={value as object} arrayLabel="Row" />;
+      break;
     case ColumnType.FLOAT_VECTOR:
       ret = <JSONTree json={value as object} arrayLabel="Vector" />;
       break;

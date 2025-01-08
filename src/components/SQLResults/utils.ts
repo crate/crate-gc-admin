@@ -38,6 +38,8 @@ export const dbTypeToHumanReadable = (tp: ColumnType | ColumnType[] | undefined)
       return 'timestamp';
     case ColumnType.UNCHECKED_OBJECT:
       return 'object';
+    case ColumnType.ROW:
+      return 'row';
     case ColumnType.REGPROC:
       return 'regproc';
     case ColumnType.TIME:
