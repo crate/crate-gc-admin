@@ -23,6 +23,7 @@ export enum ColumnType {
   GEOSHAPE = 14,
   TIMESTAMP_WITHOUT_TZ = 15,
   UNCHECKED_OBJECT = 16,
+  ROW = 18,
   REGPROC = 19,
   TIME = 20,
   OIDVECTOR = 21,

@@ -2,17 +2,20 @@
 
 ## Unreleased
 
-- Dependabot: bump node from 23.3.0-slim to 23.5.0-slim
-- Dependabot: bump @radix-ui/react-select from 2.1.1 to 2.1.4
-- Dependabot: bump less from 4.2.0 to 4.2.1
-- Dependabot: bump ts-jest from 29.1.5 to 29.2.5
-- Dependabot: bump eslint-plugin-react from 7.34.3 to 7.37.3
-- Dependabot: bump tailwind-merge from 2.5.4 to 2.6.0
-- Dependabot: bump react-intl from 6.6.8 to 7.0.4
-- Dependabot: bump @radix-ui/react-slot from 1.1.0 to 1.1.1
-- Dependabot: bump @radix-ui/react-label from 2.1.0 to 2.1.1
-- Dependabot: bump postcss from 8.4.47 to 8.4.49
-- Dependabot: bump msw from 1.3.2 to 2.7.0
+## 2025-01-08 - 0.19.10
+
+- Dependabot: bump node from 23.3.0-slim to 23.5.0-slim.
+- Dependabot: bump @radix-ui/react-select from 2.1.1 to 2.1.4.
+- Dependabot: bump less from 4.2.0 to 4.2.1.
+- Dependabot: bump ts-jest from 29.1.5 to 29.2.5.
+- Dependabot: bump eslint-plugin-react from 7.34.3 to 7.37.3.
+- Dependabot: bump tailwind-merge from 2.5.4 to 2.6.0.
+- Dependabot: bump react-intl from 6.6.8 to 7.0.4.
+- Dependabot: bump @radix-ui/react-slot from 1.1.0 to 1.1.1.
+- Dependabot: bump @radix-ui/react-label from 2.1.0 to 2.1.1.
+- Dependabot: bump postcss from 8.4.47 to 8.4.49.
+- Dependabot: bump msw from 1.3.2 to 2.7.0.
+- Add missing "row" column type to SQL results table.
 
 ## 2024-12-19 - 0.19.9
 
