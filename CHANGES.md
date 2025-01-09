@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2025-01-27 - 0.19.11
+
+- Do not show non-partitioned tables in the automation policy form.
+- Dependabot: bump vite from 5.4.10 to 5.4.12.
+
 ## 2025-01-08 - 0.19.10
 
 - Dependabot: bump node from 23.3.0-slim to 23.5.0-slim.

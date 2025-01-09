@@ -13,7 +13,8 @@ const QUERY = `
         t.table_name,
         t.number_of_shards,
         t.number_of_replicas,
-        IF ((t.table_schema IN ('information_schema', 'sys', 'pg_catalog', 'gc')), true, false) as system
+        IF ((t.table_schema IN ('information_schema', 'sys', 'pg_catalog', 'gc')), true, false) AS system,
+        t.partitioned_by IS NOT NULL AS is_partitioned
       FROM
         information_schema.tables t
       ORDER BY
@@ -35,6 +36,7 @@ const postFetch = (data: QueryResultSuccess): TableListEntry[] => {
     number_of_shards: r[2],
     number_of_replicas: r[3],
     system: r[4],
+    is_partitioned: r[5],
   }));
 };
 

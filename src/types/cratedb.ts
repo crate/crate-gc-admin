@@ -114,6 +114,7 @@ export type TableListEntry = {
   number_of_shards: number;
   number_of_replicas: string;
   system: boolean;
+  is_partitioned: boolean;
 };
 
 export type TableInfo = {
