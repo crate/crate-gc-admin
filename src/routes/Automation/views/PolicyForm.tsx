@@ -16,6 +16,7 @@ import useGcApi from 'hooks/useGcApi';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { Empty } from 'antd';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Policy,
@@ -79,6 +80,8 @@ export default function PolicyForm(props: PolicyFormProps) {
     targets: policyTargets,
     partitioning: policyPartitioning,
   });
+
+  const validTables = tables?.filter(t => !t.system && t.is_partitioned);
 
   const backToPolicyList = () => {
     navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.POLICIES}`);
@@ -202,15 +205,16 @@ export default function PolicyForm(props: PolicyFormProps) {
                 name="targets"
                 render={({ field }) => {
                   const treeElements = mapTableListEntriesToTreeItem(
-                    tables!,
+                    validTables!,
                     policyTargets,
                   );
 
-                  const handleTreeCheck = ({
-                    checked: checkedKeys,
-                  }: {
+                  const handleTreeCheck = (selectedKeys: {
                     checked: string[];
+                    halfChecked: string[];
                   }) => {
+                    const checkedKeys = selectedKeys.checked;
+
                     const targets = checkedKeys.map(key => {
                       const schemaMatches = treeElements.find(
                         schema => schema.key === key,
@@ -223,6 +227,10 @@ export default function PolicyForm(props: PolicyFormProps) {
                     });
                     form.setValue('targets', targets);
                   };
+
+                  if (validTables!.length === 0) {
+                    return <Empty className="mt-4" />;
+                  }
 
                   return (
                     <>
