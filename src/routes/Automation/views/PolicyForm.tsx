@@ -81,7 +81,7 @@ export default function PolicyForm(props: PolicyFormProps) {
     partitioning: policyPartitioning,
   });
 
-  const validTables = tables?.filter(t => !t.system && t.is_partitioned);
+  const validTables = tables?.filter(t => !t.system && t.is_partitioned) || [];
 
   const backToPolicyList = () => {
     navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.POLICIES}`);
