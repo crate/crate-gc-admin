@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## 2025-02-06 - 0.19.12
+
+- Fix a race-condition bug in Automation PolicyForm.
+- Dependabot: bump node from 23.5.0-slim to 23.7.0-slim.
+- Dependabot: bump react-syntax-highlighter from 15.5.0 to 15.6.1.
+- Dependabot: bump @vitejs/plugin-react-swc from 3.7.0 to 3.7.2.
+- Dependabot: bump postcss from 8.4.49 to 8.5.1.
+- Dependabot: bump @types/lodash from 4.17.13 to 4.17.15.
+- Dependabot: bump zustand from 5.0.1 to 5.0.3.
+- Dependabot: bump @tanstack/react-table from 8.20.5 to 8.20.6.
+- Dependabot: bump @testing-library/user-event from 14.5.2 to 14.6.1.
+- Dependabot: bump react-resizable-panels from 2.1.6 to 2.1.7.
+- Dependabot: bump @typescript-eslint/eslint-plugin from 6.21.0 to 7.0.0.
+- Dependabot: bump tailwind-merge from 2.6.0 to 3.0.1.
+
 ## 2025-01-27 - 0.19.11
 
 - Do not show non-partitioned tables in the automation policy form.
