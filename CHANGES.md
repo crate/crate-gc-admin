@@ -1,6 +1,8 @@
 # Grand Central Changelog
 
-## Unreleased
+## 2025-02-17 - 0.19.13
+
+- Upgrade @cratedb/cratedb-sqlparse to 0.0.13.
 
 ## 2025-02-06 - 0.19.12
 
