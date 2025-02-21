@@ -55,7 +55,7 @@ function SQLResultsTable({ result }: Params) {
       <div className="p-4">
         <div className="flex min-h-12 flex-row items-center justify-between rounded border p-2">
           <div className="flex items-center gap-4 pr-2 text-sm">
-            <Chip className="bg-red-600 uppercase text-white">Error</Chip>
+            <Chip color={Chip.colors.RED}>Error</Chip>
             {typeof result.error.code !== 'undefined' && (
               <a
                 href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
@@ -317,7 +317,7 @@ function SQLResultsTable({ result }: Params) {
         paginationContent={
           <div className="flex w-full items-center gap-4">
             <div className="flex items-center gap-2 text-xs">
-              <Chip className="bg-green-600 text-white">OK</Chip>
+              <Chip color={Chip.colors.GREEN}>OK</Chip>
               <div className="whitespace-nowrap leading-[1.1] text-neutral-600">
                 <div>
                   {`${result.rowcount}`} {result.rowcount === 1 ? 'row' : 'rows'}

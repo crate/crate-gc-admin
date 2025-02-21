@@ -78,4 +78,12 @@ describe('The Chip component', () => {
       );
     });
   });
+
+  describe('Adjusting the chip icon', () => {
+    it('can display a spinner icon', () => {
+      setup({ icon: Chip.icons.SPINNER });
+
+      expect(screen.getByTestId('chip-spinner-icon')).toBeInTheDocument();
+    });
+  });
 });
