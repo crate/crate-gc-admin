@@ -132,7 +132,7 @@ export default function JobForm(props: JobFormProps) {
                 Result #{index}
               </div>
             ) : null}
-            <Chip className="bg-red-600 uppercase text-white">Error</Chip>
+            <Chip color={Chip.colors.RED}>Error</Chip>
             <a
               href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
               target="_blank"
@@ -154,7 +154,9 @@ export default function JobForm(props: JobFormProps) {
                 Result #{index}
               </div>
             ) : null}
-            <Chip className="mr-1.5 bg-green-600 text-white">OK</Chip>
+            <Chip color={Chip.colors.GREEN} className="mr-1.5">
+              OK
+            </Chip>
             {`${queryResult.result.rowcount} rows, ${(Math.round(queryResult?.result.duration) / 1000).toFixed(3)} seconds`}
           </div>
         )

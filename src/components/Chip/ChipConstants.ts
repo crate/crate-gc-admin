@@ -15,3 +15,9 @@ export const COLOR_STYLES_MAP: {
   [AVAILABLE_CHIP_COLORS.RED]: 'bg-red-600 text-white',
   [AVAILABLE_CHIP_COLORS.GREEN]: 'bg-green-600 text-white',
 } as const;
+
+export const AVAILABLE_CHIP_ICONS = {
+  SPINNER: 'SPINNER',
+} as const;
+
+export type ICON_STYLES_MAP = keyof typeof AVAILABLE_CHIP_ICONS;

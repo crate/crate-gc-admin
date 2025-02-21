@@ -1,5 +1,9 @@
 # Grand Central Changelog
 
+## 2025-02-21 - 0.19.14
+
+- Add icon to Chip component and fix inconsistent usage.
+
 ## 2025-02-17 - 0.19.13
 
 - Upgrade @cratedb/cratedb-sqlparse to 0.0.13.
