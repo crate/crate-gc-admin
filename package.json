@@ -1,6 +1,6 @@
 {
   "name": "@cratedb/crate-gc-admin",
-  "version": "0.19.14",
+  "version": "0.19.15",
   "author": "cratedb",
   "private": false,
   "type": "module",

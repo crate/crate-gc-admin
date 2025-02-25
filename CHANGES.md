@@ -1,5 +1,9 @@
 # Grand Central Changelog
 
+## 2025-02-25 - 0.19.15
+
+- Fix DDL/DQL copy to clipboard on Safari.
+
 ## 2025-02-21 - 0.19.14
 
 - Add icon to Chip component and fix inconsistent usage.
