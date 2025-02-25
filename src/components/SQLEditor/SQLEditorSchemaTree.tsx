@@ -216,7 +216,13 @@ function SQLEditorSchemaTree() {
           const ddlStatement = `${ddlResult.data.rows[0][0]};`;
 
           // format and copy
-          navigator.clipboard.writeText(tryFormatSql(ddlStatement));
+          // need to use the setTimeout because API results
+          // are not considered a user-event
+          // and this causes it to fail on safari
+          setTimeout(async () => {
+            await navigator.clipboard.writeText(tryFormatSql(ddlStatement));
+          });
+
           showSuccessMessage('Copied');
         } else {
           showErrorMessage('Error genering DDL statement.');
@@ -230,7 +236,13 @@ function SQLEditorSchemaTree() {
           .join(', ')} FROM ${table.path.join('.')} LIMIT 100;`;
 
         // format and copy
-        navigator.clipboard.writeText(tryFormatSql(dqlStatement));
+        // need to use the setTimeout because API results
+        // are not considered a user-event
+        // and this causes it to fail on safari
+        setTimeout(async () => {
+          await navigator.clipboard.writeText(tryFormatSql(dqlStatement));
+        });
+
         showSuccessMessage('Copied');
       };
 
