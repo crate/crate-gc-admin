@@ -1,5 +1,9 @@
 # Grand Central Changelog
 
+## 2025-03-03 - 0.19.16
+
+- Export useExecuteSql hook.
+
 ## 2025-02-25 - 0.19.15
 
 - Fix DDL/DQL copy to clipboard on Safari.
