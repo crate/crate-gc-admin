@@ -1,5 +1,7 @@
 # Grand Central Changelog
 
+- Catching eslint errors at run-time.
+
 ## 2025-03-03 - 0.19.16
 
 - Export useExecuteSql hook.
