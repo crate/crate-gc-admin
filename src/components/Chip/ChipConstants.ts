@@ -5,9 +5,10 @@ export const AVAILABLE_CHIP_COLORS = {
   RED: 'RED',
   GREEN: 'GREEN',
 } as const;
+type AvailableChipColorsKeys = keyof typeof AVAILABLE_CHIP_COLORS;
 
 export const COLOR_STYLES_MAP: {
-  [key in keyof typeof AVAILABLE_CHIP_COLORS]: string;
+  [key in AvailableChipColorsKeys]: string;
 } = {
   [AVAILABLE_CHIP_COLORS.GRAY]: 'bg-gray-300 text-black',
   [AVAILABLE_CHIP_COLORS.BLUE]: 'bg-crate-blue text-white',

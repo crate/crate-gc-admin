@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading,react/button-has-type */
 import React, { useMemo } from 'react';
 import Loader from 'components/Loader';
 import useButtonStyles from './useButtonStyles';
