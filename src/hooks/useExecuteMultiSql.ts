@@ -55,7 +55,7 @@ export default function useExecuteMultiSql() {
     try {
       parsedQueries = parseQueries(multipleQueries);
       errorStatement = parsedQueries.find(stmt => stmt.exception);
-    } catch (e) {
+    } catch {
       parsedQueries = [];
       errorStatement = {
         exception: { line: 1, message: 'Unable to parse queries' },

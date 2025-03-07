@@ -1,6 +1,19 @@
 # Grand Central Changelog
 
 - Catching eslint errors at run-time.
+- Dependabot: bump node from 23.7.0-slim to 23.9.0-slim.
+- Dependabot: bump nginx from 1.27.3 to 1.27.4.
+- Dependabot: bump react-ace from 13.0.0 to 14.0.1.
+- Dependabot: bump web-vitals from 2.1.4 to 4.2.4.
+- Dependabot: bump vite-tsconfig-paths from 4.3.2 to 5.1.4.
+- Dependabot: bump msw from 2.7.0 to 2.7.3.
+- Dependabot: bump recharts from 2.12.7 to 2.15.1.
+- Dependabot: bump axios from 1.7.4 to 1.8.1.
+- Dependabot: bump @tanstack/react-table from 8.20.6 to 8.21.2.
+- Dependabot: bump class-variance-authority from 0.7.0 to 0.7.1.
+- Dependabot: bump eslint-config-prettier from 9.1.0 to 10.0.2.
+- Dependabot: bump @typescript-eslint/eslint-plugin from 7.18.0 to 8.26.0.
+- Dependabot: bump @typescript-eslint/parser from 6.17.0 to 8.26.0.
 
 ## 2025-03-03 - 0.19.16
 

@@ -49,7 +49,7 @@ export type JobLogWithName = JobLog & {
   job_name: string;
 };
 
-const JobFormSchemaInput = z.object({
+export const JobFormSchemaInput = z.object({
   name: z.string(),
   cron: z.string(),
   enabled: z.boolean().default(true),
