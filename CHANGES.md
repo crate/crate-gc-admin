@@ -11,7 +11,7 @@
 - Dependabot: bump axios from 1.7.4 to 1.8.1.
 - Dependabot: bump @tanstack/react-table from 8.20.6 to 8.21.2.
 - Dependabot: bump class-variance-authority from 0.7.0 to 0.7.1.
-- Dependabot: bump eslint-config-prettier from 9.1.0 to 10.0.2.
+- Dependabot: bump eslint-config-prettier from 9.1.0 to 10.1.1.
 - Dependabot: bump @typescript-eslint/eslint-plugin from 7.18.0 to 8.26.0.
 - Dependabot: bump @typescript-eslint/parser from 6.17.0 to 8.26.0.
 
