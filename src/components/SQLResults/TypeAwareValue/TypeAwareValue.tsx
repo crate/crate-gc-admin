@@ -55,7 +55,7 @@ function TypeAwareValue({
           <LinkOutlined /> {url.toString()}
         </a>
       );
-    } catch (_) {
+    } catch {
       // ignore, don't care
     }
   }

@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';

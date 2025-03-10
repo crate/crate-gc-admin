@@ -11,7 +11,7 @@ export const cronParser = (cron: string | undefined) => {
   }
   try {
     return cronstrue.toString(cron);
-  } catch (e) {
+  } catch {
     return null;
   }
 };

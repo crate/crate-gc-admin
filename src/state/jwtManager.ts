@@ -118,7 +118,7 @@ const useJWTManagerStore = create<JWTManagerStore>((set, get) => ({
         set({ gcStatus: ConnectionStatus.CONNECTED });
         return true;
       }
-    } catch (e) {
+    } catch {
       //
     }
 
