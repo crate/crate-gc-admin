@@ -5,7 +5,7 @@ import { formatNum, getNodeStatus } from 'utils';
 import {
   Chip,
   DataTable,
-  GCSpin,
+  Loader,
   StatusLight,
   Text,
   VerticalProgress,
@@ -251,7 +251,7 @@ function NodesMetrics() {
   const renderFS = (node: NodeStatusInfo) => {
     const stats = fsStats[node.id];
     if (!stats) {
-      return <GCSpin spinning={true} spinnerTestId={'loading-fs'} />;
+      return <Loader testId="loading-fs" />;
     }
 
     return (
@@ -321,11 +321,10 @@ function NodesMetrics() {
     );
   };
 
-  return (
-    <GCSpin spinning={!nodes || !cluster || !shards}>
-      <DataTable columns={columns} data={nodes!} disablePagination />
-    </GCSpin>
-  );
+  if (!nodes || !cluster || !shards) {
+    return <Loader />;
+  }
+  return <DataTable columns={columns} data={nodes!} disablePagination />;
 }
 
 export default NodesMetrics;

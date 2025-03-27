@@ -5,6 +5,7 @@ const defaultProps: LoaderProps = {
   size: Loader.sizes.SMALL,
   color: Loader.colors.PRIMARY,
 };
+
 const setup = (props: Partial<LoaderProps> = {}) => {
   const combinedProps = { ...defaultProps, ...props };
 
@@ -39,11 +40,19 @@ describe('The Loader component', () => {
     );
   });
 
-  it('adds a test id', () => {
+  it('adds a default test id', () => {
     setup();
 
     expect(screen.getByRole('alert').getAttribute('data-testid')).toBe(
       'crate-loading-spinner',
+    );
+  });
+
+  it('allows passing an optional custom test id', () => {
+    setup({ testId: 'custom-test-id' });
+
+    expect(screen.getByRole('alert').getAttribute('data-testid')).toBe(
+      'custom-test-id',
     );
   });
 

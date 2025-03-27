@@ -1,4 +1,4 @@
-import { DataTable, GCSpin, Text } from 'components';
+import { DataTable, Loader, Text } from 'components';
 import { useUsersRoles } from 'src/swr/jwt';
 import { ColumnDef } from '@tanstack/react-table';
 import { TeamOutlined, UserOutlined } from '@ant-design/icons';
@@ -135,8 +135,12 @@ function UsersTable() {
     );
   };
 
+  if (!usersRoles) {
+    return <Loader />;
+  }
+
   return (
-    <GCSpin spinning={!usersRoles}>
+    <>
       <Text>
         Learn more about Privileges in our{' '}
         <a href={CRATEDB_PRIVILEGES_DOCS} target="_blank">
@@ -150,7 +154,7 @@ function UsersTable() {
         data={usersRoles!}
         disablePagination
       />
-    </GCSpin>
+    </>
   );
 }
 

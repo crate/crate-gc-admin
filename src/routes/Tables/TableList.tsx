@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Spin } from 'antd';
 import {
   CaretDownOutlined,
   CaretRightOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
 import prettyBytes from 'pretty-bytes';
-import { StatusLight } from 'components';
+import { Loader, StatusLight } from 'components';
 import { formatHumanReadable } from 'utils/numbers';
 import { useAllocations, useShards, useTables } from 'src/swr/jwt';
 import {
@@ -242,7 +241,11 @@ function TableList({
   };
 
   if (schemas.length === 0) {
-    return <Spin />;
+    return (
+      <div className="flex h-full select-none flex-col border-r bg-crate-body-background p-4">
+        <Loader />
+      </div>
+    );
   }
   return (
     <div className="flex h-full select-none flex-col border-r bg-crate-body-background">

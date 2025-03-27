@@ -10,10 +10,11 @@ import { CloseOutlined, DownOutlined } from '@ant-design/icons';
 import { formatNum } from 'utils/numbers';
 import React, { useEffect, useState } from 'react';
 import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
-import GCSpin from 'components/GCSpin';
+import Loader from 'components/Loader';
 import logo from '../../assets/logo.svg';
 import useSessionStore from 'state/session';
 import useJWTManagerStore from 'state/jwtManager';
+import { LOADER_SIZES } from 'components/Loader/LoaderConstants';
 
 function StatusBar() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
@@ -39,10 +40,10 @@ function StatusBar() {
     };
   }, [mobileVisible]);
 
-  const spin = (
-    elem: React.JSX.Element | string | undefined | number | null = null,
+  const drawValueOrLoader = (
+    value: React.JSX.Element | string | undefined | number | null = null,
   ) => {
-    return <GCSpin spinning={!elem}>{elem}</GCSpin>;
+    return value ? value : <Loader size={LOADER_SIZES.SMALL} />;
   };
 
   const getVersion = () => {
@@ -58,7 +59,7 @@ function StatusBar() {
         </div>
       );
     }
-    return spin(nodeStatus && nodeStatus[0].version.number);
+    return drawValueOrLoader(nodeStatus && nodeStatus[0].version.number);
   };
 
   const getNumNodes = () => {
@@ -67,7 +68,7 @@ function StatusBar() {
     if (expected && current && current < expected) {
       return `${current} of ${expected}`;
     }
-    return spin(nodeStatus && nodeStatus.length);
+    return drawValueOrLoader(nodeStatus && nodeStatus.length);
   };
 
   const getDataStatus = () => {
@@ -100,7 +101,7 @@ function StatusBar() {
 
   const getLoadAverage = () => {
     if (!load || load.length == 0) {
-      return spin();
+      return drawValueOrLoader();
     }
 
     const last = load.slice(-1).pop();
@@ -119,7 +120,7 @@ function StatusBar() {
       >
         <div>
           <div className="text-xs uppercase opacity-50">Cluster</div>
-          <div>{spin(cluster?.name)}</div>
+          <div>{drawValueOrLoader(cluster?.name)}</div>
         </div>
         <div className="flex">
           <DownOutlined className="text-xs opacity-50" />
@@ -128,7 +129,7 @@ function StatusBar() {
       <div className="hidden select-none gap-8 leading-snug text-white md:flex">
         <div>
           <div className="text-xs uppercase opacity-50">Cluster</div>
-          <div>{spin(cluster?.name)}</div>
+          <div>{drawValueOrLoader(cluster?.name)}</div>
         </div>
         <div>
           <div className="text-xs uppercase opacity-50">Version</div>
@@ -148,7 +149,7 @@ function StatusBar() {
         </div>
         <div>
           <div className="text-xs uppercase opacity-50">User</div>
-          <div>{spin(currentUser)}</div>
+          <div>{drawValueOrLoader(currentUser)}</div>
         </div>
       </div>
       {mobileVisible && (
@@ -165,7 +166,7 @@ function StatusBar() {
               <div className="flex flex-col gap-8 leading-snug text-white">
                 <div>
                   <div className="text-xs uppercase opacity-50">Cluster</div>
-                  <div className="text-xl">{spin(cluster?.name)}</div>
+                  <div className="text-xl">{drawValueOrLoader(cluster?.name)}</div>
                 </div>
                 <div>
                   <div className="text-xs uppercase opacity-50">Version</div>
@@ -185,7 +186,7 @@ function StatusBar() {
                 </div>
                 <div>
                   <div className="text-xs uppercase opacity-50">User</div>
-                  <div className="text-xl">{spin(currentUser)}</div>
+                  <div className="text-xl">{drawValueOrLoader(currentUser)}</div>
                 </div>
               </div>
             </div>
