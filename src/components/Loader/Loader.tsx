@@ -13,14 +13,16 @@ export type LoaderProps = {
   color?: ValueOf<typeof LOADER_COLORS>;
   message?: React.ReactNode;
   size?: ValueOf<typeof LOADER_SIZES>;
+  testId?: string;
 };
 
 function Loader({
   align = 'left',
-  color,
+  color = LOADER_COLORS.PRIMARY,
   className = '',
   size = LOADER_SIZES.MEDIUM,
   message,
+  testId = 'crate-loading-spinner',
 }: LoaderProps) {
   return (
     <div
@@ -28,7 +30,7 @@ function Loader({
         flex: !!message,
         'items-center': !!message,
       })}
-      data-testid="crate-loading-spinner"
+      data-testid={testId}
       role="alert"
       title="loading"
     >

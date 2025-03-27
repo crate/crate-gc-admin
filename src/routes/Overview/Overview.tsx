@@ -1,5 +1,5 @@
 import { useAllocations, useClusterInfo, useQueryStats } from 'src/swr/jwt';
-import { GCSpin, Heading, GCChart } from 'components';
+import { Loader, Heading, GCChart } from 'components';
 import { Statistic, Tag } from 'antd';
 import { STATS_PERIOD } from 'components/StatsUpdater/StatsUpdater';
 import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
@@ -43,171 +43,172 @@ function Overview() {
     );
   };
 
+  if (!cluster || !allocations) {
+    return <Loader />;
+  }
   return (
-    <GCSpin spinning={!cluster || !allocations}>
-      <div>
-        <Heading level={Heading.levels.h1}>Cluster: {cluster?.name}</Heading>
-        <div className="mt-4 grid w-full grid-cols-4 gap-6 bg-gray-100 p-2">
-          <div className="rounded bg-white p-2">
-            <Statistic
-              title="Health"
-              valueRender={() => clusterStatusTag()}
-              value={0}
-            />
-          </div>
-          <div className="rounded bg-white p-2">
-            <Statistic
-              title="Available records"
-              value={formatHumanReadable(clusterStatus.totalDocsInPrimaryShards)}
-              suffix={
-                clusterStatus.primaryRecordAvailabilityPercent < 100 && (
-                  <span className="text-red-400">
-                    ({formatNum(clusterStatus.primaryRecordAvailabilityPercent)}%)
-                  </span>
-                )
-              }
-            />
-          </div>
-          <div className="rounded bg-white p-2 text-red-400">
-            <Statistic
-              title="Started primary shards"
-              value={clusterStatus.totalPrimaries - clusterStatus.missingPrimaries}
-              suffix={
-                clusterStatus.primaryShardAvailabilityPercent < 100 && (
-                  <span className="text-red-400">
-                    ({formatNum(clusterStatus.primaryShardAvailabilityPercent)}%)
-                  </span>
-                )
-              }
-            />
-          </div>
-          <div className="rounded bg-white p-2">
-            <Statistic
-              title="Started replica shards"
-              value={clusterStatus.totalReplicas - clusterStatus.missingReplicas}
-              suffix={
-                clusterStatus.replicaAvailabilityPercent < 100 && (
-                  <span className="text-amber-400">
-                    ({formatNum(clusterStatus.replicaAvailabilityPercent)}%)
-                  </span>
-                )
-              }
-            />
-          </div>
-        </div>
-        <div className="mt-4 grid w-full grid-cols-2 gap-6 bg-gray-100 p-2">
-          <div className="col-span-2">
-            <GCChart
-              title="Cluster Load"
-              data={load.map(l => {
-                return {
-                  time: l.probe_timestamp,
-                  l1: l['1'],
-                  l5: l['5'],
-                  l15: l['15'],
-                };
-              })}
-              config={{
-                areas: [{ key: 'l1', name: 'Load 1' }],
-                lines: [
-                  { key: 'l5', name: 'Load 5' },
-                  { key: 'l15', name: 'Load 15' },
-                ],
-                start_from: getStartTime(),
-              }}
-            />
-          </div>
-          <GCChart
-            title="Queries Per Second"
-            data={queryStats?.map(q => {
-              return {
-                time: q.ended_time,
-                SELECT: q.qps_select || 0,
-                UPDATE: q.qps_update || 0,
-                DDL: q.qps_ddl || 0,
-                INSERT: q.qps_insert || 0,
-                DELETE: q.qps_delete || 0,
-                OVERALL: q.qps || 0,
-              };
-            })}
-            config={{
-              areas: [
-                {
-                  key: 'OVERALL',
-                  name: 'OVERALL',
-                },
-              ],
-              lines: [
-                {
-                  key: 'SELECT',
-                  name: 'SELECT',
-                },
-                {
-                  key: 'UPDATE',
-                  name: 'UPDATE',
-                },
-                {
-                  key: 'INSERT',
-                  name: 'INSERT',
-                },
-                {
-                  key: 'DELETE',
-                  name: 'DELETE',
-                },
-                {
-                  key: 'DDL',
-                  name: 'DDL',
-                },
-              ],
-            }}
+    <div>
+      <Heading level={Heading.levels.h1}>Cluster: {cluster?.name}</Heading>
+      <div className="mt-4 grid w-full grid-cols-4 gap-6 bg-gray-100 p-2">
+        <div className="rounded bg-white p-2">
+          <Statistic
+            title="Health"
+            valueRender={() => clusterStatusTag()}
+            value={0}
           />
-          <GCChart
-            title="Query Speed (ms)"
-            data={queryStats?.map(q => {
-              return {
-                time: q.ended_time,
-                SELECT: q.dur_select || 0,
-                UPDATE: q.dur_update || 0,
-                DDL: q.dur_ddl || 0,
-                INSERT: q.dur_insert || 0,
-                DELETE: q.dur_delete || 0,
-                OVERALL: q.duration || 0,
-              };
-            })}
-            config={{
-              areas: [
-                {
-                  key: 'OVERALL',
-                  name: 'OVERALL',
-                },
-              ],
-              lines: [
-                {
-                  key: 'SELECT',
-                  name: 'SELECT',
-                },
-                {
-                  key: 'UPDATE',
-                  name: 'UPDATE',
-                },
-                {
-                  key: 'INSERT',
-                  name: 'INSERT',
-                },
-                {
-                  key: 'DELETE',
-                  name: 'DELETE',
-                },
-                {
-                  key: 'DDL',
-                  name: 'DDL',
-                },
-              ],
-            }}
+        </div>
+        <div className="rounded bg-white p-2">
+          <Statistic
+            title="Available records"
+            value={formatHumanReadable(clusterStatus.totalDocsInPrimaryShards)}
+            suffix={
+              clusterStatus.primaryRecordAvailabilityPercent < 100 && (
+                <span className="text-red-400">
+                  ({formatNum(clusterStatus.primaryRecordAvailabilityPercent)}%)
+                </span>
+              )
+            }
+          />
+        </div>
+        <div className="rounded bg-white p-2 text-red-400">
+          <Statistic
+            title="Started primary shards"
+            value={clusterStatus.totalPrimaries - clusterStatus.missingPrimaries}
+            suffix={
+              clusterStatus.primaryShardAvailabilityPercent < 100 && (
+                <span className="text-red-400">
+                  ({formatNum(clusterStatus.primaryShardAvailabilityPercent)}%)
+                </span>
+              )
+            }
+          />
+        </div>
+        <div className="rounded bg-white p-2">
+          <Statistic
+            title="Started replica shards"
+            value={clusterStatus.totalReplicas - clusterStatus.missingReplicas}
+            suffix={
+              clusterStatus.replicaAvailabilityPercent < 100 && (
+                <span className="text-amber-400">
+                  ({formatNum(clusterStatus.replicaAvailabilityPercent)}%)
+                </span>
+              )
+            }
           />
         </div>
       </div>
-    </GCSpin>
+      <div className="mt-4 grid w-full grid-cols-2 gap-6 bg-gray-100 p-2">
+        <div className="col-span-2">
+          <GCChart
+            title="Cluster Load"
+            data={load.map(l => {
+              return {
+                time: l.probe_timestamp,
+                l1: l['1'],
+                l5: l['5'],
+                l15: l['15'],
+              };
+            })}
+            config={{
+              areas: [{ key: 'l1', name: 'Load 1' }],
+              lines: [
+                { key: 'l5', name: 'Load 5' },
+                { key: 'l15', name: 'Load 15' },
+              ],
+              start_from: getStartTime(),
+            }}
+          />
+        </div>
+        <GCChart
+          title="Queries Per Second"
+          data={queryStats?.map(q => {
+            return {
+              time: q.ended_time,
+              SELECT: q.qps_select || 0,
+              UPDATE: q.qps_update || 0,
+              DDL: q.qps_ddl || 0,
+              INSERT: q.qps_insert || 0,
+              DELETE: q.qps_delete || 0,
+              OVERALL: q.qps || 0,
+            };
+          })}
+          config={{
+            areas: [
+              {
+                key: 'OVERALL',
+                name: 'OVERALL',
+              },
+            ],
+            lines: [
+              {
+                key: 'SELECT',
+                name: 'SELECT',
+              },
+              {
+                key: 'UPDATE',
+                name: 'UPDATE',
+              },
+              {
+                key: 'INSERT',
+                name: 'INSERT',
+              },
+              {
+                key: 'DELETE',
+                name: 'DELETE',
+              },
+              {
+                key: 'DDL',
+                name: 'DDL',
+              },
+            ],
+          }}
+        />
+        <GCChart
+          title="Query Speed (ms)"
+          data={queryStats?.map(q => {
+            return {
+              time: q.ended_time,
+              SELECT: q.dur_select || 0,
+              UPDATE: q.dur_update || 0,
+              DDL: q.dur_ddl || 0,
+              INSERT: q.dur_insert || 0,
+              DELETE: q.dur_delete || 0,
+              OVERALL: q.duration || 0,
+            };
+          })}
+          config={{
+            areas: [
+              {
+                key: 'OVERALL',
+                name: 'OVERALL',
+              },
+            ],
+            lines: [
+              {
+                key: 'SELECT',
+                name: 'SELECT',
+              },
+              {
+                key: 'UPDATE',
+                name: 'UPDATE',
+              },
+              {
+                key: 'INSERT',
+                name: 'INSERT',
+              },
+              {
+                key: 'DELETE',
+                name: 'DELETE',
+              },
+              {
+                key: 'DDL',
+                name: 'DDL',
+              },
+            ],
+          }}
+        />
+      </div>
+    </div>
   );
 }
 

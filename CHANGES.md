@@ -1,5 +1,7 @@
 # Grand Central Changelog
 
+## 2025-03-27 - 0.19.17
+
 - Catching eslint errors at run-time.
 - Dependabot: bump node from 23.7.0-slim to 23.9.0-slim.
 - Dependabot: bump nginx from 1.27.3 to 1.27.4.
@@ -14,6 +16,9 @@
 - Dependabot: bump eslint-config-prettier from 9.1.0 to 10.1.1.
 - Dependabot: bump @typescript-eslint/eslint-plugin from 7.18.0 to 8.26.0.
 - Dependabot: bump @typescript-eslint/parser from 6.17.0 to 8.26.0.
+- Replaced instances of GCSpin with Loader.
+- Removed unused GCSpin and CrateTable components.
+- Added default primary color and optional alternate testId to Loader.
 
 ## 2025-03-03 - 0.19.16
 

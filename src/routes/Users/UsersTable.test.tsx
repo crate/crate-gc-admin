@@ -25,7 +25,7 @@ describe('The UsersTable component', () => {
   it('renders a loader while loading the users', async () => {
     setup();
 
-    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+    expect(screen.getByTestId('crate-loading-spinner')).toBeInTheDocument();
 
     await waitForTableRender();
   });

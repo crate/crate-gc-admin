@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { GCSpin, NoDataView } from 'components';
+import { Loader, NoDataView } from 'components';
 import useJWTManagerStore from 'state/jwtManager';
 
 function Auth() {
@@ -28,13 +28,12 @@ function Auth() {
     doLogin();
   }, [specifiedToken]);
 
-  return (
-    <GCSpin spinning={status === undefined}>
-      {status === false && (
-        <NoDataView description="Could not authenticate to Grand Central: Invalid or missing token" />
-      )}
-    </GCSpin>
-  );
+  if (status === false) {
+    return (
+      <NoDataView description="Could not authenticate to Grand Central: Invalid or missing token" />
+    );
+  }
+  return <Loader />;
 }
 
 export default Auth;

@@ -135,7 +135,7 @@ export default function PolicyForm(props: PolicyFormProps) {
   if (showLoader || loadingTables) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
+        <Loader size={Loader.sizes.LARGE} />
       </div>
     );
   }

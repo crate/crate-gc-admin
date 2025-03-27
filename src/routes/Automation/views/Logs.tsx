@@ -297,7 +297,7 @@ export default function Logs() {
   if (isLoadingJobsLogs || !jobsLogs) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
+        <Loader size={Loader.sizes.LARGE} />
       </div>
     );
   }
