@@ -1,5 +1,7 @@
 # Grand Central Changelog
 
+- Dependabot: bump vite from 5.4.14 to 5.4.15.
+
 ## 2025-03-27 - 0.19.17
 
 - Catching eslint errors at run-time.
