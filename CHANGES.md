@@ -1,6 +1,17 @@
 # Grand Central Changelog
 
 - Dependabot: bump vite from 5.4.14 to 5.4.15.
+- Dependabot: bump prettier-plugin-tailwindcss from 0.6.9 to 0.6.11.
+- Dependabot: bump @eslint/compat from 1.2.7 to 1.2.8.
+- Dependabot: bump zod from 3.23.8 to 3.24.2.
+- Dependabot: bump @typescript-eslint/eslint-plugin from 8.26.0 to 8.29.0.
+- Dependabot: bump postcss from 8.5.1 to 8.5.3.
+- Dependabot: bump @vitejs/plugin-react-swc from 3.7.2 to 3.8.1.
+- Dependabot: bump @types/lodash from 4.17.15 to 4.17.16.
+- Dependabot: bump prettier from 3.3.3 to 3.5.3.
+- Dependabot: bump ace-builds from 1.36.5 to 1.39.1.
+- Dependabot: bump node from 23.9.0-slim to 23.11.0-slim.
+- Dependabot: bump @ant-design/icons from 5.5.2 to 6.0.0.
 
 ## 2025-03-27 - 0.19.17
 
