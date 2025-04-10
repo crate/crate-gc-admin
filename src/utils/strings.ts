@@ -7,10 +7,6 @@ export const capitalizeFirstLetter = (str: string) => {
 export const wrapText = (text: string, wrapSize: number) => {
   return text
     .split('\n')
-    .map(line =>
-      wrap(line, {
-        width: wrapSize,
-      }).trim(),
-    )
+    .map(line => wrap(line, { width: wrapSize }).trimEnd())
     .join('\n');
 };

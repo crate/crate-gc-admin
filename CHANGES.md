@@ -1,5 +1,9 @@
 # Grand Central Changelog
 
+## Unreleased
+
+## 2025-04-10 - 0.19.18
+
 - Dependabot: bump vite from 5.4.14 to 5.4.17.
 - Dependabot: bump prettier-plugin-tailwindcss from 0.6.9 to 0.6.11.
 - Dependabot: bump @eslint/compat from 1.2.7 to 1.2.8.
@@ -12,6 +16,7 @@
 - Dependabot: bump ace-builds from 1.36.5 to 1.39.1.
 - Dependabot: bump node from 23.9.0-slim to 23.11.0-slim.
 - Dependabot: bump @ant-design/icons from 5.5.2 to 6.0.0.
+- Update wrapText function to ignore leading whitespace.
 
 ## 2025-03-27 - 0.19.17
 
