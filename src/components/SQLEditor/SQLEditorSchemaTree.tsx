@@ -158,8 +158,8 @@ function SQLEditorSchemaTree() {
       }));
     };
 
-    const drawTableIcon = (tableType: string) => {
-      switch (tableType) {
+    const drawTableIcon = (table: SchemaTable) => {
+      switch (table.table_type) {
         case 'FOREIGN':
           return <CompassOutlined className="mr-1 size-3 opacity-50" />;
         case 'VIEW':
@@ -169,14 +169,14 @@ function SQLEditorSchemaTree() {
       }
     };
 
-    const drawTableDescription = (tableType: string) => {
-      switch (tableType) {
+    const drawTableDescription = (table: SchemaTable) => {
+      switch (table.table_type) {
         case 'FOREIGN':
-          return <div>foreign table</div>;
+          return 'foreign table';
         case 'VIEW':
-          return <div>view</div>;
+          return 'view';
         default:
-          return <div>table</div>;
+          return 'table';
       }
     };
 
@@ -288,31 +288,39 @@ function SQLEditorSchemaTree() {
       return contextMenu;
     };
 
-    const drawTableRow = (table: SchemaTable) => (
-      <Dropdown
-        menu={{
-          items: [
-            {
-              key: 'generate-sql-group',
-              type: 'group',
-              label: 'Generate SQL',
-              children: drawContextMenu(table),
-            },
-          ],
-        }}
-        trigger={['contextMenu']}
-      >
-        <span className="flex items-center" data-testid={table.path.join('.')}>
-          {drawTableIcon(table.table_type)}
-          <CopyToClipboard textToCopy={table.path.join('.')}>
-            {table.unquoted_table_name}
-          </CopyToClipboard>
-          <Text pale className="ml-1 inline text-xs italic !leading-3">
-            {drawTableDescription(table.table_type)}
-          </Text>
-        </span>
-      </Dropdown>
-    );
+    const drawTableRow = (table: SchemaTable) => {
+      const isViewInvalid =
+        table.table_type === 'VIEW' && table.columns.length === 0;
+
+      return (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: 'generate-sql-group',
+                type: 'group',
+                label: 'Generate SQL',
+                children: drawContextMenu(table),
+              },
+            ],
+          }}
+          trigger={['contextMenu']}
+        >
+          <span className="flex items-center" data-testid={table.path.join('.')}>
+            {drawTableIcon(table)}
+
+            <CopyToClipboard textToCopy={table.path.join('.')}>
+              {table.unquoted_table_name}
+            </CopyToClipboard>
+
+            <Text pale className="ml-1 inline text-xs italic !leading-3">
+              {drawTableDescription(table)}{' '}
+              {isViewInvalid && <span className="text-red-500">(corrupted)</span>}
+            </Text>
+          </span>
+        </Dropdown>
+      );
+    };
 
     return filteredSchemaTree.map(schema => ({
       title: drawSchemaRow(schema),
