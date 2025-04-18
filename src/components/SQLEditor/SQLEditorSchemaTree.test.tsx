@@ -104,6 +104,25 @@ describe('The SQLEditorSchemaTree component', () => {
       );
     });
 
+    describe('when the view is corrupted', () => {
+      it('shows the corrupted text', async () => {
+        const { user } = await setup();
+
+        const schema = schemaTableColumns.find(
+          schema => schema.schema_name === 'test_corrupted_view_schema',
+        )!;
+
+        // open schema tree
+        await triggerTreeItem(user, schema.schema_name, schema.tables[0].table_name);
+
+        expect(
+          within(
+            screen.getByTestId(`test_corrupted_view_schema.corrupted_view`),
+          ).getByText('(corrupted)'),
+        ).toBeInTheDocument();
+      });
+    });
+
     describe('the context menu', () => {
       describe('the Copy SELECT button', () => {
         it('copies the SELECT statement', async () => {

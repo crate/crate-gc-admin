@@ -250,6 +250,9 @@ export const useSchemaTreeMock: QueryResultSuccess = {
         'boolean',
       ],
     ],
+
+    // a corrupted view, used in testing
+    ['test_corrupted_view_schema', 'corrupted_view', 'VIEW', null, null],
   ],
   rowcount: 1,
   duration: 123.45,

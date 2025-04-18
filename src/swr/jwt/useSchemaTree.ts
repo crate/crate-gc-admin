@@ -60,11 +60,13 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
       // first, it makes a temporary list of all the columns (nodeList) and
       // their parent indexes, then uses that list to recursively build the
       // tree via the getNestedColumns() functionbelow.
-      const nodeList = input.column_paths
+      const dataTypes = input.data_types || [];
+      const columnPaths = input.column_paths || [];
+      const nodeList = columnPaths
         .map((_, i) => {
-          const paths = [...input.column_paths[i]];
+          const paths = [...columnPaths[i]];
           return {
-            data_type: formatDataType(input.data_types[i]),
+            data_type: formatDataType(dataTypes[i]),
             path: paths.slice(0, -1),
             name: paths.slice(-1)[0],
             index: i,
@@ -167,7 +169,7 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
 };
 
 const QUERY = `
-  WITH column_details AS (
+    WITH column_details AS (
     SELECT
       table_schema,
       table_name,
@@ -178,13 +180,13 @@ const QUERY = `
   )
 
   SELECT
-    QUOTE_IDENT(c.table_schema) AS table_schema,
-    QUOTE_IDENT(c.table_name) AS table_name,
+    QUOTE_IDENT(t.table_schema) AS table_schema,
+    QUOTE_IDENT(t.table_name) AS table_name,
     t.table_type,
-    column_paths,
-    data_types
-  FROM column_details c
-  JOIN "information_schema"."tables" t
+    c.column_paths,
+    c.data_types
+  FROM "information_schema"."tables" t
+  LEFT JOIN column_details c
     ON c.table_schema = t.table_schema
   AND c.table_name = t.table_name
   ORDER BY table_schema, table_name;

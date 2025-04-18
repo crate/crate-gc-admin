@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix corrupted views not appearing in the schema tree.
+
 ## 2025-04-10 - 0.19.18
 
 - Dependabot: bump vite from 5.4.14 to 5.4.17.
