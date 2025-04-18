@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-04-21 - 0.20.0
+
+- Add onClick callback to CopyToClipboard component.
+
 ## 2025-04-10 - 0.19.18
 
 - Dependabot: bump vite from 5.4.14 to 5.4.17.
