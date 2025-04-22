@@ -5,6 +5,7 @@ export type CopyToClipboardProps = {
   successMessage?: string;
   textToCopy: string;
   testId?: string;
+  additionalClickHandler?: () => void;
 };
 
 function CopyToClipboard({
@@ -12,6 +13,7 @@ function CopyToClipboard({
   successMessage = 'Copied',
   textToCopy,
   testId = 'copy-to-clipboard-button',
+  additionalClickHandler,
 }: PropsWithChildren<CopyToClipboardProps>) {
   const { showSuccessMessage } = useMessage();
 
@@ -21,6 +23,10 @@ function CopyToClipboard({
       onClick={() => {
         navigator.clipboard.writeText(textToCopy);
         showSuccessMessage(successMessage);
+
+        if (additionalClickHandler) {
+          additionalClickHandler();
+        }
       }}
       type="button"
     >

@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2025-04-21 - 0.20.0
+
 - Fix corrupted views not appearing in the schema tree.
+- Add additionalClickHandler to CopyToClipboard component.
 
 ## 2025-04-10 - 0.19.18
 

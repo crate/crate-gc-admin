@@ -46,5 +46,15 @@ describe('the CopyToClipboard component', () => {
 
       expect(await screen.findByText('Copied')).toBeInTheDocument();
     });
+
+    it('calls the additionalClickHandler callback', async () => {
+      const additionalClickHandlerSpy = jest.fn();
+      const { user } = setup({ additionalClickHandler: additionalClickHandlerSpy });
+
+      await user.click(screen.getByTestId('copy-to-clipboard-button'));
+
+      expect(await screen.findByText('Copied')).toBeInTheDocument();
+      expect(additionalClickHandlerSpy).toHaveBeenCalled();
+    });
   });
 });
