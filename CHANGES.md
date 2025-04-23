@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Updated dependabot to ignore major version updates.
+- Dependabot: bump vite from 5.4.17 to 5.4.18.
+
 ## 2025-04-21 - 0.20.0
 
 - Fix corrupted views not appearing in the schema tree.
