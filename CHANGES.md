@@ -4,6 +4,17 @@
 
 - Updated dependabot to ignore major version updates.
 - Dependabot: bump vite from 5.4.17 to 5.4.18.
+- Dependabot: bump vite-plugin-dts from 4.3.0 to 4.5.3.
+- Dependabot: bump react-hook-form from 7.52.1 to 7.56.1.
+- Dependabot: bump react-icons from 5.3.0 to 5.5.0.
+- Dependabot: bump @hookform/resolvers from 3.9.1 to 3.10.0.
+- Dependabot: bump @radix-ui/react-switch from 1.1.0 to 1.2.2.
+- Dependabot: bump @radix-ui/react-tabs from 1.1.0 to 1.1.9.
+- Dependabot: bump @typescript-eslint/eslint-plugin from 8.29.1 to 8.31.0.
+- Dependabot: bump eslint-plugin-react from 7.37.3 to 7.37.5.
+- Dependabot: bump @vitejs/plugin-react-swc from 3.8.1 to 3.9.0.
+- Dependabot: bump zod from 3.24.2 to 3.24.3.
+- Dependabot: bump nginx from 1.27.4 to 1.27.5.
 
 ## 2025-04-21 - 0.20.0
 
