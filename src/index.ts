@@ -8,4 +8,6 @@ export * from './routes';
 export * from './state/jwtManager';
 export * from './swr/jwt';
 
+export * from 'types/query';
+
 export type { JWTManagerStore };

@@ -306,13 +306,13 @@ function SQLResultsTable({ result }: Params) {
   }
 
   return (
-    <div className="h-full overflow-auto">
+    <div className="flex h-full w-full flex-col">
       <DataTable
         {...(output as DataTableColumnData<unknown>)}
         elementsPerPage={100}
         hidePaginationPageSize
         stickyHeader
-        className="w-full overflow-auto"
+        className="block h-full w-full overflow-auto"
         paginationAtTop
         paginationContent={
           <div className="flex w-full items-center gap-4">
