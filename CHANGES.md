@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-05 - 0.20.2
+
+- Making DataTable top pagination sticky to horizontal scrolling.
+
 ## 2025-05-02 - 0.20.1
 
 - Updated dependabot to ignore major version updates.
