@@ -13,6 +13,7 @@ export type CrateTabsShadProps = {
   hideWhenSingleTab?: boolean; // don't show the tab bar if there is only one tab
   items: CrateTabShadProps[];
   stickyTabBar?: boolean; // make the tab bar sticky
+  onChange?: (key: string) => void; // callback when the active tab changes
 };
 
 function CrateTabsShad({
@@ -20,6 +21,7 @@ function CrateTabsShad({
   hideWhenSingleTab = false,
   items = [],
   stickyTabBar = false,
+  onChange,
 }: CrateTabsShadProps) {
   const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
   const hideTabs = hideWhenSingleTab && items.length === 1;
@@ -32,6 +34,9 @@ function CrateTabsShad({
   };
 
   const onTabChange = (value: string) => {
+    if (onChange) {
+      onChange(value);
+    }
     setActiveTab(value);
   };
 

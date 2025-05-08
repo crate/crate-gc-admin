@@ -82,4 +82,30 @@ describe('The CrateTabsShad component', () => {
       expect(screen.getByTestId('tabs-container')).toHaveClass('flex');
     });
   });
+
+  describe('when changing tabs', () => {
+    it('calls the onChange prop with the new tab key', async () => {
+      const onChange = jest.fn();
+      const { user } = setup({ onChange });
+
+      const tab2 = screen.getByRole('tab', { name: 'Tab 2' });
+      await user.click(tab2);
+
+      expect(onChange).toHaveBeenCalledWith('tab2');
+    });
+
+    it('updates the active tab state', async () => {
+      const { user } = setup();
+
+      const tab2 = screen.getByRole('tab', { name: 'Tab 2' });
+      await user.click(tab2);
+
+      expect(screen.getAllByRole('tab')[0].getAttribute('aria-selected')).toBe(
+        'false',
+      );
+      expect(screen.getAllByRole('tab')[1].getAttribute('aria-selected')).toBe(
+        'true',
+      );
+    });
+  });
 });

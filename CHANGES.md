@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-08 - 0.20.4
+
+- Add onChange to CrateTabsShad component.
+
 ## 2025-05-08 - 0.20.3
 
 - Fixed tabs bug.
