@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
-
 import { cn } from 'utils';
 
 export type CrateTabShadProps = {
@@ -38,8 +37,13 @@ function CrateTabsShad({
 
   // ensure that the active tab is a valid option
   useEffect(() => {
-    setActiveTab(getDefaultTab());
-  }, [items]);
+    if (items) {
+      const keys = items.map(item => item.key);
+      if (!keys.includes(activeTab!)) {
+        setActiveTab(getDefaultTab());
+      }
+    }
+  }, [activeTab, items]);
 
   return (
     <Tabs
@@ -52,7 +56,11 @@ function CrateTabsShad({
       <div className={hideTabs ? '' : 'min-h-10 overflow-x-auto'}>
         <TabsList className={`min-h-10 ${hideTabs ? 'hidden' : 'border-b'}`}>
           {items.map(item => (
-            <TabsTrigger key={item.key} value={item.key}>
+            <TabsTrigger
+              key={item.key}
+              value={item.key}
+              className={item.key === activeTab ? 'text-crate-blue' : ''}
+            >
               {item.label}
             </TabsTrigger>
           ))}

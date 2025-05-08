@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2025-05-08 - 0.20.3
+
+- Fixed tabs bug.
+- Vite dependabot update.
+
 ## 2025-05-05 - 0.20.2
 
 - Making DataTable top pagination sticky to horizontal scrolling.
