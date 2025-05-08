@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
-import { Table, Tabs, Tag } from 'antd';
-import { Button, Heading } from 'components';
+import { Table, Tag } from 'antd';
+import { Button, CrateTabsShad, Heading } from 'components';
 import { format as formatSQL } from 'sql-formatter';
 import {
   useGetTableInformationQuery,
@@ -79,7 +79,7 @@ function TableDetail({
     {
       key: 'columns',
       label: 'Columns',
-      children: (
+      content: (
         <Table
           columns={columns}
           dataSource={activeTableInfo}
@@ -94,7 +94,7 @@ function TableDetail({
     tabs.push({
       key: 'SQL',
       label: 'SQL',
-      children: (
+      content: (
         <div className="">
           <pre>{createTableSQL}</pre>
         </div>
@@ -115,7 +115,7 @@ function TableDetail({
           <Heading level="h2">
             {activeTable.table_schema}.{activeTable.table_name}
           </Heading>
-          <Tabs defaultActiveKey="columns" items={tabs} />
+          <CrateTabsShad initialActiveTab="columns" items={tabs} hideWhenSingleTab />
           <div className="mt-4">
             <Link
               to={{
