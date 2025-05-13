@@ -202,8 +202,11 @@ function SQLEditorSchemaTree() {
         // get DDL statement
         const ddlResult = await executeSql(
           table.table_type === 'VIEW'
-            ? getViewsDDLQuery(table.schema_name, table.table_name)
-            : getTablesDDLQuery(table.schema_name, table.table_name),
+            ? getViewsDDLQuery(table.unquoted_schema_name, table.unquoted_table_name)
+            : getTablesDDLQuery(
+                table.unquoted_schema_name,
+                table.unquoted_table_name,
+              ),
           table.table_type === 'VIEW' ? '/ddl-view-query' : '/ddl-table-query',
         );
 
@@ -225,7 +228,7 @@ function SQLEditorSchemaTree() {
 
           showSuccessMessage('Copied');
         } else {
-          showErrorMessage('Error genering DDL statement.');
+          showErrorMessage('Error generating DDL statement.');
         }
       };
 

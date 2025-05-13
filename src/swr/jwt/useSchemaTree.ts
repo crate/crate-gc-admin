@@ -30,6 +30,7 @@ export type SchemaTable = {
   columns: SchemaTableColumn[];
   is_system_table: boolean;
   unquoted_table_name: string;
+  unquoted_schema_name: string;
 };
 
 export type Schema = {
@@ -129,6 +130,7 @@ export const postFetch = (data: QueryResultSuccess): Schema[] => {
             schema_name: row.table_schema,
             table_name: row.table_name,
             table_type: row.table_type as SchemaTableType,
+            unquoted_schema_name: row.table_schema.replace(/^"|"$/g, ''),
             unquoted_table_name: row.table_name.replace(/^"|"$/g, ''),
           };
         })
