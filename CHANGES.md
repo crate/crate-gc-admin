@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-14 - 0.20.5
+
+- Fix "Copy CREATE TABLE" for quoted schemas/tables.
+
 ## 2025-05-08 - 0.20.4
 
 - Add onChange to CrateTabsShad component.
