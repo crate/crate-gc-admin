@@ -84,7 +84,10 @@ export default function PolicyForm(props: PolicyFormProps) {
   const validTables = tables?.filter(t => !t.system && t.is_partitioned) || [];
 
   const backToPolicyList = () => {
-    navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.POLICIES}`);
+    navigate(
+      `..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.POLICIES}`,
+      { relative: 'path' },
+    );
   };
 
   const onSubmit: SubmitHandler<PolicyInput> = async (data: PolicyInput) => {

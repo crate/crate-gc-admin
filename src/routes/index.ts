@@ -1,5 +1,14 @@
 export { default as Auth } from './Auth';
-export { default as Automation } from './Automation';
+export {
+  default as Automation,
+  AutomationJobsTable,
+  AutomationCreateJob,
+  AutomationEditJob,
+  AutomationPoliciesTable,
+  AutomationCreatePolicy,
+  AutomationEditPolicy,
+  AutomationLogs,
+} from './Automation';
 export { default as Help } from './Help';
 export { default as Nodes } from './Nodes';
 export { default as NodesMetrics } from './Nodes/NodesMetrics';
