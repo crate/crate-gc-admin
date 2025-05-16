@@ -89,7 +89,9 @@ describe('The "JobForm" component', () => {
 
       await user.click(screen.getByText('Cancel'));
 
-      expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink);
+      expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink, {
+        relative: 'path',
+      });
     });
   });
 
@@ -109,7 +111,9 @@ describe('The "JobForm" component', () => {
           expect(createJobSpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink);
+        expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink, {
+          relative: 'path',
+        });
       });
     });
 
@@ -178,7 +182,9 @@ describe('The "JobForm" component', () => {
           expect(updateJobSpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink);
+        expect(navigateMock).toHaveBeenCalledWith(backToJobsListLink, {
+          relative: 'path',
+        });
       });
     });
 

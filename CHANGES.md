@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-16 - 0.20.6
+
+- Export individual Automation components.
+
 ## 2025-05-14 - 0.20.5
 
 - Fix "Copy CREATE TABLE" for quoted schemas/tables.

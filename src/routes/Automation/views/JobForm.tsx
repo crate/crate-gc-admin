@@ -59,7 +59,9 @@ export default function JobForm(props: JobFormProps) {
   const errors = form.formState.errors;
 
   const backToJobList = () => {
-    navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.JOBS}`);
+    navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.JOBS}`, {
+      relative: 'path',
+    });
   };
 
   const onSubmit: SubmitHandler<JobInput> = async (data: JobInput) => {
