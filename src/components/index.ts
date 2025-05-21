@@ -5,7 +5,6 @@ export { default as Chip } from './Chip';
 export { default as Code } from './Code';
 export { default as ConfirmDelete } from './ConfirmDelete';
 export { default as CopyToClipboard } from './CopyToClipboard';
-export { default as CrateTabs } from './CrateTabs';
 export { default as CrateTabsShad } from './CrateTabsShad';
 export { default as DataTable } from './DataTable';
 export { default as DisplayDate } from './DisplayDate';

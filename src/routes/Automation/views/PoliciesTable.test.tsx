@@ -8,11 +8,7 @@ import policies from 'test/__mocks__/policies';
 import { PolicyLog, Policy } from 'types';
 import { policiesLogs, policyErrorLog } from 'test/__mocks__/policiesLogs';
 import { sortByString } from 'utils';
-import {
-  AUTOMATION_TAB_KEYS,
-  AUTOMATION_TAB_QUERY_PARAM_KEY,
-} from '../routes/AutomationTabsConstants';
-import { automationEditPolicy } from 'constants/paths';
+import { automationEditPolicy, automationLogs } from 'constants/paths';
 
 const onDeleteSpy = jest.fn();
 
@@ -169,7 +165,7 @@ describe('The "PoliciesTable" component', () => {
         screen.getByTestId('last-execution').getElementsByTagName('a')[0],
       ).toHaveAttribute(
         'href',
-        `?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.LOGS}&name=${encodeURIComponent(policy.name)}`,
+        `${automationLogs.path}?name=${encodeURIComponent(policy.name)}`,
       );
     });
 
@@ -247,9 +243,9 @@ describe('The "PoliciesTable" component', () => {
       await user.click(container.getElementsByClassName('anticon-edit')[0]);
 
       expect(navigateMock).toHaveBeenCalledWith(
-        `.${automationEditPolicy.build({
+        automationEditPolicy.build({
           policyId: policy.id,
-        })}`,
+        }),
       );
     });
   });

@@ -38,24 +38,28 @@ import { EMPTY_POLICY_FORM } from 'constants/policies';
 import { ApiOutput, apiPost, apiPut } from 'utils';
 import useEligibleColumns from '../hooks/useEligibleColumns';
 import usePolicyPreview from '../hooks/usePolicyPreview';
-import {
-  AUTOMATION_TAB_KEYS,
-  AUTOMATION_TAB_QUERY_PARAM_KEY,
-} from '../routes/AutomationTabsConstants';
+import { automationTablePolicies } from 'constants/paths';
 
-type PolicyFormAdd = { type: 'add'; onSave?: () => void };
-type PolicyFormEdit = { type: 'edit'; onSave?: () => void; policy: Policy };
-type PolicyFormProps = PolicyFormAdd | PolicyFormEdit;
+type PolicyFormProps = {
+  type: 'add' | 'edit';
+  onSave?: () => void;
+  policy?: Policy;
+  pathPrefix?: string;
+};
 
-export default function PolicyForm(props: PolicyFormProps) {
-  const { type, onSave } = props;
+export default function PolicyForm({
+  type,
+  onSave,
+  policy,
+  pathPrefix = '',
+}: PolicyFormProps) {
   const navigate = useNavigate();
   const gcApi = useGcApi();
   const [showLoader, setShowLoader] = useState(false);
 
   const form = useForm<PolicyInput>({
     defaultValues:
-      type === 'add' ? EMPTY_POLICY_FORM : mapPolicyToPolicyInput(props.policy),
+      type === 'add' ? EMPTY_POLICY_FORM : mapPolicyToPolicyInput(policy!),
     resolver: zodResolver(PolicyFormSchemaInput),
   });
   const policyTargets = form.watch('targets');
@@ -84,10 +88,7 @@ export default function PolicyForm(props: PolicyFormProps) {
   const validTables = tables?.filter(t => !t.system && t.is_partitioned) || [];
 
   const backToPolicyList = () => {
-    navigate(
-      `..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.POLICIES}`,
-      { relative: 'path' },
-    );
+    navigate(`${pathPrefix}${automationTablePolicies.path}`);
   };
 
   const onSubmit: SubmitHandler<PolicyInput> = async (data: PolicyInput) => {
@@ -97,7 +98,7 @@ export default function PolicyForm(props: PolicyFormProps) {
 
     let result: ApiOutput<ApiError<PolicyInput> | Policy>;
 
-    const policy = mapPolicyInputToPolicyWithoutId(data);
+    const inputPolicy = mapPolicyInputToPolicyWithoutId(data);
 
     setShowLoader(true);
     if (type === 'add') {
@@ -105,7 +106,7 @@ export default function PolicyForm(props: PolicyFormProps) {
       result = await apiPost<ApiError<PolicyInput> | Policy>(
         gcApi,
         `/api/policies/`,
-        policy,
+        inputPolicy,
         undefined,
         false,
       );
@@ -113,8 +114,8 @@ export default function PolicyForm(props: PolicyFormProps) {
       // UPDATE
       result = await apiPut<ApiError<PolicyInput> | Policy>(
         gcApi,
-        `/api/policies/${props.policy.id}`,
-        policy,
+        `/api/policies/${policy!.id}`,
+        inputPolicy,
         undefined,
         false,
       );
@@ -138,7 +139,7 @@ export default function PolicyForm(props: PolicyFormProps) {
   if (showLoader || loadingTables) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Loader size={Loader.sizes.LARGE} />
+        <Loader size={Loader.sizes.MEDIUM} />
       </div>
     );
   }

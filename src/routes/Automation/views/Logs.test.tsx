@@ -93,7 +93,7 @@ describe('The "Logs" component', () => {
 
         expect(screen.getByText(scheduledJobLog.job_name)).toHaveAttribute(
           'href',
-          `.${automationEditJob.build({ jobId: scheduledJobLog.job_id })}`,
+          automationEditJob.build({ jobId: scheduledJobLog.job_id }),
         );
       });
     });
@@ -110,9 +110,9 @@ describe('The "Logs" component', () => {
 
         expect(screen.getByText(policyLog.job_name)).toHaveAttribute(
           'href',
-          `.${automationEditPolicy.build({
+          automationEditPolicy.build({
             policyId: policyLog.job_id,
-          })}`,
+          }),
         );
       });
     });

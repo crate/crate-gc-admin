@@ -1,7 +1,3 @@
-import Automation from './Automation';
-
-export default Automation;
-
 export {
   JobsTable as AutomationJobsTable,
   PoliciesTable as AutomationPoliciesTable,

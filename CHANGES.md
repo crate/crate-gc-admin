@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-22 - 0.20.7
+
+- Refactored automation routes.
+
 ## 2025-05-16 - 0.20.6
 
 - Export individual Automation components.

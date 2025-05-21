@@ -34,21 +34,21 @@ type SetErrorFunction = (
   error: TJobLogStatementError & { timestamp: string },
 ) => void;
 
-const renderNameColumn = (log: TaskLog) => {
+const renderNameColumn = (log: TaskLog, pathPrefix: string) => {
   const name = log.job_name;
   const isRunning = log.end === null;
   const editTaskLink =
     log.task_type === 'sql'
-      ? automationEditJob.build({
+      ? `${pathPrefix}${automationEditJob.build({
           jobId: log.job_id,
-        })
-      : automationEditPolicy.build({
+        })}`
+      : `${pathPrefix}${automationEditPolicy.build({
           policyId: log.job_id,
-        });
+        })}`;
 
   return (
     <div className="flex flex-col">
-      <Link to={`.${editTaskLink}`}>{name}</Link>
+      <Link to={editTaskLink}>{name}</Link>
       <span className="text-[8px]">
         {isRunning && <Chip color={Chip.colors.ORANGE}>RUNNING</Chip>}
       </span>
@@ -172,7 +172,13 @@ const renderErrorsColumn = (log: TaskLog, setError: SetErrorFunction) => {
   );
 };
 
-const getColumnsDefinition = ({ setError }: { setError: SetErrorFunction }) => {
+const getColumnsDefinition = ({
+  setError,
+  pathPrefix,
+}: {
+  setError: SetErrorFunction;
+  pathPrefix: string;
+}) => {
   const columns: ColumnDef<TaskLog>[] = [
     {
       header: 'Name',
@@ -190,7 +196,7 @@ const getColumnsDefinition = ({ setError }: { setError: SetErrorFunction }) => {
       enableColumnFilter: true,
       enableSorting: true,
       cell: ({ row }) => {
-        return renderNameColumn(row.original);
+        return renderNameColumn(row.original, pathPrefix);
       },
     },
     {
@@ -279,7 +285,11 @@ const getColumnsDefinition = ({ setError }: { setError: SetErrorFunction }) => {
   return columns;
 };
 
-export default function Logs() {
+export type LogsProps = {
+  pathPrefix?: string;
+};
+
+export default function Logs({ pathPrefix = '' }: LogsProps) {
   const { data: jobsLogs, isLoading: isLoadingJobsLogs } =
     useGCGetScheduledJobsAllLogs();
   const [errorDialogContent, setErrorDialogContent] = useState<
@@ -297,7 +307,7 @@ export default function Logs() {
   if (isLoadingJobsLogs || !jobsLogs) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Loader size={Loader.sizes.LARGE} />
+        <Loader size={Loader.sizes.MEDIUM} />
       </div>
     );
   }
@@ -309,6 +319,7 @@ export default function Logs() {
           data={jobsLogs}
           columns={getColumnsDefinition({
             setError: openErrorDialog,
+            pathPrefix,
           })}
           className="table-fixed"
           enableFilters

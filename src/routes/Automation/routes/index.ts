@@ -1,5 +1,3 @@
-export { default as AutomationTabs } from './AutomationTabs';
-
 export { default as CreateJob } from './CreateJob';
 export { default as EditJob } from './EditJob';
 
