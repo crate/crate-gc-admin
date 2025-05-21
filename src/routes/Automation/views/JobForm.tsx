@@ -20,21 +20,21 @@ import {
   Text,
 } from 'components';
 import { ApiError } from 'types/api';
-import {
-  AUTOMATION_TAB_KEYS,
-  AUTOMATION_TAB_QUERY_PARAM_KEY,
-} from '../routes/AutomationTabsConstants';
-
-type JobFormAdd = { type: 'add' };
-type JobFormEdit = { type: 'edit'; job: Job };
+import { automationScheduledJobs } from 'constants/paths';
 
 type JobFormProps = {
   type: 'add' | 'edit';
   onSave?: () => void;
-} & (JobFormAdd | JobFormEdit);
+  job?: Job;
+  pathPrefix?: string;
+};
 
-export default function JobForm(props: JobFormProps) {
-  const { type, onSave } = props;
+export default function JobForm({
+  type,
+  onSave,
+  job,
+  pathPrefix = '',
+}: JobFormProps) {
   const { executeSqlWithStatus, queryResults } = useExecuteMultiSql();
   const [showLoader, setShowLoader] = useState(false);
   const gcApi = useGcApi();
@@ -50,18 +50,16 @@ export default function JobForm(props: JobFormProps) {
             sql: '',
           }
         : {
-            name: props.job.name,
-            cron: props.job.cron,
-            enabled: props.job.enabled,
-            sql: props.job.sql,
+            name: job!.name,
+            cron: job!.cron,
+            enabled: job!.enabled,
+            sql: job!.sql,
           },
   });
   const errors = form.formState.errors;
 
   const backToJobList = () => {
-    navigate(`..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.JOBS}`, {
-      relative: 'path',
-    });
+    navigate(`${pathPrefix}${automationScheduledJobs.path}`);
   };
 
   const onSubmit: SubmitHandler<JobInput> = async (data: JobInput) => {
@@ -84,10 +82,9 @@ export default function JobForm(props: JobFormProps) {
       );
     } else {
       // UPDATE
-      const job = props.job;
       result = await apiPut<ApiError<JobInput> | Job>(
         gcApi,
-        `/api/scheduled-jobs/${job.id}`,
+        `/api/scheduled-jobs/${job!.id}`,
         data,
         {
           credentials: 'include',
@@ -179,7 +176,7 @@ export default function JobForm(props: JobFormProps) {
   if (showLoader) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
+        <Loader size={Loader.sizes.MEDIUM} color={Loader.colors.PRIMARY} />
       </div>
     );
   }

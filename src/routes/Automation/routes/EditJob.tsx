@@ -7,9 +7,10 @@ import { Job } from 'types';
 
 type EditJobProps = {
   onEditJob?: () => void;
+  pathPrefix?: string;
 };
 
-export default function EditJob({ onEditJob }: EditJobProps) {
+export default function EditJob({ onEditJob, pathPrefix }: EditJobProps) {
   const { jobId } = useParams();
   const gcApi = useGcApi();
   const { data: job, loading } = useApiCall<Job>({
@@ -19,8 +20,8 @@ export default function EditJob({ onEditJob }: EditJobProps) {
   });
 
   return loading || !job ? (
-    <Loader />
+    <Loader size={Loader.sizes.MEDIUM} />
   ) : (
-    <JobForm type="edit" job={job} onSave={onEditJob} />
+    <JobForm type="edit" job={job} onSave={onEditJob} pathPrefix={pathPrefix} />
   );
 }

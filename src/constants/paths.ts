@@ -12,19 +12,19 @@ export const help = new Path('/help');
 export const sql = new Path('/sql');
 
 // automation
-export const automation = new Path('/automation');
-export const automationCreateJob = new Path('/create-job');
-export const automationCreateJobFull = new Path(`${automation.path}/create-job`);
-export const automationEditJob = new Path('/edit-job/:jobId');
-export const automationEditJobFull = new Path(`${automation.path}/edit-job/:jobId`);
-export const automationCreatePolicy = new Path('/create-policy');
-export const automationCreatePolicyFull = new Path(
-  `${automation.path}/create-policy`,
+export const automationScheduledJobs = new Path('/automation/scheduled-jobs');
+export const automationCreateJob = new Path('/automation/scheduled-jobs/create-job');
+export const automationEditJob = new Path(
+  '/automation/scheduled-jobs/edit-job/:jobId',
 );
-export const automationEditPolicy = new Path('/edit-policy/:policyId');
-export const automationEditPolicyFull = new Path(
-  `${automation.path}/edit-policy/:policyId`,
+export const automationTablePolicies = new Path('/automation/table-policies');
+export const automationCreatePolicy = new Path(
+  '/automation/table-policies/create-policy',
 );
+export const automationEditPolicy = new Path(
+  '/automation/table-policies/edit-policy/:policyId',
+);
+export const automationLogs = new Path('/automation/logs');
 
 // tables
 export const tables = new Path('/tables');

@@ -8,7 +8,18 @@ import {
   CalendarOutlined,
   PieChartOutlined,
 } from '@ant-design/icons';
-import { automation, help, root, sql, tables, tablesShards, users } from './paths';
+import {
+  // automation,
+  automationScheduledJobs,
+  automationTablePolicies,
+  automationLogs,
+  help,
+  root,
+  sql,
+  tables,
+  tablesShards,
+  users,
+} from './paths';
 
 export const topNavigation = [
   {
@@ -41,10 +52,28 @@ export const topNavigation = [
     path: '/nodes',
     type: 'internal' as const,
   },
+  // {
+  //   icon: <CalendarOutlined />,
+  //   label: <span>Automation</span>,
+  //   path: automation.path,
+  //   type: 'internal' as const,
+  // },
   {
     icon: <CalendarOutlined />,
-    label: <span>Automation</span>,
-    path: automation.path,
+    label: <span>Scheduled Jobs</span>,
+    path: automationScheduledJobs.path,
+    type: 'internal' as const,
+  },
+  {
+    icon: <CalendarOutlined />,
+    label: <span>Table Policies</span>,
+    path: automationTablePolicies.path,
+    type: 'internal' as const,
+  },
+  {
+    icon: <CalendarOutlined />,
+    label: <span>Logs</span>,
+    path: automationLogs.path,
     type: 'internal' as const,
   },
   {

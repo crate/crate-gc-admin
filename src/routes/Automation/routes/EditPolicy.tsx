@@ -7,9 +7,10 @@ import { Policy } from 'types';
 
 type EditPolicyProps = {
   onEditPolicy?: () => void;
+  pathPrefix?: string;
 };
 
-export default function EditPolicy({ onEditPolicy }: EditPolicyProps) {
+export default function EditPolicy({ onEditPolicy, pathPrefix }: EditPolicyProps) {
   const { policyId } = useParams();
   const gcApi = useGcApi();
   const { data: policy, loading } = useApiCall<Policy>({
@@ -19,8 +20,13 @@ export default function EditPolicy({ onEditPolicy }: EditPolicyProps) {
   });
 
   return loading || !policy ? (
-    <Loader />
+    <Loader size={Loader.sizes.MEDIUM} />
   ) : (
-    <PolicyForm type="edit" policy={policy} onSave={onEditPolicy} />
+    <PolicyForm
+      type="edit"
+      policy={policy}
+      onSave={onEditPolicy}
+      pathPrefix={pathPrefix}
+    />
   );
 }

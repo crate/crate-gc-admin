@@ -23,11 +23,11 @@ import {
   EditOutlined,
 } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import { automationCreateJob, automationEditJob } from 'constants/paths';
 import {
-  AUTOMATION_TAB_KEYS,
-  AUTOMATION_TAB_QUERY_PARAM_KEY,
-} from '../routes/AutomationTabsConstants';
+  automationCreateJob,
+  automationEditJob,
+  automationLogs,
+} from 'constants/paths';
 
 export const JOBS_TABLE_PAGE_SIZE = 10;
 
@@ -41,13 +41,16 @@ type GetColumnsDefinitionProps = {
   deleteJob: (job: Job) => void;
   toggleJobActivation: (job: Job, table: Table<Job>) => void;
   showLoaderDelete: boolean;
+  pathPrefix?: string;
 };
+
 const getColumnsDefinition = ({
   setError,
   editJob,
   deleteJob,
   showLoaderDelete,
   toggleJobActivation,
+  pathPrefix,
 }: GetColumnsDefinitionProps) => {
   const columns: ColumnDef<Job>[] = [
     {
@@ -147,7 +150,7 @@ const getColumnsDefinition = ({
                   <div className="flex w-full flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
-                        to={`?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.LOGS}&name=${encodeURIComponent(job.name)}`}
+                        to={`${pathPrefix}${automationLogs.path}?name=${encodeURIComponent(job.name)}`}
                       >
                         <DisplayUTCDate isoDate={lastExecution.end!} tooltip />
                       </Link>
@@ -248,9 +251,10 @@ const getColumnsDefinition = ({
 
   return columns;
 };
-type JobsTableProps = { onDeleteJob?: () => void };
 
-export default function JobsTable({ onDeleteJob }: JobsTableProps) {
+type JobsTableProps = { onDeleteJob?: () => void; pathPrefix?: string };
+
+export default function JobsTable({ onDeleteJob, pathPrefix = '' }: JobsTableProps) {
   const navigate = useNavigate();
   const [errorDialogContent, setErrorDialogContent] = useState<
     (TJobLogStatementError & { timestamp: string }) | null
@@ -328,7 +332,7 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
   if (isLoadingJobs) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Loader size={Loader.sizes.LARGE} color={Loader.colors.PRIMARY} />
+        <Loader size={Loader.sizes.MEDIUM} color={Loader.colors.PRIMARY} />
       </div>
     );
   }
@@ -338,7 +342,7 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
       <div className="flex w-full justify-end">
         <Button
           onClick={() => {
-            navigate(`.${automationCreateJob.build()}`);
+            navigate(`${pathPrefix}${automationCreateJob.build()}`);
           }}
           className="float-end"
         >
@@ -354,7 +358,7 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
             setError: setErrorDialogContent,
             editJob: (job: Job) => {
               navigate(
-                `.${automationEditJob.build({
+                `${pathPrefix}${automationEditJob.build({
                   jobId: job.id,
                 })}`,
               );
@@ -362,6 +366,7 @@ export default function JobsTable({ onDeleteJob }: JobsTableProps) {
             deleteJob: handleDeleteJob,
             showLoaderDelete: showLoaderDelete,
             toggleJobActivation,
+            pathPrefix,
           })}
           additionalState={
             {

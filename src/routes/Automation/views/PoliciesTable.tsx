@@ -16,17 +16,17 @@ import {
   Switch,
   Text,
 } from 'components';
-import { automationCreatePolicy, automationEditPolicy } from 'constants/paths';
+import {
+  automationCreatePolicy,
+  automationEditPolicy,
+  automationLogs,
+} from 'constants/paths';
 import { useGCGetPolicies, useGCGetPoliciesEnriched } from 'hooks/swrHooks';
 import useGcApi from 'hooks/useGcApi';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { EnrichedPolicy, PolicyWithoutId } from 'types';
 import { apiDelete, apiPut, cn, sortByString } from 'utils';
-import {
-  AUTOMATION_TAB_KEYS,
-  AUTOMATION_TAB_QUERY_PARAM_KEY,
-} from '../routes/AutomationTabsConstants';
 
 export const POLICIES_TABLE_PAGE_SIZE = 10;
 
@@ -42,6 +42,7 @@ type GetColumnsDefinitionProps = {
     table: Table<EnrichedPolicy>,
   ) => void;
   showLoaderDelete: boolean;
+  pathPrefix: string;
 };
 
 const getColumnsDefinition = ({
@@ -49,6 +50,7 @@ const getColumnsDefinition = ({
   deletePolicy,
   showLoaderDelete,
   togglePolicyActivation,
+  pathPrefix,
 }: GetColumnsDefinitionProps) => {
   const columns: ColumnDef<EnrichedPolicy>[] = [
     {
@@ -130,7 +132,7 @@ const getColumnsDefinition = ({
                   <div className="flex w-full flex-col">
                     <div className="flex gap-2" data-testid="last-execution">
                       <Link
-                        to={`?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.LOGS}&name=${encodeURIComponent(policy.name)}`}
+                        to={`${pathPrefix}${automationLogs.path}?name=${encodeURIComponent(policy.name)}`}
                       >
                         <DisplayUTCDate isoDate={lastExecution.end!} tooltip />
                       </Link>
@@ -209,9 +211,12 @@ const getColumnsDefinition = ({
   return columns;
 };
 
-type PoliciesTableProps = { onDeletePolicy?: () => void };
+type PoliciesTableProps = { onDeletePolicy?: () => void; pathPrefix?: string };
 
-export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
+export default function PoliciesTable({
+  onDeletePolicy,
+  pathPrefix = '',
+}: PoliciesTableProps) {
   const navigate = useNavigate();
   const gcApi = useGcApi();
   const [showLoaderDelete, setShowLoaderDelete] = useState(false);
@@ -280,7 +285,7 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
   if (isLoadingPolicies || !policies) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Loader size={Loader.sizes.LARGE} />
+        <Loader size={Loader.sizes.MEDIUM} />
       </div>
     );
   }
@@ -290,11 +295,11 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
       <div className="flex w-full justify-end">
         <Button
           onClick={() => {
-            navigate(`.${automationCreatePolicy.build()}`);
+            navigate(`${pathPrefix}${automationCreatePolicy.build()}`);
           }}
           className="float-end"
         >
-          Add New Policy
+          Add new policy
         </Button>
       </div>
 
@@ -306,7 +311,7 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
           columns={getColumnsDefinition({
             editPolicy: (policy: EnrichedPolicy) => {
               navigate(
-                `.${automationEditPolicy.build({
+                `${pathPrefix}${automationEditPolicy.build({
                   policyId: policy.id,
                 })}`,
               );
@@ -314,6 +319,7 @@ export default function PoliciesTable({ onDeletePolicy }: PoliciesTableProps) {
             deletePolicy: handleDelete,
             showLoaderDelete: showLoaderDelete,
             togglePolicyActivation,
+            pathPrefix,
           })}
           additionalState={
             {

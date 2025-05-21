@@ -1,6 +1,5 @@
 export { default as Auth } from './Auth';
 export {
-  default as Automation,
   AutomationJobsTable,
   AutomationCreateJob,
   AutomationEditJob,

@@ -17,10 +17,7 @@ import { navigateMock } from '__mocks__/react-router-dom';
 import { EligibleColumnsApiOutput, Policy } from 'types';
 import { policy } from 'test/__mocks__/policy';
 import { mapPolicyToPolicyInput } from '../tablePoliciesUtils/policies';
-import {
-  AUTOMATION_TAB_KEYS,
-  AUTOMATION_TAB_QUERY_PARAM_KEY,
-} from '../routes/AutomationTabsConstants';
+import { automationTablePolicies } from 'constants/paths';
 
 const onSaveSpy = jest.fn();
 
@@ -35,7 +32,7 @@ const waitForFormRender = async () => {
   await screen.findByRole('form');
 };
 
-const backToPoliciesListLink = `..?${AUTOMATION_TAB_QUERY_PARAM_KEY}=${AUTOMATION_TAB_KEYS.POLICIES}`;
+const backToPoliciesListLink = automationTablePolicies.path;
 
 describe('The "PolicyForm" component', () => {
   it('displays an empty form', async () => {
@@ -503,9 +500,7 @@ describe('The "PolicyForm" component', () => {
 
       await user.click(screen.getByText('Cancel'));
 
-      expect(navigateMock).toHaveBeenCalledWith(backToPoliciesListLink, {
-        relative: 'path',
-      });
+      expect(navigateMock).toHaveBeenCalledWith(backToPoliciesListLink);
     });
   });
 
@@ -540,9 +535,7 @@ describe('The "PolicyForm" component', () => {
           expect(createPolicySpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith(backToPoliciesListLink, {
-          relative: 'path',
-        });
+        expect(navigateMock).toHaveBeenCalledWith(backToPoliciesListLink);
       });
     });
 
@@ -679,9 +672,7 @@ describe('The "PolicyForm" component', () => {
           expect(updatePolicySpy).toHaveBeenCalled();
         });
 
-        expect(navigateMock).toHaveBeenCalledWith(backToPoliciesListLink, {
-          relative: 'path',
-        });
+        expect(navigateMock).toHaveBeenCalledWith(backToPoliciesListLink);
       });
     });
 
