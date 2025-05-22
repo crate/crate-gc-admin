@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-23 - 0.21.0
+
+- Add download option for query results in CSV and JSON format.
+
 ## 2025-05-22 - 0.20.7
 
 - Refactored automation routes.

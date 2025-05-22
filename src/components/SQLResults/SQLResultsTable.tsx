@@ -1,4 +1,3 @@
-import { Radio } from 'antd';
 import { ColumnDef } from '@tanstack/react-table';
 import _ from 'lodash';
 import Chip from 'components/Chip';
@@ -14,19 +13,17 @@ import {
   QueryResultSuccess,
 } from 'types/query';
 import useSessionStore from 'state/session';
+import DropdownMenu from 'components/DropdownMenu';
+import Button from 'components/Button';
+import { DownloadOutlined } from '@ant-design/icons';
+import { Radio } from 'antd';
+import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
 
-type Params = {
+export type SQLResultsTableProps = {
   result: QueryResult | undefined;
-  format?: boolean;
+  onDownloadResult?: (format: 'csv' | 'json') => void;
 };
 
-type JSONData = {
-  json: string;
-  SQL_RESULTS_ROW_NUMBER: React.ReactNode;
-};
-type CSVData = {
-  csv: string;
-};
 type TableViewData = Record<string, React.ReactNode> & {
   SQL_RESULTS_ROW_NUMBER: React.ReactNode;
 };
@@ -39,11 +36,11 @@ type DataTableColumnData<T> = {
   data: T[];
 };
 
-function SQLResultsTable({ result }: Params) {
-  const { showErrorTrace, tableResultsFormat } = useSessionStore();
+function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
+  const { showErrorTrace, tableResultsFormatPretty } = useSessionStore();
   const setShowErrorTrace = useSessionStore(store => store.setShowErrorTrace);
-  const setTableResultsFormat = useSessionStore(
-    store => store.setTableResultsFormat,
+  const setTableResultsFormatPretty = useSessionStore(
+    store => store.setTableResultsFormatPretty,
   );
 
   const toggleErrorTrace = () => {
@@ -57,10 +54,7 @@ function SQLResultsTable({ result }: Params) {
           <div className="flex items-center gap-4 pr-2 text-sm">
             <Chip color={Chip.colors.RED}>Error</Chip>
             {typeof result.error.code !== 'undefined' && (
-              <a
-                href="https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes"
-                target="_blank"
-              >
+              <a href={CRATEDB_ERROR_CODES_DOCS} target="_blank">
                 {result.error?.code}
               </a>
             )}
@@ -97,7 +91,7 @@ function SQLResultsTable({ result }: Params) {
     value: unknown,
     numColumns: number,
   ): React.ReactNode => {
-    if (tableResultsFormat === 'pretty') {
+    if (tableResultsFormatPretty) {
       return (
         <TypeAwareValue
           value={value}
@@ -106,7 +100,7 @@ function SQLResultsTable({ result }: Params) {
         />
       );
     }
-    if (tableResultsFormat === 'raw' && typeof value === 'boolean') {
+    if (!tableResultsFormatPretty && typeof value === 'boolean') {
       return value.toString();
     }
     if (typeof value === 'object') {
@@ -115,72 +109,7 @@ function SQLResultsTable({ result }: Params) {
     return value as string;
   };
 
-  const asJson = (result: QueryResultSuccess): DataTableColumnData<JSONData> => {
-    const columns: ColumnDef<JSONData>[] = [
-      {
-        header: () => <div className="font-bold">JSON</div>,
-        accessorKey: 'json',
-        cell: ({ cell }) => (
-          // select all contents on double click
-          <pre
-            onDoubleClick={event => {
-              window?.getSelection()?.selectAllChildren(event.currentTarget);
-            }}
-          >
-            {cell.getValue<string>()}
-          </pre>
-        ),
-      },
-    ];
-
-    // add row number
-    columns.unshift({
-      header: () => <div className="w-1"></div>,
-      accessorKey: 'SQL_RESULTS_ROW_NUMBER',
-      cell: ({ cell }) => cell.getValue(),
-      meta: { width: '1px' },
-    });
-
-    const data: JSONData[] = result.rows
-      .map(row =>
-        _.zip(result.cols, row).reduce((result: Record<string, unknown>, arr) => {
-          result[arr[0] as string] = arr[1];
-          return result;
-        }, {}),
-      )
-      .map((row, idx) => {
-        return {
-          json: JSON.stringify(row),
-          SQL_RESULTS_ROW_NUMBER: (
-            <div className="text-right text-xs text-neutral-400">{idx + 1}</div>
-          ),
-        };
-      });
-
-    return {
-      columns,
-      data,
-    } satisfies DataTableColumnData<JSONData>;
-  };
-
-  const asCSV = (result: QueryResultSuccess): DataTableColumnData<CSVData> => {
-    const columns: ColumnDef<CSVData>[] = [
-      {
-        header: () => <div className="font-bold">CSV</div>,
-        accessorKey: 'csv',
-        cell: ({ cell }) => (
-          // select all contents on double click
-          <pre
-            onDoubleClick={event => {
-              window?.getSelection()?.selectAllChildren(event.currentTarget);
-            }}
-          >
-            {cell.getValue<string>()}
-          </pre>
-        ),
-      },
-    ];
-
+  const downloadAsCsv = (result: QueryResultSuccess) => {
     const unparsedCSV = result.rows.map(row =>
       _.zip(result.cols, row)
         .map(arr => {
@@ -195,18 +124,18 @@ function SQLResultsTable({ result }: Params) {
           return result;
         }, {}),
     );
-    const csvString = Papa.unparse(unparsedCSV).replace(/"""/g, '"');
+    return Papa.unparse(unparsedCSV).replace(/"""/g, '"');
+  };
 
-    return {
-      columns,
-      data: [
-        {
-          csv:
-            csvString ||
-            'Looks like this data cannot be displayed as a CSV. We tried, sorry.',
-        },
-      ] satisfies CSVData[],
-    } satisfies DataTableColumnData<CSVData>;
+  const downloadAsJson = (result: QueryResultSuccess) => {
+    const data: Record<string, unknown>[] = result.rows.map(row =>
+      _.zip(result.cols, row).reduce((result: Record<string, unknown>, arr) => {
+        result[arr[0] as string] = arr[1];
+        return result;
+      }, {}),
+    );
+
+    return JSON.stringify(data);
   };
 
   const asTable = (
@@ -273,23 +202,10 @@ function SQLResultsTable({ result }: Params) {
   }
 
   let output:
-    | DataTableColumnData<JSONData>
-    | DataTableColumnData<CSVData>
     | DataTableColumnData<TableViewData>
-    | DataTableColumnData<NoColumnsData>;
+    | DataTableColumnData<NoColumnsData> = asTable(result);
 
-  if (tableResultsFormat === 'json') {
-    output = asJson(result);
-  } else if (tableResultsFormat === 'csv') {
-    output = asCSV(result);
-  } else {
-    output = asTable(result);
-  }
-
-  if (
-    output.columns.length === 1 &&
-    ['json', 'pretty', 'raw'].includes(tableResultsFormat)
-  ) {
+  if (output.columns.length === 1) {
     output = {
       columns: [
         {
@@ -315,30 +231,82 @@ function SQLResultsTable({ result }: Params) {
         className="block h-full w-full overflow-auto"
         paginationAtTop
         paginationContent={
-          <div className="flex w-full items-center gap-4">
-            <div className="flex items-center gap-2 text-xs">
-              <Chip color={Chip.colors.GREEN}>OK</Chip>
-              <div className="whitespace-nowrap leading-[1.1] text-neutral-600">
-                <div>
-                  {`${result.rowcount}`} {result.rowcount === 1 ? 'row' : 'rows'}
+          <div className="flex w-full items-center">
+            <div className="flex w-full items-center gap-4">
+              <div className="flex items-center gap-2 text-xs">
+                <Chip color={Chip.colors.GREEN}>OK</Chip>
+                <div className="whitespace-nowrap leading-[1.1] text-neutral-600">
+                  <div>
+                    {`${result.rowcount}`} {result.rowcount === 1 ? 'row' : 'rows'}
+                  </div>
+                  <div>
+                    {(Math.round(result?.duration) / 1000).toFixed(3)} seconds
+                  </div>
                 </div>
-                <div>{(Math.round(result?.duration) / 1000).toFixed(3)} seconds</div>
               </div>
+
+              <Radio.Group
+                className="whitespace-nowrap"
+                data-testid="format-selector"
+                options={[
+                  { label: 'Pretty', value: 'pretty' },
+                  { label: 'Raw', value: 'raw' },
+                ]}
+                onChange={evt =>
+                  setTableResultsFormatPretty(evt.target.value === 'pretty')
+                }
+                value={tableResultsFormatPretty ? 'pretty' : 'raw'}
+                optionType="button"
+                buttonStyle="solid"
+                size="small"
+              />
             </div>
-            <Radio.Group
-              className="whitespace-nowrap"
-              options={[
-                { label: 'Pretty', value: 'pretty' },
-                { label: 'Raw', value: 'raw' },
-                { label: 'CSV', value: 'csv' },
-                { label: 'JSON', value: 'json' },
-              ]}
-              onChange={evt => setTableResultsFormat(evt.target.value)}
-              value={tableResultsFormat}
-              optionType="button"
-              buttonStyle="solid"
-              size="small"
-            />
+
+            <DropdownMenu.Menu>
+              <DropdownMenu.Trigger asChild>
+                <span>
+                  <Button
+                    kind={Button.kinds.SECONDARY}
+                    size={Button.sizes.SMALL}
+                    // extra small
+                    className="h-6 !text-xs !leading-3"
+                  >
+                    <DownloadOutlined /> Download
+                  </Button>
+                </span>
+              </DropdownMenu.Trigger>
+
+              <DropdownMenu.Content>
+                <DropdownMenu.Item>
+                  <a
+                    href={`data:text/csv;charset=utf-8,${downloadAsCsv(result)}`}
+                    download={'query-results-' + Date.now() + '.csv'}
+                    className="text-black"
+                    onClick={() => {
+                      if (onDownloadResult) {
+                        onDownloadResult('csv');
+                      }
+                    }}
+                  >
+                    Export as .csv
+                  </a>
+                </DropdownMenu.Item>
+                <DropdownMenu.Item>
+                  <a
+                    href={`data:application/json;charset=utf-8,${downloadAsJson(result)}`}
+                    download={'query-results-' + Date.now() + '.json'}
+                    className="text-black"
+                    onClick={() => {
+                      if (onDownloadResult) {
+                        onDownloadResult('json');
+                      }
+                    }}
+                  >
+                    Export as .json
+                  </a>
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Menu>
           </div>
         }
       />

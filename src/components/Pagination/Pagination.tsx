@@ -59,7 +59,7 @@ const Pagination = ({
       data-testid={testId}
       role="navigation"
       aria-label="pagination"
-      className={cn('mx-auto flex w-full select-none justify-center', className)}
+      className={cn('mx-auto flex select-none justify-center', className)}
     >
       <Content>
         {/* Prev Button */}

@@ -1,8 +1,8 @@
 import { QueryResultSuccess } from 'types/query';
 
 export const useSchemaTreeMock: QueryResultSuccess = {
-  col_types: [],
-  cols: [],
+  col_types: [4, 4, 4],
+  cols: ['table_schema', 'table_name', 'table_type'],
   rows: [
     ['gc', 'alembic_version', 'BASE TABLE', [['version_num']], ['text']],
     [
