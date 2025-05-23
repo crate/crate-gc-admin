@@ -12,15 +12,20 @@ import { QueryStatus } from 'types/query';
 import { Tooltip } from 'antd';
 import { truncate } from 'lodash';
 
-type Params = {
+export type SQLResultsProps = {
   results: QueryStatus[] | undefined;
-  format?: boolean;
+  onDownloadResult?: (format: 'csv' | 'json') => void;
 };
 
-function SQLResults({ results, format }: Params) {
+function SQLResults({ results, onDownloadResult }: SQLResultsProps) {
   function renderResult(queryResult: QueryStatus) {
     if (queryResult.status === 'ERROR' || queryResult.status === 'SUCCESS') {
-      return <SQLResultsTable result={queryResult.result} format={format} />;
+      return (
+        <SQLResultsTable
+          result={queryResult.result}
+          onDownloadResult={onDownloadResult}
+        />
+      );
     } else {
       return (
         <div className="p-4">

@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import AceEditor from 'react-ace';
-import { CaretRightOutlined, FormatPainterOutlined } from '@ant-design/icons';
+import {
+  CaretRightOutlined,
+  FormatPainterOutlined,
+  HistoryOutlined,
+} from '@ant-design/icons';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
@@ -387,10 +391,11 @@ function SQLEditor({
                       }
                       setShowHistory(true);
                     }}
-                    kind="tertiary"
-                    size="small"
+                    kind={Button.kinds.SECONDARY}
+                    size={Button.sizes.SMALL}
                   >
-                    Show history
+                    <HistoryOutlined className="mr-2" />
+                    History
                   </Button>
                 )}
               </div>

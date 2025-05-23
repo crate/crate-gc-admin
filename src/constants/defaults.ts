@@ -20,3 +20,6 @@ export const DURATION_FORMAT = 'H:mm:ss.SSS';
 // Docs
 export const CRATEDB_PRIVILEGES_DOCS =
   'https://cratedb.com/docs/crate/reference/en/latest/admin/privileges.html';
+
+export const CRATEDB_ERROR_CODES_DOCS =
+  'https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes';

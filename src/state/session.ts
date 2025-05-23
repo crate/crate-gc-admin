@@ -20,8 +20,8 @@ type SessionStore = {
   ) => void;
   load: LoadAverage[];
   fsStats: { [key: string]: FSStats };
-  tableResultsFormat: string;
-  setTableResultsFormat: (format: string) => void;
+  tableResultsFormatPretty: boolean;
+  setTableResultsFormatPretty: (pretty: boolean) => void;
   showErrorTrace: boolean;
   setShowErrorTrace: (showErrorTrace: boolean) => void;
 };
@@ -30,7 +30,7 @@ const initialState = {
   notification: null,
   load: [],
   fsStats: {},
-  tableResultsFormat: 'pretty',
+  tableResultsFormatPretty: true,
   showErrorTrace: false,
 };
 
@@ -52,8 +52,8 @@ const useSessionStore = create<SessionStore>(set => ({
   setShowErrorTrace: (showErrorTrace: boolean) => {
     set({ showErrorTrace });
   },
-  setTableResultsFormat: (format: string) => {
-    set({ tableResultsFormat: format });
+  setTableResultsFormatPretty: (pretty: boolean) => {
+    set({ tableResultsFormatPretty: pretty });
   },
 }));
 export default useSessionStore;

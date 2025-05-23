@@ -7,9 +7,10 @@ import useJWTManagerStore from 'state/jwtManager';
 type SQLConsoleProps = {
   onQuery?: () => void;
   onViewHistory?: () => void;
+  onDownloadResult?: (format: 'csv' | 'json') => void;
 };
 
-function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
+function SQLConsole({ onQuery, onViewHistory, onDownloadResult }: SQLConsoleProps) {
   const { executeSqlWithStatus, queryResults, resetResults } = useExecuteMultiSql();
   const specifiedQuery = new URLSearchParams(location.search).get('q');
   const [showHistory, setShowHistory] = useState(false);
@@ -74,7 +75,9 @@ function SQLConsole({ onQuery, onViewHistory }: SQLConsoleProps) {
           <div className="h-full w-10 bg-crate-blue" />
         </PanelResizeHandle>
         <Panel minSize={5}>
-          {queryResults && <SQLResults results={queryResults} />}
+          {queryResults && (
+            <SQLResults results={queryResults} onDownloadResult={onDownloadResult} />
+          )}
           {!queryResults && <NoDataView />}
         </Panel>
       </PanelGroup>

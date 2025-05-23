@@ -104,11 +104,11 @@ describe('The SQLEditor component', () => {
     });
   });
 
-  describe('the "Show history" button', () => {
+  describe('the "History" button', () => {
     it('is hidden by default', async () => {
       await setup();
 
-      expect(screen.queryByText('Show history')).not.toBeInTheDocument();
+      expect(screen.queryByText('History')).not.toBeInTheDocument();
     });
 
     it('is shown if setShowHistory prop is passed', async () => {
@@ -116,7 +116,7 @@ describe('The SQLEditor component', () => {
         setShowHistory,
       });
 
-      expect(screen.getByText('Show history')).toBeInTheDocument();
+      expect(screen.getByText('History')).toBeInTheDocument();
     });
 
     it('clicking on it triggers setShowHistory', async () => {
@@ -124,7 +124,7 @@ describe('The SQLEditor component', () => {
         setShowHistory,
       });
 
-      await user.click(screen.getByText('Show history'));
+      await user.click(screen.getByText('History'));
 
       expect(setShowHistory).toHaveBeenCalledWith(true);
     });
@@ -133,7 +133,7 @@ describe('The SQLEditor component', () => {
       it('clicking on it triggers onViewHistory', async () => {
         const { user } = await setup({ setShowHistory, onViewHistory });
 
-        await user.click(screen.getByText('Show history'));
+        await user.click(screen.getByText('History'));
 
         expect(onViewHistory).toHaveBeenCalled();
       });
