@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-23 - 0.21.1
+
+- Change JSON format query export to use NDJSON format.
+
 ## 2025-05-23 - 0.21.0
 
 - Add download option for query results in CSV and JSON format.

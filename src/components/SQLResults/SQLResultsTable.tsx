@@ -135,7 +135,7 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
       }, {}),
     );
 
-    return JSON.stringify(data);
+    return data.map(el => JSON.stringify(el)).join('\n');
   };
 
   const asTable = (
