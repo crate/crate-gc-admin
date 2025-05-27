@@ -10,4 +10,6 @@ export * from './swr/jwt';
 
 export * from 'types/query';
 
+export * from 'utils/sqlFormatter';
+
 export type { JWTManagerStore };

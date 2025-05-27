@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-26 - 0.21.2
+
+- Exporting SQL Formatter utility file.
+
 ## 2025-05-23 - 0.21.1
 
 - Change JSON format query export to use NDJSON format.
