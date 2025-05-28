@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-05-28 - 0.21.3
+
+- Removing whitespace prepended into pretty-printed query results strings.
+
 ## 2025-05-26 - 0.21.2
 
 - Exporting SQL Formatter utility file.
