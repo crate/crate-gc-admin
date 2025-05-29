@@ -19,7 +19,7 @@ const MIN_COL_WIDTH = '170px';
 function NodesMetrics() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
   const isLocalConnection = useJWTManagerStore(state => state.isLocalConnection);
-  const { fsStats } = useSessionStore();
+  const { clusterHealth } = useSessionStore();
 
   const { data: nodes } = useClusterNodeStatus(clusterId);
   const { data: cluster } = useClusterInfo(clusterId);
@@ -249,7 +249,7 @@ function NodesMetrics() {
   };
 
   const renderFS = (node: NodeStatusInfo) => {
-    const stats = fsStats[node.id];
+    const stats = clusterHealth[clusterId || '']?.fsStats[node.id];
     if (!stats) {
       return <Loader testId="loading-fs" />;
     }
@@ -266,17 +266,20 @@ function NodesMetrics() {
           <Text>{formatNum(stats.iops_read, 0)} iops</Text>
           <Text>{formatNum(stats.iops_write, 0)} iops</Text>
           <Text>
-            {prettyBytes(fsStats[node.id].bps_read, {
+            {prettyBytes(clusterHealth[clusterId || '']?.fsStats[node.id].bps_read, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
             /s
           </Text>
           <Text>
-            {prettyBytes(fsStats[node.id].bps_write, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            {prettyBytes(
+              clusterHealth[clusterId || '']?.fsStats[node.id].bps_write,
+              {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              },
+            )}
             /s
           </Text>
         </div>

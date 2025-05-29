@@ -19,7 +19,7 @@ import { LOADER_SIZES } from 'components/Loader/LoaderConstants';
 function StatusBar() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
   const [mobileVisible, setMobileVisible] = useState(false);
-  const { load } = useSessionStore();
+  const { clusterHealth } = useSessionStore();
   const { data: nodeStatus } = useClusterNodeStatus();
   const { data: currentUser } = useCurrentUser();
   const { data: cluster } = useClusterInfo(clusterId);
@@ -100,11 +100,14 @@ function StatusBar() {
   };
 
   const getLoadAverage = () => {
-    if (!load || load.length == 0) {
+    if (
+      !clusterHealth[clusterId || '']?.load ||
+      clusterHealth[clusterId || ''].load.length === 0
+    ) {
       return drawValueOrLoader();
     }
 
-    const last = load.slice(-1).pop();
+    const last = clusterHealth[clusterId || ''].load.slice(-1).pop();
     if (!last) {
       return;
     }
