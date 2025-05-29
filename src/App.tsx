@@ -3,10 +3,11 @@ import { bottomNavigation, topNavigation } from 'constants/navigation';
 import routes from 'constants/routes';
 import { useEffect } from 'react';
 import { ConnectionStatus } from 'types';
-import { Layout, StatusBar, StatsUpdater, GcAdminAntdProvider } from 'components';
+import { Layout, StatusBar, GcAdminAntdProvider } from 'components';
 import logo from './assets/logo.svg';
 import useGcApi from 'hooks/useGcApi';
 import { apiGet } from 'utils/api';
+import ClusterHealthManager from 'components/ClusterHealthManager';
 import NotificationHandler from 'components/NotificationHandler';
 import { root } from 'constants/paths';
 import useJWTManagerStore from 'state/jwtManager';
@@ -39,7 +40,7 @@ function App() {
 
   return (
     <GcAdminAntdProvider>
-      <StatsUpdater />
+      <ClusterHealthManager clusterId="" />
       <Layout
         topbarLogo={
           <Link to={root.build()}>

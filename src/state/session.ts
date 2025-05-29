@@ -10,7 +10,13 @@ type Notification = {
   description?: string | React.ReactElement;
 };
 
+type ClusterHealth = {
+  load: LoadAverage[];
+  fsStats: { [key: string]: FSStats };
+};
+
 type SessionStore = {
+  // notifications
   notification: Notification | null;
   clearNotification: () => void;
   setNotification: (
@@ -18,18 +24,23 @@ type SessionStore = {
     message: string,
     description?: string,
   ) => void;
-  load: LoadAverage[];
-  fsStats: { [key: string]: FSStats };
+
+  // health
+  clusterHealth: Record<string, ClusterHealth>;
+  setClusterHealth: (clusterId: string, health: ClusterHealth) => void;
+
+  // table results format
   tableResultsFormatPretty: boolean;
   setTableResultsFormatPretty: (pretty: boolean) => void;
+
+  // error trace
   showErrorTrace: boolean;
   setShowErrorTrace: (showErrorTrace: boolean) => void;
 };
 
 const initialState = {
   notification: null,
-  load: [],
-  fsStats: {},
+  clusterHealth: {},
   tableResultsFormatPretty: true,
   showErrorTrace: false,
 };
@@ -49,6 +60,16 @@ const useSessionStore = create<SessionStore>(set => ({
   ) => {
     set({ notification: { type, message, description } });
   },
+  setClusterHealth: (clusterId: string, health: ClusterHealth) => {
+    set(state => {
+      return {
+        clusterHealth: {
+          ...state.clusterHealth,
+          [clusterId]: health,
+        },
+      };
+    });
+  },
   setShowErrorTrace: (showErrorTrace: boolean) => {
     set({ showErrorTrace });
   },
@@ -56,4 +77,5 @@ const useSessionStore = create<SessionStore>(set => ({
     set({ tableResultsFormatPretty: pretty });
   },
 }));
+
 export default useSessionStore;
