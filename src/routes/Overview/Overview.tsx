@@ -1,7 +1,7 @@
 import { useAllocations, useClusterInfo, useQueryStats } from 'src/swr/jwt';
 import { Loader, Heading, GCChart } from 'components';
 import { Statistic, Tag } from 'antd';
-import { STATS_PERIOD } from 'components/StatsUpdater/StatsUpdater';
+import { STATS_PERIOD } from 'components/ClusterHealthManager/ClusterHealthManager';
 import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
 import { formatHumanReadable, formatNum } from 'utils/numbers';
 import useSessionStore from 'state/session';
@@ -9,7 +9,7 @@ import useJWTManagerStore from 'state/jwtManager';
 
 function Overview() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
-  const { load } = useSessionStore();
+  const { clusterHealth } = useSessionStore();
 
   const { data: cluster } = useClusterInfo(clusterId);
   const { data: allocations } = useAllocations();
@@ -18,10 +18,15 @@ function Overview() {
   const clusterStatus = getClusterStatus(allocations);
 
   const getStartTime = () => {
-    if (!load || load.length == 0) {
+    if (
+      !clusterHealth[clusterId || '']?.load ||
+      clusterHealth[clusterId || ''].load.length == 0
+    ) {
       return;
     }
-    const latest = load.slice(-1)?.pop()?.probe_timestamp;
+    const latest = clusterHealth[clusterId || ''].load
+      .slice(-1)
+      ?.pop()?.probe_timestamp;
     return latest ? latest - STATS_PERIOD : undefined;
   };
 
@@ -46,6 +51,7 @@ function Overview() {
   if (!cluster || !allocations) {
     return <Loader />;
   }
+
   return (
     <div>
       <Heading level={Heading.levels.h1}>Cluster: {cluster?.name}</Heading>
@@ -101,7 +107,7 @@ function Overview() {
         <div className="col-span-2">
           <GCChart
             title="Cluster Load"
-            data={load.map(l => {
+            data={clusterHealth[clusterId || ''].load.map(l => {
               return {
                 time: l.probe_timestamp,
                 l1: l['1'],

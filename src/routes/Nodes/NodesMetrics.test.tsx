@@ -21,7 +21,7 @@ const waitForTableRender = async () => {
   await screen.findByRole('table');
 };
 
-const { fsStats } = useSessionStore.getState();
+const initialState = useSessionStore.getState();
 
 const changeStats = (fsUsedPercent: number, heapUsedPercent: number) => {
   // would be nicer to use structuredClone here...
@@ -389,8 +389,11 @@ describe('The Nodes component', () => {
         bps_write: 20,
         bps_read: 25,
       };
-      beforeAll(() => {
-        fsStats[clusterNode.id] = stats;
+      beforeEach(async () => {
+        useSessionStore.setState({
+          ...initialState,
+          clusterHealth: { '': { fsStats: { [clusterNode.id]: stats }, load: [] } },
+        });
       });
 
       it('shows reads iops', async () => {
