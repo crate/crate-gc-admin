@@ -23,3 +23,6 @@ export const CRATEDB_PRIVILEGES_DOCS =
 
 export const CRATEDB_ERROR_CODES_DOCS =
   'https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes';
+
+// SQL Editor
+export const SQL_EDITOR_QUERIES_QUOTA = 100;
