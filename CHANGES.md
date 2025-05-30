@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-06-02 - 0.21.4
+
+- Replace StatsUpdater with multi-cluster aware ClusterHealthManager.
+
 ## 2025-05-28 - 0.21.3
 
 - Removing whitespace prepended into pretty-printed query results strings.
