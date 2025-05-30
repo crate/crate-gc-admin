@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Migrate SQL Editor history from single-cluster to multi-cluster.
+
 ## 2025-05-28 - 0.21.3
 
 - Removing whitespace prepended into pretty-printed query results strings.
