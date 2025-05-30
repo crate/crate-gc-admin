@@ -3,6 +3,43 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { NoDataView, SQLEditor, SQLHistory, SQLResults } from 'components';
 import useExecuteMultiSql from 'hooks/useExecuteMultiSql';
 import useJWTManagerStore from 'state/jwtManager';
+import { SQL_EDITOR_QUERIES_QUOTA } from 'constants/defaults';
+import { SqlEditorHistoryEntry } from 'types/localStorage';
+
+const getAndMigrateHistory = (
+  oldHistoryKey: string,
+  oldTempHistoryKey: string,
+  newHistoryKey: string,
+  clusterId: string | undefined,
+): SqlEditorHistoryEntry[] => {
+  // get old and new history
+  const oldHistory: string[] = JSON.parse(
+    localStorage.getItem(oldHistoryKey) || '[]',
+  );
+  let newHistory: SqlEditorHistoryEntry[] = JSON.parse(
+    localStorage.getItem(newHistoryKey) || '[]',
+  );
+
+  // migrate old history
+  oldHistory.forEach(query => {
+    newHistory.push({
+      clusterId,
+      query,
+    });
+  });
+
+  // get last SQL_EDITOR_QUERIES_QUOTA items
+  newHistory = newHistory.slice(-SQL_EDITOR_QUERIES_QUOTA);
+
+  // save new history
+  localStorage.setItem(newHistoryKey, JSON.stringify(newHistory));
+
+  // remove old history
+  localStorage.removeItem(oldHistoryKey);
+  localStorage.removeItem(oldTempHistoryKey);
+
+  return newHistory;
+};
 
 type SQLConsoleProps = {
   onQuery?: () => void;
@@ -36,8 +73,15 @@ function SQLConsole({ onQuery, onViewHistory, onDownloadResult }: SQLConsoleProp
   };
 
   const LOCAL_STORAGE_KEY = 'sql-editor';
-  const SQL_HISTORY_CONTENT_KEY = `crate.gc.admin.${LOCAL_STORAGE_KEY}-history.${clusterId || ''}`;
-  const history = JSON.parse(localStorage.getItem(SQL_HISTORY_CONTENT_KEY) || '[]');
+  const OLD_SQL_HISTORY_CONTENT_KEY = `crate.gc.admin.${LOCAL_STORAGE_KEY}-history.${clusterId || ''}`;
+  const OLD_TEMP_SQL_HISTORY_CONTENT_KEY = `crate.gc.admin.${LOCAL_STORAGE_KEY}-history-temp.${clusterId || ''}`;
+  const SQL_HISTORY_CONTENT_KEY = `crate.gc.admin.${LOCAL_STORAGE_KEY}-history`;
+  const history = getAndMigrateHistory(
+    OLD_SQL_HISTORY_CONTENT_KEY,
+    OLD_TEMP_SQL_HISTORY_CONTENT_KEY,
+    SQL_HISTORY_CONTENT_KEY,
+    clusterId,
+  );
 
   const clearHistory = () => {
     localStorage.removeItem(SQL_HISTORY_CONTENT_KEY);
@@ -82,7 +126,7 @@ function SQLConsole({ onQuery, onViewHistory, onDownloadResult }: SQLConsoleProp
         </Panel>
       </PanelGroup>
       <SQLHistory
-        history={history}
+        history={history.filter(el => el.clusterId === clusterId)}
         showHistory={showHistory}
         clearHistory={clearHistory}
         removeHistoryItem={removeHistoryItem}

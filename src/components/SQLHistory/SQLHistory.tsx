@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Modal, Table } from 'antd';
 import { CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, CopyToClipboard, NoDataView } from 'components';
+import { SqlEditorHistoryEntry } from 'types/localStorage';
 
 type SQLHistoryProps = {
-  history: string[];
+  history: SqlEditorHistoryEntry[];
   showHistory: boolean;
   clearHistory: () => void;
   removeHistoryItem: (index: number) => void;
@@ -67,13 +68,13 @@ function SQLHistory({
   };
 
   const tableData = history
-    .map((query: string, index: number) => {
+    .map((historyEntry: SqlEditorHistoryEntry, index: number) => {
       return {
         key: `query_${index}`,
-        query: drawQuery(query, index),
+        query: drawQuery(historyEntry.query, index),
         manage: (
           <div className="flex gap-4">
-            <CopyToClipboard textToCopy={query}>
+            <CopyToClipboard textToCopy={historyEntry.query}>
               <CopyOutlined className="text-crate-blue" />
             </CopyToClipboard>
             <button

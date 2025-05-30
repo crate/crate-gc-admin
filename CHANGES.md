@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2025-06-03 - 0.21.5
+
 - Misc dependabot updates and node version bump.
+- Migrate SQL Editor history from single-cluster to multi-cluster.
 
 ## 2025-06-02 - 0.21.4
 
