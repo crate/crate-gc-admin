@@ -2,6 +2,7 @@ export { default as Button, useButtonStyles } from './Button';
 export { default as Card, CardHeader, CardIconDescriptor } from './Card';
 export { default as Checkbox } from './Checkbox';
 export { default as Chip } from './Chip';
+export { default as ClusterHealthManager } from './ClusterHealthManager';
 export { default as Code } from './Code';
 export { default as ConfirmDelete } from './ConfirmDelete';
 export { default as CopyToClipboard } from './CopyToClipboard';

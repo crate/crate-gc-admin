@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Misc dependabot updates and node version bump.
+
 ## 2025-06-02 - 0.21.4
 
 - Replace StatsUpdater with multi-cluster aware ClusterHealthManager.
