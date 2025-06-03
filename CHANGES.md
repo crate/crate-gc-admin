@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix intermittent failing test.
+
 ## 2025-06-03 - 0.21.5
 
 - Misc dependabot updates and node version bump.
