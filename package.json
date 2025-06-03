@@ -36,7 +36,7 @@
     "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-select": "^2.1.4",
     "@radix-ui/react-slot": "^1.2.0",
-    "@radix-ui/react-switch": "^1.2.2",
+    "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-tabs": "^1.1.9",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.21.2",
