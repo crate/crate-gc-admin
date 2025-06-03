@@ -18,6 +18,8 @@ import { QueryStatus } from 'types/query';
 import SQLEditorSchemaTree from './SQLEditorSchemaTree';
 import { useSchemaTree } from 'src/swr/jwt';
 import useJWTManagerStore from 'state/jwtManager';
+import { SQL_EDITOR_QUERIES_QUOTA } from 'constants/defaults';
+import { SqlEditorHistoryEntry } from 'types/localStorage';
 
 export type SQLEditorProps = {
   value?: string | undefined | null;
@@ -63,11 +65,9 @@ function SQLEditor({
   const SQL_EDITOR_CONTENT_KEY =
     localStorageKey && `crate.gc.admin.${localStorageKey}.${clusterId || ''}`;
   const SQL_HISTORY_CONTENT_KEY =
-    localStorageKey &&
-    `crate.gc.admin.${localStorageKey}-history.${clusterId || ''}`;
+    localStorageKey && `crate.gc.admin.${localStorageKey}-history`;
   const SQL_HISTORY_TEMP_CONTENT_KEY =
-    localStorageKey &&
-    `crate.gc.admin.${localStorageKey}-history-temp.${clusterId || ''}`;
+    localStorageKey && `crate.gc.admin.${localStorageKey}-history-temp`;
 
   const dataFromLocalStorage = SQL_EDITOR_CONTENT_KEY
     ? localStorage.getItem(SQL_EDITOR_CONTENT_KEY)
@@ -180,14 +180,17 @@ function SQLEditor({
       return;
     }
     const strHistory = localStorage.getItem(SQL_HISTORY_CONTENT_KEY!) || '[]';
-    let historyArray: string[] = JSON.parse(strHistory);
+    let historyArray: SqlEditorHistoryEntry[] = JSON.parse(strHistory);
     const last = historyArray.slice(-1);
-    if (last.length > 0 && last[0] == value) {
+    if (last.length > 0 && last[0].query == value) {
       // do not push if same as last
       return;
     }
-    historyArray.push(value);
-    if (historyArray.length > 100) {
+    historyArray.push({
+      clusterId,
+      query: value,
+    });
+    if (historyArray.length > SQL_EDITOR_QUERIES_QUOTA) {
       historyArray = historyArray.slice(1); // remove the head
     }
     localStorage.setItem(SQL_HISTORY_CONTENT_KEY!, JSON.stringify(historyArray));
@@ -198,10 +201,10 @@ function SQLEditor({
     if (!isLocalStorageUsed) {
       return;
     }
-    const history: string[] = JSON.parse(
+    const history: SqlEditorHistoryEntry[] = JSON.parse(
       localStorage.getItem(SQL_HISTORY_CONTENT_KEY!) || '[]',
     );
-    const tempHistory: string[] = JSON.parse(
+    const tempHistory: SqlEditorHistoryEntry[] = JSON.parse(
       localStorage.getItem(SQL_HISTORY_TEMP_CONTENT_KEY!) || '[]',
     );
     let historyToUse = history;
@@ -216,7 +219,7 @@ function SQLEditor({
       SQL_HISTORY_TEMP_CONTENT_KEY!,
       JSON.stringify(historyToUse),
     );
-    return ret;
+    return ret?.query;
   };
 
   const formatSql = () => {
