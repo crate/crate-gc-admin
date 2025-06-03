@@ -4652,11 +4652,6 @@ get-proto@^1.0.1:
     dunder-proto "^1.0.1"
     es-object-atoms "^1.0.0"
 
-get-stdin@=8.0.0:
-  version "8.0.0"
-  resolved "https://registry.npmjs.org/get-stdin/-/get-stdin-8.0.0.tgz#cbad6a73feb75f6eeb22ba9e01f89aa28aa97a53"
-  integrity sha512-sY22aA6xchAzprjyqmSEQv4UbAAzRN0L2dQB0NlN5acTTK9Don6nhoc3eAbUnpZiCANAMfd/+40kVdKfFygohg==
-
 get-stream@^6.0.0:
   version "6.0.1"
   resolved "https://registry.npmjs.org/get-stream/-/get-stream-6.0.1.tgz#a262d8eef67aced57c2852ad6167526a43cbf7b7"
@@ -7956,13 +7951,12 @@ sprintf-js@~1.0.2:
   resolved "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
 
-sql-formatter@^15.4.6:
-  version "15.4.6"
-  resolved "https://registry.yarnpkg.com/sql-formatter/-/sql-formatter-15.4.6.tgz#6e00e967ce86aa70daa0249097b2d3941e4e66f4"
-  integrity sha512-aH6kwvJpylljHqXe+zpie0Q5snL3uerDLLhjPEBjDCVK1NMRFq4nMJbuPJWYp08LaaaJJgBhShAdAfspcBYY0Q==
+sql-formatter@^15.6.2:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/sql-formatter/-/sql-formatter-15.6.2.tgz#d217a9ab4749c1a1791ce954dd224e283b054edc"
+  integrity sha512-ZjqOfJGuB97UeHzTJoTbadlM0h9ynehtSTHNUbGfXR4HZ4rCIoD2oIW91W+A5oE76k8hl0Uz5GD8Sx3Pt9Xa3w==
   dependencies:
     argparse "^2.0.1"
-    get-stdin "=8.0.0"
     nearley "^2.20.1"
 
 stack-utils@^2.0.3:
