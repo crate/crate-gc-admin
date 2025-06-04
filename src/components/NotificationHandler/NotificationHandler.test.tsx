@@ -38,9 +38,7 @@ describe('The NotificationHandler component', () => {
 
       await waitFor(() => {
         expect(
-          (container.nextSibling! as HTMLElement).querySelector(
-            '.cui-notification-warn',
-          ),
+          container.nextElementSibling?.querySelector('.cui-notification-warn'),
         ).toBeInTheDocument();
       });
 
@@ -58,9 +56,7 @@ describe('The NotificationHandler component', () => {
 
       await waitFor(() => {
         expect(
-          (container.nextSibling! as HTMLElement).querySelector(
-            '.cui-notification-error',
-          ),
+          container.nextElementSibling?.querySelector('.cui-notification-error'),
         ).toBeInTheDocument();
       });
 
@@ -78,9 +74,7 @@ describe('The NotificationHandler component', () => {
 
       await waitFor(() => {
         expect(
-          (container.nextSibling as HTMLElement).querySelector(
-            '.cui-notification-info',
-          ),
+          container.nextElementSibling?.querySelector('.cui-notification-info'),
         ).toBeInTheDocument();
       });
 
