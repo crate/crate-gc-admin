@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import dts from 'vite-plugin-dts';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
@@ -6,9 +6,7 @@ import { resolve } from 'path';
 import packageJson from './package.json';
 import preserveDirectives from 'rollup-preserve-directives';
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), 'REACT_APP_');
-
+export default defineConfig(() => {
   return {
     // depending on your application, base can also be "/"
     base: '',
@@ -20,15 +18,12 @@ export default defineConfig(({ mode }) => {
       }),
 
       // Fix https://github.com/vitejs/vite/issues/15012#issuecomment-2049888711
-      preserveDirectives(),
+      preserveDirectives() as Plugin,
     ],
     server: {
       // this ensures that the browser opens upon server start
       open: true,
       port: 5000,
-    },
-    define: {
-      'process.env': env,
     },
     build: {
       outDir: 'dist',
