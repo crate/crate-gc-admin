@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Fix intermittent failing test.
+- Migrate crate-gc-admin env variables to vite specifications.
 
 ## 2025-06-03 - 0.21.5
 

@@ -4,7 +4,7 @@ FROM node:24.1.0-slim as build-deps
 ENV NPM_CONFIG_LOGLEVEL warn
 
 # FIXME: This should not be hardcoded
-ENV REACT_APP_GRAND_CENTRAL_URL http://localhost:5050
+ENV VITE_GRAND_CENTRAL_URL http://localhost:5050
 
 # Create the work dir
 ADD . /home/nodeuser/app
