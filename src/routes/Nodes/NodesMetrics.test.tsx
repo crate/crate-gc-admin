@@ -5,7 +5,7 @@ import { NODE_STATUS_THRESHOLD } from 'constants/database';
 import prettyBytes from 'pretty-bytes';
 import { VERTICAL_PROGRESS_BARS } from 'components/VerticalProgress/VerticalProgress';
 import { formatNum } from 'utils';
-import useSessionStore from 'src/state/session';
+import useClusterHealthStore from 'src/state/clusterHealth';
 import { http, HttpResponse } from 'msw';
 import { useClusterNodeStatusMock } from 'test/__mocks__/useClusterNodeStatusMock';
 import { clusterNode } from 'test/__mocks__/nodes';
@@ -21,7 +21,7 @@ const waitForTableRender = async () => {
   await screen.findByRole('table');
 };
 
-const initialState = useSessionStore.getState();
+const initialState = useClusterHealthStore.getState();
 
 const changeStats = (fsUsedPercent: number, heapUsedPercent: number) => {
   // would be nicer to use structuredClone here...
@@ -390,7 +390,7 @@ describe('The Nodes component', () => {
         bps_read: 25,
       };
       beforeEach(async () => {
-        useSessionStore.setState({
+        useClusterHealthStore.setState({
           ...initialState,
           clusterHealth: { '': { fsStats: { [clusterNode.id]: stats }, load: [] } },
         });

@@ -4,12 +4,12 @@ import { Statistic, Tag } from 'antd';
 import { STATS_PERIOD } from 'components/ClusterHealthManager/ClusterHealthManager';
 import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
 import { formatHumanReadable, formatNum } from 'utils/numbers';
-import useSessionStore from 'state/session';
+import useClusterHealthStore from 'state/clusterHealth';
 import useJWTManagerStore from 'state/jwtManager';
 
 function Overview() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
-  const { clusterHealth } = useSessionStore();
+  const { clusterHealth } = useClusterHealthStore();
 
   const { data: cluster } = useClusterInfo(clusterId);
   const { data: allocations } = useAllocations();

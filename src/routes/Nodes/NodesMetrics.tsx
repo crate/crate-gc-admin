@@ -11,7 +11,7 @@ import {
   VerticalProgress,
 } from 'components';
 import { ColumnDef } from '@tanstack/react-table';
-import useSessionStore from 'src/state/session';
+import useClusterHealthStore from 'src/state/clusterHealth';
 import useJWTManagerStore from 'state/jwtManager';
 
 const MIN_COL_WIDTH = '170px';
@@ -19,7 +19,7 @@ const MIN_COL_WIDTH = '170px';
 function NodesMetrics() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
   const isLocalConnection = useJWTManagerStore(state => state.isLocalConnection);
-  const { clusterHealth } = useSessionStore();
+  const { clusterHealth } = useClusterHealthStore();
 
   const { data: nodes } = useClusterNodeStatus(clusterId);
   const { data: cluster } = useClusterInfo(clusterId);

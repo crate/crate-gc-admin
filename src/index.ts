@@ -5,6 +5,7 @@ export { useJWTManagerStore };
 export * from './components';
 export * from './hooks';
 export * from './routes';
+export * from './state/clusterHealth';
 export * from './state/jwtManager';
 export * from './swr/jwt';
 
