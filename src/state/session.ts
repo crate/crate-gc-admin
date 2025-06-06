@@ -2,17 +2,11 @@
 // currently used for API error notifications only
 
 import { create } from 'zustand';
-import { FSStats, LoadAverage } from 'types/cratedb';
 
 type Notification = {
   type?: NotificationType;
   message: string;
   description?: string | React.ReactElement;
-};
-
-type ClusterHealth = {
-  load: LoadAverage[];
-  fsStats: { [key: string]: FSStats };
 };
 
 type SessionStore = {
@@ -25,10 +19,6 @@ type SessionStore = {
     description?: string,
   ) => void;
 
-  // health
-  clusterHealth: Record<string, ClusterHealth>;
-  setClusterHealth: (clusterId: string, health: ClusterHealth) => void;
-
   // table results format
   tableResultsFormatPretty: boolean;
   setTableResultsFormatPretty: (pretty: boolean) => void;
@@ -40,7 +30,6 @@ type SessionStore = {
 
 const initialState = {
   notification: null,
-  clusterHealth: {},
   tableResultsFormatPretty: true,
   showErrorTrace: false,
 };
@@ -59,16 +48,6 @@ const useSessionStore = create<SessionStore>(set => ({
     description?: string,
   ) => {
     set({ notification: { type, message, description } });
-  },
-  setClusterHealth: (clusterId: string, health: ClusterHealth) => {
-    set(state => {
-      return {
-        clusterHealth: {
-          ...state.clusterHealth,
-          [clusterId]: health,
-        },
-      };
-    });
   },
   setShowErrorTrace: (showErrorTrace: boolean) => {
     set({ showErrorTrace });

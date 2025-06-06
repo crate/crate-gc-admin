@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useSessionStore from 'state/session';
+import useClusterHealthStore from 'state/clusterHealth';
 import { useClusterNodeStatus } from 'src/swr/jwt';
 import { FSStats, LoadAverage, NodeStatusInfo } from 'types/cratedb';
 
@@ -10,7 +10,7 @@ export type ClusterHealthManagerProps = {
 export const STATS_PERIOD = 15 * 60 * 1000;
 
 function ClusterHealthManager({ clusterId }: ClusterHealthManagerProps) {
-  const { clusterHealth, setClusterHealth } = useSessionStore();
+  const { clusterHealth, setClusterHealth } = useClusterHealthStore();
   const { data: nodes } = useClusterNodeStatus(clusterId);
   const [prevNodeData, setPrevNodesData] = useState<NodeStatusInfo[] | []>();
 

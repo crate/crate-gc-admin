@@ -12,14 +12,14 @@ import React, { useEffect, useState } from 'react';
 import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
 import Loader from 'components/Loader';
 import logo from '../../assets/logo.svg';
-import useSessionStore from 'state/session';
+import useClusterHealthStore from 'state/clusterHealth';
 import useJWTManagerStore from 'state/jwtManager';
 import { LOADER_SIZES } from 'components/Loader/LoaderConstants';
 
 function StatusBar() {
   const clusterId = useJWTManagerStore(state => state.clusterId);
   const [mobileVisible, setMobileVisible] = useState(false);
-  const { clusterHealth } = useSessionStore();
+  const { clusterHealth } = useClusterHealthStore();
   const { data: nodeStatus } = useClusterNodeStatus();
   const { data: currentUser } = useCurrentUser();
   const { data: cluster } = useClusterInfo(clusterId);

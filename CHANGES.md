@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## 2025-06-06 - 0.21.6
+
 - Fix intermittent failing test.
 - Migrate crate-gc-admin env variables to vite specifications.
+- Migrate cluster health values from session store to new clusterHealth store.
 
 ## 2025-06-03 - 0.21.5
 
