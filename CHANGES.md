@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-06-24 - 0.22.0
+
+- Add a copy to clipboard option to TSV output.
+
 ## 2025-06-06 - 0.21.6
 
 - Fix intermittent failing test.

@@ -15,9 +15,10 @@ import {
 import useSessionStore from 'state/session';
 import DropdownMenu from 'components/DropdownMenu';
 import Button from 'components/Button';
-import { DownloadOutlined } from '@ant-design/icons';
+import { CopyOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Radio } from 'antd';
 import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
+import useMessage from 'hooks/useMessage';
 
 export type SQLResultsTableProps = {
   result: QueryResult | undefined;
@@ -38,6 +39,7 @@ type DataTableColumnData<T> = {
 
 function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
   const { showErrorTrace, tableResultsFormatPretty } = useSessionStore();
+  const { showSuccessMessage } = useMessage();
   const setShowErrorTrace = useSessionStore(store => store.setShowErrorTrace);
   const setTableResultsFormatPretty = useSessionStore(
     store => store.setTableResultsFormatPretty,
@@ -109,8 +111,8 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
     return value as string;
   };
 
-  const downloadAsCsv = (result: QueryResultSuccess) => {
-    const unparsedCSV = result.rows.map(row =>
+  const generateUnparsedTextValues = (result: QueryResultSuccess) => {
+    const unparsed = result.rows.map(row =>
       _.zip(result.cols, row)
         .map(arr => {
           arr[1] =
@@ -124,10 +126,23 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
           return result;
         }, {}),
     );
-    return Papa.unparse(unparsedCSV).replace(/"""/g, '"');
+
+    return unparsed;
   };
 
-  const downloadAsJson = (result: QueryResultSuccess) => {
+  const generateCsv = (result: QueryResultSuccess) => {
+    const unparsed = generateUnparsedTextValues(result);
+    return Papa.unparse(unparsed).replace(/"""/g, '"');
+  };
+
+  const generateTsv = (result: QueryResultSuccess) => {
+    const unparsed = generateUnparsedTextValues(result);
+    return Papa.unparse(unparsed, {
+      delimiter: '\t',
+    }).replace(/"""/g, '"');
+  };
+
+  const generateJson = (result: QueryResultSuccess) => {
     const data: Record<string, unknown>[] = result.rows.map(row =>
       _.zip(result.cols, row).reduce((result: Record<string, unknown>, arr) => {
         result[arr[0] as string] = arr[1];
@@ -262,9 +277,24 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
               />
             </div>
 
+            <Button
+              kind={Button.kinds.SECONDARY}
+              size={Button.sizes.SMALL}
+              // extra small
+              className="h-6 !text-xs !leading-3"
+              onClick={() => {
+                const tsv = generateTsv(result);
+
+                navigator.clipboard.writeText(tsv);
+                showSuccessMessage('Copied');
+              }}
+            >
+              <CopyOutlined /> Copy
+            </Button>
+
             <DropdownMenu.Menu>
               <DropdownMenu.Trigger asChild>
-                <span>
+                <span className="ml-2">
                   <Button
                     kind={Button.kinds.SECONDARY}
                     size={Button.sizes.SMALL}
@@ -279,7 +309,7 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
               <DropdownMenu.Content>
                 <DropdownMenu.Item>
                   <a
-                    href={`data:text/csv;charset=utf-8,${downloadAsCsv(result)}`}
+                    href={`data:text/csv;charset=utf-8,${generateCsv(result)}`}
                     download={'query-results-' + Date.now() + '.csv'}
                     className="text-black"
                     onClick={() => {
@@ -293,7 +323,7 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
                 </DropdownMenu.Item>
                 <DropdownMenu.Item>
                   <a
-                    href={`data:application/json;charset=utf-8,${downloadAsJson(result)}`}
+                    href={`data:application/json;charset=utf-8,${generateJson(result)}`}
                     download={'query-results-' + Date.now() + '.json'}
                     className="text-black"
                     onClick={() => {

@@ -108,6 +108,27 @@ describe('The SQLResultsTable component', () => {
     });
   });
 
+  describe('the Copy button', () => {
+    it('copies the results to the clipboard', async () => {
+      const { user } = setup();
+      const writeTextMock = jest
+        .spyOn(navigator.clipboard, 'writeText')
+        .mockResolvedValue();
+
+      await user.click(screen.getByText('Copy'));
+
+      expect(writeTextMock).toHaveBeenCalled();
+    });
+
+    it('shows the "Copied" success message', async () => {
+      const { user } = setup();
+
+      await user.click(screen.getByText('Copy'));
+
+      expect(screen.getByText('Copied')).toBeInTheDocument();
+    });
+  });
+
   describe('the Download button', () => {
     it('opens a menu', async () => {
       const { user } = setup();
