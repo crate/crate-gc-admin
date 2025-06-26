@@ -8,6 +8,9 @@
   a {
     @apply text-crate-blue;
   }
+  a:hover {
+    @apply text-crate-button-hover;
+  }
 }
 
 body {
