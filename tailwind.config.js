@@ -18,7 +18,7 @@ module.exports = {
         'crate-green-1': '#9BF1AD',
         'crate-body-background': '#F1F1F1',
         'crate-border-dark': '#525252', // tailwind neutral-600
-        'crate-border-mid': '#d4d4d4', // tailwind neutral-300
+        'crate-border-mid': '#A3A3A3', // tailwind neutral-400
         'crate-border-light': '#D4D4D4', // tailwind neutral-300
         'crate-form-disabled': '#f5f5f5',
         'crate-gray30': '#777',

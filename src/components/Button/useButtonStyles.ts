@@ -90,7 +90,7 @@ function useButtonStyles({
       },
       {
         // disabled
-        'border-crate-border-mid': !kindIsTertiary && !kindIsSecondary && disabled,
+        'border-crate-border-light': !kindIsTertiary && !kindIsSecondary && disabled,
         'bg-neutral-100': kindIsPrimary && disabled,
         'text-neutral-400': disabled,
         'cursor-not-allowed': disabled,
