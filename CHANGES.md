@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-06-27 - 0.22.1
+
+- Make Buttons consitent.
+
 ## 2025-06-24 - 0.22.0
 
 - Add a copy to clipboard option to TSV output.

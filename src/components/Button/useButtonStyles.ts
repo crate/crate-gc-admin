@@ -6,7 +6,6 @@ import { BUTTON_KINDS, BUTTON_SIZES } from './ButtonConstants';
 type UseButtonStylesProps = {
   className?: string;
   disabled?: boolean;
-  ghost?: boolean;
   kind?: ButtonKind;
   loading?: boolean;
   size?: ButtonSize;
@@ -25,7 +24,6 @@ type UseButtonStylesProps = {
 function useButtonStyles({
   className = '',
   disabled = false,
-  ghost = false,
   kind = BUTTON_KINDS.PRIMARY,
   loading = false,
   size = BUTTON_SIZES.REGULAR,
@@ -50,11 +48,7 @@ function useButtonStyles({
       'rounded',
       'transition-all',
       'whitespace-nowrap',
-      {
-        // Common Styles
-        'focus-visible:outline-crate-blue': !ghost,
-        'focus-visible:outline-neutral-100': ghost,
-      },
+      'focus-visible:outline-crate-blue',
       {
         // Sizes
         'leading-8': sizeIsRegular,
@@ -69,62 +63,37 @@ function useButtonStyles({
       },
       {
         // primary variant
-        'border-crate-blue': kindIsPrimary && !disabled && !ghost,
-        'bg-crate-blue': kindIsPrimary && !disabled && !warn && !ghost,
+        'border-crate-blue': kindIsPrimary && !disabled,
+        'bg-crate-blue': kindIsPrimary && !disabled && !warn,
         'text-neutral-100': kindIsPrimary && !disabled,
 
         'active:bg-[#23bfde]': kindIsPrimary && !loadingOrDisabled,
         'active:border-[#23bfde]': kindIsPrimary && !loadingOrDisabled,
-        'hover:bg-[#23bfde]': kindIsPrimary && !loadingOrDisabled,
-        'hover:border-[#23bfde]': kindIsPrimary && !loadingOrDisabled,
+        'hover:bg-crate-button-hover': kindIsPrimary && !loadingOrDisabled,
+        'hover:border-crate-button-hover': kindIsPrimary && !loadingOrDisabled,
+
+        // secondary and tertiary common
+        'border-transparent': kindIsTertiary || kindIsSecondary,
 
         // secondary variant
-        'border-crate-border-dark': kindIsSecondary && !disabled,
         'text-neutral-600': kindIsSecondary && !disabled && !warn,
 
-        'active:text-crate-blue': kindIsSecondary && !loadingOrDisabled && !ghost,
-        'active:border-crate-blue': kindIsSecondary && !loadingOrDisabled && !ghost,
-        'hover:text-crate-blue': kindIsSecondary && !loadingOrDisabled && !ghost,
-        'hover:border-crate-blue': kindIsSecondary && !loadingOrDisabled && !ghost,
+        'active:text-crate-blue': kindIsSecondary && !loadingOrDisabled,
+        'hover:bg-gray-100': kindIsSecondary && !loadingOrDisabled,
+        'hover:text-neutral-600': kindIsSecondary && !loadingOrDisabled,
 
         // tertiary - text only
-        'border-transparent': kindIsTertiary,
-        'text-crate-blue': kindIsTertiary && !loadingOrDisabled && !warn && !ghost,
-        'active:text-[#23bfde]':
-          kindIsTertiary && !loadingOrDisabled && !warn && !ghost,
-        'hover:text-[#23bfde]':
-          kindIsTertiary && !loadingOrDisabled && !warn && !ghost,
+        'text-crate-blue': kindIsTertiary && !loadingOrDisabled && !warn,
+        'active:text-[#23bfde]': kindIsTertiary && !loadingOrDisabled && !warn,
+        'hover:text-crate-button-hover':
+          kindIsTertiary && !loadingOrDisabled && !warn,
       },
       {
         // disabled
-        'border-crate-border-mid': !kindIsTertiary && disabled && !ghost,
-        'bg-neutral-200': kindIsPrimary && disabled && !ghost,
-        'text-neutral-400': disabled && !ghost,
-        'text-neutral-100': disabled && ghost,
-        'opacity-80': disabled && ghost,
-      },
-      {
-        // ghost
-        'bg-transparent': ghost,
-
-        // ghost primary
-        'border-neutral-100':
-          (kindIsPrimary && ghost) || (kindIsSecondary && disabled && ghost),
-        'active:bg-neutral-100': kindIsPrimary && !loadingOrDisabled && ghost,
-        'active:text-crate-blue': kindIsPrimary && !loadingOrDisabled && ghost,
-        'hover:bg-neutral-100': kindIsPrimary && !loadingOrDisabled && ghost,
-        'hover:text-crate-blue': kindIsPrimary && !loadingOrDisabled && ghost,
-
-        // ghost secondary
-        'active:text-neutral-100': kindIsSecondary && !loadingOrDisabled && ghost,
-        'active:border-neutral-100': kindIsSecondary && !loadingOrDisabled && ghost,
-        'hover:text-neutral-100': kindIsSecondary && !loadingOrDisabled && ghost,
-        'hover:border-neutral-100': kindIsSecondary && !loadingOrDisabled && ghost,
-
-        // ghost tertiary
-        'text-neutral-100': kindIsTertiary && !loadingOrDisabled && ghost,
-        'active:opacity-80': kindIsTertiary && !loadingOrDisabled && ghost,
-        'hover:opacity-80': kindIsTertiary && !loadingOrDisabled && ghost,
+        'border-crate-border-mid': !kindIsTertiary && !kindIsSecondary && disabled,
+        'bg-neutral-100': kindIsPrimary && disabled,
+        'text-neutral-400': disabled,
+        'cursor-not-allowed': disabled,
       },
       {
         // warn
@@ -149,7 +118,7 @@ function useButtonStyles({
           (kindIsSecondary || kindIsTertiary) && !loadingOrDisabled && warn,
       },
     );
-  }, [className, disabled, ghost, kind, loading, size, warn]);
+  }, [className, disabled, kind, loading, size, warn]);
 
   return buttonClasses;
 }

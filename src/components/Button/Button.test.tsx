@@ -99,44 +99,6 @@ describe('The Button component', () => {
     });
   });
 
-  describe('when the button is displayed as the ghost variation', () => {
-    it('displays the background as transparent', () => {
-      setup({
-        ghost: true,
-      });
-
-      expect(screen.getByRole('button')).toHaveClass('bg-transparent');
-    });
-
-    it('displays the border as white for primary buttons', () => {
-      setup({
-        ghost: true,
-        kind: Button.kinds.PRIMARY,
-      });
-
-      expect(screen.getByRole('button')).toHaveClass('border-neutral-100');
-    });
-
-    it('displays the border as white on hover for secondary disabled buttons', () => {
-      setup({
-        ghost: true,
-        kind: Button.kinds.SECONDARY,
-      });
-
-      expect(screen.getByRole('button')).toHaveClass('hover:border-neutral-100');
-    });
-
-    it('displays the border as white for secondary disabled buttons', () => {
-      setup({
-        disabled: true,
-        ghost: true,
-        kind: Button.kinds.SECONDARY,
-      });
-
-      expect(screen.getByRole('button')).toHaveClass('border-neutral-100');
-    });
-  });
-
   describe('when the button is displayed as the warn variation', () => {
     it('displays the background as red for primary buttons', () => {
       setup({

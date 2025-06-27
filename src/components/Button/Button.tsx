@@ -44,7 +44,6 @@ function Button({
   children,
   disabled = false,
   form,
-  ghost = false,
   id,
   kind = BUTTON_KINDS.PRIMARY,
   loading = false,
@@ -55,7 +54,6 @@ function Button({
 }: ButtonProps) {
   const buttonClasses = useButtonStyles({
     disabled,
-    ghost,
     kind,
     loading,
     size,
