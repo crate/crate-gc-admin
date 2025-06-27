@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-06-27 - 0.22.2
+
+- Revert change in tailwind config and update button disabled border.
+
 ## 2025-06-27 - 0.22.1
 
 - Make Buttons consitent.
