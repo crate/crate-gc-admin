@@ -377,12 +377,20 @@ function SQLEditor({
             <div className="flex w-full items-center justify-between px-2 py-1.5">
               <div className="flex items-center gap-2">
                 {showRunButton && (
-                  <Button kind="primary" size="small" onClick={() => exec()}>
+                  <Button
+                    kind={Button.kinds.PRIMARY}
+                    size={Button.sizes.SMALL}
+                    onClick={() => exec()}
+                  >
                     <CaretRightOutlined className="mr-2" />
                     {runButtonLabel}
                   </Button>
                 )}
-                <Button kind="secondary" size="small" onClick={formatSql}>
+                <Button
+                  kind={Button.kinds.SECONDARY}
+                  size={Button.sizes.SMALL}
+                  onClick={formatSql}
+                >
                   <FormatPainterOutlined className="mr-2" />
                   Format
                 </Button>

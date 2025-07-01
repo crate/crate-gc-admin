@@ -72,17 +72,14 @@ function useButtonStyles({
         'hover:bg-crate-button-hover': kindIsPrimary && !loadingOrDisabled,
         'hover:border-crate-button-hover': kindIsPrimary && !loadingOrDisabled,
 
-        // secondary and tertiary common
-        'border-transparent': kindIsTertiary || kindIsSecondary,
-
         // secondary variant
         'text-neutral-600': kindIsSecondary && !disabled && !warn,
-
         'active:text-crate-blue': kindIsSecondary && !loadingOrDisabled,
         'hover:bg-gray-100': kindIsSecondary && !loadingOrDisabled,
         'hover:text-neutral-600': kindIsSecondary && !loadingOrDisabled,
 
         // tertiary - text only
+        'border-transparent': kindIsTertiary,
         'text-crate-blue': kindIsTertiary && !loadingOrDisabled && !warn,
         'active:text-[#23bfde]': kindIsTertiary && !loadingOrDisabled && !warn,
         'hover:text-crate-button-hover':

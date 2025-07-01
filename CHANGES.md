@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-07-01 - 0.22.3
+
+- Add secondary button variant border.
+
 ## 2025-06-27 - 0.22.2
 
 - Revert change in tailwind config and update button disabled border.
