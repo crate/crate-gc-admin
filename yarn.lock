@@ -501,10 +501,10 @@
     "@types/tough-cookie" "^4.0.5"
     tough-cookie "^4.1.4"
 
-"@cratedb/cratedb-sqlparse@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.npmjs.org/@cratedb/cratedb-sqlparse/-/cratedb-sqlparse-0.0.13.tgz#b24b310621709b06c1f74792c95141bce0b1da09"
-  integrity sha512-QCMCgN1B6iDoriMyZvW0CXjFc6xfXQw0ZCv61qLscE5I6cFx36qSxcwJUPgcJIBGiaP/LHsXBh3SOVYYayZAQg==
+"@cratedb/cratedb-sqlparse@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@cratedb/cratedb-sqlparse/-/cratedb-sqlparse-0.0.15.tgz#da963b16d11862394af25939359cfe5ee43a833f"
+  integrity sha512-FnL0QIZ0tqeWCHnC30Pwu71+otNyAfzOs52phgvpq8Rz1fSuqdDFbZj6cyrBx7K9ArZzv9LEPnpnfjRNnnXcHA==
   dependencies:
     antlr4 "^4.13.2"
 
