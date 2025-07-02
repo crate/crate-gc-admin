@@ -1,4 +1,4 @@
-FROM node:24.1.0-slim as build-deps
+FROM node:24.3.0-slim as build-deps
 
 # The base node image sets a very verbose log level.
 ENV NPM_CONFIG_LOGLEVEL warn
@@ -24,7 +24,7 @@ ENV PATH=$PATH:/home/nodeuser/app/node_modules/.bin
 RUN yarn && yarn build && rm -r /home/nodeuser/app/node_modules
 
 # Serve the gc-admin build.
-FROM nginx:1.27.5
+FROM nginx:1.29.0
 
 # pick up any security updates
 RUN apt-get update && apt-get upgrade -y

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2025-07-02 - 0.22.4
+
+- Misc dependabot updates and node version bump.
+
 ## 2025-07-01 - 0.22.3
 
 - Add secondary button variant border.
