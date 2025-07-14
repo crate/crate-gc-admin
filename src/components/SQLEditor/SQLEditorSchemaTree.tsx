@@ -8,19 +8,19 @@ import {
   SearchOutlined,
   TableOutlined,
 } from '@ant-design/icons';
-import { Checkbox, Dropdown, Tree } from 'antd';
-import Button from 'components/Button';
-import CopyToClipboard from 'components/CopyToClipboard';
-import Loader from 'components/Loader';
-import Popover, { PopoverContent, PopoverTrigger } from 'components/Popover';
-import Text from 'components/Text';
 import { getTablesDDLQuery, getViewsDDLQuery } from 'constants/queries';
-import useExecuteSql from 'hooks/useExecuteSql';
-import useMessage from 'hooks/useMessage';
+import { Checkbox, Dropdown, Tree } from 'antd';
+import { tryFormatSql } from 'utils';
 import { useState } from 'react';
 import { useSchemaTree, Schema, SchemaTable, SchemaTableColumn } from 'src/swr/jwt';
-import { tryFormatSql } from 'utils';
+import Popover, { PopoverContent, PopoverTrigger } from 'components/Popover';
+import CopyToClipboard from 'components/CopyToClipboard';
 import useJWTManagerStore from 'state/jwtManager';
+import useExecuteSql from 'hooks/useExecuteSql';
+import useMessage from 'hooks/useMessage';
+import Loader from 'components/Loader';
+import Button from 'components/Button';
+import Text from 'components/Text';
 
 type AntDesignTreeItem = {
   title: React.ReactNode;

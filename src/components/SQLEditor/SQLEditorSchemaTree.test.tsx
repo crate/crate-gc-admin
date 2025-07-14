@@ -1,5 +1,3 @@
-import { render, screen, waitFor, within } from 'test/testUtils';
-import SQLEditorSchemaTree from './SQLEditorSchemaTree';
 import { UserEvent } from '@testing-library/user-event';
 import { SYSTEM_SCHEMAS } from 'constants/database';
 import { format as formatSQL } from 'sql-formatter';
@@ -8,6 +6,8 @@ import {
   getViewsDDLQueryResult,
 } from 'test/__mocks__/query';
 import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
+import { render, screen, waitFor, within } from 'test/testUtils';
+import SQLEditorSchemaTree from './SQLEditorSchemaTree';
 import { postFetch } from 'src/swr/jwt/useSchemaTree';
 
 const schemaTableColumns = postFetch(useSchemaTreeMock);

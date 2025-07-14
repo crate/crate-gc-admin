@@ -1,6 +1,6 @@
-import { create } from 'zustand';
 import { compare } from 'compare-versions';
 import { jwtDecode } from 'jwt-decode';
+import { create } from 'zustand';
 import { ConnectionStatus } from 'types';
 
 const MINIMUM_JWT_CRATE_VERSION = '5.8.2';

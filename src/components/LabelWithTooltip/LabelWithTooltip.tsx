@@ -1,8 +1,8 @@
-import React from 'react';
-import { Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { colors } from 'constants/colors';
 import { TooltipPlacement } from 'antd/es/tooltip';
+import { colors } from 'constants/colors';
+import { Tooltip } from 'antd';
+import React from 'react';
 
 export type TLabelWithTooltip = {
   message: React.ReactNode;

@@ -1,5 +1,3 @@
-import { AxiosInstance } from 'axios';
-import { useEffect, useState } from 'react';
 import {
   ApiOutput,
   HttpBody,
@@ -12,6 +10,8 @@ import {
   apiPost,
   apiPut,
 } from 'utils';
+import { useEffect, useState } from 'react';
+import { AxiosInstance } from 'axios';
 
 type CommonUseApiCallProps = {
   axiosInstance: AxiosInstance;

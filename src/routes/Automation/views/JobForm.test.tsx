@@ -1,9 +1,9 @@
+import { automationScheduledJobs } from 'constants/paths';
+import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
 import { navigateMock } from '__mocks__/react-router-dom';
 import scheduledJob from 'test/__mocks__/scheduledJob';
-import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
-import { Job } from 'types';
 import JobForm from './JobForm';
-import { automationScheduledJobs } from 'constants/paths';
+import { Job } from 'types';
 
 const onSaveSpy = jest.fn();
 

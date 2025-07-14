@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import Loader from 'components/Loader';
-import useButtonStyles from './useButtonStyles';
 import { BUTTON_INPUT_TYPES, BUTTON_KINDS, BUTTON_SIZES } from './ButtonConstants';
+import useButtonStyles from './useButtonStyles';
+import Loader from 'components/Loader';
 import { ValueOf } from 'types/utils';
 
 export type ButtonKind = ValueOf<typeof BUTTON_KINDS>;

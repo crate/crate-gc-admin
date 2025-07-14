@@ -1,8 +1,8 @@
-import JSONTree from '../JSONTree/JSONTree';
-import { LinkOutlined } from '@ant-design/icons';
-import { ColumnType } from 'types/query';
-import { wrapText } from 'utils';
 import { ArrowUpOutlined } from '@ant-design/icons';
+import { LinkOutlined } from '@ant-design/icons';
+import { wrapText } from 'utils';
+import JSONTree from '../JSONTree/JSONTree';
+import { ColumnType } from 'types/query';
 
 export type TypeAwareValueParams = {
   value: unknown;

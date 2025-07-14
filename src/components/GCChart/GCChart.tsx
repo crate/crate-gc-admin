@@ -9,9 +9,9 @@ import {
   ComposedChart,
   Legend,
 } from 'recharts';
-import Heading from 'components/Heading';
-import { useState } from 'react';
 import { Payload } from 'recharts/types/component/DefaultLegendContent';
+import { useState } from 'react';
+import Heading from 'components/Heading';
 
 type ValueType = {
   time: number;

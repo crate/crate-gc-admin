@@ -1,5 +1,5 @@
-import React from 'react';
 import { cn } from 'utils';
+import React from 'react';
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,

@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as SelectPrimitive from '@radix-ui/react-select';
-import { cn } from 'utils';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import * as React from 'react';
+import { cn } from 'utils';
 
 type RootProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> & {
   label: React.ReactNode;

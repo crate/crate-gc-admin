@@ -1,15 +1,15 @@
+import { format as formatSQL } from 'sql-formatter';
+import { LeftOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LeftOutlined } from '@ant-design/icons';
+import { sql } from 'constants/paths';
 import { Table, Tag } from 'antd';
-import { Button, CrateTabsShad, Heading } from 'components';
-import { format as formatSQL } from 'sql-formatter';
 import {
   useGetTableInformationQuery,
   useShowCreateTableQuery,
 } from 'hooks/queryHooks';
+import { Button, CrateTabsShad, Heading } from 'components';
 import { TableInfo, TableListEntry } from 'types/cratedb';
-import { sql } from 'constants/paths';
 
 function TableDetail({
   activeTable,

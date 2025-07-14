@@ -1,18 +1,18 @@
-import Logs, { JOBS_LOGS_TABLE_PAGE_SIZE } from './Logs';
-import { render, screen, within } from 'test/testUtils';
-import server, { customAllLogsGetResponse } from 'test/msw';
-import moment from 'moment';
-import { JobLogWithName, PolicyLogWithName } from 'types';
+import { automationEditJob, automationEditPolicy } from 'constants/paths';
 import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
+import { getLogDuration } from 'utils';
+import moment from 'moment';
 import {
   scheduledJobErrorLog,
   scheduledJobLog,
   scheduledJobLogsWithName,
   scheduledJobRunning,
 } from 'test/__mocks__/scheduledJobLogs';
-import { getLogDuration } from 'utils';
-import { automationEditJob, automationEditPolicy } from 'constants/paths';
 import { policyErrorLog, policyLog } from 'test/__mocks__/policiesLogs';
+import server, { customAllLogsGetResponse } from 'test/msw';
+import { JobLogWithName, PolicyLogWithName } from 'types';
+import Logs, { JOBS_LOGS_TABLE_PAGE_SIZE } from './Logs';
+import { render, screen, within } from 'test/testUtils';
 
 const setup = () => {
   return render(<Logs />);

@@ -1,8 +1,8 @@
-import { Loader } from 'components';
 import { useParams } from 'react-router-dom';
-import { PolicyForm } from '../views';
 import { useApiCall } from 'hooks/useApiCall';
 import useGcApi from 'hooks/useGcApi';
+import { PolicyForm } from '../views';
+import { Loader } from 'components';
 import { Policy } from 'types';
 
 type EditPolicyProps = {

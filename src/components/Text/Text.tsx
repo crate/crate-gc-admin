@@ -1,7 +1,7 @@
 import React from 'react';
-import cx from 'classnames';
 import { TEXT_ELEMENTS } from './TextConstants';
 import { ValueOf } from 'types/utils';
+import cx from 'classnames';
 
 export type TextProps = {
   className?: string;

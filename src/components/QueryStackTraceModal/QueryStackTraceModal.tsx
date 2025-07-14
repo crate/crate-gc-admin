@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
-import Button from 'components/Button';
 import SyntaxHighlighter from 'components/SyntaxHighlighter';
 import DisplayUTCDate from 'components/DisplayUTCDate';
+import Button from 'components/Button';
 
 export type QueryStackTraceModalProps = {
   modalTitle: string;

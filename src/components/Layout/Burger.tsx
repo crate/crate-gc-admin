@@ -1,8 +1,8 @@
-import type { BurgerProps } from './types';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Navigation from './Navigation';
+import type { BurgerProps } from './types';
 
 function Burger({
   navIsExpanded,

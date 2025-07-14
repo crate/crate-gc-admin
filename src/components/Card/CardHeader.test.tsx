@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import CardHeader, { CardHeaderProps } from './CardHeader';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: CardHeaderProps = {
   title: 'Resource A',

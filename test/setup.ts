@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /// <reference types="@types/jest" />;
 import '@testing-library/jest-dom';
-
 // polyfill window.fetch
 import 'whatwg-fetch';
-import server from './msw';
-import { useLocation } from '__mocks__/react-router-dom';
 import mockLocalStorage from '__mocks__/localStorageMock';
+import { useLocation } from '__mocks__/react-router-dom';
+import server from './msw';
 
 class ResizeObserver {
   observe: jest.Mock<any, any, any>;

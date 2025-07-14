@@ -1,5 +1,5 @@
-import type { TopBarProps } from './types';
 import Burger from './Burger';
+import type { TopBarProps } from './types';
 
 function TopBar({
   logo,

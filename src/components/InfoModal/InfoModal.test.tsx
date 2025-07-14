@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
-import { render, screen } from 'test/testUtils';
 import InfoModal, { InfoModalProps } from './InfoModal';
+import { render, screen } from 'test/testUtils';
 
 const onCloseSpy = jest.fn();
 

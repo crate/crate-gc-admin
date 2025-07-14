@@ -1,5 +1,5 @@
-import { Heading } from 'components';
 import NodesMetrics from './NodesMetrics';
+import { Heading } from 'components';
 
 function Nodes() {
   return (

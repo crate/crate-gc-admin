@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { LayoutProps } from './types';
+import useJWTManagerStore from 'state/jwtManager';
 import Navigation from './Navigation';
 import TopBar from './TopBar';
-import useJWTManagerStore from 'state/jwtManager';
+import type { LayoutProps } from './types';
 
 function Layout({
   bottomNavigation,

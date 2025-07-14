@@ -1,6 +1,6 @@
-import React, { PropsWithChildren } from 'react';
 import { render as rtlRender, screen as rtlScreen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
+import React, { PropsWithChildren } from 'react';
 import { SWRConfig } from 'swr';
 
 type RenderType = {

@@ -1,11 +1,11 @@
 import { http, HttpResponse } from 'msw';
-import handlerFactory from 'test/msw/handlerFactory';
-import scheduledJob from 'test/__mocks__/scheduledJob';
-import scheduledJobs from 'test/__mocks__/scheduledJobs';
 import {
   scheduledJobLogs,
   scheduledJobLogsWithName,
 } from 'test/__mocks__/scheduledJobLogs';
+import scheduledJobs from 'test/__mocks__/scheduledJobs';
+import scheduledJob from 'test/__mocks__/scheduledJob';
+import handlerFactory from 'test/msw/handlerFactory';
 
 const getAllScheduledJobs = http.get(
   'http://localhost:5050/api/scheduled-jobs/',

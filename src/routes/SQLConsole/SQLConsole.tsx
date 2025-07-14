@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { SQL_EDITOR_QUERIES_QUOTA } from 'constants/defaults';
+import { useEffect, useRef, useState } from 'react';
 import { NoDataView, SQLEditor, SQLHistory, SQLResults } from 'components';
+import { SqlEditorHistoryEntry } from 'types/localStorage';
 import useExecuteMultiSql from 'hooks/useExecuteMultiSql';
 import useJWTManagerStore from 'state/jwtManager';
-import { SQL_EDITOR_QUERIES_QUOTA } from 'constants/defaults';
-import { SqlEditorHistoryEntry } from 'types/localStorage';
 
 const getAndMigrateHistory = (
   oldHistoryKey: string,

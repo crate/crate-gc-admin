@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import Checkbox, { CheckboxProps } from './Checkbox';
+import { render, screen } from 'test/testUtils';
 
 const onClickSpy = jest.fn();
 

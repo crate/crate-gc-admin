@@ -1,5 +1,5 @@
-import moment, { Moment } from 'moment';
 import { capitalizeFirstLetter } from 'utils/strings';
+import moment, { Moment } from 'moment';
 
 export type DisplayDateDifferenceProps = {
   from?: string;

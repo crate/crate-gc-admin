@@ -1,7 +1,6 @@
-import { useClusterInfo, useClusterNodeStatus, useShards } from 'src/swr/jwt';
-import { NodeStatusInfo } from 'types/cratedb';
-import prettyBytes from 'pretty-bytes';
+import { ColumnDef } from '@tanstack/react-table';
 import { formatNum, getNodeStatus } from 'utils';
+import prettyBytes from 'pretty-bytes';
 import {
   Chip,
   DataTable,
@@ -10,9 +9,10 @@ import {
   Text,
   VerticalProgress,
 } from 'components';
-import { ColumnDef } from '@tanstack/react-table';
+import { useClusterInfo, useClusterNodeStatus, useShards } from 'src/swr/jwt';
 import useClusterHealthStore from 'src/state/clusterHealth';
 import useJWTManagerStore from 'state/jwtManager';
+import { NodeStatusInfo } from 'types/cratedb';
 
 const MIN_COL_WIDTH = '170px';
 

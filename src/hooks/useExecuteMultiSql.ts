@@ -1,9 +1,9 @@
 import { sqlparse } from '@cratedb/cratedb-sqlparse';
+import { useRef, useState } from 'react';
+import { HttpStatusCode } from 'axios';
 import { Statement } from 'node_modules/@cratedb/cratedb-sqlparse/dist/parser';
 import { QueryResult, QueryStatus, QueryStatusType } from 'types/query';
 import useExecuteSql from './useExecuteSql';
-import { HttpStatusCode } from 'axios';
-import { useRef, useState } from 'react';
 
 export type UpdateQueryResult = (result: QueryStatus[] | undefined) => void;
 

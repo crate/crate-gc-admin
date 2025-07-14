@@ -1,7 +1,7 @@
 import { useParams } from '__mocks__/react-router-dom';
 import { render, screen } from 'test/testUtils';
-import { EditPolicy } from '.';
 import { policy } from 'test/__mocks__/policy';
+import { EditPolicy } from '.';
 
 const setup = () => {
   return render(<EditPolicy />);

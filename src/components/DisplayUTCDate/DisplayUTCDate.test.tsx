@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { render, screen, waitFor } from 'test/testUtils';
-import DisplayUTCDate from '.';
 import { DisplayUTCDateProps } from './DisplayUTCDate';
+import DisplayUTCDate from '.';
 
 const dummyDate: string = '2020-03-25T10:26:26.161Z';
 

@@ -1,9 +1,9 @@
-import { render, screen } from 'test/testUtils';
+import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
+import _ from 'lodash';
 import SQLResultsTable, { SQLResultsTableProps } from './SQLResultsTable';
 import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
-import _ from 'lodash';
+import { render, screen } from 'test/testUtils';
 import { QueryResult } from 'types/query';
-import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
 
 const cols = _.zip(useSchemaTreeMock.col_types, useSchemaTreeMock.cols).flatMap(
   arr => {

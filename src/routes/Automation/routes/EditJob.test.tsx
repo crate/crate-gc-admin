@@ -1,7 +1,7 @@
-import { useParams } from '__mocks__/react-router-dom';
-import EditJob from './EditJob';
 import { render, screen, waitFor } from 'test/testUtils';
 import scheduledJob from 'test/__mocks__/scheduledJob';
+import { useParams } from '__mocks__/react-router-dom';
+import EditJob from './EditJob';
 
 const job = scheduledJob;
 

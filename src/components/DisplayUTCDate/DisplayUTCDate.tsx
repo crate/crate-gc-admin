@@ -1,6 +1,6 @@
+import { DATE_FORMAT_WITH_TZ } from 'constants/defaults';
 import { Tooltip } from 'antd';
 import DisplayDate from 'components/DisplayDate';
-import { DATE_FORMAT_WITH_TZ } from 'constants/defaults';
 
 export type DisplayUTCDateProps = {
   isoDate: string;

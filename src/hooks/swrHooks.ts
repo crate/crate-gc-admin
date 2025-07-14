@@ -1,7 +1,6 @@
-import useSWR from 'swr';
-import swrCORSFetch from 'src/swr/swrCORSFetch';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'utils/api';
+import useSWR from 'swr';
 import {
   EnrichedPolicy,
   Job,
@@ -12,8 +11,9 @@ import {
   PolicyLogWithName,
   TaskLog,
 } from 'types';
-import useGcApi from 'hooks/useGcApi';
 import useJWTManagerStore from 'state/jwtManager';
+import swrCORSFetch from 'src/swr/swrCORSFetch';
+import useGcApi from 'hooks/useGcApi';
 
 const gcApiKeyBuilder = (key: string) => {
   const gcUrl = useJWTManagerStore(state => state.gcUrl);

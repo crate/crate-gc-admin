@@ -1,8 +1,8 @@
-import useSWR from 'swr';
-import swrJWTFetch from '../swrJWTFetch';
-import { QueryResultSuccess } from 'types/query';
-import { UserInfo } from 'types/cratedb';
 import { SYSTEM_USERS } from 'constants/database';
+import useSWR from 'swr';
+import { QueryResultSuccess } from 'types/query';
+import swrJWTFetch from '../swrJWTFetch';
+import { UserInfo } from 'types/cratedb';
 
 const QUERY = `
   SELECT

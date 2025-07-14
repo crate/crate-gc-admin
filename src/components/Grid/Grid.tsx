@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactElement } from 'react';
-import { ValueOf } from 'types/utils';
 import { cn } from 'utils';
 import { GRID_COLS, GRID_ROWS } from './GridConstants';
+import { ValueOf } from 'types/utils';
 
 type GridValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'full' | 'auto';
 

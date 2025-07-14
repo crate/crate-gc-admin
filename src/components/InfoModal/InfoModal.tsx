@@ -1,5 +1,5 @@
-import { Modal } from 'antd';
 import { PropsWithChildren } from 'react';
+import { Modal } from 'antd';
 
 export type InfoModalProps = {
   title: string;

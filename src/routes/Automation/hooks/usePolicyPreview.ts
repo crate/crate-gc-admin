@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios';
-import useGcApi from 'hooks/useGcApi';
 import { useEffect, useState } from 'react';
+import { AxiosInstance } from 'axios';
+import { apiPost } from 'utils';
 import {
   EligibleTable,
   EligibleTablesApiOutput,
@@ -9,9 +9,9 @@ import {
   TPolicyPreviewBody,
   TPolicyTargetInput,
 } from 'types';
-import { TableListEntry } from 'types/cratedb';
-import { apiPost } from 'utils';
 import { isTargetDeleted } from '../tablePoliciesUtils/policies';
+import { TableListEntry } from 'types/cratedb';
+import useGcApi from 'hooks/useGcApi';
 
 const getPreview = async (gcApi: AxiosInstance, policy: TPolicyPreviewBody) => {
   const preview = await apiPost<EligibleTablesApiOutput>(

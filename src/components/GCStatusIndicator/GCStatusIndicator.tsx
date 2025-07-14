@@ -1,5 +1,5 @@
-import { ConnectionStatus } from 'types';
 import useJWTManagerStore from 'state/jwtManager';
+import { ConnectionStatus } from 'types';
 
 function renderStatus(status: ConnectionStatus) {
   const prefix = 'GC';

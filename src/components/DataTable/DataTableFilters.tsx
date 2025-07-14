@@ -1,7 +1,7 @@
 import { CloseOutlined, SearchOutlined } from '@ant-design/icons';
 import { Header, Table } from '@tanstack/react-table';
-import { Button, Input, MultiSelect } from 'components';
 import { distinct } from 'utils';
+import { Button, Input, MultiSelect } from 'components';
 
 export type DataTableFiltersProps<TData> = {
   data: TData[];

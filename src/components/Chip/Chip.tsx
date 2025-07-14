@@ -1,6 +1,6 @@
+import { LoadingOutlined } from '@ant-design/icons';
 import { PropsWithChildren } from 'react';
 import { cn } from 'utils';
-import { LoadingOutlined } from '@ant-design/icons';
 import {
   AVAILABLE_CHIP_COLORS,
   AVAILABLE_CHIP_ICONS,

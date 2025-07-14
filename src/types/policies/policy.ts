@@ -1,10 +1,10 @@
-import { PolicyLog } from '.';
 import {
   TPolicyAction,
   TPolicyPartitioningOperation,
   TPolicyPartitioningUnit,
   TPolicyTargetType,
 } from './input';
+import { PolicyLog } from '.';
 
 // Policy (from DB)
 

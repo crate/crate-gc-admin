@@ -1,6 +1,6 @@
-import Card from '.';
 import { screen, render } from 'test/testUtils';
 import { CardProps } from './Card';
+import Card from '.';
 
 const onClickSpy = jest.fn();
 

@@ -1,6 +1,6 @@
 import useSWR from 'swr';
-import swrJWTFetch from '../swrJWTFetch';
 import { QueryResultSuccess } from 'types/query';
+import swrJWTFetch from '../swrJWTFetch';
 
 const QUERY = 'SELECT CURRENT_USER';
 

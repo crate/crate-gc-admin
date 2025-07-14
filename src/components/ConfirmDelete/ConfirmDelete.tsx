@@ -1,8 +1,8 @@
-import { Input, Modal, Form } from 'antd';
 import { PropsWithChildren, useState } from 'react';
 import { CopyOutlined } from '@ant-design/icons';
-import CopyToClipboard from 'components/CopyToClipboard';
+import { Input, Modal, Form } from 'antd';
 import SubmitButtonGroup from 'components/SubmitButtonGroup';
+import CopyToClipboard from 'components/CopyToClipboard';
 import Text from 'components/Text';
 
 export type ConfirmDeleteProps = {

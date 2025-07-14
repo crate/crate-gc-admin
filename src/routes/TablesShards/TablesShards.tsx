@@ -1,5 +1,5 @@
-import { Heading } from 'components';
 import TablesShardsMetrics from './TablesShardsMetrics';
+import { Heading } from 'components';
 
 function TablesShards() {
   return (

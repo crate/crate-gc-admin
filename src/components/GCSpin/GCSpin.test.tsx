@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import GCSpin, { GCSpinParams } from './GCSpin.tsx';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: GCSpinParams = {
   spinning: true,

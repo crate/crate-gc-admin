@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   ColumnDef,
   PaginationState,
@@ -10,6 +9,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { arrIncludesElement } from 'utils';
+import * as React from 'react';
+import { cn } from 'utils';
+import { Button, Pagination, Table } from 'components';
+import DataTableFilters from './DataTableFilters';
 import type {
   ColumnFiltersState,
   Header,
@@ -18,13 +25,6 @@ import type {
   Row,
   TableOptions,
 } from '@tanstack/react-table';
-import { Button, Pagination, Table } from 'components';
-import { useEffect, useState } from 'react';
-import DataTableFilters from './DataTableFilters';
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
-import { cn } from 'utils';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { arrIncludesElement } from 'utils';
 
 export const DEFAULT_ELEMENTS_PER_PAGE = 10;
 

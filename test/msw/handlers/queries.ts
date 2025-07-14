@@ -1,3 +1,8 @@
+import {
+  getTablesColumnsQuery,
+  getTablesDDLQuery,
+  getViewsDDLQuery,
+} from 'constants/queries';
 import { http, HttpResponse } from 'msw';
 import {
   getTablesColumnsResult,
@@ -5,24 +10,17 @@ import {
   getViewsDDLQueryResult,
   queryResult,
 } from 'test/__mocks__/query';
-
-import { useAllocationsMock } from 'test/__mocks__/useAllocationsMock';
+import { useClusterNodeStatusMock } from 'test/__mocks__/useClusterNodeStatusMock';
+import { useTablesShardsMock } from 'test/__mocks__/useTablesShardsMock';
 import { useCurrentUserMock } from 'test/__mocks__/useCurrentUserMock';
 import { useClusterInfoMock } from 'test/__mocks__/useClusterInfoMock';
-import { useClusterNodeStatusMock } from 'test/__mocks__/useClusterNodeStatusMock';
-import { useQueryStatsMock } from 'test/__mocks__/useQueryStatsMock';
-import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
-import { useShardsMock } from 'test/__mocks__/useShardsMock';
-import { useTablesMock } from 'test/__mocks__/useTablesMock';
-import { useTablesShardsMock } from 'test/__mocks__/useTablesShardsMock';
+import { useAllocationsMock } from 'test/__mocks__/useAllocationsMock';
 import { useUsersRolesMock } from 'test/__mocks__/useUsersRolesMock';
-
+import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
+import { useQueryStatsMock } from 'test/__mocks__/useQueryStatsMock';
+import { useTablesMock } from 'test/__mocks__/useTablesMock';
+import { useShardsMock } from 'test/__mocks__/useShardsMock';
 import handlerFactory from 'test/msw/handlerFactory';
-import {
-  getTablesColumnsQuery,
-  getTablesDDLQuery,
-  getViewsDDLQuery,
-} from 'constants/queries';
 
 const executeJWTQueryPost = http.post(
   'http://localhost:4200/_sql',

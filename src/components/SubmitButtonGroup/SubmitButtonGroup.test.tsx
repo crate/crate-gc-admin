@@ -1,5 +1,5 @@
-import { render, within, screen } from 'test/testUtils';
 import SubmitButtonGroup, { SubmitButtonGroupProps } from './SubmitButtonGroup';
+import { render, within, screen } from 'test/testUtils';
 
 const onCancelMock = jest.fn();
 const onSubmitMock = jest.fn();

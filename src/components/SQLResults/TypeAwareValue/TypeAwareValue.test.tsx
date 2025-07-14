@@ -1,6 +1,6 @@
+import TypeAwareValue, { TypeAwareValueParams } from './TypeAwareValue';
 import { render, screen } from 'test/testUtils';
 import { ColumnType } from 'types/query';
-import TypeAwareValue, { TypeAwareValueParams } from './TypeAwareValue';
 
 const setup = (props: TypeAwareValueParams) => render(<TypeAwareValue {...props} />);
 

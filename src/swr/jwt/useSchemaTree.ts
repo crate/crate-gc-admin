@@ -1,7 +1,7 @@
-import useSWR from 'swr';
-import swrJWTFetch from '../swrJWTFetch';
 import { SYSTEM_SCHEMAS } from 'constants/database';
+import useSWR from 'swr';
 import { QueryResultSuccess } from 'types/query';
+import swrJWTFetch from '../swrJWTFetch';
 
 // a schema description row, as returned direct from the DB
 type SchemaDescription = {

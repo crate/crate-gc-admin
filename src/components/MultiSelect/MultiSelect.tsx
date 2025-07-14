@@ -1,6 +1,6 @@
 import { CaretDownOutlined } from '@ant-design/icons';
-import { Button, DropdownMenu, Input } from 'components';
 import { PropsWithChildren, useState } from 'react';
+import { Button, DropdownMenu, Input } from 'components';
 
 type MultiSelectItem = {
   label: string;

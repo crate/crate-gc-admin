@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react';
-import { render, screen } from 'test/testUtils';
 import QueryStackTraceModal, {
   QueryStackTraceModalProps,
 } from './QueryStackTraceModal';
+import { render, screen } from 'test/testUtils';
 
 const onCloseSpy = jest.fn();
 

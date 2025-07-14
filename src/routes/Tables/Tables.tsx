@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Heading } from 'components';
 import { TAILWIND_BREAKPOINT_MD } from 'constants/defaults';
 import { SYSTEM_SCHEMAS } from 'constants/database';
+import { useEffect, useState } from 'react';
 import { TableListEntry } from 'types/cratedb';
 import TableDetail from './TableDetail';
+import { Heading } from 'components';
 import TableList from './TableList';
 
 function Tables() {

@@ -1,5 +1,5 @@
-import { QueryResultSuccess } from 'types/query';
 import useJWTManagerStore from 'state/jwtManager';
+import { QueryResultSuccess } from 'types/query';
 
 export type JWTFetchArgs = {
   clusterId: string;

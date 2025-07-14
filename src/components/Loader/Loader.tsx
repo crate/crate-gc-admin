@@ -1,11 +1,11 @@
-import cx from 'classnames';
 import {
   LOADER_ALIGNMENT_OPTIONS,
   LOADER_COLORS,
   LOADER_SIZES,
 } from './LoaderConstants';
-import Text from 'components/Text';
 import { ValueOf } from 'types/utils';
+import Text from 'components/Text';
+import cx from 'classnames';
 
 export type LoaderProps = {
   align?: ValueOf<typeof LOADER_ALIGNMENT_OPTIONS>;

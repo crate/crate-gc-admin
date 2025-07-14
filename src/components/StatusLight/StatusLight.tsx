@@ -1,9 +1,9 @@
 import { Tooltip } from 'antd';
-import { AVAILABLE_LIGHT_COLORS, COLOR_STYLES_MAP } from './StatusLightConstants';
-import Text from 'components/Text';
-import SolidLight from './SolidLight';
-import PulsingLight from './PulsingLight';
 import React from 'react';
+import { AVAILABLE_LIGHT_COLORS, COLOR_STYLES_MAP } from './StatusLightConstants';
+import PulsingLight from './PulsingLight';
+import SolidLight from './SolidLight';
+import Text from 'components/Text';
 
 export type StatusLightProps = {
   color: keyof typeof AVAILABLE_LIGHT_COLORS;

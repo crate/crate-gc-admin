@@ -1,4 +1,9 @@
+import { TABLE_HEALTH_STATES, TableHealthState } from 'constants/database';
+import { FilterOutlined } from '@ant-design/icons';
+import { ColumnDef } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { fromBytes } from 'utils/bytes';
+import { Checkbox } from 'antd';
 import {
   DataTable,
   Popover,
@@ -6,14 +11,9 @@ import {
   PopoverTrigger,
   Table,
 } from 'components';
-import { Checkbox } from 'antd';
-import { FilterOutlined } from '@ant-design/icons';
 import { useTablesShards, TableShard } from 'src/swr/jwt';
-import { ColumnDef } from '@tanstack/react-table';
-import { Loader } from 'components';
-import { fromBytes } from 'utils/bytes';
 import useJWTManagerStore from 'state/jwtManager';
-import { TABLE_HEALTH_STATES, TableHealthState } from 'constants/database';
+import { Loader } from 'components';
 
 const TABLE_HEALTH_DESCRIPTIONS = {
   GREEN: 'Good',

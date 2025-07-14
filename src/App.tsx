@@ -1,16 +1,16 @@
-import { Link, Route, Routes } from 'react-router-dom';
 import { bottomNavigation, topNavigation } from 'constants/navigation';
+import { Link, Route, Routes } from 'react-router-dom';
+import { root } from 'constants/paths';
 import routes from 'constants/routes';
-import { useEffect } from 'react';
-import { ConnectionStatus } from 'types';
-import { Layout, StatusBar, GcAdminAntdProvider } from 'components';
-import logo from './assets/logo.svg';
-import useGcApi from 'hooks/useGcApi';
 import { apiGet } from 'utils/api';
+import { useEffect } from 'react';
+import { Layout, StatusBar, GcAdminAntdProvider } from 'components';
 import ClusterHealthManager from 'components/ClusterHealthManager';
 import NotificationHandler from 'components/NotificationHandler';
-import { root } from 'constants/paths';
 import useJWTManagerStore from 'state/jwtManager';
+import { ConnectionStatus } from 'types';
+import useGcApi from 'hooks/useGcApi';
+import logo from './assets/logo.svg';
 
 function App() {
   const hasToken = useJWTManagerStore(state => state.hasToken);

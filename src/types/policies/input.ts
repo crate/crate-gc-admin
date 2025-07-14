@@ -1,9 +1,9 @@
-import { SET_REPLICAS_VALUE_REGEXP } from 'constants/database';
 import {
   FORCE_MERGE_INVALID_VALUE_ERROR,
   PARTITIONING_TIME_VALUE_INVALID_VALUE_ERROR,
   SET_REPLICAS_INVALID_VALUE_ERROR,
 } from 'constants/policies';
+import { SET_REPLICAS_VALUE_REGEXP } from 'constants/database';
 import { INTEGER_VALUE_REGEXP } from 'constants/utils';
 import { z } from 'zod';
 

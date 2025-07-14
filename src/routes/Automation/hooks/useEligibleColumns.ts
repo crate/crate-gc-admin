@@ -1,16 +1,16 @@
-import { AxiosInstance } from 'axios';
-import { useTables } from 'src/swr/jwt';
-import useGcApi from 'hooks/useGcApi';
 import { useEffect, useState } from 'react';
+import { AxiosInstance } from 'axios';
+import { apiPost } from 'utils';
 import {
   EligibleColumnTarget,
   EligibleColumnsApiOutput,
   TPolicyTarget,
 } from 'types';
-import { apiPost } from 'utils';
 import { mapTableListEntriesToTreeItem } from '../tablePoliciesUtils/tableTree';
 import { isTargetDeleted } from '../tablePoliciesUtils/policies';
 import useJWTManagerStore from 'state/jwtManager';
+import { useTables } from 'src/swr/jwt';
+import useGcApi from 'hooks/useGcApi';
 
 const getEligibleColumns = async (
   gcApi: AxiosInstance,
