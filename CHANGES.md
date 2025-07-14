@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update GitHub codeowners file.
+
 ## 2025-07-02 - 0.22.4
 
 - Misc dependabot updates and node version bump.
