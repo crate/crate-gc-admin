@@ -1,9 +1,8 @@
 // from https://ui.shadcn.com/docs/components/popover
 // updated the default tailwind styles to match our UI, namely bg-white and removed the fixed width
 
-import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-
+import * as React from 'react';
 import { cn } from 'utils';
 
 const Popover = PopoverPrimitive.Root;

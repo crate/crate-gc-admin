@@ -1,6 +1,6 @@
 import { notification } from 'antd';
-import { infoNotification } from './notificationPresets';
 import { actWithFakeTimers, disableConsole } from 'test/testUtils';
+import { infoNotification } from './notificationPresets';
 
 describe('the notification presets', () => {
   const notificationSpy = jest.spyOn(notification, 'open');

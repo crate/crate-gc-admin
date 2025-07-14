@@ -4,4 +4,6 @@ bracketSpacing: true
 singleQuote: true
 printWidth: 85
 arrowParens: 'avoid'
-plugins: ['prettier-plugin-tailwindcss']
+stripNewlines: true
+importTypeOrder: ['NPMPackages', 'localImportsValue', 'localImportsType']
+plugins: ['prettier-plugin-tailwindcss', 'prettier-plugin-sort-imports']

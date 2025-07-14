@@ -1,5 +1,5 @@
-import { TableInfo } from 'types/cratedb';
 import useExecuteSql from 'hooks/useExecuteSql';
+import { TableInfo } from 'types/cratedb';
 
 export const useGetTableInformationQuery = () => {
   const executeSql = useExecuteSql();

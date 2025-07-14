@@ -1,9 +1,9 @@
-import { render, screen, within } from 'test/testUtils';
-import UsersTable from './UsersTable';
 import { CRATEDB_PRIVILEGES_DOCS } from 'constants/defaults';
-import { UserInfo } from 'types/cratedb';
 import { useUsersRolesMock } from 'test/__mocks__/useUsersRolesMock';
+import { render, screen, within } from 'test/testUtils';
 import { postFetch } from 'src/swr/jwt/useUsersRoles';
+import { UserInfo } from 'types/cratedb';
+import UsersTable from './UsersTable';
 
 const users: UserInfo[] = postFetch(useUsersRolesMock);
 const SYSTEM_USER = 1;

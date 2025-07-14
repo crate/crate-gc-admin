@@ -1,4 +1,9 @@
 import {
+  FORCE_MERGE_INVALID_VALUE_ERROR,
+  SET_REPLICAS_INVALID_VALUE_ERROR,
+} from 'constants/policies';
+import { automationTablePolicies } from 'constants/paths';
+import {
   checkTreeItem,
   getCheckedTreeItems,
   getRequestSpy,
@@ -7,17 +12,12 @@ import {
   screen,
   waitFor,
 } from 'test/testUtils';
-import { PolicyForm } from '.';
+import { mapPolicyToPolicyInput } from '../tablePoliciesUtils/policies';
 import server, { customGetEligibleColumns } from 'test/msw';
-import {
-  FORCE_MERGE_INVALID_VALUE_ERROR,
-  SET_REPLICAS_INVALID_VALUE_ERROR,
-} from 'constants/policies';
 import { navigateMock } from '__mocks__/react-router-dom';
 import { EligibleColumnsApiOutput, Policy } from 'types';
 import { policy } from 'test/__mocks__/policy';
-import { mapPolicyToPolicyInput } from '../tablePoliciesUtils/policies';
-import { automationTablePolicies } from 'constants/paths';
+import { PolicyForm } from '.';
 
 const onSaveSpy = jest.fn();
 

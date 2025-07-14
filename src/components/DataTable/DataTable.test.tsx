@@ -1,6 +1,6 @@
-import { render, screen } from 'test/testUtils';
 import { DEFAULT_ELEMENTS_PER_PAGE, DataTable, DataTableProps } from './DataTable';
 import { SampleData, colDef, generateData } from './test/dataTableTestUtils';
+import { render, screen } from 'test/testUtils';
 
 const data = generateData();
 const columns = colDef;

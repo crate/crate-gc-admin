@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import CrateTabsShad, { CrateTabsShadProps } from './CrateTabsShad';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: CrateTabsShadProps = {
   items: [

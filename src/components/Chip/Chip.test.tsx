@@ -1,6 +1,6 @@
+import { COLOR_STYLES_MAP } from './ChipConstants';
 import { render, screen } from 'test/testUtils';
 import Chip, { ChipProps } from './Chip';
-import { COLOR_STYLES_MAP } from './ChipConstants';
 
 const defaultProps: ChipProps = {
   children: 'CHIP_CONTENT',

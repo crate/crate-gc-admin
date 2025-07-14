@@ -1,5 +1,5 @@
-import { matchRequestUrl } from 'msw';
 import { HttpMethod } from 'utils/api';
+import { matchRequestUrl } from 'msw';
 import server from 'test/msw/server';
 
 export const getRequestSpy = (method: HttpMethod, url: string) => {

@@ -1,25 +1,25 @@
-import { useEffect, useMemo, useState } from 'react';
-import AceEditor from 'react-ace';
 import {
   CaretRightOutlined,
   FormatPainterOutlined,
   HistoryOutlined,
 } from '@ant-design/icons';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import 'ace-builds/src-noconflict/theme-github';
-import 'ace-builds/src-min-noconflict/ext-language_tools';
-import './mode-cratedb';
-import { format as formatSQL } from 'sql-formatter';
-import { Ace } from 'ace-builds';
-import { Button } from 'components';
-import { cn } from 'utils';
-import { annotate } from './annotationUtils';
-import { QueryStatus } from 'types/query';
-import SQLEditorSchemaTree from './SQLEditorSchemaTree';
-import { useSchemaTree } from 'src/swr/jwt';
-import useJWTManagerStore from 'state/jwtManager';
 import { SQL_EDITOR_QUERIES_QUOTA } from 'constants/defaults';
+import 'ace-builds/src-min-noconflict/ext-language_tools';
+import { useEffect, useMemo, useState } from 'react';
+import { format as formatSQL } from 'sql-formatter';
+import 'ace-builds/src-noconflict/theme-github';
+import AceEditor from 'react-ace';
+import { Ace } from 'ace-builds';
+import { cn } from 'utils';
 import { SqlEditorHistoryEntry } from 'types/localStorage';
+import SQLEditorSchemaTree from './SQLEditorSchemaTree';
+import useJWTManagerStore from 'state/jwtManager';
+import { annotate } from './annotationUtils';
+import { useSchemaTree } from 'src/swr/jwt';
+import { QueryStatus } from 'types/query';
+import { Button } from 'components';
+import './mode-cratedb';
 
 export type SQLEditorProps = {
   value?: string | undefined | null;

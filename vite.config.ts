@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import react from '@vitejs/plugin-react-swc';
 import eslint from 'vite-plugin-eslint';
+import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {

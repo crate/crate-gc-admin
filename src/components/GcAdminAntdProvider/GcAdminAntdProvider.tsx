@@ -1,6 +1,6 @@
-import { ConfigProvider } from 'antd';
 import { colors } from 'constants/colors';
 import { PropsWithChildren } from 'react';
+import { ConfigProvider } from 'antd';
 
 type GcAdminAntdProvider = PropsWithChildren;
 

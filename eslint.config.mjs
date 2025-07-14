@@ -1,15 +1,15 @@
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import prettier from 'eslint-plugin-prettier';
-import react from 'eslint-plugin-react';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import reactHooks from 'eslint-plugin-react-hooks';
 import { fixupPluginRules } from '@eslint/compat';
-import globals from 'globals';
 import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
+import prettier from 'eslint-plugin-prettier';
+import react from 'eslint-plugin-react';
 import { FlatCompat } from '@eslint/eslintrc';
-import eslintConfigPrettier from 'eslint-config-prettier';
+import { fileURLToPath } from 'node:url';
+import globals from 'globals';
+import path from 'node:path';
+import js from '@eslint/js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

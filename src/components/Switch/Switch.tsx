@@ -1,9 +1,9 @@
-import * as React from 'react';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
+import * as React from 'react';
 import { cn } from 'utils';
-import { Loader } from 'components';
 import { SWITCH_SIZES } from './SwitchConstants';
 import { ValueOf } from 'types/utils';
+import { Loader } from 'components';
 
 type SwitchProps = {
   loading?: boolean;

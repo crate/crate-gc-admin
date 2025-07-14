@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import cx from 'classnames';
-import { ButtonKind, ButtonSize } from './Button';
 import { BUTTON_KINDS, BUTTON_SIZES } from './ButtonConstants';
+import { ButtonKind, ButtonSize } from './Button';
+import cx from 'classnames';
 
 type UseButtonStylesProps = {
   className?: string;

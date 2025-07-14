@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import CopyToClipboard, { CopyToClipboardProps } from './CopyToClipboard';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: CopyToClipboardProps = {
   textToCopy: 'example-string',

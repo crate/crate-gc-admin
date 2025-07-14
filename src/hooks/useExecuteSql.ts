@@ -1,5 +1,5 @@
-import { QueryResults } from 'types/query';
 import useJWTManagerStore from 'state/jwtManager';
+import { QueryResults } from 'types/query';
 
 export type ExecuteSqlResult = {
   data: QueryResults | null;

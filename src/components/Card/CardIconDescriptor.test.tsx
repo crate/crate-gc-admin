@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import CardIconDescriptor, { CardIconDescriptorProps } from './CardIconDescriptor';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: CardIconDescriptorProps = {
   imageSrc: 'static/media/logo_azure_2021.c0c0bdfcc980e52835dba9fcb29718c2.svg',

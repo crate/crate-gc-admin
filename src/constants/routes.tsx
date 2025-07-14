@@ -1,25 +1,4 @@
 import {
-  Auth,
-  Help,
-  Nodes,
-  Overview,
-  SQLConsole,
-  Tables,
-  TablesShards,
-  Users,
-} from 'routes';
-import {
-  AutomationJobsTable,
-  AutomationCreateJob,
-  AutomationEditJob,
-  AutomationPoliciesTable,
-  AutomationCreatePolicy,
-  AutomationEditPolicy,
-  AutomationLogs,
-} from 'routes/Automation';
-import { EnterpriseScreen, Heading } from 'components';
-import { Route } from 'types';
-import {
   auth,
   automationScheduledJobs,
   automationCreateJob,
@@ -36,6 +15,27 @@ import {
   tablesShards,
   users,
 } from './paths';
+import {
+  AutomationJobsTable,
+  AutomationCreateJob,
+  AutomationEditJob,
+  AutomationPoliciesTable,
+  AutomationCreatePolicy,
+  AutomationEditPolicy,
+  AutomationLogs,
+} from 'routes/Automation';
+import {
+  Auth,
+  Help,
+  Nodes,
+  Overview,
+  SQLConsole,
+  Tables,
+  TablesShards,
+  Users,
+} from 'routes';
+import { EnterpriseScreen, Heading } from 'components';
+import { Route } from 'types';
 
 const routes: Route[] = [
   {

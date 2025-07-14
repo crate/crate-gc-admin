@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import { FSStats, LoadAverage, NodeStatusInfo } from 'types/cratedb';
 import useClusterHealthStore from 'state/clusterHealth';
 import { useClusterNodeStatus } from 'src/swr/jwt';
-import { FSStats, LoadAverage, NodeStatusInfo } from 'types/cratedb';
 
 export type ClusterHealthManagerProps = {
   clusterId: string;

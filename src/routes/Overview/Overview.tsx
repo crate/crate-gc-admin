@@ -1,10 +1,10 @@
-import { useAllocations, useClusterInfo, useQueryStats } from 'src/swr/jwt';
-import { Loader, Heading, GCChart } from 'components';
-import { Statistic, Tag } from 'antd';
-import { STATS_PERIOD } from 'components/ClusterHealthManager/ClusterHealthManager';
 import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
 import { formatHumanReadable, formatNum } from 'utils/numbers';
+import { Statistic, Tag } from 'antd';
+import { STATS_PERIOD } from 'components/ClusterHealthManager/ClusterHealthManager';
+import { useAllocations, useClusterInfo, useQueryStats } from 'src/swr/jwt';
 import useClusterHealthStore from 'state/clusterHealth';
+import { Loader, Heading, GCChart } from 'components';
 import useJWTManagerStore from 'state/jwtManager';
 
 function Overview() {

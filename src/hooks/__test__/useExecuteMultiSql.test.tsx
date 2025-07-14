@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { render, screen, waitFor } from 'test/testUtils';
 import useExecuteMultiSql from 'hooks/useExecuteMultiSql';
+import { render, screen, waitFor } from 'test/testUtils';
 
 type MockComponentProps = { query: string };
 

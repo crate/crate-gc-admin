@@ -1,16 +1,16 @@
-import { useMemo } from 'react';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
   PauseCircleOutlined,
 } from '@ant-design/icons';
+import { truncate } from 'lodash';
+import { useMemo } from 'react';
+import { Tooltip } from 'antd';
 import CrateTabsShad from 'components/CrateTabsShad';
-import Loader from 'components/Loader';
 import SQLResultsTable from './SQLResultsTable';
 import { QueryStatus } from 'types/query';
-import { Tooltip } from 'antd';
-import { truncate } from 'lodash';
+import Loader from 'components/Loader';
 
 export type SQLResultsProps = {
   results: QueryStatus[] | undefined;

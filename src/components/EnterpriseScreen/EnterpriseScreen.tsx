@@ -1,8 +1,8 @@
-import React from 'react';
 import { Result } from 'antd';
-import Button from 'components/Button';
-import { ConnectionStatus } from 'types';
+import React from 'react';
 import useJWTManagerStore from 'state/jwtManager';
+import { ConnectionStatus } from 'types';
+import Button from 'components/Button';
 
 type EnterpriseScreenProps = {
   children: React.ReactElement;

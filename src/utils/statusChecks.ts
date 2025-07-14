@@ -1,5 +1,5 @@
-import { Allocation } from 'types/cratedb';
 import { Color } from 'constants/colors';
+import { Allocation } from 'types/cratedb';
 
 export function tablesWithMissingPrimaryReplicas(
   allocations: Allocation[] | undefined,

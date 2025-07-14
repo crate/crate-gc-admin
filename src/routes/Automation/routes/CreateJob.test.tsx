@@ -1,5 +1,5 @@
-import CreateJob from './CreateJob';
 import { render, screen } from 'test/testUtils';
+import CreateJob from './CreateJob';
 
 const setup = () => {
   return render(<CreateJob />);

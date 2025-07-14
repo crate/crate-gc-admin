@@ -1,8 +1,8 @@
-import { render, screen } from '../../../test/testUtils';
 import VerticalProgress, {
   VERTICAL_PROGRESS_BARS,
   VerticalProgressProps,
 } from './VerticalProgress';
+import { render, screen } from '../../../test/testUtils';
 
 const defaultProps: VerticalProgressProps = {
   max: 50,

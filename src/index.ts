@@ -1,5 +1,5 @@
-import './index.css';
 import useJWTManagerStore, { JWTManagerStore } from './state/jwtManager';
+import './index.css';
 
 export { useJWTManagerStore };
 export * from './components';

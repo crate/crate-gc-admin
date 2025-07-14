@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import Heading, { HeadingProps } from './Heading';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: HeadingProps = {
   children: 'the heading value',

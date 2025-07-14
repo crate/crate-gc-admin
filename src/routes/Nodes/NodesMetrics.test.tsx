@@ -1,17 +1,17 @@
-import { render, screen } from '../../../test/testUtils';
-import NodesMetrics from '.';
-import server from 'test/msw';
 import { NODE_STATUS_THRESHOLD } from 'constants/database';
-import prettyBytes from 'pretty-bytes';
-import { VERTICAL_PROGRESS_BARS } from 'components/VerticalProgress/VerticalProgress';
-import { formatNum } from 'utils';
-import useClusterHealthStore from 'src/state/clusterHealth';
 import { http, HttpResponse } from 'msw';
+import prettyBytes from 'pretty-bytes';
+import { formatNum } from 'utils';
+import { VERTICAL_PROGRESS_BARS } from 'components/VerticalProgress/VerticalProgress';
 import { useClusterNodeStatusMock } from 'test/__mocks__/useClusterNodeStatusMock';
-import { clusterNode } from 'test/__mocks__/nodes';
 import { useShardsMock } from 'test/__mocks__/useShardsMock';
+import useClusterHealthStore from 'src/state/clusterHealth';
+import { render, screen } from '../../../test/testUtils';
+import { clusterNode } from 'test/__mocks__/nodes';
 import { postFetch } from 'src/swr/jwt/useShards';
 import { QueryResultSuccess } from 'types/query';
+import server from 'test/msw';
+import NodesMetrics from '.';
 
 const setup = () => {
   return render(<NodesMetrics />);

@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
+import {
+  tablesWithMissingPrimaryReplicas,
+  tablesWithUnassignedShards,
+} from 'utils/statusChecks';
 import {
   CaretDownOutlined,
   CaretRightOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import prettyBytes from 'pretty-bytes';
-import { Loader, StatusLight } from 'components';
 import { formatHumanReadable } from 'utils/numbers';
+import { useEffect, useState } from 'react';
+import prettyBytes from 'pretty-bytes';
 import { useAllocations, useShards, useTables } from 'src/swr/jwt';
-import {
-  tablesWithMissingPrimaryReplicas,
-  tablesWithUnassignedShards,
-} from 'utils/statusChecks';
-import { TableListEntry } from 'types/cratedb';
 import useJWTManagerStore from 'state/jwtManager';
+import { Loader, StatusLight } from 'components';
+import { TableListEntry } from 'types/cratedb';
 
 function TableList({
   setActiveTable,

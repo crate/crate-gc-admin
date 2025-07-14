@@ -1,3 +1,7 @@
+import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
+import { CloseOutlined, DownOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { formatNum } from 'utils/numbers';
 import {
   useAllocations,
   useClusterNodeStatus,
@@ -5,16 +9,12 @@ import {
   useClusterInfo,
   useShards,
 } from 'src/swr/jwt';
-import StatusLight from 'components/StatusLight';
-import { CloseOutlined, DownOutlined } from '@ant-design/icons';
-import { formatNum } from 'utils/numbers';
-import React, { useEffect, useState } from 'react';
-import { ClusterStatusColor, getClusterStatus } from 'utils/statusChecks';
-import Loader from 'components/Loader';
-import logo from '../../assets/logo.svg';
+import { LOADER_SIZES } from 'components/Loader/LoaderConstants';
 import useClusterHealthStore from 'state/clusterHealth';
 import useJWTManagerStore from 'state/jwtManager';
-import { LOADER_SIZES } from 'components/Loader/LoaderConstants';
+import StatusLight from 'components/StatusLight';
+import logo from '../../assets/logo.svg';
+import Loader from 'components/Loader';
 
 function StatusBar() {
   const clusterId = useJWTManagerStore(state => state.clusterId);

@@ -1,9 +1,9 @@
-import { TreeItem } from 'components/Tree/Tree';
-import _ from 'lodash';
 import { PropsWithChildren } from 'react';
-import { TPolicyTarget } from 'types';
-import { TableListEntry } from 'types/cratedb';
 import { cn } from 'utils';
+import _ from 'lodash';
+import { TreeItem } from 'components/Tree/Tree';
+import { TableListEntry } from 'types/cratedb';
+import { TPolicyTarget } from 'types';
 
 type TreeItemLabelProps = PropsWithChildren<{
   disabled?: boolean;

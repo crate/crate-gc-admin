@@ -1,14 +1,13 @@
-import * as React from 'react';
-
-import { cn } from 'utils';
-import { Button as CrateButton, Select } from 'components';
-import { ButtonProps as CrateButtonProps } from 'components/Button/Button';
 import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
   LeftOutlined,
   RightOutlined,
 } from '@ant-design/icons';
+import * as React from 'react';
+import { cn } from 'utils';
+import { ButtonProps as CrateButtonProps } from 'components/Button/Button';
+import { Button as CrateButton, Select } from 'components';
 
 export type PaginationProps = {
   pageSize?: number;

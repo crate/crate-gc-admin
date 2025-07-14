@@ -1,5 +1,5 @@
-import { Heading } from 'components';
 import UsersTable from './UsersTable';
+import { Heading } from 'components';
 
 function Users() {
   return (

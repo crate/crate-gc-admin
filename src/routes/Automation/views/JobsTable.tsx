@@ -1,9 +1,19 @@
-import { useState } from 'react';
-import { useGCGetScheduledJobs } from 'hooks/swrHooks';
-import { Job, TJobLogStatementError } from 'types';
-import useGcApi from 'hooks/useGcApi';
-import { Link, useNavigate } from 'react-router-dom';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
+import {
+  automationCreateJob,
+  automationEditJob,
+  automationLogs,
+} from 'constants/paths';
+import { cronParser, cn, apiDelete, apiPut, sortByString } from 'utils';
 import { ColumnDef, Table } from '@tanstack/react-table';
+import { Link, useNavigate } from 'react-router-dom';
+import { Popconfirm } from 'antd';
+import { useState } from 'react';
 import {
   Text,
   Chip,
@@ -15,19 +25,9 @@ import {
   DisplayUTCDate,
   DisplayDateDifference,
 } from 'components';
-import { cronParser, cn, apiDelete, apiPut, sortByString } from 'utils';
-import {
-  CheckOutlined,
-  CloseOutlined,
-  DeleteOutlined,
-  EditOutlined,
-} from '@ant-design/icons';
-import { Popconfirm } from 'antd';
-import {
-  automationCreateJob,
-  automationEditJob,
-  automationLogs,
-} from 'constants/paths';
+import { useGCGetScheduledJobs } from 'hooks/swrHooks';
+import { Job, TJobLogStatementError } from 'types';
+import useGcApi from 'hooks/useGcApi';
 
 export const JOBS_TABLE_PAGE_SIZE = 10;
 

@@ -1,6 +1,6 @@
-import { Heading } from 'components';
 import { PropsWithChildren } from 'react';
 import { cn } from 'utils';
+import { Heading } from 'components';
 
 export type CardProps = PropsWithChildren<{
   title?: string;

@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Loader, NoDataView } from 'components';
+import { useEffect, useState } from 'react';
 import useJWTManagerStore from 'state/jwtManager';
+import { Loader, NoDataView } from 'components';
 
 function Auth() {
   const login = useJWTManagerStore(state => state.login);

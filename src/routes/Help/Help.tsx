@@ -1,6 +1,6 @@
+import { FaDiscourse, FaGithub, FaStackOverflow } from 'react-icons/fa';
 import { BookOutlined } from '@ant-design/icons';
 import { Heading } from 'components';
-import { FaDiscourse, FaGithub, FaStackOverflow } from 'react-icons/fa';
 
 function Help() {
   const panels = [

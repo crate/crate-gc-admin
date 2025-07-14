@@ -1,16 +1,16 @@
-import moment from 'moment';
-import { scheduledJobLogs } from 'test/__mocks__/scheduledJobLogs';
-import scheduledJobs from 'test/__mocks__/scheduledJobs';
-import server from 'test/msw';
-import { customScheduledJobGetResponse } from 'test/msw';
-import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
-import { Job, JobLog } from 'types';
-import { cronParser } from 'utils/cron';
-import JobsTable, { JOBS_TABLE_PAGE_SIZE } from './JobsTable';
-import { DATE_FORMAT } from 'constants/defaults';
-import { navigateMock } from '__mocks__/react-router-dom';
-import { sortByString } from 'utils';
 import { automationEditJob, automationLogs } from 'constants/paths';
+import { DATE_FORMAT } from 'constants/defaults';
+import { cronParser } from 'utils/cron';
+import { sortByString } from 'utils';
+import moment from 'moment';
+import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
+import { scheduledJobLogs } from 'test/__mocks__/scheduledJobLogs';
+import JobsTable, { JOBS_TABLE_PAGE_SIZE } from './JobsTable';
+import { navigateMock } from '__mocks__/react-router-dom';
+import scheduledJobs from 'test/__mocks__/scheduledJobs';
+import { customScheduledJobGetResponse } from 'test/msw';
+import { Job, JobLog } from 'types';
+import server from 'test/msw';
 
 const onDeleteSpy = jest.fn();
 

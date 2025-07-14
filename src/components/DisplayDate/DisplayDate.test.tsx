@@ -1,7 +1,7 @@
 import moment from 'moment';
+import { DisplayDateProps } from './DisplayDate';
 import { render } from 'test/testUtils';
 import DisplayDate from '.';
-import { DisplayDateProps } from './DisplayDate';
 
 const dummyDate: string = '2020-03-25T10:26:26.161Z';
 

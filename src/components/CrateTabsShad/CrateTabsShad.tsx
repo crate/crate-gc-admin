@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
+import React, { useEffect, useState } from 'react';
 import { cn } from 'utils';
 
 export type CrateTabShadProps = {

@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import NoDataView, { NoDataViewProps } from './NoDataView';
+import { render, screen } from 'test/testUtils';
 
 const defaultProps: NoDataViewProps = {};
 

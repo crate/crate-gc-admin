@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Modal, Table } from 'antd';
 import { CopyOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Modal, Table } from 'antd';
+import { useState } from 'react';
 import { Button, CopyToClipboard, NoDataView } from 'components';
 import { SqlEditorHistoryEntry } from 'types/localStorage';
 

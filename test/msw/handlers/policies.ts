@@ -1,8 +1,8 @@
 import { http, HttpResponse } from 'msw';
-import policies from 'test/__mocks__/policies';
-import { policiesLogs, policiesLogsWithName } from 'test/__mocks__/policiesLogs';
 import { policy, policyEligibleColumns, policyPreview } from 'test/__mocks__/policy';
+import { policiesLogs, policiesLogsWithName } from 'test/__mocks__/policiesLogs';
 import handlerFactory from 'test/msw/handlerFactory';
+import policies from 'test/__mocks__/policies';
 
 const getAllPolicy = http.get('http://localhost:5050/api/policies/', () => {
   return HttpResponse.json(policies);

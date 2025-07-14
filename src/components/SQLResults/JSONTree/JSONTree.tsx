@@ -1,6 +1,6 @@
-import React from 'react';
-import { Tree, message } from 'antd';
 import { DataNode } from 'antd/lib/tree';
+import { Tree, message } from 'antd';
+import React from 'react';
 import TypeAwareValue from '../TypeAwareValue/TypeAwareValue.tsx';
 
 export type JSONTreeParams = {

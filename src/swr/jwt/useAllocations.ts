@@ -1,7 +1,7 @@
 import useSWR from 'swr';
-import swrJWTFetch from '../swrJWTFetch';
 import { QueryResultSuccess } from 'types/query';
 import { Allocation } from 'types/cratedb';
+import swrJWTFetch from '../swrJWTFetch';
 
 const QUERY = `
 SELECT

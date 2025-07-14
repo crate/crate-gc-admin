@@ -1,3 +1,21 @@
+import { automationTablePolicies } from 'constants/paths';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { EMPTY_POLICY_FORM } from 'constants/policies';
+import { INTEGER_VALUE_REGEXP } from 'constants/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { WarningOutlined } from '@ant-design/icons';
+import { ApiOutput, apiPost, apiPut } from 'utils';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Empty } from 'antd';
+import {
+  Policy,
+  PolicyFormSchemaInput,
+  PolicyInput,
+  TPolicyPartitioningOperation,
+  TPolicyPartitioningUnit,
+  TPolicyTarget,
+} from 'types';
 import {
   Form,
   Input,
@@ -12,33 +30,15 @@ import {
   Text,
   DataTable,
 } from 'components';
-import useGcApi from 'hooks/useGcApi';
-import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { Empty } from 'antd';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Policy,
-  PolicyFormSchemaInput,
-  PolicyInput,
-  TPolicyPartitioningOperation,
-  TPolicyPartitioningUnit,
-  TPolicyTarget,
-} from 'types';
-import { ApiError } from 'types/api';
 import {
   mapPolicyInputToPolicyWithoutId,
   mapPolicyToPolicyInput,
 } from '../tablePoliciesUtils/policies';
 import { mapTableListEntriesToTreeItem } from '../tablePoliciesUtils/tableTree';
-import { INTEGER_VALUE_REGEXP } from 'constants/utils';
-import { WarningOutlined } from '@ant-design/icons';
-import { EMPTY_POLICY_FORM } from 'constants/policies';
-import { ApiOutput, apiPost, apiPut } from 'utils';
 import useEligibleColumns from '../hooks/useEligibleColumns';
 import usePolicyPreview from '../hooks/usePolicyPreview';
-import { automationTablePolicies } from 'constants/paths';
+import useGcApi from 'hooks/useGcApi';
+import { ApiError } from 'types/api';
 
 type PolicyFormProps = {
   type: 'add' | 'edit';

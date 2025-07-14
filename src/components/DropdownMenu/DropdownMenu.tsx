@@ -1,8 +1,7 @@
-import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-
-import { cn } from 'utils';
 import { CiCircleOutlined, RightOutlined } from '@ant-design/icons';
+import * as React from 'react';
+import { cn } from 'utils';
 import { Checkbox } from 'components';
 
 const Menu = DropdownMenuPrimitive.Root;

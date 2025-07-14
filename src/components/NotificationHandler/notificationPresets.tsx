@@ -1,11 +1,11 @@
-import { message, notification } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import React from 'react';
 import {
   LONG_MESSAGE_NOTIFICATION_DURATION,
   SHORT_MESSAGE_NOTIFICATION_DURATION,
 } from 'constants/defaults';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { ArgsProps } from 'antd/es/notification';
+import { message, notification } from 'antd';
+import React from 'react';
 
 type NotificationAntd = ArgsProps & {
   description?: string | React.ReactElement;

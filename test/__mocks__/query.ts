@@ -1,6 +1,6 @@
+import { schemaTableColumnMock } from './schemaTableColumn';
 import { NodeStatusInfo, ShardInfo } from 'types/cratedb';
 import { QueryResult } from 'types/query';
-import { schemaTableColumnMock } from './schemaTableColumn';
 
 export const queryResult: QueryResult = {
   col_types: [9],

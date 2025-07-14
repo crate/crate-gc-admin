@@ -1,7 +1,7 @@
-import useSWR from 'swr';
-import swrJWTFetch from '../swrJWTFetch';
 import { TABLE_HEALTH_STATES, TableHealthState } from 'constants/database';
+import useSWR from 'swr';
 import { QueryResultSuccess } from 'types/query';
+import swrJWTFetch from '../swrJWTFetch';
 
 export type TableShard = {
   schemaName: string;

@@ -1,6 +1,5 @@
 ## Summary of changes
 
-
 ## Checklist
 
 - [ ] Link to issue this PR refers to:

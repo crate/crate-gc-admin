@@ -1,8 +1,8 @@
-import React from 'react';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import ReactSyntaxHighlighter from 'react-syntax-highlighter';
-import CustomPreTag from './CustomPreTag';
+import React from 'react';
 import CopyToClipboard from 'components/CopyToClipboard';
+import CustomPreTag from './CustomPreTag';
 import Heading from 'components/Heading';
 import Text from 'components/Text';
 

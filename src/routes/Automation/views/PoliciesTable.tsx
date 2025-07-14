@@ -4,8 +4,16 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from '@ant-design/icons';
+import {
+  automationCreatePolicy,
+  automationEditPolicy,
+  automationLogs,
+} from 'constants/paths';
+import { apiDelete, apiPut, cn, sortByString } from 'utils';
 import { ColumnDef, Table } from '@tanstack/react-table';
+import { Link, useNavigate } from 'react-router-dom';
 import { Popconfirm } from 'antd';
+import { useState } from 'react';
 import {
   Button,
   Chip,
@@ -16,17 +24,9 @@ import {
   Switch,
   Text,
 } from 'components';
-import {
-  automationCreatePolicy,
-  automationEditPolicy,
-  automationLogs,
-} from 'constants/paths';
 import { useGCGetPolicies, useGCGetPoliciesEnriched } from 'hooks/swrHooks';
-import useGcApi from 'hooks/useGcApi';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { EnrichedPolicy, PolicyWithoutId } from 'types';
-import { apiDelete, apiPut, cn, sortByString } from 'utils';
+import useGcApi from 'hooks/useGcApi';
 
 export const POLICIES_TABLE_PAGE_SIZE = 10;
 

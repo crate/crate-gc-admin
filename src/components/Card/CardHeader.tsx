@@ -1,7 +1,7 @@
 import { ApartmentOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Heading } from 'components';
 import CARD_HEADER_TYPES from './CardConstants';
 import { ValueOf } from 'types/utils';
+import { Heading } from 'components';
 import type { ReactNode } from 'react';
 
 export type CardHeaderProps = {

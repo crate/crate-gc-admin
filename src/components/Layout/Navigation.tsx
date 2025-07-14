@@ -1,6 +1,3 @@
-import { ConnectionStatus } from 'types';
-import { NavigationProps, NavigationLinkProps } from './types';
-import { NavLink } from 'react-router-dom';
 import {
   ArrowUpOutlined,
   CheckOutlined,
@@ -10,6 +7,9 @@ import {
   LoginOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
+import { NavLink } from 'react-router-dom';
+import { NavigationProps, NavigationLinkProps } from './types';
+import { ConnectionStatus } from 'types';
 
 function Navigation({
   navIsExpanded,

@@ -1,24 +1,24 @@
+import { CopyOutlined, DownloadOutlined } from '@ant-design/icons';
+import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
 import { ColumnDef } from '@tanstack/react-table';
-import _ from 'lodash';
-import Chip from 'components/Chip';
-import DataTable from 'components/DataTable';
-import Switch from 'components/Switch';
-import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
-import { dbTypeToHumanReadable } from './utils';
 import Papa from 'papaparse';
+import { Radio } from 'antd';
+import _ from 'lodash';
 import {
   ColumnType,
   QueryResult,
   QueryResultError,
   QueryResultSuccess,
 } from 'types/query';
-import useSessionStore from 'state/session';
+import TypeAwareValue from './TypeAwareValue/TypeAwareValue';
 import DropdownMenu from 'components/DropdownMenu';
-import Button from 'components/Button';
-import { CopyOutlined, DownloadOutlined } from '@ant-design/icons';
-import { Radio } from 'antd';
-import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
+import { dbTypeToHumanReadable } from './utils';
+import DataTable from 'components/DataTable';
+import useSessionStore from 'state/session';
 import useMessage from 'hooks/useMessage';
+import Switch from 'components/Switch';
+import Button from 'components/Button';
+import Chip from 'components/Chip';
 
 export type SQLResultsTableProps = {
   result: QueryResult | undefined;

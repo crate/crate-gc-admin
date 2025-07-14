@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import Pagination, { PaginationProps } from './Pagination';
+import { render, screen } from 'test/testUtils';
 
 const onPageChangeSpy = jest.fn();
 

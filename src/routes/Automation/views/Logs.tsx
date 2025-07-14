@@ -1,12 +1,13 @@
-import { useGCGetScheduledJobsAllLogs } from 'hooks/swrHooks';
-import {
-  JobLogWithName,
-  PolicyLogWithName,
-  TJobLogStatementError,
-  TaskLog,
-} from 'types';
-import { useState } from 'react';
+import { automationEditJob, automationEditPolicy } from 'constants/paths';
+import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { cn, compareDurations, compareIsoDates } from 'utils';
+import { ColumnDef, Row } from '@tanstack/react-table';
+import { POLICY_NAMES } from 'constants/policies';
 import { Link } from 'react-router-dom';
+import { getLogDuration } from 'utils';
+import { useState } from 'react';
+import moment from 'moment';
 import {
   Button,
   Chip,
@@ -17,16 +18,15 @@ import {
   QueryStackTraceModal,
   Text,
 } from 'components';
-import { ColumnDef, Row } from '@tanstack/react-table';
-import moment from 'moment';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { cn, compareDurations, compareIsoDates } from 'utils';
-import { DATE_FORMAT, DURATION_FORMAT } from 'constants/defaults';
-import { getLogDuration } from 'utils';
-import { automationEditJob, automationEditPolicy } from 'constants/paths';
-import { POLICY_NAMES } from 'constants/policies';
-import { ActionsInfoError } from '../tablePoliciesUtils/types';
+import {
+  JobLogWithName,
+  PolicyLogWithName,
+  TJobLogStatementError,
+  TaskLog,
+} from 'types';
 import { getLogActionsInError } from '../tablePoliciesUtils/policies';
+import { ActionsInfoError } from '../tablePoliciesUtils/types';
+import { useGCGetScheduledJobsAllLogs } from 'hooks/swrHooks';
 
 export const JOBS_LOGS_TABLE_PAGE_SIZE = 10;
 

@@ -1,5 +1,5 @@
-import { render, screen } from 'test/testUtils';
 import NotificationDescription from './NotificationDescription';
+import { render, screen } from 'test/testUtils';
 
 const mockMessages = [{ keyName: 'key', text: 'text' }];
 

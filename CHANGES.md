@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Update GitHub codeowners file.
+- Sort imports.
 
 ## 2025-07-02 - 0.22.4
 

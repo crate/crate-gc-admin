@@ -1,5 +1,5 @@
-import CreatePolicy from './CreatePolicy';
 import { render, screen } from 'test/testUtils';
+import CreatePolicy from './CreatePolicy';
 
 const setup = () => {
   return render(<CreatePolicy />);

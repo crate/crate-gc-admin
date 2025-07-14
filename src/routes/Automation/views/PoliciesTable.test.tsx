@@ -1,14 +1,14 @@
+import { automationEditPolicy, automationLogs } from 'constants/paths';
+import { DATE_FORMAT } from 'constants/defaults';
+import { sortByString } from 'utils';
 import moment from 'moment';
 import server, { customGetAllPolicies, customGetPolicyLogs } from 'test/msw';
-import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
+import { policiesLogs, policyErrorLog } from 'test/__mocks__/policiesLogs';
 import PoliciesTable, { POLICIES_TABLE_PAGE_SIZE } from './PoliciesTable';
-import { DATE_FORMAT } from 'constants/defaults';
+import { getRequestSpy, render, screen, waitFor } from 'test/testUtils';
 import { navigateMock } from '__mocks__/react-router-dom';
 import policies from 'test/__mocks__/policies';
 import { PolicyLog, Policy } from 'types';
-import { policiesLogs, policyErrorLog } from 'test/__mocks__/policiesLogs';
-import { sortByString } from 'utils';
-import { automationEditPolicy, automationLogs } from 'constants/paths';
 
 const onDeleteSpy = jest.fn();
 

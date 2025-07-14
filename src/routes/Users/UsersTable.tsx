@@ -1,10 +1,10 @@
+import { TeamOutlined, UserOutlined } from '@ant-design/icons';
+import { CRATEDB_PRIVILEGES_DOCS } from 'constants/defaults';
+import { ColumnDef } from '@tanstack/react-table';
+import { Tag, Tooltip } from 'antd';
 import { DataTable, Loader, Text } from 'components';
 import { useUsersRoles } from 'src/swr/jwt';
-import { ColumnDef } from '@tanstack/react-table';
-import { TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { UserInfo } from 'types/cratedb';
-import { Tag, Tooltip } from 'antd';
-import { CRATEDB_PRIVILEGES_DOCS } from 'constants/defaults';
 
 function UsersTable() {
   const { data: usersRoles } = useUsersRoles();
