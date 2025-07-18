@@ -4,6 +4,7 @@
 
 - Update GitHub codeowners file.
 - Sort imports.
+- Misc dependabot updates.
 
 ## 2025-07-02 - 0.22.4
 
