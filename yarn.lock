@@ -9083,10 +9083,10 @@ yoctocolors-cjs@^2.1.2:
   resolved "https://registry.yarnpkg.com/yoctocolors-cjs/-/yoctocolors-cjs-2.1.2.tgz#f4b905a840a37506813a7acaa28febe97767a242"
   integrity sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==
 
-zod@^3.24.3:
-  version "3.24.3"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.3.tgz#1f40f750a05e477396da64438e0e1c0995dafd87"
-  integrity sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==
+zod@^3.25.76:
+  version "3.25.76"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
+  integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
 
 zustand@^5.0.6:
   version "5.0.6"
