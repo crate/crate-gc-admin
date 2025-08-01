@@ -34,11 +34,12 @@
   dependencies:
     "@ant-design/fast-color" "^3.0.0"
 
-"@ant-design/compatible@^5.1.3":
-  version "5.1.3"
-  resolved "https://registry.npmjs.org/@ant-design/compatible/-/compatible-5.1.3.tgz#5ede26392defae43f54e19f604fdb44eb9859816"
-  integrity sha512-uLvjwENnpY/1gxYb5m8L2k+WmBpBHqH45fO76+4J+WUDKTUKpmwbEW3OG/in2mSO2HI6h3Mcp57+tAMr18ZkgQ==
+"@ant-design/compatible@^5.1.4":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@ant-design/compatible/-/compatible-5.1.4.tgz#5161e23af945e91768b23f5bb7dc7d6442da30b9"
+  integrity sha512-sykrus7W8SDtDE2BefzMlQpug18O4haIqZW/zrhTSSYUKO77yIOqL5BFMgs5QSvgghSzjMRNNKzn4dX43I0TQg==
   dependencies:
+    "@ctrl/tinycolor" "^3.6.1"
     classnames "^2.2.6"
     dayjs "^1.11.4"
     lodash.camelcase "^4.3.0"
