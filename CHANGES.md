@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## 2025-09-10 - 0.23.0
+
 - Update GitHub codeowners file.
 - Sort imports.
 - Misc dependabot updates.
+- Update node version in GitHub workflows.
 
 ## 2025-07-02 - 0.22.4
 

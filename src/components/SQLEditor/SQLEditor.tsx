@@ -1,3 +1,8 @@
+// sort-imports-ignore
+import 'ace-builds/src-min-noconflict/ace';
+import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/src-min-noconflict/theme-github';
+
 import {
   CaretRightOutlined,
   FormatPainterOutlined,
@@ -5,10 +10,8 @@ import {
 } from '@ant-design/icons';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { SQL_EDITOR_QUERIES_QUOTA } from 'constants/defaults';
-import 'ace-builds/src-min-noconflict/ext-language_tools';
 import { useEffect, useMemo, useState } from 'react';
 import { format as formatSQL } from 'sql-formatter';
-import 'ace-builds/src-noconflict/theme-github';
 import AceEditor from 'react-ace';
 import { Ace } from 'ace-builds';
 import { cn } from 'utils';
