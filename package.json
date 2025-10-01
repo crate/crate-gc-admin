@@ -40,7 +40,7 @@
     "@radix-ui/react-tabs": "^1.1.12",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.21.3",
-    "ace-builds": "^1.43.2",
+    "ace-builds": "^1.43.3",
     "antd": "^5.26.7",
     "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
