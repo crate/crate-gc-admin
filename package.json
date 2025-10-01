@@ -28,7 +28,7 @@
   ],
   "dependencies": {
     "@ant-design/compatible": "^5.1.4",
-    "@ant-design/icons": "^6.0.0",
+    "@ant-design/icons": "^6.1.0",
     "@cratedb/cratedb-sqlparse": "^0.0.15",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-dropdown-menu": "^2.1.15",
