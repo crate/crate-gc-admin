@@ -35,10 +35,17 @@ export default {
     customExportConditions: [''],
   },
   transform: {
-    '^.+\\.jsx?$': 'ts-jest',
-    '^.+\\.tsx?$': 'ts-jest',
+    'node_modules/until-async/.*\\.js$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true,
+          esModuleInterop: true,
+        },
+      },
+    ],
   },
-  transformIgnorePatterns: ['node_modules/(?!pretty-bytes/.*)'],
+  transformIgnorePatterns: ['node_modules/(?!until-async)(?!pretty-bytes/.*)'],
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   globalSetup: './test/global-setup.ts',
 };
