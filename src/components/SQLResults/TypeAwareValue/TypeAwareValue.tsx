@@ -85,7 +85,11 @@ function TypeAwareValue({
       break;
     case ColumnType.TIMESTAMP_WITH_TZ:
     case ColumnType.TIMESTAMP_WITHOUT_TZ:
-      isoDate = new Date(Number(value)).toISOString();
+      try {
+        isoDate = new Date(Number(value)).toISOString();
+      } catch {
+        isoDate = 'Cannot parse timestamp';
+      }
       ret = (
         <div>
           <span>{`${value}`}</span>

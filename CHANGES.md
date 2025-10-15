@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2025-10-15 - 0.23.1
+
 - Misc dependabot updates.
+- Prevent UI crash when invalid timestamp encountered.
 
 ## 2025-09-10 - 0.23.0
 
