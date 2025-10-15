@@ -313,7 +313,7 @@ describe('The DataTable component', () => {
     it('renders the custom header, not the standard one', () => {
       setup({
         customTableHeader: (
-          <thead data-testId="custom-table-header">
+          <thead data-testid="custom-table-header">
             <tr>
               <th></th>
               <th></th>

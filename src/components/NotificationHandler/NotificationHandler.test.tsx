@@ -47,7 +47,7 @@ describe('The NotificationHandler component', () => {
 
     it('renders error messages if the "error" type is passed', async () => {
       const initialState = useSessionStore.getState();
-      useSessionStore.setState({
+      await useSessionStore.setState({
         ...initialState,
         notification: { type: 'error', message: 'this is an error' },
       });
