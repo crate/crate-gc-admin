@@ -1,38 +1,26 @@
 # CrateDB Grand Central Admin
 
-This is an administration interface for CrateDB, that aims to be a direct replacement
-for the original [crate-admin](https://github.com/crate/crate-admin) (a.k.a. Admin UI).
+A TypeScript/React front-end only app that runs purely in a browser with no external dependencies, reliance on APIs etc.
 
-## Architectural Design Choices
+This project is active, but it is important to understand why it was created and how it is used for today:
 
-GC Admin is open source and will always be open source (Apache 2.0).
-
-GC Admin aims to be embedded within a CrateDB database, as the original crate-admin is.
-However, the project can also be run standalone, and configured to access CrateDB using
-Cross-Origin requests.
-
-GC Admin is pure TypeScript/React that runs in a browser (no backend code).
-
-GC Admin exposes a React component library, where components can be re-used in other
-React applications (i.e. they are used in CrateDB Cloud).
-
-GC Admin has a consistent UX with CrateDB Cloud.
-
-### Authentication
-
-GC Admin authenticates to CrateDB using standard HTTP Basic Auth.
-
-### Enterprise Features
-
-GC Admin includes certain enterprise features, which require a non-open-source, paid-for
-application called Grand Central to function. When Grand Central is not present, the admin
-UI works, but certain features/tabs are inaccessible. Grand Central is always accessed
-via HTTP(S) Cross-Origin requests (the URL is configurable).
-
-GC Admin authenticates to Grand Central via a JWT token, which must be obtained from
-CrateDB Cloud.
+* Origins
+  * Created to be a direct replacement for the original [crate-admin](https://github.com/crate/crate-admin), aka Admin UI.
+  * Designed to have consistent UX and branding with the [cloud-ui](https://github.com/crate/cloud-ui).
+  * Designed to be a home for common, reusable components, to be used here and imported into the Cloud offering via NPM package: https://www.npmjs.com/package/@cratedb/crate-gc-admin.
+  * Designed to house future non-Open Source, enterprise features, not yet implemented.
+* Original Goals
+  * It was intended for this repo to always be open source (Apache 2.0)
+  * Authentication is performed using HTTP Basic Auth.
+  * To be able to run embedded within CrateDB (as the original Admin UI is), or run standalone and communicate with CrateDB instances via cross-origin requests.
+  * Designed to communicate with CrateDB via Grand Central. However, since this project was started, CrateDB has added support for direct communication via JWT tokens. This means that communication between this app and the database is now a hybrid collection of calls to GC, and some JWT-enabled calls direct to the database.
+* Current state
+  * The standalone side of this project is feature complete (or very close to it), but hasn’t been updated since Q1/Q2 2025. A product decision needs to be made here, but the old Admin UI is written using the now end-of-life AngularJS framework.
+  * Creating / editing components in this repo, then importing them into the Cloud UI is a time consuming, inefficient process. Possible solutions to this problem include combining this repo and the cloud-ui into a monorepo with two separate build outputs.
 
 ## Install
+
+It is recommended to use Node Version Manager with Crate front-end projects.
 
 To install this library you have to run the following command:
 
@@ -51,6 +39,10 @@ add the following:
 and edit your index.css to import library style:
 
     @import '@cratedb/crate-gc-admin/style.css';
+
+## Testing with the Cloud UI
+
+To test unpublished `crate-gc-admin` code in the Admin UI, use the `devtools/link_gc.sh` bash script within the Cloud UI repo. It is not a fast process, but it is the easiest way to code across the two repos.
 
 ## Publish a new version
 
