@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parallelize GHA workflow steps
+
 ## 2025-10-15 - 0.23.1
 
 - Misc dependabot updates.

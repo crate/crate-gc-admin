@@ -9,31 +9,48 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build:
+  lint-and-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        name: Setup Node
         with:
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org/
-          cache: 'yarn'
+          cache: "yarn"
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --immutable --immutable-cache
 
-      - name: Run linter
-        run: yarn lint
+      - name: Restore ESLint Cache
+        uses: actions/cache@v4
+        with:
+          path: .eslintcache
+          key: eslint-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.sha }}
+          restore-keys: |
+            eslint-${{ runner.os }}-${{ hashFiles('yarn.lock') }}-
+            eslint-${{ runner.os }}-
 
-      # We don't actually use the output, but it is useful to know if vite works.
-      # App build (useful for future needs)
-      - name: Build App
-        run: yarn build
+      - name: Lint and Build
+        # Running these in one job saves VM startup time
+        run: |
+          yarn lint --cache --cache-location .eslintcache
+          yarn build
+          yarn build-lib
 
-      # Component Library build
-      - name: Build Lib
-        run: yarn build-lib
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: "yarn"
 
-      # Run tests
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache
+
       - name: Run component tests
         run: yarn test
