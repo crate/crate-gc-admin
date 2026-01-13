@@ -61,7 +61,7 @@
     "react-icons": "^5.5.0",
     "react-intl": "^7.1.11",
     "react-resizable-panels": "^2.1.9",
-    "react-router-dom": "^6.30.1",
+    "react-router-dom": "^6.30.3",
     "react-syntax-highlighter": "^15.6.6",
     "recharts": "^2.15.4",
     "rollup-preserve-directives": "^1.1.3",
