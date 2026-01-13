@@ -478,10 +478,10 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cratedb/cratedb-sqlparse@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@cratedb/cratedb-sqlparse/-/cratedb-sqlparse-0.0.15.tgz#da963b16d11862394af25939359cfe5ee43a833f"
-  integrity sha512-FnL0QIZ0tqeWCHnC30Pwu71+otNyAfzOs52phgvpq8Rz1fSuqdDFbZj6cyrBx7K9ArZzv9LEPnpnfjRNnnXcHA==
+"@cratedb/cratedb-sqlparse@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@cratedb/cratedb-sqlparse/-/cratedb-sqlparse-0.0.17.tgz#20adccb5a719ca9929928715b6414b2dcc7d09dd"
+  integrity sha512-u/i2btfEMu9o+Fw1HY+2Hx08/kvA0QMmPoqfBTvCRBwPfClYoP7cv52R9vZq3tUII1l9gRQQndAFUeMDPj7/qQ==
   dependencies:
     antlr4 "^4.13.2"
 
