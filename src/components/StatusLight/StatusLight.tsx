@@ -28,7 +28,7 @@ function StatusLight({
         <Tooltip
           arrow={{ pointAtCenter: true }}
           color="#fff"
-          overlayStyle={{ maxWidth: '400px' }}
+          styles={{ root: {maxWidth: '400px'} }}
           placement="topLeft"
           title={<div className="text-black">{tooltip}</div>}
           trigger="hover"
