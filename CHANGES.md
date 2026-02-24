@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2026-02-24 - 0.23.2
+
 - Parallelize GHA workflow steps
 - Misc dependabot updates, node version bump and fix test warnings.
 
