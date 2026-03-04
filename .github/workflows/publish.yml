@@ -8,6 +8,10 @@ on:
 jobs:
   npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -42,5 +46,3 @@ jobs:
       - name: Publish to npm
         if: steps.check.outputs.changed == 'true'
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
