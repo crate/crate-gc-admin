@@ -70,7 +70,7 @@ function Overview() {
             suffix={
               clusterStatus.primaryRecordAvailabilityPercent < 100 && (
                 <span className="text-red-400">
-                  ({formatNum(clusterStatus.primaryRecordAvailabilityPercent)}%)
+                  ({formatNum(clusterStatus.primaryRecordAvailabilityPercent, 2, "%")})
                 </span>
               )
             }
@@ -83,7 +83,7 @@ function Overview() {
             suffix={
               clusterStatus.primaryShardAvailabilityPercent < 100 && (
                 <span className="text-red-400">
-                  ({formatNum(clusterStatus.primaryShardAvailabilityPercent)}%)
+                  ({formatNum(clusterStatus.primaryShardAvailabilityPercent, 2, "%")})
                 </span>
               )
             }
@@ -96,7 +96,7 @@ function Overview() {
             suffix={
               clusterStatus.replicaAvailabilityPercent < 100 && (
                 <span className="text-amber-400">
-                  ({formatNum(clusterStatus.replicaAvailabilityPercent)}%)
+                  ({formatNum(clusterStatus.replicaAvailabilityPercent, 2, "%")})
                 </span>
               )
             }

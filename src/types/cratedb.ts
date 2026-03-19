@@ -59,12 +59,19 @@ export type MemInfo = {
 
 export type NodeStatus = 'UNREACHABLE' | 'CRITICAL' | 'WARNING' | 'GOOD';
 
+export type NodeErrorMessage = {
+  status: NodeStatus;
+  message: string;
+};
+
 export type NodeStatusInfo = {
   id: string;
   name: string;
   hostname: string;
   heap: HeapUsage;
+  heap_status?: NodeStatus;
   fs: FSInfo;
+  fs_status?: NodeStatus;
   load: LoadAverage;
   version: NodeStatusInfoVersion;
   crate_cpu_usage: number;
@@ -74,6 +81,7 @@ export type NodeStatusInfo = {
   timestamp: number;
   mem: MemInfo;
   attributes: { [key: string]: string };
+  errorMessages?: NodeErrorMessage[];
 };
 
 export type ClusterSettings = {

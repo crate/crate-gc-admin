@@ -68,6 +68,17 @@ const getFiltersFromQuery = <TData, TValue>(
   return columnFilters;
 };
 
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case 'CRITICAL':
+      return 'border-red-400';
+    case 'WARNING':
+      return 'border-amber-400';
+    default:
+      return '';
+  }
+};
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -297,11 +308,18 @@ export function DataTable<TData, TValue>({
 
         <Table.Body>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map(row => (
+            table.getRowModel().rows.map(row => {
+              const hasErrorMessages = !!(row.original as any).errorMessages;
+              return (
+              <React.Fragment key={row.id}>
               <Table.Row
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
                 data-row-key={row.id}
+                className={cn(
+                  "hover:bg-table-row-hover",
+                  hasErrorMessages && "border-b-0"
+                )}
               >
                 {row.getVisibleCells().map(cell => (
                   <Table.Cell key={cell.id}>
@@ -309,7 +327,22 @@ export function DataTable<TData, TValue>({
                   </Table.Cell>
                 ))}
               </Table.Row>
-            ))
+              {hasErrorMessages && (
+                <Table.Row className="hover:bg-table-row-hover">
+                  <Table.Cell colSpan={row.getVisibleCells().length} className='p-0'>
+                    {(row.original as any).errorMessages.map((msg: any, index: number) => (
+                      <div
+                        key={index}
+                        className={`text-neutral-500 border-l-[6px] pl-1 mb-2 rounded-md ${getStatusClass(msg.status)}`}
+                      >
+                        {msg.message}
+                      </div>
+                    ))}
+                  </Table.Cell>
+                </Table.Row>
+              )}
+              </React.Fragment>
+            )})
           ) : (
             <Table.Row className="hover:bg-transparent">
               <Table.Cell

@@ -82,4 +82,36 @@ describe('The VerticalProgress component', () => {
       );
     });
   });
+
+  describe('when the status prop is passed', () => {
+    it('sets the color to red when status is CRITICAL', () => {
+      setup({
+        status: 'CRITICAL',
+      });
+
+      const numberOfFilled =
+        (defaultProps.current / defaultProps.max) * VERTICAL_PROGRESS_BARS;
+
+      const wrapper = screen.getByTestId('vertical-progress');
+
+      expect(wrapper.getElementsByClassName('bg-red-400')).toHaveLength(
+        numberOfFilled,
+      );
+    });
+
+    it('sets the color to amber when status is WARNING', () => {
+      setup({
+        status: 'WARNING',
+      });
+
+      const numberOfFilled =
+        (defaultProps.current / defaultProps.max) * VERTICAL_PROGRESS_BARS;
+
+      const wrapper = screen.getByTestId('vertical-progress');
+
+      expect(wrapper.getElementsByClassName('bg-amber-400')).toHaveLength(
+        numberOfFilled,
+      );
+    });
+  });
 });
