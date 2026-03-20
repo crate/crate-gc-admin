@@ -15,8 +15,10 @@ import { useEffect, useState } from 'react';
 import { arrIncludesElement } from 'utils';
 import * as React from 'react';
 import { cn } from 'utils';
+import TableRowWithNote from 'components/TableRowWithNote';
 import { Button, Pagination, Table } from 'components';
 import DataTableFilters from './DataTableFilters';
+import { ErrorMessage } from 'types/cratedb';
 import type {
   ColumnFiltersState,
   Header,
@@ -25,8 +27,6 @@ import type {
   Row,
   TableOptions,
 } from '@tanstack/react-table';
-import { ErrorMessage } from 'types/cratedb';
-import TableRowWithNote from 'components/TableRowWithNote';
 
 export const DEFAULT_ELEMENTS_PER_PAGE = 10;
 
@@ -312,30 +312,37 @@ export function DataTable<TData, TValue>({
         <Table.Body>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => {
-              const rowOriginal = row.original as TData & { errorMessages?: ErrorMessage[] };
-              const hasErrorMessages = !!rowOriginal.errorMessages;
-              if (hasErrorMessages) {
+              const rowOriginal = row.original as TData & {
+                errorMessages?: ErrorMessage[];
+              };
+              if (
+                rowOriginal.errorMessages &&
+                rowOriginal.errorMessages.length > 0
+              ) {
                 return (
                   <TableRowWithNote
                     rowId={row.id}
-                    cells={
-                      row.getVisibleCells().map(cell => (
-                        <Table.Cell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </Table.Cell>
-                      ))
-                    }
+                    cells={row.getVisibleCells().map(cell => (
+                      <Table.Cell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Table.Cell>
+                    ))}
                     note={
-                      <Table.Cell colSpan={row.getVisibleCells().length} className='p-0'>
-                        {rowOriginal.errorMessages.map((msg: ErrorMessage, index: number) => (
-                          <div
-                            key={index}
-                            className={`text-neutral-500 border-l-[6px] pl-1 mb-2 rounded-md ${getStatusClass(msg.status)}`}
-                          >
-                             {msg.message}
-                          </div>
-                        ))}
-                     </Table.Cell>
+                      <Table.Cell
+                        colSpan={row.getVisibleCells().length}
+                        className="p-0"
+                      >
+                        {rowOriginal.errorMessages?.map(
+                          (msg: ErrorMessage, index: number) => (
+                            <div
+                              key={index}
+                              className={`text-neutral-500 border-l-[6px] pl-1 mb-2 rounded-md ${getStatusClass(msg.status)}`}
+                            >
+                              {msg.message}
+                            </div>
+                          ),
+                        )}
+                      </Table.Cell>
                     }
                     dataState={row.getIsSelected() ? 'selected' : ''}
                     hoveredRowGroup={hoveredRowGroup}
@@ -357,7 +364,7 @@ export function DataTable<TData, TValue>({
                   </Table.Row>
                 );
               }
-          })
+            })
           ) : (
             <Table.Row className="hover:bg-transparent">
               <Table.Cell

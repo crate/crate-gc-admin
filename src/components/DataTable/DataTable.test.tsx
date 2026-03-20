@@ -1,5 +1,10 @@
+import {
+  SampleData,
+  SampleDataWithError,
+  colDef,
+  generateData,
+} from './test/dataTableTestUtils';
 import { DEFAULT_ELEMENTS_PER_PAGE, DataTable, DataTableProps } from './DataTable';
-import { SampleData, colDef, generateData } from './test/dataTableTestUtils';
 import { render, screen } from 'test/testUtils';
 
 const data = generateData();
@@ -120,6 +125,22 @@ describe('The DataTable component', () => {
           'desc',
         );
       });
+    });
+  });
+
+  describe('when the row has a error messages', () => {
+    const elements: SampleDataWithError[] | SampleData[] = generateData(2);
+    elements[0] = {
+      ...elements[0],
+      errorMessages: [{ message: 'ERROR_MESSAGE', status: 'CRITICAL' }],
+    } as SampleDataWithError;
+
+    it('should render the error messages in a row bellow the main row', () => {
+      setup({ data: elements });
+
+      checkElementInTable(elements[0]);
+      expect(screen.getByText('ERROR_MESSAGE')).toBeInTheDocument();
+      checkElementInTable(elements[1]);
     });
   });
 
