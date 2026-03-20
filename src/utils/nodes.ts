@@ -1,10 +1,55 @@
 import { NODE_STATUS_THRESHOLD } from 'constants/database';
-import { NodeStatus, NodeStatusInfo, ErrorMessage } from 'types/cratedb';
+import {
+  NodeStatus,
+  NodeStatusInfo,
+  ErrorMessage,
+  ClusterSettings,
+} from 'types/cratedb';
+
+const DiskStatusMessages: Record<NodeStatus, string> = {
+  CRITICAL:
+    'The flood stage disk watermark is exceeded on the node. Tables that reside on an affected disk on this node have been made read-only. Please check the node disk usage.',
+  WARNING:
+    'The high disk watermark is exceeded on the node. The cluster will attempt to relocate shards to another node. Please check the node disk usage.',
+  GOOD: '',
+  UNREACHABLE: '',
+};
+
+const HeapStatusMessages: Record<NodeStatus, string> = {
+  CRITICAL:
+    'The node is running out of heap memory. Please check the node heap usage.',
+  WARNING:
+    'The node is running low on heap memory. Please check the node heap usage.',
+  GOOD: '',
+  UNREACHABLE: '',
+};
 
 function getUsedPercent(node: NodeStatusInfo): { fs: number; heap: number } {
   const fs_used_percent = (node.fs.total.used * 100) / node.fs.total.size;
   const heap_used_percent = (node.heap.used * 100) / node.heap.max;
   return { fs: fs_used_percent, heap: heap_used_percent };
+}
+
+function getThreasholdFromSettings(
+  watermark: string | undefined,
+  defaultValue: number,
+): number {
+  const match = watermark?.match(/\d+/);
+  return match ? Number(match[0]) : defaultValue;
+}
+
+function pushErrorMessage(
+  errorMessages: ErrorMessage[],
+  messageMap: Record<NodeStatus, string>,
+  status: NodeStatus,
+) {
+  if (status === 'CRITICAL' || status === 'WARNING') {
+    const errorMessage: ErrorMessage = {
+      status: status,
+      message: messageMap[status],
+    };
+    errorMessages.push(errorMessage);
+  }
 }
 
 export function getNodeStatus(node: NodeStatusInfo): NodeStatus {
@@ -25,50 +70,65 @@ export function getNodeStatus(node: NodeStatusInfo): NodeStatus {
   }
 }
 
-export function setNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
+function setHeapHealth(
+  node: NodeStatusInfo,
+  errorMessages: ErrorMessage[],
+  heap_used_percent: number,
+) {
+  let heapStatus: NodeStatus = 'GOOD';
+  if (heap_used_percent === 0) {
+    heapStatus = 'UNREACHABLE';
+  } else if (heap_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
+    heapStatus = 'CRITICAL';
+  } else if (heap_used_percent > NODE_STATUS_THRESHOLD.WARNING) {
+    heapStatus = 'WARNING';
+  }
+
+  node.heap_status = heapStatus;
+  pushErrorMessage(errorMessages, HeapStatusMessages, heapStatus);
+}
+
+function setDiskHealth(
+  node: NodeStatusInfo,
+  errorMessages: ErrorMessage[],
+  fs_used_percent: number,
+  settings?: ClusterSettings,
+) {
+  const criticalDiskThreshold = getThreasholdFromSettings(
+    settings?.cluster?.routing?.allocation?.disk?.watermark?.flood_stage,
+    NODE_STATUS_THRESHOLD.CRITICAL,
+  );
+
+  const warningDiskThreshold = getThreasholdFromSettings(
+    settings?.cluster?.routing?.allocation?.disk?.watermark?.high,
+    NODE_STATUS_THRESHOLD.WARNING,
+  );
+
+  let diskStatus: NodeStatus = 'GOOD';
+  if (fs_used_percent === 0) {
+    diskStatus = 'UNREACHABLE';
+  } else if (fs_used_percent > criticalDiskThreshold) {
+    diskStatus = 'CRITICAL';
+  } else if (fs_used_percent > warningDiskThreshold) {
+    diskStatus = 'WARNING';
+  }
+
+  node.fs_status = diskStatus;
+  pushErrorMessage(errorMessages, DiskStatusMessages, diskStatus);
+}
+
+export function setNodeHealth(
+  node: NodeStatusInfo,
+  settings?: ClusterSettings,
+): NodeStatusInfo {
   const { fs: fs_used_percent, heap: heap_used_percent } = getUsedPercent(node);
 
   const errorMessages: ErrorMessage[] = [];
 
-  if (fs_used_percent === 0) {
-    node.fs_status = 'UNREACHABLE';
-  } else if (fs_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
-    node.fs_status = 'CRITICAL';
-    const msg = `The flood stage disk watermark is exceeded on the node. Tables that reside on an affected disk on this node have been made read-only. Please check the node disk usage.`;
-    const errorMessage: ErrorMessage = {
-      status: 'CRITICAL',
-      message: msg,
-    };
-    errorMessages.push(errorMessage);
-  } else if (fs_used_percent > NODE_STATUS_THRESHOLD.WARNING) {
-    node.fs_status = 'WARNING';
-    const msg = `The high disk watermark is exceeded on the node. The cluster will attempt to relocate shards to another node. Please check the node disk usage.`;
-    const errorMessage: ErrorMessage = {
-      status: 'WARNING',
-      message: msg,
-    };
-    errorMessages.push(errorMessage);
-  }
+  setDiskHealth(node, errorMessages, fs_used_percent, settings);
+  setHeapHealth(node, errorMessages, heap_used_percent);
 
-  if (heap_used_percent === 0) {
-    node.heap_status = 'UNREACHABLE';
-  } else if (heap_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
-    node.heap_status = 'CRITICAL';
-    const msg = `The node is running out of heap memory. Please check the node heap usage.`;
-    const errorMessage: ErrorMessage = {
-      status: 'CRITICAL',
-      message: msg,
-    };
-    errorMessages.push(errorMessage);
-  } else if (heap_used_percent > NODE_STATUS_THRESHOLD.WARNING) {
-    node.heap_status = 'WARNING';
-    const msg = `The node is running low on heap memory. Please check the node heap usage.`;
-    const errorMessage: ErrorMessage = {
-      status: 'WARNING',
-      message: msg,
-    };
-    errorMessages.push(errorMessage);
-  }
+  // Add error messages to node if there are any
   if (errorMessages.length > 0) {
     node['errorMessages'] = errorMessages;
   }

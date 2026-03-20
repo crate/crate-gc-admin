@@ -86,6 +86,19 @@ export type NodeStatusInfo = {
 
 export type ClusterSettings = {
   gateway: { expected_data_nodes: number };
+  cluster?: {
+    routing?: {
+      allocation?: {
+        disk?: {
+          watermark?: {
+            low?: string;
+            high?: string;
+            flood_stage?: string;
+          };
+        };
+      };
+    };
+  };
 };
 
 export type ClusterInfo = {

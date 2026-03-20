@@ -27,7 +27,7 @@ function NodesMetrics() {
 
   const nodesWithMessages = (nodes: NodeStatusInfo[]) => {
     return nodes.map(node => {
-      return setNodeHealth(node);
+      return setNodeHealth(node, cluster?.settings);
     });
   };
 
