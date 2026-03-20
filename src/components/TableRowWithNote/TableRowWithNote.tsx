@@ -1,6 +1,6 @@
-import { Table } from 'components/Table/Table';
-import React from 'react';
 import cn from 'utils/cn';
+import React from 'react';
+import { Table } from 'components/Table/Table';
 
 export type TableRowWithNoteProps = {
   rowId: string;
@@ -22,22 +22,21 @@ function TableRowWithNote({
   return (
     <React.Fragment key={rowId}>
       <Table.Row
-          key={rowId}
-          data-state={dataState}
-          data-row-key={rowId}
-          className={cn(
-          "border-b-0",
-          hoveredRowGroup === rowId && 'bg-table-row-hover',
-          )}
-          onMouseEnter={() => setHoveredRowGroup(rowId)}
-          onMouseLeave={() => setHoveredRowGroup(null)}
-      >
-          {...cells}
-      </Table.Row>
-      <Table.Row 
+        key={rowId}
+        data-state={dataState}
+        data-row-key={rowId}
         className={cn(
-            hoveredRowGroup === rowId && 'bg-table-row-hover',
+          'border-b-0',
+          hoveredRowGroup === rowId && 'bg-table-row-hover',
         )}
+        onMouseEnter={() => setHoveredRowGroup(rowId)}
+        onMouseLeave={() => setHoveredRowGroup(null)}
+      >
+        {...cells}
+      </Table.Row>
+      <Table.Row
+        data-testid="note-row"
+        className={cn(hoveredRowGroup === rowId && 'bg-table-row-hover')}
         onMouseEnter={() => setHoveredRowGroup(rowId)}
         onMouseLeave={() => setHoveredRowGroup(null)}
       >

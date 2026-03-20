@@ -1,5 +1,10 @@
+import {
+  formatNum,
+  getNodeHealth as setNodeHealth,
+  getNodeStatus,
+  formatBytes,
+} from 'utils';
 import { ColumnDef } from '@tanstack/react-table';
-import { formatNum, getNodeHealth as setNodeHealth, getNodeStatus, formatBytes } from 'utils';
 import prettyBytes from 'pretty-bytes';
 import {
   Chip,
@@ -271,10 +276,10 @@ function NodesMetrics() {
           <Text>Write rate</Text>
         </div>
         <div className="col-span-3">
-          <Text>{formatNum(stats.iops_read, 0, " iops")}</Text>
-          <Text>{formatNum(stats.iops_write, 0, " iops")}</Text>
-          <Text>{formatBytes(stats.bps_read, 2, "/s")}</Text>
-          <Text>{formatBytes(stats.bps_write, 2, "/s")}</Text>
+          <Text>{formatNum(stats.iops_read, 0, ' iops')}</Text>
+          <Text>{formatNum(stats.iops_write, 0, ' iops')}</Text>
+          <Text>{formatBytes(stats.bps_read, 2, '/s')}</Text>
+          <Text>{formatBytes(stats.bps_write, 2, '/s')}</Text>
         </div>
       </div>
     );
@@ -320,7 +325,13 @@ function NodesMetrics() {
   if (!nodes || !cluster || !shards) {
     return <Loader />;
   }
-  return <DataTable columns={columns} data={nodesWithMessages(nodes)!} disablePagination />;
+  return (
+    <DataTable
+      columns={columns}
+      data={nodesWithMessages(nodes)!}
+      disablePagination
+    />
+  );
 }
 
 export default NodesMetrics;

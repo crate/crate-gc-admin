@@ -1,4 +1,4 @@
-import { NodeStatus } from "types/cratedb";
+import { NodeStatus } from 'types/cratedb';
 
 export type VerticalProgressProps = {
   max: number;
