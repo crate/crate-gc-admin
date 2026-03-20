@@ -28,9 +28,9 @@ const Field = <
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
   return (
-    <FieldContext.Provider value={{ name: props.name }}>
+    <FieldContext value={{ name: props.name }}>
       <Controller {...props} />
-    </FieldContext.Provider>
+    </FieldContext>
   );
 };
 
@@ -72,7 +72,7 @@ function Item({ ref, className, layout = 'vertical', ...props }: ItemProps) {
   const id = React.useId();
 
   return (
-    <ItemContext.Provider value={{ id }}>
+    <ItemContext value={{ id }}>
       <div
         ref={ref}
         className={cn(
@@ -84,7 +84,7 @@ function Item({ ref, className, layout = 'vertical', ...props }: ItemProps) {
         )}
         {...props}
       />
-    </ItemContext.Provider>
+    </ItemContext>
   );
 }
 Item.displayName = 'FormItem';
