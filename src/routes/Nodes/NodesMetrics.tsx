@@ -1,9 +1,4 @@
-import {
-  formatNum,
-  getNodeHealth as setNodeHealth,
-  getNodeStatus,
-  formatBytes,
-} from 'utils';
+import { formatNum, setNodeHealth, getNodeStatus, formatBytes } from 'utils';
 import { ColumnDef } from '@tanstack/react-table';
 import prettyBytes from 'pretty-bytes';
 import {

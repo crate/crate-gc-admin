@@ -5,7 +5,7 @@ import {
   generateData,
 } from './test/dataTableTestUtils';
 import { DEFAULT_ELEMENTS_PER_PAGE, DataTable, DataTableProps } from './DataTable';
-import { render, screen } from 'test/testUtils';
+import { render, screen, waitFor } from 'test/testUtils';
 
 const data = generateData();
 const columns = colDef;
@@ -19,6 +19,12 @@ const setup = (props: Partial<DataTableProps<SampleData, unknown>> = {}) => {
   const combinedProps = { ...defaultProps, ...props };
 
   return render(<DataTable {...combinedProps} />);
+};
+
+const waitForRender = async () => {
+  await waitFor(() => {
+    expect(screen.getByRole('table')).toBeInTheDocument();
+  });
 };
 
 // Utility function to check that the whole element is in the table
@@ -37,10 +43,9 @@ const getNumberOfRows = (container: HTMLElement) => {
 };
 
 describe('The DataTable component', () => {
-  it('renders a table', () => {
+  it('renders a table', async () => {
     setup();
-
-    expect(screen.getByRole('table')).toBeInTheDocument();
+    waitForRender();
   });
 
   describe('the columns', () => {
@@ -86,6 +91,8 @@ describe('The DataTable component', () => {
       it('should toggle sort if clicked', async () => {
         const { user } = setup();
 
+        waitForRender();
+
         // Before clicking it should be not sorted
         expect(screen.getByTestId('head_col_name')).toHaveAttribute(
           'data-sorting',
@@ -128,14 +135,14 @@ describe('The DataTable component', () => {
     });
   });
 
-  describe('when the row has a error messages', () => {
+  describe('when the row has an error message', () => {
     const elements: SampleDataWithError[] | SampleData[] = generateData(2);
     elements[0] = {
       ...elements[0],
       errorMessages: [{ message: 'ERROR_MESSAGE', status: 'CRITICAL' }],
     } as SampleDataWithError;
 
-    it('should render the error messages in a row bellow the main row', () => {
+    it('should render the error messages in a row below the main row', () => {
       setup({ data: elements });
 
       checkElementInTable(elements[0]);

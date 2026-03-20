@@ -321,6 +321,7 @@ export function DataTable<TData, TValue>({
               ) {
                 return (
                   <TableRowWithNote
+                    key={row.id}
                     rowId={row.id}
                     cells={row.getVisibleCells().map(cell => (
                       <Table.Cell key={cell.id}>

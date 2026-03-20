@@ -8,7 +8,7 @@ const defaultProps: TableRowWithNoteProps = {
   rowId: '1',
   cells: [<td key="cell1">Cell 1</td>],
   note: <td>Note content</td>,
-  dataState: 'selected',
+  dataState: '',
   hoveredRowGroup: null,
   setHoveredRowGroup: setHoveredRowGroupMock,
 };

@@ -25,15 +25,14 @@ export function getNodeStatus(node: NodeStatusInfo): NodeStatus {
   }
 }
 
-export function getNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
+export function setNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
   const { fs: fs_used_percent, heap: heap_used_percent } = getUsedPercent(node);
 
   const errorMessages: ErrorMessage[] = [];
 
   if (fs_used_percent === 0) {
     node.fs_status = 'UNREACHABLE';
-  }
-  else if (fs_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
+  } else if (fs_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
     node.fs_status = 'CRITICAL';
     const msg = `The flood stage disk watermark is exceeded on the node. Tables that reside on an affected disk on this node have been made read-only. Please check the node disk usage.`;
     const errorMessage: ErrorMessage = {
@@ -53,8 +52,7 @@ export function getNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
 
   if (heap_used_percent === 0) {
     node.heap_status = 'UNREACHABLE';
-  }
-  else if (heap_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
+  } else if (heap_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
     node.heap_status = 'CRITICAL';
     const msg = `The node is running out of heap memory. Please check the node heap usage.`;
     const errorMessage: ErrorMessage = {
