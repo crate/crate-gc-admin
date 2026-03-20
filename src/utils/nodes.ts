@@ -1,5 +1,5 @@
 import { NODE_STATUS_THRESHOLD } from 'constants/database';
-import { NodeStatus, NodeStatusInfo, NodeErrorMessage } from 'types/cratedb';
+import { NodeStatus, NodeStatusInfo, ErrorMessage } from 'types/cratedb';
 
 function getUsedPercent(node: NodeStatusInfo): { fs: number; heap: number } {
   const fs_used_percent = (node.fs.total.used * 100) / node.fs.total.size;
@@ -28,7 +28,7 @@ export function getNodeStatus(node: NodeStatusInfo): NodeStatus {
 export function getNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
   const { fs: fs_used_percent, heap: heap_used_percent } = getUsedPercent(node);
 
-  const errorMessages: NodeErrorMessage[] = [];
+  const errorMessages: ErrorMessage[] = [];
 
   if (fs_used_percent === 0) {
     node.fs_status = 'UNREACHABLE';
@@ -36,7 +36,7 @@ export function getNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
   else if (fs_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
     node.fs_status = 'CRITICAL';
     const msg = `The flood stage disk watermark is exceeded on the node. Tables that reside on an affected disk on this node have been made read-only. Please check the node disk usage.`;
-    const errorMessage: NodeErrorMessage = {
+    const errorMessage: ErrorMessage = {
       status: 'CRITICAL',
       message: msg,
     };
@@ -44,7 +44,7 @@ export function getNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
   } else if (fs_used_percent > NODE_STATUS_THRESHOLD.WARNING) {
     node.fs_status = 'WARNING';
     const msg = `The high disk watermark is exceeded on the node. The cluster will attempt to relocate shards to another node. Please check the node disk usage.`;
-    const errorMessage: NodeErrorMessage = {
+    const errorMessage: ErrorMessage = {
       status: 'WARNING',
       message: msg,
     };
@@ -57,7 +57,7 @@ export function getNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
   else if (heap_used_percent > NODE_STATUS_THRESHOLD.CRITICAL) {
     node.heap_status = 'CRITICAL';
     const msg = `The node is running out of heap memory. Please check the node heap usage.`;
-    const errorMessage: NodeErrorMessage = {
+    const errorMessage: ErrorMessage = {
       status: 'CRITICAL',
       message: msg,
     };
@@ -65,7 +65,7 @@ export function getNodeHealth(node: NodeStatusInfo): NodeStatusInfo {
   } else if (heap_used_percent > NODE_STATUS_THRESHOLD.WARNING) {
     node.heap_status = 'WARNING';
     const msg = `The node is running low on heap memory. Please check the node heap usage.`;
-    const errorMessage: NodeErrorMessage = {
+    const errorMessage: ErrorMessage = {
       status: 'WARNING',
       message: msg,
     };

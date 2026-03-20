@@ -59,7 +59,7 @@ export type MemInfo = {
 
 export type NodeStatus = 'UNREACHABLE' | 'CRITICAL' | 'WARNING' | 'GOOD';
 
-export type NodeErrorMessage = {
+export type ErrorMessage = {
   status: NodeStatus;
   message: string;
 };
@@ -81,7 +81,7 @@ export type NodeStatusInfo = {
   timestamp: number;
   mem: MemInfo;
   attributes: { [key: string]: string };
-  errorMessages?: NodeErrorMessage[];
+  errorMessages?: ErrorMessage[];
 };
 
 export type ClusterSettings = {
