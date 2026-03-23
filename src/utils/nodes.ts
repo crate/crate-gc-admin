@@ -1,3 +1,7 @@
+import {
+  CRATEDB_CLUSTER_HEAP_DOCS,
+  CRATEDB_CLUSTER_DISK_DOCS,
+} from 'constants/defaults';
 import { NODE_STATUS_THRESHOLD } from 'constants/database';
 import {
   NodeStatus,
@@ -42,12 +46,16 @@ function pushErrorMessage(
   errorMessages: ErrorMessage[],
   messageMap: Record<NodeStatus, string>,
   status: NodeStatus,
+  docsLink?: string,
 ) {
   if (status === 'CRITICAL' || status === 'WARNING') {
     const errorMessage: ErrorMessage = {
       status: status,
       message: messageMap[status],
     };
+    if (docsLink) {
+      errorMessage.docs_link = docsLink;
+    }
     errorMessages.push(errorMessage);
   }
 }
@@ -85,7 +93,12 @@ function setHeapHealth(
   }
 
   node.heap_status = heapStatus;
-  pushErrorMessage(errorMessages, HeapStatusMessages, heapStatus);
+  pushErrorMessage(
+    errorMessages,
+    HeapStatusMessages,
+    heapStatus,
+    CRATEDB_CLUSTER_HEAP_DOCS,
+  );
 }
 
 function setDiskHealth(
@@ -114,7 +127,12 @@ function setDiskHealth(
   }
 
   node.fs_status = diskStatus;
-  pushErrorMessage(errorMessages, DiskStatusMessages, diskStatus);
+  pushErrorMessage(
+    errorMessages,
+    DiskStatusMessages,
+    diskStatus,
+    CRATEDB_CLUSTER_DISK_DOCS,
+  );
 }
 
 export function setNodeHealth(

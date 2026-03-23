@@ -62,6 +62,7 @@ export type NodeStatus = 'UNREACHABLE' | 'CRITICAL' | 'WARNING' | 'GOOD';
 export type ErrorMessage = {
   status: NodeStatus;
   message: string;
+  docs_link?: string;
 };
 
 export type NodeStatusInfo = {

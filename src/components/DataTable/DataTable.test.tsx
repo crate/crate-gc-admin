@@ -5,7 +5,7 @@ import {
   generateData,
 } from './test/dataTableTestUtils';
 import { DEFAULT_ELEMENTS_PER_PAGE, DataTable, DataTableProps } from './DataTable';
-import { render, screen, waitFor } from 'test/testUtils';
+import { render, screen, waitFor, within } from 'test/testUtils';
 
 const data = generateData();
 const columns = colDef;
@@ -160,6 +160,33 @@ describe('The DataTable component', () => {
       checkElementInTable(elements[0]);
       expect(screen.getByText('ERROR_MESSAGE')).toBeInTheDocument();
       checkElementInTable(elements[1]);
+    });
+  });
+
+  describe('when the row has an error message with docs link', () => {
+    const elements: SampleDataWithError[] | SampleData[] = generateData(2);
+    elements[0] = {
+      ...elements[0],
+      errorMessages: [
+        {
+          message: 'ERROR_MESSAGE',
+          status: 'CRITICAL',
+          docs_link: 'https://example.com',
+        },
+      ],
+    } as SampleDataWithError;
+
+    it('should render the error messages in a row below the main row', async () => {
+      setup({ data: elements });
+
+      await waitForRender();
+
+      checkElementInTable(elements[0]);
+      expect(screen.getByText('ERROR_MESSAGE')).toBeInTheDocument();
+      const link = screen.getByRole('link');
+      expect(link).toBeInTheDocument();
+      expect(within(link).getByText('Learn more')).toBeInTheDocument();
+      expect(link).toHaveAttribute('href', 'https://example.com');
     });
   });
 

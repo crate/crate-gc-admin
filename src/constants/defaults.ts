@@ -24,5 +24,11 @@ export const CRATEDB_PRIVILEGES_DOCS =
 export const CRATEDB_ERROR_CODES_DOCS =
   'https://cratedb.com/docs/crate/reference/en/latest/interfaces/http.html#error-codes';
 
+export const CRATEDB_CLUSTER_DOCS =
+  'https://cratedb.com/docs/crate/reference/en/latest/config/cluster.html';
+export const CRATEDB_CLUSTER_DISK_DOCS = `${CRATEDB_CLUSTER_DOCS}#disk-based-shard-allocation`;
+export const CRATEDB_CLUSTER_HEAP_DOCS =
+  'https://cratedb.com/docs/guide/admin/going-into-production.html#prod-config-heap';
+
 // SQL Editor
 export const SQL_EDITOR_QUERIES_QUOTA = 100;

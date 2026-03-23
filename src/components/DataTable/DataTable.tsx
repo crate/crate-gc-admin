@@ -340,6 +340,15 @@ export function DataTable<TData, TValue>({
                               className={`text-neutral-500 border-l-[6px] pl-1 mb-2 rounded-md ${getStatusClass(msg.status)}`}
                             >
                               {msg.message}
+                              {msg.docs_link && (
+                                <a
+                                  href={msg.docs_link}
+                                  target="_blank"
+                                  className="ml-1 text-xs"
+                                >
+                                  Learn more
+                                </a>
+                              )}
                             </div>
                           ),
                         )}
