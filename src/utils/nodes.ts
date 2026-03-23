@@ -30,7 +30,7 @@ function getUsedPercent(node: NodeStatusInfo): { fs: number; heap: number } {
   return { fs: fs_used_percent, heap: heap_used_percent };
 }
 
-function getThreasholdFromSettings(
+function getThresholdFromSettings(
   watermark: string | undefined,
   defaultValue: number,
 ): number {
@@ -94,12 +94,12 @@ function setDiskHealth(
   fs_used_percent: number,
   settings?: ClusterSettings,
 ) {
-  const criticalDiskThreshold = getThreasholdFromSettings(
+  const criticalDiskThreshold = getThresholdFromSettings(
     settings?.cluster?.routing?.allocation?.disk?.watermark?.flood_stage,
     NODE_STATUS_THRESHOLD.CRITICAL,
   );
 
-  const warningDiskThreshold = getThreasholdFromSettings(
+  const warningDiskThreshold = getThresholdFromSettings(
     settings?.cluster?.routing?.allocation?.disk?.watermark?.high,
     NODE_STATUS_THRESHOLD.WARNING,
   );

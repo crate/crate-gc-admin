@@ -45,22 +45,26 @@ const getNumberOfRows = (container: HTMLElement) => {
 describe('The DataTable component', () => {
   it('renders a table', async () => {
     setup();
-    waitForRender();
+    await waitForRender();
   });
 
   describe('the columns', () => {
     const firstElement = data[0];
 
-    it('uses the specified column header', () => {
+    it('uses the specified column header', async () => {
       setup({ data: [firstElement] });
+
+      await waitForRender();
 
       columns.forEach(col => {
         expect(screen.getByText(col.header as string)).toBeInTheDocument();
       });
     });
 
-    it('uses the specified column value', () => {
+    it('uses the specified column value', async () => {
       setup({ data: [firstElement] });
+
+      await waitForRender();
 
       expect(screen.getByRole('table')).toBeInTheDocument();
 
@@ -79,11 +83,15 @@ describe('The DataTable component', () => {
           ],
         });
 
+        await waitForRender();
+
         expect(screen.queryByTestId('sorting_button_name')).not.toBeInTheDocument();
       });
 
-      it('should be present if enabledSorting = true', () => {
+      it('should be present if enabledSorting = true', async () => {
         setup();
+
+        await waitForRender();
 
         expect(screen.getByTestId('sorting_button_name')).toBeInTheDocument();
       });
@@ -91,7 +99,7 @@ describe('The DataTable component', () => {
       it('should toggle sort if clicked', async () => {
         const { user } = setup();
 
-        waitForRender();
+        await waitForRender();
 
         // Before clicking it should be not sorted
         expect(screen.getByTestId('head_col_name')).toHaveAttribute(
@@ -126,6 +134,8 @@ describe('The DataTable component', () => {
           ],
         });
 
+        await waitForRender();
+
         // Before clicking it should be not sorted
         expect(screen.getByTestId('head_col_name')).toHaveAttribute(
           'data-sorting',
@@ -142,8 +152,10 @@ describe('The DataTable component', () => {
       errorMessages: [{ message: 'ERROR_MESSAGE', status: 'CRITICAL' }],
     } as SampleDataWithError;
 
-    it('should render the error messages in a row below the main row', () => {
+    it('should render the error messages in a row below the main row', async () => {
       setup({ data: elements });
+
+      await waitForRender();
 
       checkElementInTable(elements[0]);
       expect(screen.getByText('ERROR_MESSAGE')).toBeInTheDocument();
@@ -152,8 +164,10 @@ describe('The DataTable component', () => {
   });
 
   describe('the pagination', () => {
-    it('should display the pagination where current page is the first', () => {
+    it('should display the pagination where current page is the first', async () => {
       setup();
+
+      await waitForRender();
 
       expect(screen.getByTestId('datatable-pagination')).toBeInTheDocument();
       // Prev arrow should be disabled, next arrow should be enabled
@@ -171,38 +185,46 @@ describe('The DataTable component', () => {
       );
     });
 
-    it('should show "DEFAULT_ELEMENTS_PER_PAGE" elements per page by default', () => {
+    it('should show "DEFAULT_ELEMENTS_PER_PAGE" elements per page by default', async () => {
       const { container } = setup();
+
+      await waitForRender();
 
       // There should be only DEFAULT_ELEMENTS_PER_PAGE table rows per page
       expect(getNumberOfRows(container)).toBe(DEFAULT_ELEMENTS_PER_PAGE);
     });
 
-    it('should show the specified elements per page by passing the prop', () => {
+    it('should show the specified elements per page by passing the prop', async () => {
       const { container } = setup({
         elementsPerPage: 10,
       });
+
+      await waitForRender();
 
       // There should be only 10 table rows per page
       expect(getNumberOfRows(container)).toBe(10);
     });
 
     describe('when hidePaginationWhenSinglePage is set', () => {
-      it('does not display pagination if there is only one page', () => {
+      it('does not display pagination if there is only one page', async () => {
         setup({
           data: generateData(1),
           hidePaginationWhenSinglePage: true,
         });
+
+        await waitForRender();
 
         expect(screen.queryByTestId('datatable-pagination')).not.toBeInTheDocument();
       });
     });
 
     describe('when hidePaginationPageSize is set', () => {
-      it('does not display the page size selector', () => {
+      it('does not display the page size selector', async () => {
         setup({
           hidePaginationPageSize: true,
         });
+
+        await waitForRender();
 
         expect(screen.queryByTestId('datatable-pagination')).toBeInTheDocument();
 
@@ -213,10 +235,12 @@ describe('The DataTable component', () => {
     });
 
     describe('when paginationContent is set', () => {
-      it('displays the custom pagination content', () => {
+      it('displays the custom pagination content', async () => {
         setup({
           paginationContent: <div data-testid="custom-pagination-content" />,
         });
+
+        await waitForRender();
 
         expect(screen.getByTestId('custom-pagination-content')).toBeInTheDocument();
       });
@@ -224,45 +248,55 @@ describe('The DataTable component', () => {
   });
 
   describe('when stickyHeader is set', () => {
-    it('applies the CSS classes to make the table header sticky', () => {
+    it('applies the CSS classes to make the table header sticky', async () => {
       setup({
         stickyHeader: true,
       });
+
+      await waitForRender();
 
       expect(screen.getByTestId('head_col_name')).toHaveClass('sticky');
     });
   });
 
   describe('when table is empty', () => {
-    it('should show "No results" label', () => {
+    it('should show "No results" label', async () => {
       setup({
         data: [],
       });
+
+      await waitForRender();
 
       expect(screen.getByText(/No results/)).toBeInTheDocument();
     });
 
-    it('should show custom no result label if passing noResultsLabel prop', () => {
+    it('should show custom no result label if passing noResultsLabel prop', async () => {
       setup({
         data: [],
         noResultsLabel: 'CUSTOM_NO_RESULT',
       });
+
+      await waitForRender();
 
       expect(screen.getByText('CUSTOM_NO_RESULT')).toBeInTheDocument();
     });
   });
 
   describe('the filters', () => {
-    it('should be hidden by default', () => {
+    it('should be hidden by default', async () => {
       setup();
+
+      await waitForRender();
 
       expect(screen.queryByTestId('datatable-filters')).not.toBeInTheDocument();
     });
 
-    it('should render only filters for columns with enableColumnFilter = true', () => {
+    it('should render only filters for columns with enableColumnFilter = true', async () => {
       setup({
         enableFilters: true,
       });
+
+      await waitForRender();
 
       expect(screen.getByTestId('datatable-filter-name')).toBeInTheDocument();
       expect(
@@ -271,10 +305,12 @@ describe('The DataTable component', () => {
     });
 
     describe('when enableFilters = true', () => {
-      it('filters should be present', () => {
+      it('filters should be present', async () => {
         setup({
           enableFilters: true,
         });
+
+        await waitForRender();
 
         expect(screen.getByTestId('datatable-filters')).toBeInTheDocument();
       });
@@ -292,21 +328,25 @@ describe('The DataTable component', () => {
       });
 
       describe('the search box', () => {
-        it('should be hidden by default', () => {
+        it('should be hidden by default', async () => {
           setup({
             enableFilters: true,
           });
+
+          await waitForRender();
 
           expect(
             screen.queryByTestId('datatable-searchbox'),
           ).not.toBeInTheDocument();
         });
 
-        it('should be present if enableSearchBox = true', () => {
+        it('should be present if enableSearchBox = true', async () => {
           setup({
             enableFilters: true,
             enableSearchBox: true,
           });
+
+          await waitForRender();
 
           expect(screen.queryByTestId('datatable-searchbox')).toBeInTheDocument();
         });
@@ -330,15 +370,17 @@ describe('The DataTable component', () => {
   });
 
   describe('when the pagination is disabled', () => {
-    it('does not display the pagination', () => {
+    it('does not display the pagination', async () => {
       setup({ disablePagination: true });
+
+      await waitForRender();
 
       expect(screen.queryByTestId('datatable-pagination')).not.toBeInTheDocument();
     });
   });
 
   describe('when passing in a custom table header', () => {
-    it('renders the custom header, not the standard one', () => {
+    it('renders the custom header, not the standard one', async () => {
       setup({
         customTableHeader: (
           <thead data-testid="custom-table-header">
@@ -350,6 +392,8 @@ describe('The DataTable component', () => {
           </thead>
         ),
       });
+
+      await waitForRender();
 
       expect(screen.getByTestId('custom-table-header')).toBeInTheDocument();
       expect(screen.getAllByRole('columnheader').length).toBe(3);
