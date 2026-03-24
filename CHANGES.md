@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add error messages related to node status.
+
 ## 2026-02-24 - 0.23.2
 
 - Parallelize GHA workflow steps

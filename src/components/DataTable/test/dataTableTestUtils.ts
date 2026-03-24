@@ -1,8 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { ErrorMessage } from 'types/cratedb';
 
 export type SampleData = {
   name: string;
   surname: string;
+};
+
+export type SampleDataWithError = SampleData & {
+  errorMessages: ErrorMessage[];
 };
 
 export const generateData = (numberOfElements: number = 250): SampleData[] => {

@@ -4,9 +4,9 @@ import prettyBytes from 'pretty-bytes';
 import { formatNum } from 'utils';
 import { VERTICAL_PROGRESS_BARS } from 'components/VerticalProgress/VerticalProgress';
 import { useClusterNodeStatusMock } from 'test/__mocks__/useClusterNodeStatusMock';
+import { render, screen, within } from '../../../test/testUtils';
 import { useShardsMock } from 'test/__mocks__/useShardsMock';
 import useClusterHealthStore from 'src/state/clusterHealth';
-import { render, screen } from '../../../test/testUtils';
 import { clusterNode } from 'test/__mocks__/nodes';
 import { postFetch } from 'src/swr/jwt/useShards';
 import { QueryResultSuccess } from 'types/query';
@@ -321,6 +321,59 @@ describe('The Nodes component', () => {
         filled,
       );
     });
+
+    it('shows the heap progress bar in yellow if status is warning', async () => {
+      server.use(
+        http.post('http://localhost:4200/_sql', ({ request }) => {
+          const url = new URL(request.url);
+          const ident = url.searchParams.get('ident');
+
+          if (ident === '/use-cluster-node-status/undefined') {
+            return HttpResponse.json(warningNode);
+          }
+        }),
+      );
+      setup();
+      await waitForTableRender();
+
+      const max = warningNode.rows[0][3].max;
+      const current = warningNode.rows[0][3].used;
+      const filled = Math.floor((current / max) * VERTICAL_PROGRESS_BARS);
+      expect(screen.getByTestId('heap-progress')).toBeInTheDocument();
+
+      const verticalProgress = screen.getByTestId('heap-progress');
+      expect(verticalProgress.getElementsByClassName('bg-amber-400')).toHaveLength(
+        filled,
+      );
+      server.restoreHandlers();
+    });
+
+    it('shows the heap progress bar in red if status is critical', async () => {
+      server.use(
+        http.post('http://localhost:4200/_sql', ({ request }) => {
+          const url = new URL(request.url);
+          const ident = url.searchParams.get('ident');
+
+          if (ident === '/use-cluster-node-status/undefined') {
+            return HttpResponse.json(criticalNode);
+          }
+        }),
+      );
+      setup();
+
+      await waitForTableRender();
+
+      const max = criticalNode.rows[0][3].max;
+      const current = criticalNode.rows[0][3].used;
+      const filled = Math.floor((current / max) * VERTICAL_PROGRESS_BARS);
+      expect(screen.getByTestId('heap-progress')).toBeInTheDocument();
+
+      const verticalProgress = screen.getByTestId('heap-progress');
+      expect(verticalProgress.getElementsByClassName('bg-red-400')).toHaveLength(
+        filled,
+      );
+      server.restoreHandlers();
+    });
   });
 
   describe('the "Disk" cell', () => {
@@ -370,6 +423,59 @@ describe('The Nodes component', () => {
       expect(verticalProgress.getElementsByClassName('bg-crate-blue')).toHaveLength(
         filled,
       );
+    });
+
+    it('shows the disk progress bar in yellow if status is warning', async () => {
+      server.use(
+        http.post('http://localhost:4200/_sql', ({ request }) => {
+          const url = new URL(request.url);
+          const ident = url.searchParams.get('ident');
+
+          if (ident === '/use-cluster-node-status/undefined') {
+            return HttpResponse.json(warningNode);
+          }
+        }),
+      );
+      setup();
+      await waitForTableRender();
+
+      const max = warningNode.rows[0][4].total.size;
+      const current = warningNode.rows[0][4].total.used;
+      const filled = Math.floor((current / max) * VERTICAL_PROGRESS_BARS);
+      expect(screen.getByTestId('disk-progress')).toBeInTheDocument();
+
+      const verticalProgress = screen.getByTestId('disk-progress');
+      expect(verticalProgress.getElementsByClassName('bg-amber-400')).toHaveLength(
+        filled,
+      );
+      server.restoreHandlers();
+    });
+
+    it('shows the heap progress bar in red if status is critical', async () => {
+      server.use(
+        http.post('http://localhost:4200/_sql', ({ request }) => {
+          const url = new URL(request.url);
+          const ident = url.searchParams.get('ident');
+
+          if (ident === '/use-cluster-node-status/undefined') {
+            return HttpResponse.json(criticalNode);
+          }
+        }),
+      );
+      setup();
+
+      await waitForTableRender();
+
+      const max = criticalNode.rows[0][4].total.size;
+      const current = criticalNode.rows[0][4].total.used;
+      const filled = Math.floor((current / max) * VERTICAL_PROGRESS_BARS);
+      expect(screen.getByTestId('disk-progress')).toBeInTheDocument();
+
+      const verticalProgress = screen.getByTestId('disk-progress');
+      expect(verticalProgress.getElementsByClassName('bg-red-400')).toHaveLength(
+        filled,
+      );
+      server.restoreHandlers();
     });
   });
 
@@ -497,6 +603,74 @@ describe('The Nodes component', () => {
       expect(screen.getByTestId('relocating-shards')).toHaveTextContent(
         relocatingShards.toString(),
       );
+    });
+  });
+
+  describe('the "Error Messages" cell', () => {
+    it('shows the error messages if the status is critical', async () => {
+      server.use(
+        http.post('http://localhost:4200/_sql', ({ request }) => {
+          const url = new URL(request.url);
+          const ident = url.searchParams.get('ident');
+
+          if (ident === '/use-cluster-node-status/undefined') {
+            return HttpResponse.json(criticalNode);
+          }
+        }),
+      );
+
+      setup();
+
+      await waitForTableRender();
+
+      const noteRow = screen.queryByTestId('note-row');
+      expect(noteRow).toBeInTheDocument();
+      expect(
+        within(noteRow!).getByText(
+          'The node is running out of heap memory. Please check the node heap usage.',
+        ),
+      ).toBeInTheDocument();
+      expect(
+        within(noteRow!).getByText(
+          'The flood stage disk watermark is exceeded on the node. Tables that reside on an affected disk on this node have been made read-only. Please check the node disk usage.',
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it('shows the warning messages if the status is warning', async () => {
+      server.use(
+        http.post('http://localhost:4200/_sql', ({ request }) => {
+          const url = new URL(request.url);
+          const ident = url.searchParams.get('ident');
+
+          if (ident === '/use-cluster-node-status/undefined') {
+            return HttpResponse.json(warningNode);
+          }
+        }),
+      );
+
+      setup();
+
+      await waitForTableRender();
+
+      const noteRow = screen.queryByTestId('note-row');
+      expect(noteRow).toBeInTheDocument();
+      expect(
+        within(noteRow!).getByText(
+          'The node is running low on heap memory. Please check the node heap usage.',
+        ),
+      ).toBeInTheDocument();
+      expect(
+        within(noteRow!).getByText(
+          'The high disk watermark is exceeded on the node. The cluster will attempt to relocate shards to another node. Please check the node disk usage.',
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it('does not show the error messages row if there are no error messages', async () => {
+      setup();
+      await waitForTableRender();
+      expect(screen.queryByTestId('note-row')).not.toBeInTheDocument();
     });
   });
 });

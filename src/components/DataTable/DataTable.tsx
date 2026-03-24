@@ -15,8 +15,10 @@ import { useEffect, useState } from 'react';
 import { arrIncludesElement } from 'utils';
 import * as React from 'react';
 import { cn } from 'utils';
+import TableRowWithNote from 'components/TableRowWithNote';
 import { Button, Pagination, Table } from 'components';
 import DataTableFilters from './DataTableFilters';
+import { ErrorMessage } from 'types/cratedb';
 import type {
   ColumnFiltersState,
   Header,
@@ -68,6 +70,17 @@ const getFiltersFromQuery = <TData, TValue>(
   return columnFilters;
 };
 
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case 'CRITICAL':
+      return 'border-red-400';
+    case 'WARNING':
+      return 'border-amber-400';
+    default:
+      return '';
+  }
+};
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -98,6 +111,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     getFiltersFromQuery(location?.search, columns),
   );
+  const [hoveredRowGroup, setHoveredRowGroup] = useState<string | null>(null);
 
   const getReactTableOptions = (): TableOptions<TData> => {
     const options: TableOptions<TData> = {
@@ -297,19 +311,70 @@ export function DataTable<TData, TValue>({
 
         <Table.Body>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map(row => (
-              <Table.Row
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-                data-row-key={row.id}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <Table.Cell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Table.Cell>
-                ))}
-              </Table.Row>
-            ))
+            table.getRowModel().rows.map(row => {
+              const rowOriginal = row.original as TData & {
+                errorMessages?: ErrorMessage[];
+              };
+              if (
+                rowOriginal.errorMessages &&
+                rowOriginal.errorMessages.length > 0
+              ) {
+                return (
+                  <TableRowWithNote
+                    key={row.id}
+                    rowId={row.id}
+                    cells={row.getVisibleCells().map(cell => (
+                      <Table.Cell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Table.Cell>
+                    ))}
+                    note={
+                      <Table.Cell
+                        colSpan={row.getVisibleCells().length}
+                        className="p-0"
+                      >
+                        {rowOriginal.errorMessages?.map(
+                          (msg: ErrorMessage, index: number) => (
+                            <div
+                              key={index}
+                              className={`text-neutral-500 border-l-[6px] pl-1 mb-2 rounded-md ${getStatusClass(msg.status)}`}
+                            >
+                              {msg.message}
+                              {msg.docs_link && (
+                                <a
+                                  href={msg.docs_link}
+                                  target="_blank"
+                                  className="ml-1 text-xs"
+                                >
+                                  Learn more
+                                </a>
+                              )}
+                            </div>
+                          ),
+                        )}
+                      </Table.Cell>
+                    }
+                    dataState={row.getIsSelected() ? 'selected' : ''}
+                    hoveredRowGroup={hoveredRowGroup}
+                    setHoveredRowGroup={setHoveredRowGroup}
+                  />
+                );
+              } else {
+                return (
+                  <Table.Row
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                    data-row-key={row.id}
+                  >
+                    {row.getVisibleCells().map(cell => (
+                      <Table.Cell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Table.Cell>
+                    ))}
+                  </Table.Row>
+                );
+              }
+            })
           ) : (
             <Table.Row className="hover:bg-transparent">
               <Table.Cell

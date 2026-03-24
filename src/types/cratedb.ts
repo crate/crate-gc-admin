@@ -59,12 +59,20 @@ export type MemInfo = {
 
 export type NodeStatus = 'UNREACHABLE' | 'CRITICAL' | 'WARNING' | 'GOOD';
 
+export type ErrorMessage = {
+  status: NodeStatus;
+  message: string;
+  docs_link?: string;
+};
+
 export type NodeStatusInfo = {
   id: string;
   name: string;
   hostname: string;
   heap: HeapUsage;
+  heap_status?: NodeStatus;
   fs: FSInfo;
+  fs_status?: NodeStatus;
   load: LoadAverage;
   version: NodeStatusInfoVersion;
   crate_cpu_usage: number;
@@ -74,10 +82,24 @@ export type NodeStatusInfo = {
   timestamp: number;
   mem: MemInfo;
   attributes: { [key: string]: string };
+  errorMessages?: ErrorMessage[];
 };
 
 export type ClusterSettings = {
   gateway: { expected_data_nodes: number };
+  cluster?: {
+    routing?: {
+      allocation?: {
+        disk?: {
+          watermark?: {
+            low?: string;
+            high?: string;
+            flood_stage?: string;
+          };
+        };
+      };
+    };
+  };
 };
 
 export type ClusterInfo = {

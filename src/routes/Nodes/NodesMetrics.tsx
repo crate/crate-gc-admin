@@ -1,5 +1,5 @@
+import { formatNum, setNodeHealth, getNodeStatus, formatBytes } from 'utils';
 import { ColumnDef } from '@tanstack/react-table';
-import { formatNum, getNodeStatus } from 'utils';
 import prettyBytes from 'pretty-bytes';
 import {
   Chip,
@@ -24,6 +24,12 @@ function NodesMetrics() {
   const { data: nodes } = useClusterNodeStatus(clusterId);
   const { data: cluster } = useClusterInfo(clusterId);
   const { data: shards } = useShards(clusterId);
+
+  const nodesWithMessages = (nodes: NodeStatusInfo[]) => {
+    return nodes.map(node => {
+      return setNodeHealth(node, cluster?.settings);
+    });
+  };
 
   const columns: ColumnDef<NodeStatusInfo>[] = [
     {
@@ -181,6 +187,7 @@ function NodesMetrics() {
           <VerticalProgress
             max={node.heap.max}
             current={node.heap.used}
+            status={node.heap_status}
             testId="heap-progress"
           />
         </div>
@@ -231,6 +238,7 @@ function NodesMetrics() {
           <VerticalProgress
             max={node.fs.total.size}
             current={node.fs.total.used}
+            status={node.fs_status}
             testId="disk-progress"
           />
         </div>
@@ -263,25 +271,10 @@ function NodesMetrics() {
           <Text>Write rate</Text>
         </div>
         <div className="col-span-3">
-          <Text>{formatNum(stats.iops_read, 0)} iops</Text>
-          <Text>{formatNum(stats.iops_write, 0)} iops</Text>
-          <Text>
-            {prettyBytes(clusterHealth[clusterId || '']?.fsStats[node.id].bps_read, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-            /s
-          </Text>
-          <Text>
-            {prettyBytes(
-              clusterHealth[clusterId || '']?.fsStats[node.id].bps_write,
-              {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              },
-            )}
-            /s
-          </Text>
+          <Text>{formatNum(stats.iops_read, 0, ' iops')}</Text>
+          <Text>{formatNum(stats.iops_write, 0, ' iops')}</Text>
+          <Text>{formatBytes(stats.bps_read, 2, '/s')}</Text>
+          <Text>{formatBytes(stats.bps_write, 2, '/s')}</Text>
         </div>
       </div>
     );
@@ -327,7 +320,13 @@ function NodesMetrics() {
   if (!nodes || !cluster || !shards) {
     return <Loader />;
   }
-  return <DataTable columns={columns} data={nodes!} disablePagination />;
+  return (
+    <DataTable
+      columns={columns}
+      data={nodesWithMessages(nodes)!}
+      disablePagination
+    />
+  );
 }
 
 export default NodesMetrics;
