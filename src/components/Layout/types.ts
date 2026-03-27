@@ -7,15 +7,15 @@ export type BurgerProps = {
   bottomNavigation: NavigationLinkProps[];
   topNavigation: NavigationLinkProps[];
   gcStatus?: ConnectionStatus;
-  logo: React.JSX.Element;
+  logo: React.ReactElement;
 };
 
 export type LayoutProps = {
   bottomNavigation: NavigationLinkProps[];
   topNavigation: NavigationLinkProps[];
-  topbarLogo: React.JSX.Element;
-  topbarContent: React.JSX.Element;
-  children: React.JSX.Element;
+  topbarLogo: React.ReactElement;
+  topbarContent: React.ReactElement;
+  children: React.ReactElement;
 };
 
 export type NavigationProps = {
@@ -27,15 +27,15 @@ export type NavigationProps = {
 };
 
 export type NavigationLinkProps = {
-  icon: React.JSX.Element;
-  label: React.JSX.Element;
+  icon: React.ReactElement;
+  label: React.ReactElement;
   path: string;
   type: 'internal' | 'external';
 };
 
 export type TopBarProps = {
-  logo: React.JSX.Element;
-  content: React.JSX.Element;
+  logo: React.ReactElement;
+  content: React.ReactElement;
   navIsExpanded: boolean;
   setNavIsExpanded: (navIsExpanded: boolean) => void;
   bottomNavigation: NavigationLinkProps[];
