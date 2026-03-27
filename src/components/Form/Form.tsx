@@ -63,9 +63,8 @@ type ItemContextValue = {
 
 const ItemContext = React.createContext<ItemContextValue>({} as ItemContextValue);
 
-type ItemProps = React.HTMLAttributes<HTMLDivElement> & {
+type ItemProps = React.ComponentPropsWithRef<'div'> & {
   layout?: 'vertical' | 'horizontal';
-  ref?: React.Ref<HTMLDivElement>;
 };
 
 function Item({ ref, className, layout = 'vertical', ...props }: ItemProps) {
@@ -92,9 +91,7 @@ Item.displayName = 'FormItem';
 function Label({
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & {
-  ref?: React.Ref<React.ElementRef<typeof LabelPrimitive.Root>>;
-}) {
+}: React.ComponentPropsWithRef<typeof LabelPrimitive.Root>) {
   const { formItemId } = useFormField();
 
   return <CrateLabel ref={ref} htmlFor={formItemId} {...props} />;
@@ -104,9 +101,7 @@ Label.displayName = 'FormLabel';
 function Control({
   ref,
   ...props
-}: React.ComponentPropsWithoutRef<typeof Slot> & {
-  ref?: React.Ref<React.ElementRef<typeof Slot>>;
-}) {
+}: React.ComponentPropsWithRef<typeof Slot>) {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
   return (
@@ -127,9 +122,7 @@ function Description({
   ref,
   className,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement> & {
-  ref?: React.Ref<HTMLParagraphElement>;
-}) {
+}: React.ComponentPropsWithRef<'p'>) {
   const { formDescriptionId } = useFormField();
 
   return (
@@ -150,9 +143,7 @@ function Message({
   className,
   children,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement> & {
-  ref?: React.Ref<HTMLParagraphElement>;
-}) {
+}: React.ComponentPropsWithRef<'p'>) {
   const { error, formMessageId } = useFormField();
   const body =
     (error && error.message) || (error && error.root && error.root.message)

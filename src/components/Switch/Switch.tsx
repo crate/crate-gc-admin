@@ -16,10 +16,7 @@ function Root({
   loading = false,
   size = 'medium',
   ...props
-}: React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> &
-  SwitchProps & {
-    ref?: React.Ref<React.ElementRef<typeof SwitchPrimitives.Root>>;
-  }) {
+}: React.ComponentPropsWithRef<typeof SwitchPrimitives.Root> & SwitchProps) {
   const isMediumSize = size === 'medium';
   const isSmallSize = size === 'small';
 

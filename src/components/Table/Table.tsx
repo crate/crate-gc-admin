@@ -6,24 +6,12 @@ const Table = ({ className, ...props }: React.ComponentProps<'table'>) => (
 );
 Table.displayName = 'Table';
 
-function Header({
-  ref,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLTableSectionElement> & {
-  ref?: React.Ref<HTMLTableSectionElement>;
-}) {
+function Header({ ref, className, ...props }: React.ComponentPropsWithRef<'thead'>) {
   return <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />;
 }
 Header.displayName = 'TableHeader';
 
-function Body({
-  ref,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLTableSectionElement> & {
-  ref?: React.Ref<HTMLTableSectionElement>;
-}) {
+function Body({ ref, className, ...props }: React.ComponentPropsWithRef<'tbody'>) {
   return (
     <tbody
       ref={ref}
@@ -34,13 +22,7 @@ function Body({
 }
 Body.displayName = 'TableBody';
 
-function Footer({
-  ref,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLTableSectionElement> & {
-  ref?: React.Ref<HTMLTableSectionElement>;
-}) {
+function Footer({ ref, className, ...props }: React.ComponentPropsWithRef<'tfoot'>) {
   return (
     <tfoot
       ref={ref}
@@ -54,13 +36,7 @@ function Footer({
 }
 Footer.displayName = 'TableFooter';
 
-function RowHeader({
-  ref,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLTableRowElement> & {
-  ref?: React.Ref<HTMLTableRowElement>;
-}) {
+function RowHeader({ ref, className, ...props }: React.ComponentPropsWithRef<'tr'>) {
   return (
     <tr
       ref={ref}
@@ -71,13 +47,7 @@ function RowHeader({
 }
 RowHeader.displayName = 'TableRowHeader';
 
-function Row({
-  ref,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLTableRowElement> & {
-  ref?: React.Ref<HTMLTableRowElement>;
-}) {
+function Row({ ref, className, ...props }: React.ComponentPropsWithRef<'tr'>) {
   return (
     <tr
       ref={ref}
@@ -96,9 +66,7 @@ function Head({
   className,
   children,
   ...props
-}: React.ThHTMLAttributes<HTMLTableCellElement> & {
-  ref?: React.Ref<HTMLTableCellElement>;
-}) {
+}: React.ComponentPropsWithRef<'th'>) {
   return (
     <th
       ref={ref}
@@ -114,13 +82,7 @@ function Head({
 }
 Head.displayName = 'TableHead';
 
-function Cell({
-  ref,
-  className,
-  ...props
-}: React.TdHTMLAttributes<HTMLTableCellElement> & {
-  ref?: React.Ref<HTMLTableCellElement>;
-}) {
+function Cell({ ref, className, ...props }: React.ComponentPropsWithRef<'td'>) {
   return (
     <td
       ref={ref}
@@ -131,13 +93,7 @@ function Cell({
 }
 Cell.displayName = 'TableCell';
 
-function Caption({
-  ref,
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLTableCaptionElement> & {
-  ref?: React.Ref<HTMLTableCaptionElement>;
-}) {
+function Caption({ ref, className, ...props }: React.ComponentPropsWithRef<'caption'>) {
   return (
     <caption
       ref={ref}

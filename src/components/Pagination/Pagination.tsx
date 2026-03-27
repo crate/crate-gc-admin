@@ -179,7 +179,7 @@ function Content({
   ref,
   className,
   ...props
-}: React.ComponentProps<'ul'> & { ref?: React.Ref<HTMLUListElement> }) {
+}: React.ComponentPropsWithRef<'ul'>) {
   return (
     <ul
       ref={ref}
@@ -194,7 +194,7 @@ function Item({
   ref,
   className,
   ...props
-}: React.ComponentProps<'li'> & { ref?: React.Ref<HTMLLIElement> }) {
+}: React.ComponentPropsWithRef<'li'>) {
   return <li ref={ref} className={cn('', className)} {...props} />;
 }
 Item.displayName = 'PaginationItem';
