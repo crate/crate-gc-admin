@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+## 2026-03-31 - 0.23.3
+
 - Add error messages related to node status.
+- Use trusted publisher when releasing.
+- Dependabot: bump node from 25.5.0-slim to 25.7.0-slim.
 
 ## 2026-02-24 - 0.23.2
 
