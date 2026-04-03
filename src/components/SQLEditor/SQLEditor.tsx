@@ -22,6 +22,7 @@ import { annotate } from './annotationUtils';
 import { useSchemaTree } from 'src/swr/jwt';
 import { QueryStatus } from 'types/query';
 import { Button } from 'components';
+import { crateDbCompleter } from './cratedbCompleter';
 import './mode-cratedb';
 
 export type SQLEditorProps = {
@@ -358,6 +359,7 @@ function SQLEditor({
               onChange={onValueChange}
               mode="cratedb"
               onLoad={editor => {
+                editor.completers = [crateDbCompleter];
                 setAce(editor);
               }}
               scrollMargin={[5, 5, 0, 5]}
