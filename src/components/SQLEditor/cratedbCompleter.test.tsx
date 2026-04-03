@@ -1,14 +1,14 @@
-import { Completion } from 'ace-builds-internal/autocomplete';
+import { Ace } from 'ace-builds';
 import { crateDbCompleter } from './cratedbCompleter';
 
-const getCompletions = (prefix: string): Promise<Completion[]> => {
+const getCompletions = (prefix: string): Promise<Ace.Completion[]> => {
   return new Promise(resolve => {
     crateDbCompleter.getCompletions(
-      {} as any,
-      {} as any,
+      {} as Ace.Editor,
+      {} as Ace.EditSession,
       { row: 0, column: 0 },
       prefix,
-      (_err, completions: Completion[]) => resolve(completions),
+      (_err, completions: Ace.Completion[]) => resolve(completions),
     );
   });
 };
@@ -47,7 +47,7 @@ describe('crateDbCompleter', () => {
     expect(sha1).toBeUndefined();
   });
 
-  it('matches functions in lowercase', async () => {
+  it('matches functions', async () => {
     const results = await getCompletions('array_a');
     expect(results).toEqual(
       expect.arrayContaining([
@@ -57,7 +57,7 @@ describe('crateDbCompleter', () => {
     );
   });
 
-  it('matches data types in uppercase', async () => {
+  it('matches data types', async () => {
     const results = await getCompletions('varc');
     expect(results).toEqual([
       { caption: 'varchar', meta: 'type', score: 800, value: 'varchar' },
