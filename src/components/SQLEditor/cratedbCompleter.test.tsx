@@ -41,6 +41,11 @@ describe('crateDbCompleter', () => {
     ]);
   });
 
+  it("returns no suggestions if there's no match", async () => {
+    const results = await getCompletions('zzz');
+    expect(results).toEqual([]);
+  });
+
   it('does prefix matching only, not substring', async () => {
     const results = await getCompletions('ha1');
     const sha1 = results.find(c => c.value === 'sha1');
