@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Changed SQL editor auto-complete to use prefix matching and require at least
+  2 characters before showing suggestions.
+
 ## 2026-03-31 - 0.23.3
 
 - Add error messages related to node status.
