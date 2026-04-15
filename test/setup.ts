@@ -3,6 +3,26 @@
 import '@testing-library/jest-dom';
 // polyfill window.fetch
 import 'whatwg-fetch';
+import { act } from 'react';
+import { createRoot } from 'react-dom/client';
+import { unstableSetRender } from 'antd';
+
+// Make antd static APIs (message, notification) work in React 19's test environment.
+// Without this, antd renders its floating UI outside act() and React 19 never
+// commits those renders during tests.
+unstableSetRender((node, container) => {
+  const containerWithRoot = container as Element & { _reactRoot?: ReturnType<typeof createRoot> };
+  containerWithRoot._reactRoot ||= createRoot(container as Element);
+  act(() => {
+    containerWithRoot._reactRoot!.render(node);
+  });
+  return async () => {
+    await act(async () => {
+      containerWithRoot._reactRoot?.unmount();
+    });
+    delete containerWithRoot._reactRoot;
+  };
+});
 import mockLocalStorage from '__mocks__/localStorageMock';
 import { useLocation } from '__mocks__/react-router-dom';
 import server from './msw';

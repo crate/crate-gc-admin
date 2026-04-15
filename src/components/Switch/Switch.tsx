@@ -10,10 +10,13 @@ type SwitchProps = {
   size?: ValueOf<typeof SWITCH_SIZES>;
 };
 
-const Root = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & SwitchProps
->(({ className, loading = false, size = 'medium', ...props }, ref) => {
+function Root({
+  ref,
+  className,
+  loading = false,
+  size = 'medium',
+  ...props
+}: React.ComponentPropsWithRef<typeof SwitchPrimitives.Root> & SwitchProps) {
   const isMediumSize = size === 'medium';
   const isSmallSize = size === 'small';
 
@@ -56,7 +59,7 @@ const Root = React.forwardRef<
       </SwitchPrimitives.Thumb>
     </SwitchPrimitives.Root>
   );
-});
+}
 Root.displayName = SwitchPrimitives.Root.displayName;
 
 const Switch = {

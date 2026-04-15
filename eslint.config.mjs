@@ -36,6 +36,12 @@ export default [
       'react-hooks': fixupPluginRules(reactHooks),
     },
 
+    settings: {
+      react: {
+        version: '19',
+      },
+    },
+
     languageOptions: {
       globals: {
         ...globals.browser,

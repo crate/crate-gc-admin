@@ -3,12 +3,12 @@ import { render, screen } from 'test/testUtils';
 
 const onClickSpy = jest.fn();
 
-const defaultProps: Omit<CheckboxProps, 'ref'> = {
+const defaultProps: CheckboxProps = {
   onChange: onClickSpy,
   checked: false,
 };
 
-const setup = (props: Partial<Omit<CheckboxProps, 'ref'>> = {}) => {
+const setup = (props: Partial<CheckboxProps> = {}) => {
   const combinedProps = { ...defaultProps, ...props };
 
   return render(<Checkbox {...combinedProps} />);

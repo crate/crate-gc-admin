@@ -175,22 +175,28 @@ const Pagination = ({
 };
 Pagination.displayName = 'Pagination';
 
-const Content = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(
-  ({ className, ...props }, ref) => (
+function Content({
+  ref,
+  className,
+  ...props
+}: React.ComponentPropsWithRef<'ul'>) {
+  return (
     <ul
       ref={ref}
       className={cn('flex flex-row items-center gap-1', className)}
       {...props}
     />
-  ),
-);
+  );
+}
 Content.displayName = 'PaginationContent';
 
-const Item = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
-  ({ className, ...props }, ref) => (
-    <li ref={ref} className={cn('', className)} {...props} />
-  ),
-);
+function Item({
+  ref,
+  className,
+  ...props
+}: React.ComponentPropsWithRef<'li'>) {
+  return <li ref={ref} className={cn('', className)} {...props} />;
+}
 Item.displayName = 'PaginationItem';
 
 type ButtonProps = {

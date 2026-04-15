@@ -89,39 +89,48 @@ function CrateTabsShad({
 
 const Tabs = TabsPrimitive.Root;
 
-const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn('flex h-10 justify-start gap-4 px-2', className)}
-    {...props}
-  />
-));
+function TabsList({
+  ref,
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof TabsPrimitive.List>) {
+  return (
+    <TabsPrimitive.List
+      ref={ref}
+      className={cn('flex h-10 justify-start gap-4 px-2', className)}
+      {...props}
+    />
+  );
+}
 TabsList.displayName = TabsPrimitive.List.displayName;
 
-const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'border-b-2 border-transparent data-[state=active]:border-crate-blue',
-      className,
-    )}
-    {...props}
-  />
-));
+function TabsTrigger({
+  ref,
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof TabsPrimitive.Trigger>) {
+  return (
+    <TabsPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        'border-b-2 border-transparent data-[state=active]:border-crate-blue',
+        className,
+      )}
+      {...props}
+    />
+  );
+}
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
-const TabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content ref={ref} className={cn('', className)} {...props} />
-));
+function TabsContent({
+  ref,
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof TabsPrimitive.Content>) {
+  return (
+    <TabsPrimitive.Content ref={ref} className={cn('', className)} {...props} />
+  );
+}
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 export default CrateTabsShad;
