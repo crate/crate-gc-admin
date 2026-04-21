@@ -116,7 +116,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/react-syntax-highlighter": "^15.5.11",
     "@typescript-eslint/eslint-plugin": "^8.52.0",
-    "@typescript-eslint/parser": "^8.55.0",
+    "@typescript-eslint/parser": "^8.59.0",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.5.0",
     "eslint": "^9.39.4",
