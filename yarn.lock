@@ -6455,10 +6455,10 @@ prettier-linter-helpers@^1.0.1:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-sort-imports@^1.8.9:
-  version "1.8.9"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-sort-imports/-/prettier-plugin-sort-imports-1.8.9.tgz#4ce2b73d170f29c4c819fd79491b24e10550c856"
-  integrity sha512-DWGenlVAOqUZzlCpksqfmBMtgZAAofj6wV91rwoGh3ibVuVoOjxxTL3PnPzEzRru88AOUGShxi5RgTfSWpzMrA==
+prettier-plugin-sort-imports@^1.8.11:
+  version "1.8.11"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-sort-imports/-/prettier-plugin-sort-imports-1.8.11.tgz#fd5f29d15f7feb6a70815a414f63549b1bda8718"
+  integrity sha512-ApmZkEmNh2Fi6TAcYNgUR15rsP1+omX43+8neY+MXfNZ7JQwrqSdjzKhLUYTtaLo52aaC9gCs+lJaYSU8oSJJA==
   dependencies:
     prettier "^3.1.1"
 
