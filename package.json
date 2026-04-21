@@ -27,7 +27,7 @@
     "./dist"
   ],
   "dependencies": {
-    "@ant-design/icons": "^6.1.0",
+    "@ant-design/icons": "^6.1.1",
     "@cratedb/cratedb-sqlparse": "^0.0.17",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
