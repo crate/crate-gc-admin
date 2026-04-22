@@ -41,7 +41,7 @@
     "@tanstack/react-table": "^8.21.3",
     "ace-builds": "^1.43.6",
     "antd": "^5.29.3",
-    "axios": "^1.15.0",
+    "axios": "^1.15.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.0",
     "compare-versions": "^6.1.1",
