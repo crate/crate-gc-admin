@@ -58,6 +58,19 @@ Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage,
 });
 
+const originalConsoleError = console.error;
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation((...args) => {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes('trigger element and popup element should in same shadow root')
+    ) {
+      return;
+    }
+    originalConsoleError(...args);
+  });
+});
+
 beforeEach(() => {
   server.listen();
   useLocation.mockReturnValue({
