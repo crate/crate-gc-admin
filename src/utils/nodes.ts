@@ -1,8 +1,12 @@
 import {
+  DISK_WATERMARK_DEFAULT,
+  DiskWatermarkLevel,
+  NODE_STATUS_THRESHOLD,
+} from 'constants/database';
+import {
   CRATEDB_CLUSTER_HEAP_DOCS,
   CRATEDB_CLUSTER_DISK_DOCS,
 } from 'constants/defaults';
-import { NODE_STATUS_THRESHOLD } from 'constants/database';
 import {
   NodeStatus,
   NodeStatusInfo,
@@ -15,6 +19,7 @@ const DiskStatusMessages: Record<NodeStatus, string> = {
     'The flood stage disk watermark is exceeded on the node. Tables that reside on an affected disk on this node have been made read-only. Please check the node disk usage.',
   WARNING:
     'The high disk watermark is exceeded on the node. The cluster will attempt to relocate shards to another node. Please check the node disk usage.',
+  INFO: 'The low disk watermark is exceeded on the node. New shards will not be allocated on this node. Please check the node disk usage.',
   GOOD: '',
   UNREACHABLE: '',
 };
@@ -24,6 +29,7 @@ const HeapStatusMessages: Record<NodeStatus, string> = {
     'The node is running out of heap memory. Please check the node heap usage.',
   WARNING:
     'The node is running low on heap memory. Please check the node heap usage.',
+  INFO: '',
   GOOD: '',
   UNREACHABLE: '',
 };
@@ -48,7 +54,7 @@ function pushErrorMessage(
   status: NodeStatus,
   docsLink?: string,
 ) {
-  if (status === 'CRITICAL' || status === 'WARNING') {
+  if (status === 'CRITICAL' || status === 'WARNING' || status === 'INFO') {
     const errorMessage: ErrorMessage = {
       status: status,
       message: messageMap[status],
@@ -101,29 +107,41 @@ function setHeapHealth(
   );
 }
 
+function getDiskThresholds(settings?: ClusterSettings) {
+  return {
+    floodStageDiskThreshold: getThresholdFromSettings(
+      settings?.cluster?.routing?.allocation?.disk?.watermark?.flood_stage,
+      DISK_WATERMARK_DEFAULT.FLOOD_STAGE.value,
+    ),
+    highDiskThreshold: getThresholdFromSettings(
+      settings?.cluster?.routing?.allocation?.disk?.watermark?.high,
+      DISK_WATERMARK_DEFAULT.HIGH.value,
+    ),
+    lowDiskThreshold: getThresholdFromSettings(
+      settings?.cluster?.routing?.allocation?.disk?.watermark?.low,
+      DISK_WATERMARK_DEFAULT.LOW.value,
+    ),
+  };
+}
+
 function setDiskHealth(
   node: NodeStatusInfo,
   errorMessages: ErrorMessage[],
   fs_used_percent: number,
   settings?: ClusterSettings,
 ) {
-  const criticalDiskThreshold = getThresholdFromSettings(
-    settings?.cluster?.routing?.allocation?.disk?.watermark?.flood_stage,
-    NODE_STATUS_THRESHOLD.CRITICAL,
-  );
-
-  const warningDiskThreshold = getThresholdFromSettings(
-    settings?.cluster?.routing?.allocation?.disk?.watermark?.high,
-    NODE_STATUS_THRESHOLD.WARNING,
-  );
+  const { floodStageDiskThreshold, highDiskThreshold, lowDiskThreshold } =
+    getDiskThresholds(settings);
 
   let diskStatus: NodeStatus = 'GOOD';
   if (fs_used_percent === 0) {
     diskStatus = 'UNREACHABLE';
-  } else if (fs_used_percent > criticalDiskThreshold) {
+  } else if (fs_used_percent > floodStageDiskThreshold) {
     diskStatus = 'CRITICAL';
-  } else if (fs_used_percent > warningDiskThreshold) {
+  } else if (fs_used_percent > highDiskThreshold) {
     diskStatus = 'WARNING';
+  } else if (fs_used_percent > lowDiskThreshold) {
+    diskStatus = 'INFO';
   }
 
   node.fs_status = diskStatus;
@@ -152,4 +170,48 @@ export function setNodeHealth(
   }
 
   return node;
+}
+
+export type ClusterDisksWatermarkStatus = {
+  disksWatermarkStatus: DiskWatermarkLevel | null;
+};
+
+export function getClusterDiskWatermarkStatus(
+  nodes: NodeStatusInfo[],
+  settings?: ClusterSettings,
+): ClusterDisksWatermarkStatus {
+  const { floodStageDiskThreshold, highDiskThreshold, lowDiskThreshold } =
+    getDiskThresholds(settings);
+
+  let highestLevel: DiskWatermarkLevel | null = null;
+
+  nodes.forEach(node => {
+    if (node.fs.total.size === 0) {
+      return;
+    }
+    const usedPercent = (node.fs.total.used * 100) / node.fs.total.size;
+
+    let nodeLevel: DiskWatermarkLevel | null = null;
+    if (usedPercent > floodStageDiskThreshold) {
+      nodeLevel = 'FLOOD_STAGE';
+    } else if (usedPercent > highDiskThreshold) {
+      nodeLevel = 'HIGH';
+    } else if (usedPercent > lowDiskThreshold) {
+      nodeLevel = 'LOW';
+    }
+
+    if (nodeLevel) {
+      if (
+        !highestLevel ||
+        DISK_WATERMARK_DEFAULT[nodeLevel].rank >
+          DISK_WATERMARK_DEFAULT[highestLevel].rank
+      ) {
+        highestLevel = nodeLevel;
+      }
+    }
+  });
+
+  return {
+    disksWatermarkStatus: highestLevel,
+  };
 }

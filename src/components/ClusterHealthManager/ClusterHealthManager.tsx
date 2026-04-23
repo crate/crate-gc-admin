@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { FSStats, LoadAverage, NodeStatusInfo } from 'types/cratedb';
 import useClusterHealthStore from 'state/clusterHealth';
-import { useClusterNodeStatus } from 'src/swr/jwt';
+import { useClusterInfo, useClusterNodeStatus } from 'src/swr/jwt';
+import { getClusterDiskWatermarkStatus } from 'utils/nodes';
 
 export type ClusterHealthManagerProps = {
   clusterId: string;
@@ -12,6 +13,7 @@ export const STATS_PERIOD = 15 * 60 * 1000;
 function ClusterHealthManager({ clusterId }: ClusterHealthManagerProps) {
   const { clusterHealth, setClusterHealth } = useClusterHealthStore();
   const { data: nodes } = useClusterNodeStatus(clusterId);
+  const { data: cluster } = useClusterInfo(clusterId);
   const [prevNodeData, setPrevNodesData] = useState<NodeStatusInfo[] | []>();
 
   const getFs = (nodes: NodeStatusInfo[]): Record<string, FSStats> => {
@@ -74,9 +76,13 @@ function ClusterHealthManager({ clusterId }: ClusterHealthManagerProps) {
       return;
     }
 
-    setClusterHealth(clusterId, { load: getLoad(nodes), fsStats: getFs(nodes) });
+    setClusterHealth(clusterId, {
+      load: getLoad(nodes),
+      fsStats: getFs(nodes),
+      diskWatermark: getClusterDiskWatermarkStatus(nodes, cluster?.settings),
+    });
     setPrevNodesData(nodes);
-  }, [nodes]);
+  }, [nodes, cluster]);
 
   return null;
 }
