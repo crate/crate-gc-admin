@@ -142,6 +142,7 @@ export function DataTable<TData, TValue>({
       onGlobalFilterChange: setSearchTerm,
       onPaginationChange: setPagination,
       globalFilterFn: 'includesString',
+      autoResetPageIndex: false,
       getRowId,
     };
 
