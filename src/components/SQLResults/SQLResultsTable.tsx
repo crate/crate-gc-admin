@@ -37,6 +37,16 @@ type DataTableColumnData<T> = {
   data: T[];
 };
 
+function triggerDownload(content: string, mimeType: string, filename: string) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
   const { showErrorTrace, tableResultsFormatPretty } = useSessionStore();
   const { showSuccessMessage } = useMessage();
@@ -307,33 +317,23 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
               </DropdownMenu.Trigger>
 
               <DropdownMenu.Content>
-                <DropdownMenu.Item>
-                  <a
-                    href={`data:text/csv;charset=utf-8,${generateCsv(result)}`}
-                    download={'query-results-' + Date.now() + '.csv'}
-                    className="text-black"
-                    onClick={() => {
-                      if (onDownloadResult) {
-                        onDownloadResult('csv');
-                      }
-                    }}
-                  >
-                    Export as .csv
-                  </a>
+                <DropdownMenu.Item
+                  className="cursor-pointer"
+                  onClick={() => {
+                    triggerDownload(generateCsv(result), 'text/csv', 'query-results-' + Date.now() + '.csv');
+                    if (onDownloadResult) onDownloadResult('csv');
+                  }}
+                >
+                  Export as .csv
                 </DropdownMenu.Item>
-                <DropdownMenu.Item>
-                  <a
-                    href={`data:application/json;charset=utf-8,${generateJson(result)}`}
-                    download={'query-results-' + Date.now() + '.json'}
-                    className="text-black"
-                    onClick={() => {
-                      if (onDownloadResult) {
-                        onDownloadResult('json');
-                      }
-                    }}
-                  >
-                    Export as .json
-                  </a>
+                <DropdownMenu.Item
+                  className="cursor-pointer"
+                  onClick={() => {
+                    triggerDownload(generateJson(result), 'application/json', 'query-results-' + Date.now() + '.json');
+                    if (onDownloadResult) onDownloadResult('json');
+                  }}
+                >
+                  Export as .json
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Menu>
