@@ -57,7 +57,7 @@ export type MemInfo = {
   used: number;
 };
 
-export type NodeStatus = 'UNREACHABLE' | 'CRITICAL' | 'WARNING' | 'GOOD';
+export type NodeStatus = 'UNREACHABLE' | 'CRITICAL' | 'WARNING' | 'INFO' | 'GOOD';
 
 export type ErrorMessage = {
   status: NodeStatus;

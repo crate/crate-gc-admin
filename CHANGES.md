@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Expose ClusterHealthStore and add disk watermark status to it.
+
 ## 2026-04-16 - 0.24.0
 
 - Changed SQL editor auto-complete to use prefix matching and require at least

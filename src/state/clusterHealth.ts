@@ -1,15 +1,17 @@
 // the state in this file is not persisted to localStorage
 // use this for cluster health management only
 
+import { ClusterDisksWatermarkStatus } from 'utils/nodes';
 import { create } from 'zustand';
 import { FSStats, LoadAverage } from 'types/cratedb';
 
 type ClusterHealth = {
   load: LoadAverage[];
   fsStats: { [key: string]: FSStats };
+  diskWatermark?: ClusterDisksWatermarkStatus;
 };
 
-type ClusterHealthStore = {
+export type ClusterHealthStore = {
   clusterHealth: Record<string, ClusterHealth>;
   setClusterHealth: (clusterId: string, health: ClusterHealth) => void;
 };

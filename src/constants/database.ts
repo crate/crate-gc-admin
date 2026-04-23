@@ -16,6 +16,13 @@ export const NODE_STATUS_THRESHOLD = {
   GOOD: 0,
 } as const;
 
+export const DISK_WATERMARK_DEFAULT = {
+  FLOOD_STAGE: { value: 95, rank: 3 },
+  HIGH: { value: 90, rank: 2 },
+  LOW: { value: 85, rank: 1 },
+} as const;
+export type DiskWatermarkLevel = keyof typeof DISK_WATERMARK_DEFAULT;
+
 // JWT authentication was added in crate 5.7.2. however, it is supported
 // on all clusters in the cloud from 5.8.2.
 // it is possible to manually enable it on 5.7.2+ cloud clusters, but at

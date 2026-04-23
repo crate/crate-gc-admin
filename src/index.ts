@@ -1,7 +1,8 @@
+import useClusterHealthStore, { ClusterHealthStore } from './state/clusterHealth';
 import useJWTManagerStore, { JWTManagerStore } from './state/jwtManager';
 import './index.css';
 
-export { useJWTManagerStore };
+export { useJWTManagerStore, useClusterHealthStore };
 export * from './components';
 export * from './hooks';
 export * from './routes';
@@ -13,4 +14,4 @@ export * from 'types/query';
 
 export * from 'utils/sqlFormatter';
 
-export type { JWTManagerStore };
+export type { JWTManagerStore, ClusterHealthStore };
