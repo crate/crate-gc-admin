@@ -54,6 +54,14 @@ global.window.open = jest.fn();
 global.window.ResizeObserver = ResizeObserver;
 global.window.scrollTo = jest.fn();
 
+// URL.createObjectURL / revokeObjectURL are not implemented in jsdom.
+// Used by triggerDownload in SQLResultsTable and similar programmatic downloads.
+global.URL.createObjectURL = jest.fn(() => 'blob:mock');
+global.URL.revokeObjectURL = jest.fn();
+
+// Prevent programmatic a.click() calls from triggering jsdom navigation.
+HTMLAnchorElement.prototype.click = jest.fn();
+
 Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage,
 });
