@@ -3,7 +3,7 @@ import {
   getTablesDDLQuery,
   getViewsDDLQuery,
 } from 'constants/queries';
-import { http, HttpResponse } from 'msw';
+import { DefaultBodyType, http, HttpResponse } from 'msw';
 import {
   getTablesColumnsResult,
   getTablesDDLQueryResult,
@@ -22,64 +22,51 @@ import { useTablesMock } from 'test/__mocks__/useTablesMock';
 import { useShardsMock } from 'test/__mocks__/useShardsMock';
 import handlerFactory from 'test/msw/handlerFactory';
 
+const getJWTQueryResult = (ident?: string | null): object => {
+  switch (ident) {
+    case '/console-query':
+      return {
+        col_types: [],
+        cols: [],
+        rows: [],
+        rowcount: 0,
+        duration: 123.45,
+      };
+    case '/ddl-table-query':
+      return getTablesDDLQueryResult;
+    case '/ddl-view-query':
+      return getViewsDDLQueryResult;
+    case '/use-allocations':
+      return useAllocationsMock;
+    case '/use-cluster-info':
+      return useClusterInfoMock;
+    case '/use-cluster-node-status':
+      return useClusterNodeStatusMock;
+    case '/use-current-user':
+      return useCurrentUserMock;
+    case '/use-query-stats':
+      return useQueryStatsMock;
+    case '/use-schema-tree':
+      return useSchemaTreeMock;
+    case '/use-shards':
+      return useShardsMock;
+    case '/use-tables':
+      return useTablesMock;
+    case '/use-tables-shards':
+      return useTablesShardsMock;
+    case '/use-users-roles':
+      return useUsersRolesMock;
+    default:
+      return queryResult;
+  }
+};
+
 const executeJWTQueryPost = http.post(
   'http://localhost:4200/_sql',
   async ({ request }) => {
     const url = new URL(request.url);
     const ident = url.searchParams.get('ident')?.split('/').slice(0, 2).join('/');
-    let result: null | object = null;
-
-    switch (ident) {
-      case '/console-query':
-        result = {
-          col_types: [],
-          cols: [],
-          rows: [],
-          rowcount: 0,
-          duration: 123.45,
-        };
-        break;
-      case '/ddl-table-query':
-        result = getTablesDDLQueryResult;
-        break;
-      case '/ddl-view-query':
-        result = getViewsDDLQueryResult;
-        break;
-      case '/use-allocations':
-        result = useAllocationsMock;
-        break;
-      case '/use-cluster-info':
-        result = useClusterInfoMock;
-        break;
-      case '/use-cluster-node-status':
-        result = useClusterNodeStatusMock;
-        break;
-      case '/use-current-user':
-        result = useCurrentUserMock;
-        break;
-      case '/use-query-stats':
-        result = useQueryStatsMock;
-        break;
-      case '/use-schema-tree':
-        result = useSchemaTreeMock;
-        break;
-      case '/use-shards':
-        result = useShardsMock;
-        break;
-      case '/use-tables':
-        result = useTablesMock;
-        break;
-      case '/use-tables-shards':
-        result = useTablesShardsMock;
-        break;
-      case '/use-users-roles':
-        result = useUsersRolesMock;
-        break;
-      default:
-        result = queryResult; // todo
-    }
-
-    return HttpResponse.json(result);
+    return HttpResponse.json(getJWTQueryResult(ident));
   },
 );
 
@@ -105,6 +92,21 @@ const executeQueryPost = http.post('/api/_sql', async ({ request }) => {
 
   return HttpResponse.json(result);
 });
+
+export const customExecuteJWTQueryResponse = (
+  responses: Record<string, DefaultBodyType>,
+) => {
+  return http.post('http://localhost:4200/_sql', async ({ request }) => {
+    const url = new URL(request.url);
+    const ident = url.searchParams.get('ident')?.split('/').slice(0, 2).join('/');
+
+    if (ident && responses[ident] !== undefined) {
+      return HttpResponse.json(responses[ident]);
+    }
+
+    return HttpResponse.json(getJWTQueryResult(ident));
+  });
+};
 
 export const executeJWTQueryHandlers = [executeJWTQueryPost];
 export const executeQueryHandlers = [executeQueryPost];

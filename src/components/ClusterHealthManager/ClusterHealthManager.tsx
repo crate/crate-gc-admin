@@ -1,8 +1,8 @@
+import { getClusterDiskWatermarkStatus } from 'utils/nodes';
 import { useEffect, useState } from 'react';
 import { FSStats, LoadAverage, NodeStatusInfo } from 'types/cratedb';
-import useClusterHealthStore from 'state/clusterHealth';
 import { useClusterInfo, useClusterNodeStatus } from 'src/swr/jwt';
-import { getClusterDiskWatermarkStatus } from 'utils/nodes';
+import useClusterHealthStore from 'state/clusterHealth';
 
 export type ClusterHealthManagerProps = {
   clusterId: string;
