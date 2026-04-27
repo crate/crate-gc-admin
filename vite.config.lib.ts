@@ -31,6 +31,7 @@ export default defineConfig(() => {
         entry: resolve(__dirname, 'src/index.ts'),
         name: packageJson.name,
         fileName: format => `index.${format}.js`,
+        cssFileName: 'style',
       },
       rollupOptions: {
         input: 'src/index.ts',

@@ -16,11 +16,11 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
       "export": "./dist/index.umd.js",
-      "require": "./dist/index.umd.js",
-      "types": "./dist/index.d.ts"
-    },
+      "require": "./dist/index.umd.js"
+   },
     "./style.css": "./dist/style.css"
   },
   "files": [
