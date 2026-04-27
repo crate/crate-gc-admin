@@ -23,42 +23,28 @@ import { useShardsMock } from 'test/__mocks__/useShardsMock';
 import handlerFactory from 'test/msw/handlerFactory';
 
 const getJWTQueryResult = (ident?: string | null): object => {
-  switch (ident) {
-    case '/console-query':
-      return {
-        col_types: [],
-        cols: [],
-        rows: [],
-        rowcount: 0,
-        duration: 123.45,
-      };
-    case '/ddl-table-query':
-      return getTablesDDLQueryResult;
-    case '/ddl-view-query':
-      return getViewsDDLQueryResult;
-    case '/use-allocations':
-      return useAllocationsMock;
-    case '/use-cluster-info':
-      return useClusterInfoMock;
-    case '/use-cluster-node-status':
-      return useClusterNodeStatusMock;
-    case '/use-current-user':
-      return useCurrentUserMock;
-    case '/use-query-stats':
-      return useQueryStatsMock;
-    case '/use-schema-tree':
-      return useSchemaTreeMock;
-    case '/use-shards':
-      return useShardsMock;
-    case '/use-tables':
-      return useTablesMock;
-    case '/use-tables-shards':
-      return useTablesShardsMock;
-    case '/use-users-roles':
-      return useUsersRolesMock;
-    default:
-      return queryResult;
-  }
+  const identMap: Record<string, object> = {
+    '/console-query': {
+      col_types: [],
+      cols: [],
+      rows: [],
+      rowcount: 0,
+      duration: 123.45,
+    },
+    '/ddl-table-query': getTablesDDLQueryResult,
+    '/ddl-view-query': getViewsDDLQueryResult,
+    '/use-allocations': useAllocationsMock,
+    '/use-cluster-info': useClusterInfoMock,
+    '/use-cluster-node-status': useClusterNodeStatusMock,
+    '/use-current-user': useCurrentUserMock,
+    '/use-query-stats': useQueryStatsMock,
+    '/use-schema-tree': useSchemaTreeMock,
+    '/use-shards': useShardsMock,
+    '/use-tables': useTablesMock,
+    '/use-tables-shards': useTablesShardsMock,
+    '/use-users-roles': useUsersRolesMock,
+  };
+  return ident && identMap[ident] ? identMap[ident] : queryResult;
 };
 
 const executeJWTQueryPost = http.post(
