@@ -15,4 +15,7 @@ export {
   customGetPolicyLogs,
   customGetEligibleColumns,
 } from './handlers/policies';
-export { customExecuteQueryResponse } from './handlers/queries';
+export {
+  customExecuteJWTQueryResponse,
+  customExecuteQueryResponse,
+} from './handlers/queries';
