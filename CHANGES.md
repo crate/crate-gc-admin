@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Expose ClusterHealthStore and add disk watermark status to it.
+- Added ref to Button
 
 ## 2026-04-16 - 0.24.0
 

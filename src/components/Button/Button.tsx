@@ -35,6 +35,7 @@ export type ButtonProps = {
 };
 
 function Button({
+  ref,
   ariaControls,
   ariaExpanded,
   ariaHasPopup,
@@ -51,7 +52,7 @@ function Button({
   size = BUTTON_SIZES.REGULAR,
   type = BUTTON_INPUT_TYPES.BUTTON,
   warn = false,
-}: ButtonProps) {
+}: React.ComponentPropsWithRef<'button'> & ButtonProps) {
   const buttonClasses = useButtonStyles({
     disabled,
     kind,
@@ -95,7 +96,7 @@ function Button({
   );
 
   return (
-    <button {...buttonProps}>
+    <button {...buttonProps} ref={ref}>
       <span>{children}</span>
       {loading && <Loader className="ml-2" size={Loader.sizes.SMALL} />}
     </button>
