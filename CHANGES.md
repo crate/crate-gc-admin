@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## 2026-05-04 - 0.24.1
+
 - Expose ClusterHealthStore and add disk watermark status to it.
-- Added ref to Button
+- Add ref to Button.
+- Misc dependabot updates.
 
 ## 2026-04-16 - 0.24.0
 
