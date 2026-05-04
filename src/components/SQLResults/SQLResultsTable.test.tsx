@@ -140,13 +140,14 @@ describe('The SQLResultsTable component', () => {
     });
 
     describe('clicking on "Export as .csv"', () => {
-      it('downloads the CSV file', async () => {
+      it('triggers a CSV file download', async () => {
         const { user } = setup();
 
         await user.click(screen.getByText('Download'));
+        await user.click(screen.getByText('Export as .csv'));
 
-        expect(screen.getByText('Export as .csv').getAttribute('href')).toMatch(
-          /^data:text\/csv;charset=utf-8,/,
+        expect(URL.createObjectURL).toHaveBeenCalledWith(
+          expect.objectContaining({ type: 'text/csv' }),
         );
       });
 
@@ -154,10 +155,11 @@ describe('The SQLResultsTable component', () => {
         const { user } = setup();
 
         await user.click(screen.getByText('Download'));
+        await user.click(screen.getByText('Export as .csv'));
 
-        expect(screen.getByText('Export as .csv').getAttribute('download')).toMatch(
-          /^query-results-\d+\.csv/,
-        );
+        const call = (URL.createObjectURL as jest.Mock).mock.calls[0]?.[0] as Blob;
+        expect(call).toBeDefined();
+        expect(call.type).toBe('text/csv');
       });
 
       it('calls the onDownloadResult callback with format = csv', async () => {
@@ -171,13 +173,14 @@ describe('The SQLResultsTable component', () => {
     });
 
     describe('clicking on "Export as .json"', () => {
-      it('downloads the JSON file', async () => {
+      it('triggers a JSON file download', async () => {
         const { user } = setup();
 
         await user.click(screen.getByText('Download'));
+        await user.click(screen.getByText('Export as .json'));
 
-        expect(screen.getByText('Export as .json').getAttribute('href')).toMatch(
-          /^data:application\/json;charset=utf-8,/,
+        expect(URL.createObjectURL).toHaveBeenCalledWith(
+          expect.objectContaining({ type: 'application/json' }),
         );
       });
 
@@ -185,10 +188,11 @@ describe('The SQLResultsTable component', () => {
         const { user } = setup();
 
         await user.click(screen.getByText('Download'));
+        await user.click(screen.getByText('Export as .json'));
 
-        expect(screen.getByText('Export as .json').getAttribute('download')).toMatch(
-          /^query-results-\d+\.json/,
-        );
+        const call = (URL.createObjectURL as jest.Mock).mock.calls[0]?.[0] as Blob;
+        expect(call).toBeDefined();
+        expect(call.type).toBe('application/json');
       });
 
       it('calls the onDownloadResult callback with format = json', async () => {

@@ -23,15 +23,15 @@ function CrateTabsShad({
   stickyTabBar = false,
   onChange,
 }: CrateTabsShadProps) {
-  const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
-  const hideTabs = hideWhenSingleTab && items.length === 1;
-
   const getDefaultTab = (): string => {
     if (initialActiveTab && items.map(item => item.key).includes(initialActiveTab)) {
       return initialActiveTab;
     }
     return items[0].key;
   };
+
+  const [activeTab, setActiveTab] = useState<string>(getDefaultTab);
+  const hideTabs = hideWhenSingleTab && items.length === 1;
 
   const onTabChange = (value: string) => {
     if (onChange) {
@@ -54,7 +54,6 @@ function CrateTabsShad({
     <Tabs
       className={stickyTabBar ? 'flex h-full w-full flex-col' : ''}
       data-testid="tabs-container"
-      defaultValue={getDefaultTab()}
       value={activeTab}
       onValueChange={onTabChange}
     >
