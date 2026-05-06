@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prevent unfocused document bug happening in CopyToClipboard component.
+
 ## 2026-05-04 - 0.24.1
 
 - Expose ClusterHealthStore and add disk watermark status to it.

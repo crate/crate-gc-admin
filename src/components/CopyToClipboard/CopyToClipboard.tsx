@@ -20,12 +20,19 @@ function CopyToClipboard({
   return (
     <button
       data-testid={testId}
-      onClick={() => {
-        navigator.clipboard.writeText(textToCopy);
-        showSuccessMessage(successMessage);
-
-        if (additionalClickHandler) {
-          additionalClickHandler();
+      onClick={async () => {
+        // We very occasionally see a `NotAllowedError` exception when the document is not focused.
+        // The try/catch block is a workaround to handle this gracefully, but it happens so infrequently
+        // it is not worth the effort required to handle it better.
+        try {
+          if (!document.hasFocus()) {
+            window.focus();
+          }
+          await navigator.clipboard.writeText(textToCopy);
+          showSuccessMessage(successMessage);
+          additionalClickHandler?.();
+        } catch {
+          //
         }
       }}
       type="button"
