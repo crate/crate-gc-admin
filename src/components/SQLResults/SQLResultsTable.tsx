@@ -51,7 +51,7 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
 
   const renderErrorTable = (result: QueryResultError) => {
     return (
-      <div className="p-4">
+      <div className="flex h-full w-full flex-col p-4 gap-4">
         <div className="flex min-h-12 flex-row items-center justify-between rounded border p-2">
           <div className="flex items-center gap-4 pr-2 text-sm">
             <Chip color={Chip.colors.RED}>Error</Chip>
@@ -79,9 +79,9 @@ function SQLResultsTable({ result, onDownloadResult }: SQLResultsTableProps) {
           )}
         </div>
         {showErrorTrace && (
-          <div className="mt-4">
+          <div className="overflow-y-auto">
             <div className="font-bold">Error trace:</div>
-            <pre className="text-xs">{result.error_trace}</pre>
+            <pre className="text-xs overflow-y-auto">{result.error_trace}</pre>
           </div>
         )}
       </div>

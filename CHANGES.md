@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fix bug where the error trace data was not scrollable and flowed off-screen.
 - Prevent unfocused document bug happening in CopyToClipboard component.
 
 ## 2026-05-04 - 0.24.1
