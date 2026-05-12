@@ -3,9 +3,16 @@
 import '@testing-library/jest-dom';
 // polyfill window.fetch
 import 'whatwg-fetch';
-import { act } from 'react';
+import { act } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
 import { unstableSetRender } from 'antd';
+import { actWrapper as messageActWrapper } from 'antd/lib/message';
+import { actWrapper as notificationActWrapper } from 'antd/lib/notification';
+
+// Wire antd's static message/notification APIs to RTL's act(), which sets
+// IS_REACT_ACT_ENVIRONMENT=true so React 19 doesn't warn about out-of-act updates.
+messageActWrapper(act);
+notificationActWrapper(act);
 
 // Make antd static APIs (message, notification) work in React 19's test environment.
 // Without this, antd renders its floating UI outside act() and React 19 never
