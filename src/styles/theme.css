@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200..900&family=Poppins:wght@700&display=swap');
+
+a {
+  color: #19c0ea;
+}
+
+a:hover {
+  color: #17b2d1;
+}
+
+body {
+  font-family: Inter, Arial, sans-serif;
+  font-feature-settings: 'tnum';
+  background-color: #f1f1f1;
+}

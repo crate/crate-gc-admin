@@ -35,7 +35,7 @@ export default {
     customExportConditions: [''],
   },
   transform: {
-    'node_modules/until-async/.*\\.js$': [
+    '^.+/until-async/.*\\.js$': [
       'ts-jest',
       {
         tsconfig: {
@@ -45,7 +45,9 @@ export default {
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!until-async)(?!pretty-bytes/.*)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!\\.pnpm/(until-async|pretty-bytes)@|until-async|pretty-bytes)',
+  ],
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   globalSetup: './test/global-setup.ts',
 };

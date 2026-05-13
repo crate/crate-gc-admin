@@ -1,6 +1,5 @@
 import useClusterHealthStore, { ClusterHealthStore } from './state/clusterHealth';
 import useJWTManagerStore, { JWTManagerStore } from './state/jwtManager';
-import './index.css';
 
 export { useJWTManagerStore, useClusterHealthStore };
 export * from './components';

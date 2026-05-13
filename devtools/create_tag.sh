@@ -35,7 +35,7 @@ if [[ "$LOCAL_COMMIT" != "$ORIGIN_COMMIT" ]]; then
   exit 1
 fi
 
-VERSION="$(yarn version --non-interactive | grep 'info Current version' | rev | cut -d' ' -f 1 | rev)"
+VERSION="$(grep \"version\": package.json | cut -f2 -d: | cut -f2 -d\")"
 
 echo
 print_info "Do you want to tag version $VERSION now?"
