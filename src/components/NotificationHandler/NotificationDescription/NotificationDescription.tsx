@@ -1,4 +1,5 @@
 import Text from 'components/Text';
+import type React from 'react';
 
 type Message = {
   keyName: string;

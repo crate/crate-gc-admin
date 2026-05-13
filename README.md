@@ -24,25 +24,28 @@ It is recommended to use Node Version Manager with Crate front-end projects.
 
 To install this library you have to run the following command:
 
-    yarn add @cratedb/crate-gc-admin
+    pnpm add @cratedb/crate-gc-admin
 
-Then, if you are using tailwind, edit your `tailwind.config` file and
-add the following:
+Then import the library component styles from your app entrypoint (for example
+`src/main.tsx` or `src/index.tsx`):
 
-    ...
-    content: [
-      ...
-      './node_modules/@cratedb/crate-gc-admin/**/*.{js,jsx,ts,tsx}'
-    ]
-    ...
+    import '@cratedb/crate-gc-admin/styles/components.css';
 
-and edit your index.css to import library style:
+If you want the package's global theme defaults (fonts, body and links), opt in:
+
+    import '@cratedb/crate-gc-admin/styles/theme.css';
+
+No Tailwind content scanning of `@cratedb/crate-gc-admin` is required when using
+these prebuilt CSS entrypoints.
+
+The legacy stylesheet import below still works for backwards compatibility, but
+is deprecated and will be removed in a future major release:
 
     @import '@cratedb/crate-gc-admin/style.css';
 
 ## Testing with the Cloud UI
 
-To test unpublished `crate-gc-admin` code in the Admin UI, use the `devtools/link_gc.sh` bash script within the Cloud UI repo. It is not a fast process, but it is the easiest way to code across the two repos.
+View the `DEVELOP.md` within the `cloud-ui` repo.
 
 ## Publish a new version
 

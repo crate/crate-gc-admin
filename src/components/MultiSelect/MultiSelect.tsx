@@ -29,7 +29,7 @@ export default function MultiSelect({
   );
 
   const triggerCheck = (id: string) => {
-    let newSelectedElements = value;
+    let newSelectedElements: string[];
     if (value.includes(id)) {
       // element is already checked, needs to be un-checked
       newSelectedElements = value.filter(el => el !== id);

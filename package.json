@@ -1,6 +1,6 @@
 {
   "name": "@cratedb/crate-gc-admin",
-  "version": "0.24.2",
+  "version": "0.25.0",
   "author": "cratedb",
   "private": false,
   "type": "module",
@@ -14,15 +14,23 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
       "export": "./dist/index.umd.js",
       "require": "./dist/index.umd.js"
-   },
-    "./style.css": "./dist/style.css"
+    },
+    "./style.css": "./dist/style.css",
+    "./styles/components.css": "./dist/styles/components.css",
+    "./styles/theme.css": "./dist/styles/theme.css"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "./dist"
   ],
@@ -43,6 +51,7 @@
     "antd": "^5.29.3",
     "axios": "^1.15.2",
     "class-variance-authority": "^0.7.1",
+    "classnames": "^2.5.1",
     "clsx": "^2.1.0",
     "compare-versions": "^6.1.1",
     "cronstrue": "^2.59.0",
@@ -53,14 +62,11 @@
     "papaparse": "^5.5.3",
     "path-parser": "^6.1.0",
     "pretty-bytes": "^6.1.1",
-    "react": "^19.0.0",
     "react-ace": "^14.0.1",
-    "react-dom": "^19.0.0",
     "react-hook-form": "^7.73.1",
     "react-icons": "^5.6.0",
     "react-intl": "^7.1.14",
     "react-resizable-panels": "^2.1.9",
-    "react-router-dom": "^6.30.3",
     "react-syntax-highlighter": "^15.6.6",
     "recharts": "^2.15.4",
     "rollup-preserve-directives": "^1.1.3",
@@ -76,13 +82,16 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "build-lib": "tsc && vite build --config vite.config.lib.ts",
+    "build-lib": "tsc && vite build --config vite.config.lib.ts && pnpm run build-lib-css-entries",
+    "build-lib-css-entries": "mkdir -p dist/styles && tailwindcss -i ./src/styles/components.css -o ./dist/styles/components.css --minify && pnpm run sync-theme-css",
+    "sync-theme-css": "cp ./src/styles/theme.css ./dist/styles/theme.css && printf \"@import './styles/components.css';\\n@import './styles/theme.css';\\n\" > ./dist/style.css",
+    "build-lib-css-components-watch": "mkdir -p dist/styles && tailwindcss -i ./src/styles/components.css -o ./dist/styles/components.css --watch --minify",
+    "build-lib-theme-watch": "chokidar \"src/styles/theme.css\" -c \"pnpm run sync-theme-css\"",
+    "build-lib-watch": "pnpm run sync-theme-css && concurrently -k -n vite,css,theme \"vite build --config vite.config.lib.ts --watch\" \"pnpm run build-lib-css-components-watch\" \"pnpm run build-lib-theme-watch\"",
     "check-types": "tsc --noemit",
-    "prepack": "yarn run build-lib",
+    "prepack": "pnpm run build-lib",
     "test": "jest",
-    "lint": "eslint --cache --ext=.ts --ext=.tsx src/",
-    "link-local": "yarn link && cd node_modules/react && yarn link && cd ../react-dom && yarn link",
-    "unlink-local": "yarn unlink && cd node_modules/react && yarn unlink && cd ../react-dom && yarn unlink"
+    "lint": "eslint --cache --ext=.ts --ext=.tsx src/"
   },
   "eslintConfig": {
     "extends": [
@@ -104,6 +113,8 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.1",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
     "@testing-library/dom": "^10.0.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.0.0",
@@ -112,19 +123,22 @@
     "@types/lodash": "^4.17.24",
     "@types/node": "^22.19.17",
     "@types/papaparse": "^5.5.2",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
     "@types/react-syntax-highlighter": "^15.5.11",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
     "@typescript-eslint/parser": "^8.59.0",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.5.0",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.0.0",
+    "globals": "^17.6.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-fixed-jsdom": "^0.0.11",
@@ -133,6 +147,9 @@
     "prettier": "^3.8.1",
     "prettier-plugin-sort-imports": "^1.8.11",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.14.1",
     "tailwindcss": "^3.4.19",
     "ts-jest": "^29.4.9",
     "typescript": "^5.9.3",
@@ -145,7 +162,13 @@
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",
     "react-dom": "^18.2.0 || ^19.0.0",
-    "react-router-dom": "^6.28.0"
+    "react-router-dom": "^6.28.0 || ^7.0.0"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "pnpm": {
+    "overrides": {
+      "@types/react@*": "19.0.0",
+      "@types/react-dom@*": "19.0.0"
+    }
+  },
+  "packageManager": "pnpm@10.33.4"
 }

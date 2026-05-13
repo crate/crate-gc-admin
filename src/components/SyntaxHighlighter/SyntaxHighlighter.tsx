@@ -13,6 +13,17 @@ export type SyntaxHighlighterProps = {
   helpText?: React.ReactNode;
 };
 
+type ReactSyntaxHighlighterCompatProps = {
+  language?: string;
+  PreTag?: React.ElementType;
+  style?: object;
+  wrapLongLines?: boolean;
+  children?: React.ReactNode;
+};
+
+const ReactSyntaxHighlighterCompat =
+  ReactSyntaxHighlighter as unknown as React.ComponentType<ReactSyntaxHighlighterCompatProps>;
+
 function SyntaxHighlighter({
   language,
   title,
@@ -25,14 +36,14 @@ function SyntaxHighlighter({
 
       <div className="rounded-lg bg-neutral-100 py-1 pl-2 pr-4">
         <div className="flex items-start justify-between">
-          <ReactSyntaxHighlighter
+          <ReactSyntaxHighlighterCompat
             language={language}
             PreTag={CustomPreTag}
             style={docco}
             wrapLongLines
           >
             {children}
-          </ReactSyntaxHighlighter>
+          </ReactSyntaxHighlighterCompat>
 
           <CopyToClipboard textToCopy={children}>
             <Text className="py-2 text-sm text-crate-blue">Copy</Text>

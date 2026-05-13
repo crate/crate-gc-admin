@@ -1,27 +1,28 @@
-FROM node:25.9.0-slim as build-deps
+FROM node:22.13.1-slim AS build-deps
 
 # The base node image sets a very verbose log level.
-ENV NPM_CONFIG_LOGLEVEL warn
+ENV NPM_CONFIG_LOGLEVEL=warn
 
 # FIXME: This should not be hardcoded
-ENV VITE_GRAND_CENTRAL_URL http://localhost:5050
+ENV VITE_GRAND_CENTRAL_URL=http://localhost:5050
 
 # Create the work dir
 ADD . /home/nodeuser/app
-ENV HOME /home/nodeuser
+ENV HOME=/home/nodeuser
 WORKDIR /home/nodeuser/app
 
 # We are creating a specific user to be able to build
 # the docker image on azure to avoid running npm tasks as root
 RUN useradd -ms /bin/bash nodeuser
 RUN chown -R nodeuser:nodeuser /home/nodeuser
+RUN npm install -g pnpm@11.1.1
 USER nodeuser
-COPY --chown=nodeuser:nodeuser package.json yarn.lock ./
+COPY --chown=nodeuser:nodeuser package.json pnpm-lock.yaml .npmrc ./
 
 ENV NODE_PATH=/home/nodeuser/app/node_modules
 ENV PATH=$PATH:/home/nodeuser/app/node_modules/.bin
 
-RUN yarn && yarn build && rm -r /home/nodeuser/app/node_modules
+RUN pnpm install --frozen-lockfile && pnpm run build && rm -r /home/nodeuser/app/node_modules
 
 # Serve the gc-admin build.
 FROM nginx:1.29.8
