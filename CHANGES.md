@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dependabot: Bump react-intl from 7.1.11 to 7.1.14
+
 ## 2026-05-19 - 0.24.2
 
 - Make the warning colour more yellow than red.
