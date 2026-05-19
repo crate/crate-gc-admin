@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Dependabot: Bump react-intl from 7.1.11 to 7.1.14
+- Dependabot: Bump flatted from 3.3.1 to 3.4.2
 
 ## 2026-05-19 - 0.24.2
 
