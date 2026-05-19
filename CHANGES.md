@@ -7,6 +7,7 @@
 - Dependabot: Bump ws from 8.18.0 to 8.20.1
 - Dependabot: Bump fast-uri from 3.0.3 to 3.1.2
 - Dependabot: Bump nginx from 1.29.7 to 1.29.8
+- Dependabot: Bump msw from 2.12.7 to 2.13.6
 
 ## 2026-05-19 - 0.24.2
 
