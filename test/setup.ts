@@ -58,8 +58,8 @@ Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage,
 });
 
+beforeAll(() => server.listen());
 beforeEach(() => {
-  server.listen();
   useLocation.mockReturnValue({
     pathname: '',
   });

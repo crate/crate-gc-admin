@@ -6,7 +6,7 @@ export default {
   preset: 'ts-jest/presets/js-with-ts',
   rootDir: '.',
   testRegex: '(/__tests__/*.test.js|\\.(test))\\.(jsx|js|tsx|ts)$',
-  moduleFileExtensions: ['jsx', 'js', 'tsx', 'ts', 'json'],
+  moduleFileExtensions: ['jsx', 'js', 'mjs', 'tsx', 'ts', 'json'],
   collectCoverage: false,
   coverageThreshold: {
     global: {
@@ -44,8 +44,10 @@ export default {
         },
       },
     ],
+    'node_modules/rettime/.*\\.mjs$': ['<rootDir>/test/esm-to-cjs.cjs'],
+    'node_modules/@open-draft/deferred-promise/.*\\.mjs$': ['<rootDir>/test/esm-to-cjs.cjs'],
   },
-  transformIgnorePatterns: ['node_modules/(?!until-async)(?!pretty-bytes/.*)'],
+  transformIgnorePatterns: ['node_modules/(?!(until-async|pretty-bytes|rettime|@open-draft/deferred-promise)/.*)'],
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   globalSetup: './test/global-setup.ts',
 };
