@@ -26,11 +26,11 @@ function Navigation({
   const linkKey = (type: string, path: string): string => `${type}_${path}`;
 
   const drawLinkInner = (
-    icon: JSX.Element,
-    label: JSX.Element,
+    icon: React.JSX.Element,
+    label: React.JSX.Element,
     navIsExpanded: boolean,
     isExternalLink: boolean = false,
-  ): JSX.Element => {
+  ): React.JSX.Element => {
     return (
       <div className="align-center mx-auto flex w-full max-w-[300px] flex-nowrap gap-2 whitespace-nowrap">
         <div className="size-6 text-center text-sm">{icon}</div>
@@ -44,7 +44,7 @@ function Navigation({
     );
   };
 
-  const drawExpandCollapse = (): JSX.Element => (
+  const drawExpandCollapse = (): React.JSX.Element => (
     <div
       className={`${linkClassesUnselected} hidden md:block`}
       onClick={() => setNavIsExpanded(!navIsExpanded)}
@@ -57,9 +57,9 @@ function Navigation({
     </div>
   );
 
-  const drawGCConnectionStatus = (status?: ConnectionStatus): JSX.Element => {
+  const drawGCConnectionStatus = (status?: ConnectionStatus): React.JSX.Element => {
     let classes: string;
-    let icon: JSX.Element;
+    let icon: React.JSX.Element;
     let label: string;
 
     switch (status) {
@@ -112,7 +112,7 @@ function Navigation({
     );
   };
 
-  const drawLink = (link: NavigationLinkProps): JSX.Element => {
+  const drawLink = (link: NavigationLinkProps): React.JSX.Element => {
     switch (link.type) {
       case 'external':
         return (
