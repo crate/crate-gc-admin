@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 2026-05-19 - 0.24.2
+
+- Make the warning colour more yellow than red.
 - Fix bug where the error trace data was not scrollable and flowed off-screen.
 - Prevent unfocused document bug happening in CopyToClipboard component.
 
