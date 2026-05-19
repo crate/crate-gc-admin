@@ -76,6 +76,8 @@ const getStatusClass = (status: string) => {
       return 'border-red-400';
     case 'WARNING':
       return 'border-amber-400';
+    case 'INFO':
+      return 'border-gray-200';
     default:
       return '';
   }

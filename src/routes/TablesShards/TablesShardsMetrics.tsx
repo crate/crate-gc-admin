@@ -111,8 +111,8 @@ function TablesShardsMetrics() {
               );
             case 'YELLOW':
               return (
-                <div className="flex items-center gap-2 text-orange-600">
-                  <div className="h-2 w-2 rounded-full bg-orange-600" />
+                <div className="flex items-center gap-2 text-amber-600">
+                  <div className="h-2 w-2 rounded-full bg-amber-600" />
                   <span>{TABLE_HEALTH_DESCRIPTIONS.YELLOW}</span>
                 </div>
               );

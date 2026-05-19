@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 2026-05-19 - 0.24.2
+
+- Make the warning colour more yellow than red.
+- Fix bug where the error trace data was not scrollable and flowed off-screen.
+- Prevent unfocused document bug happening in CopyToClipboard component.
+
+## 2026-05-04 - 0.24.1
+
+- Expose ClusterHealthStore and add disk watermark status to it.
+- Add ref to Button.
+- Misc dependabot updates.
+
 ## 2026-04-16 - 0.24.0
 
 - Changed SQL editor auto-complete to use prefix matching and require at least
