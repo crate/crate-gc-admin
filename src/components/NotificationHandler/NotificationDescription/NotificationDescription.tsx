@@ -6,7 +6,7 @@ type Message = {
 };
 
 export type NotificationDescriptionProps = {
-  messages?: null | string | JSX.Element | Message[];
+  messages?: null | string | React.JSX.Element | Message[];
 };
 
 function NotificationDescription({ messages }: NotificationDescriptionProps) {
