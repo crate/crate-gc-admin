@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react-swc';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import type { Plugin } from 'vite';
 
 // D-14: Stub SVG/PNG imports in tests — replaces Jest moduleNameMapper.
@@ -19,7 +18,8 @@ const assetStub: Plugin = {
 };
 
 export default defineConfig({
-  plugins: [assetStub, react(), tsconfigPaths()],
+  plugins: [assetStub, react({ disableOxcRecommendation: true })],
+  resolve: { tsconfigPaths: true },
   test: {
     globals: true,                              // D-03: vi/describe/it/expect available globally
     testTimeout: 15000,
