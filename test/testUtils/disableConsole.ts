@@ -2,6 +2,6 @@
 // until the global console override is
 // removed from test/setup.js
 const disableConsole = (...args: ('warn' | 'error')[]) =>
-  args.forEach(method => jest.spyOn(console, method).mockImplementation(() => {}));
+  args.forEach(method => vi.spyOn(console, method).mockImplementation(() => {}));
 
 export default disableConsole;
