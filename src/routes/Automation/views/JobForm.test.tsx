@@ -5,7 +5,7 @@ import scheduledJob from 'test/__mocks__/scheduledJob';
 import JobForm from './JobForm';
 import { Job } from 'types';
 
-const onSaveSpy = jest.fn();
+const onSaveSpy = vi.fn();
 
 const setupAdd = (onSave?: () => void) => {
   return render(<JobForm type="add" onSave={onSave} />);

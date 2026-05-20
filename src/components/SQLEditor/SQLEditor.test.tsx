@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from 'test/testUtils';
 import SQLEditor, { SQLEditorProps } from './SQLEditor';
 
-const onExecute = jest.fn();
-const onChange = jest.fn();
-const setShowHistory = jest.fn();
-const onViewHistory = jest.fn();
+const onExecute = vi.fn();
+const onChange = vi.fn();
+const setShowHistory = vi.fn();
+const onViewHistory = vi.fn();
 const defaultProps: SQLEditorProps = {
   onExecute,
   onChange,
