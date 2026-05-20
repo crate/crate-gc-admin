@@ -3,7 +3,25 @@ import '@testing-library/jest-dom/vitest';
 // polyfill window.fetch
 import 'whatwg-fetch';
 import { type Mock } from 'vitest';
-import { act } from '@testing-library/react';
+import { configure, cleanup, act } from '@testing-library/react';
+import { message, notification } from 'antd';
+
+// React 19 test mode: treat all state updates (incl. timer callbacks) as inside act().
+// Without this, rc-motion's setTimeout-based animation updates are deferred and
+// never committed, breaking Ant Design Tree expansion in tests.
+(global as any).IS_REACT_ACT_ENVIRONMENT = true;
+
+configure({ asyncUtilTimeout: 5000 });
+beforeEach(async () => {
+  // Destroy lingering Ant Design messages/notifications from previous tests.
+  // Wrapped in act() so the async unstableSetRender cleanup completes before
+  // the next test starts, preventing race conditions in showSuccessMessage().
+  await act(async () => {
+    message.destroy();
+    notification.destroy();
+  });
+});
+afterEach(cleanup);
 import { createRoot } from 'react-dom/client';
 import { unstableSetRender } from 'antd';
 import { actWrapper as messageActWrapper } from 'antd/lib/message';
@@ -23,18 +41,23 @@ unstableSetRender((node, container) => {
   act(() => {
     containerWithRoot._reactRoot!.render(node);
   });
-  return async () => {
-    await act(async () => {
-      containerWithRoot._reactRoot?.unmount();
-    });
+  return () => {
+    // Delete the root reference FIRST so that any synchronous re-render
+    // (e.g. message.success() called right after message.destroy() inside
+    // showSuccessMessage) gets a fresh root instead of a half-unmounted one.
+    const root = containerWithRoot._reactRoot;
     delete containerWithRoot._reactRoot;
+    root?.unmount();
+    return Promise.resolve();
   };
 });
 
-// D-13: Vitest does NOT auto-apply __mocks__/react-router-dom.tsx for node_modules
-// without an explicit vi.mock() call. Required for all 13+ components using useNavigate,
-// useLocation, etc. to receive the mock instead of the real implementation.
+// Vitest does NOT auto-apply __mocks__/ for node_modules without explicit vi.mock() calls.
 vi.mock('react-router-dom');
+vi.mock('react-ace');
+vi.mock('react-syntax-highlighter');
+vi.mock('react-resizable-panels');
+vi.mock('ace-builds');
 
 // D-12: Register zustand mock globally (replaces auto-hoisting).
 // The factory is async because vi.importActual returns a Promise.

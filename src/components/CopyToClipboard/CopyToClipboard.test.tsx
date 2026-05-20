@@ -30,7 +30,7 @@ describe('the CopyToClipboard component', () => {
   describe('when the user clicks the button', () => {
     it('copies the text to the clipboard', async () => {
       const { user } = setup();
-      const writeTextMock = jest
+      const writeTextMock = vi
         .spyOn(navigator.clipboard, 'writeText')
         .mockResolvedValue();
 
