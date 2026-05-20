@@ -3,9 +3,16 @@
 import '@testing-library/jest-dom';
 // polyfill window.fetch
 import 'whatwg-fetch';
-import { act } from 'react';
+import { act } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
 import { unstableSetRender } from 'antd';
+import { actWrapper as messageActWrapper } from 'antd/lib/message';
+import { actWrapper as notificationActWrapper } from 'antd/lib/notification';
+
+// Wire antd's static message/notification APIs to RTL's act(), which sets
+// IS_REACT_ACT_ENVIRONMENT=true so React 19 doesn't warn about out-of-act updates.
+messageActWrapper(act);
+notificationActWrapper(act);
 
 // Make antd static APIs (message, notification) work in React 19's test environment.
 // Without this, antd renders its floating UI outside act() and React 19 never
@@ -54,8 +61,29 @@ global.window.open = jest.fn();
 global.window.ResizeObserver = ResizeObserver;
 global.window.scrollTo = jest.fn();
 
+// URL.createObjectURL / revokeObjectURL are not implemented in jsdom.
+// Used by triggerDownload in SQLResultsTable and similar programmatic downloads.
+global.URL.createObjectURL = jest.fn(() => 'blob:mock');
+global.URL.revokeObjectURL = jest.fn();
+
+// Prevent programmatic a.click() calls from triggering jsdom navigation.
+HTMLAnchorElement.prototype.click = jest.fn();
+
 Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage,
+});
+
+const originalConsoleError = console.error;
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation((...args) => {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes('trigger element and popup element should in same shadow root')
+    ) {
+      return;
+    }
+    originalConsoleError(...args);
+  });
 });
 
 beforeEach(() => {
