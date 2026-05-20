@@ -23,7 +23,7 @@ const errorQueryResponse: QueryResult = {
   error_trace: 'EXAMPLE_ERROR_TRACE',
 };
 
-const onDownloadResultMock = jest.fn();
+const onDownloadResultMock = vi.fn();
 const defaultProps: SQLResultsTableProps = {
   result: useSchemaTreeMock,
   onDownloadResult: onDownloadResultMock,

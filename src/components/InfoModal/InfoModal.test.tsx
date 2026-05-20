@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import InfoModal, { InfoModalProps } from './InfoModal';
 import { render, screen } from 'test/testUtils';
 
-const onCloseSpy = jest.fn();
+const onCloseSpy = vi.fn();
 
 const defaultProps: PropsWithChildren<InfoModalProps> = {
   title: 'Modal Title',

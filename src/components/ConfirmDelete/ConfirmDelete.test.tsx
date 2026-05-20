@@ -1,11 +1,12 @@
 import ConfirmDelete, { ConfirmDeleteProps } from './ConfirmDelete';
 import { render, waitFor, screen } from 'test/testUtils';
+import type { Mock } from 'vitest';
 
 const defaultProps: ConfirmDeleteProps = {
   confirmText: 'confirmText',
   prompt: 'A custom prompt',
-  onCancel: jest.fn(),
-  onConfirm: jest.fn(),
+  onCancel: vi.fn(),
+  onConfirm: vi.fn(),
   title: 'Delete Project',
   visible: true,
   disclaimer: 'Disclaimer',
@@ -22,8 +23,8 @@ const setup = (props: Partial<ConfirmDeleteProps> = {}) => {
 
 describe('The ConfirmDelete component', () => {
   afterEach(() => {
-    (defaultProps.onCancel as jest.Mock).mockClear();
-    (defaultProps.onConfirm as jest.Mock).mockClear();
+    (defaultProps.onCancel as Mock).mockClear();
+    (defaultProps.onConfirm as Mock).mockClear();
   });
 
   it('displays the provided title correctly', () => {

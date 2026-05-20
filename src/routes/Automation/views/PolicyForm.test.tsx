@@ -19,7 +19,7 @@ import { EligibleColumnsApiOutput, Policy } from 'types';
 import { policy } from 'test/__mocks__/policy';
 import { PolicyForm } from '.';
 
-const onSaveSpy = jest.fn();
+const onSaveSpy = vi.fn();
 
 const setupAdd = (onSave?: () => void) => {
   return render(<PolicyForm type="add" onSave={onSave} />);

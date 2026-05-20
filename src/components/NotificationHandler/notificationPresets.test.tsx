@@ -3,7 +3,7 @@ import { actWithFakeTimers, disableConsole } from 'test/testUtils';
 import { infoNotification } from './notificationPresets';
 
 describe('the notification presets', () => {
-  const notificationSpy = jest.spyOn(notification, 'open');
+  const notificationSpy = vi.spyOn(notification, 'open');
 
   beforeAll(() => {
     // disabled the console here as the notifications code will be

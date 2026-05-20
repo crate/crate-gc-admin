@@ -10,7 +10,7 @@ import { navigateMock } from '__mocks__/react-router-dom';
 import policies from 'test/__mocks__/policies';
 import { PolicyLog, Policy } from 'types';
 
-const onDeleteSpy = jest.fn();
+const onDeleteSpy = vi.fn();
 
 const setup = (onDeletePolicy?: () => void) => {
   return render(<PoliciesTable onDeletePolicy={onDeletePolicy} />);
