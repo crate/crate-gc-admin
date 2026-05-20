@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/// <reference types="@types/jest" />;
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 // polyfill window.fetch
 import 'whatwg-fetch';
+import { type Mock } from 'vitest';
 import { act } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
 import { unstableSetRender } from 'antd';
@@ -30,18 +30,31 @@ unstableSetRender((node, container) => {
     delete containerWithRoot._reactRoot;
   };
 });
+
+// D-13: Vitest does NOT auto-apply __mocks__/react-router-dom.tsx for node_modules
+// without an explicit vi.mock() call. Required for all 13+ components using useNavigate,
+// useLocation, etc. to receive the mock instead of the real implementation.
+vi.mock('react-router-dom');
+
+// D-12: Register zustand mock globally (replaces auto-hoisting).
+// The factory is async because vi.importActual returns a Promise.
+vi.mock('zustand', async () => {
+  const factory = (await import('../__mocks__/zustand')).default;
+  return factory();
+});
+
 import mockLocalStorage from '__mocks__/localStorageMock';
 import { useLocation } from '__mocks__/react-router-dom';
 import server from './msw';
 
 class ResizeObserver {
-  observe: jest.Mock<any, any, any>;
-  unobserve: jest.Mock<any, any, any>;
-  disconnect: jest.Mock<any, any, any>;
+  observe: Mock;
+  unobserve: Mock;
+  disconnect: Mock;
   constructor() {
-    this.observe = jest.fn();
-    this.unobserve = jest.fn();
-    this.disconnect = jest.fn();
+    this.observe = vi.fn();
+    this.unobserve = vi.fn();
+    this.disconnect = vi.fn();
   }
 }
 
@@ -50,16 +63,16 @@ global.window.matchMedia = query => ({
   matches: false,
   media: query,
   onchange: null,
-  addListener: jest.fn(), // deprecated
-  removeListener: jest.fn(), // deprecated
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
+  addListener: vi.fn(), // deprecated
+  removeListener: vi.fn(), // deprecated
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
 });
 
-global.window.open = jest.fn();
+global.window.open = vi.fn();
 global.window.ResizeObserver = ResizeObserver;
-global.window.scrollTo = jest.fn();
+global.window.scrollTo = vi.fn();
 
 // URL.createObjectURL / revokeObjectURL are not implemented in jsdom.
 // Used by triggerDownload in SQLResultsTable and similar programmatic downloads.
@@ -94,6 +107,6 @@ beforeEach(() => {
 });
 afterEach(() => {
   server.resetHandlers();
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 afterAll(() => server.close());
