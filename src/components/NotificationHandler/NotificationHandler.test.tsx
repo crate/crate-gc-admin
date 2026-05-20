@@ -1,4 +1,5 @@
 import { notification } from 'antd';
+import { act } from 'react';
 import { disableConsole, render, screen, waitFor } from 'test/testUtils';
 import NotificationHandler from './NotificationHandler';
 import useSessionStore from 'state/session';
@@ -12,8 +13,17 @@ describe('The NotificationHandler component', () => {
     disableConsole('error');
   });
 
-  afterEach(() => {
-    notification.destroy();
+  afterEach(async () => {
+    // Flush rc-motion's leave animation so the notification is fully gone
+    // before the next test starts, preventing stale elements from interfering.
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    await act(async () => {
+      notification.destroy();
+    });
+    await act(async () => { vi.runAllTimers(); });
+    await act(async () => { vi.runAllTimers(); });
+    await act(async () => { vi.runAllTimers(); });
+    vi.useRealTimers();
   });
 
   it('renders nothing if there is no notification to show', () => {
@@ -52,11 +62,13 @@ describe('The NotificationHandler component', () => {
         notification: { type: 'error', message: 'this is an error' },
       });
 
-      const { container } = setup();
+      setup();
 
       await waitFor(() => {
+        // Search document rather than container.nextElementSibling — a leftover
+        // warn notification animating out may shift sibling positions.
         expect(
-          container.nextElementSibling?.querySelector('.cui-notification-error'),
+          document.querySelector('.cui-notification-error'),
         ).toBeInTheDocument();
       });
 
@@ -70,11 +82,11 @@ describe('The NotificationHandler component', () => {
         notification: { message: 'a message without a type' },
       });
 
-      const { container } = setup();
+      setup();
 
       await waitFor(() => {
         expect(
-          container.nextElementSibling?.querySelector('.cui-notification-info'),
+          document.querySelector('.cui-notification-info'),
         ).toBeInTheDocument();
       });
 

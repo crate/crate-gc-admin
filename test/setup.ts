@@ -14,12 +14,19 @@ import { message, notification } from 'antd';
 configure({ asyncUtilTimeout: 5000 });
 beforeEach(async () => {
   // Destroy lingering Ant Design messages/notifications from previous tests.
-  // Wrapped in act() so the async unstableSetRender cleanup completes before
-  // the next test starts, preventing race conditions in showSuccessMessage().
+  // rc-motion's leave animations use setTimeout; flush them with fake timers so
+  // the old elements are fully removed before the next test starts.
+  vi.useFakeTimers({ shouldAdvanceTime: true });
   await act(async () => {
     message.destroy();
     notification.destroy();
   });
+  // Three passes: each covers one rc-motion step (rAFs → STEP_ACTIVE → deadline
+  // → goMotionEnd → antd removes message → React unmounts element).
+  await act(async () => { vi.runAllTimers(); });
+  await act(async () => { vi.runAllTimers(); });
+  await act(async () => { vi.runAllTimers(); });
+  vi.useRealTimers();
 });
 afterEach(cleanup);
 import { createRoot } from 'react-dom/client';
@@ -35,21 +42,19 @@ notificationActWrapper(act);
 // Make antd static APIs (message, notification) work in React 19's test environment.
 // Without this, antd renders its floating UI outside act() and React 19 never
 // commits those renders during tests.
+//
+// The cleanup is intentionally a no-op: showSuccessMessage() calls message.destroy()
+// then message.success() synchronously. If cleanup unmounts the root, the
+// immediately-following message.success() hits a half-torn-down container and the
+// render is silently dropped. Keeping the root alive and letting antd manage content
+// via re-renders avoids this race.
 unstableSetRender((node, container) => {
   const containerWithRoot = container as Element & { _reactRoot?: ReturnType<typeof createRoot> };
   containerWithRoot._reactRoot ||= createRoot(container as Element);
   act(() => {
     containerWithRoot._reactRoot!.render(node);
   });
-  return () => {
-    // Delete the root reference FIRST so that any synchronous re-render
-    // (e.g. message.success() called right after message.destroy() inside
-    // showSuccessMessage) gets a fresh root instead of a half-unmounted one.
-    const root = containerWithRoot._reactRoot;
-    delete containerWithRoot._reactRoot;
-    root?.unmount();
-    return Promise.resolve();
-  };
+  return () => Promise.resolve();
 });
 
 // Vitest does NOT auto-apply __mocks__/ for node_modules without explicit vi.mock() calls.
