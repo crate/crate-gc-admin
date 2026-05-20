@@ -14,10 +14,11 @@ import { postFetch } from 'src/swr/jwt/useSchemaTree';
 const schemaTableColumns = postFetch(useSchemaTreeMock);
 
 // rc-motion (Ant Design Tree) schedules animation state updates via setTimeout.
-// In React 19 test mode those callbacks fire outside act() and are never committed.
-// vi.advanceTimersByTime(600) inside act() fires the 500ms motionDeadline synchronously,
+// vi.runAllTimers() inside act() fires the motionDeadline synchronously,
 // committing onMotionEnd (which updates prevData) before the next expansion click.
 // shouldAdvanceTime: true keeps real-time polling in waitFor/SWR working normally.
+// A second runAllTimers() after waitFor flushes onMotionEnd's setPrevData so it
+// is committed before the next click (needed for 3-level expansion).
 const triggerTreeItem = async (
   user: UserEvent,
   text: string,
@@ -28,13 +29,12 @@ const triggerTreeItem = async (
     .closest('.ant-tree-treenode')
     ?.getElementsByClassName('ant-tree-switcher')[0];
   await user.click(triggerIcon!);
-  await act(async () => {
-    vi.runAllTimers();
-  });
+  await act(async () => { vi.runAllTimers(); });
   if (textToWait) {
     await waitFor(() => {
       expect(screen.getByText(textToWait)).toBeInTheDocument();
     });
+    await act(async () => { vi.runAllTimers(); });
   }
 };
 
