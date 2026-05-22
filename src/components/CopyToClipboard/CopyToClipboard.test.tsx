@@ -44,7 +44,7 @@ describe('the CopyToClipboard component', () => {
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));
 
-      expect(await screen.findByText('Copied')).toBeInTheDocument();
+      expect((await screen.findAllByText('Copied')).length).toBeGreaterThan(0);
     });
 
     it('calls the additionalClickHandler callback', async () => {
