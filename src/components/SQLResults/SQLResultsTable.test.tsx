@@ -158,7 +158,7 @@ describe('The SQLResultsTable component', () => {
         await user.click(screen.getByText('Download'));
         await user.click(screen.getByText('Export as .csv'));
 
-        const call = (URL.createObjectURL as jest.Mock).mock.calls[0]?.[0] as Blob;
+        const call = (URL.createObjectURL as vi.Mock).mock.calls[0]?.[0] as Blob;
         expect(call).toBeDefined();
         expect(call.type).toBe('text/csv');
       });
@@ -191,7 +191,7 @@ describe('The SQLResultsTable component', () => {
         await user.click(screen.getByText('Download'));
         await user.click(screen.getByText('Export as .json'));
 
-        const call = (URL.createObjectURL as jest.Mock).mock.calls[0]?.[0] as Blob;
+        const call = (URL.createObjectURL as vi.Mock).mock.calls[0]?.[0] as Blob;
         expect(call).toBeDefined();
         expect(call.type).toBe('application/json');
       });
