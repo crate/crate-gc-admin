@@ -1,4 +1,4 @@
-FROM node:22.13.1-slim AS build-deps
+FROM node:24.13.0-slim AS build-deps
 
 # The base node image sets a very verbose log level.
 ENV NPM_CONFIG_LOGLEVEL=warn
@@ -15,9 +15,9 @@ WORKDIR /home/nodeuser/app
 # the docker image on azure to avoid running npm tasks as root
 RUN useradd -ms /bin/bash nodeuser
 RUN chown -R nodeuser:nodeuser /home/nodeuser
-RUN npm install -g pnpm@11.1.1
+RUN corepack enable && corepack prepare pnpm@11.3.0 --activate
 USER nodeuser
-COPY --chown=nodeuser:nodeuser package.json pnpm-lock.yaml .npmrc ./
+COPY --chown=nodeuser:nodeuser package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 ENV NODE_PATH=/home/nodeuser/app/node_modules
 ENV PATH=$PATH:/home/nodeuser/app/node_modules/.bin

@@ -5,7 +5,7 @@ This guide is for developers who already worked on the Yarn-based version of thi
 ## What changed
 
 - Package manager: Yarn -> pnpm
-- Node version: standardized to `22.13.1`
+- Node version: standardized to `24.13.0`
 - Lockfile: `yarn.lock` -> `pnpm-lock.yaml`
 
 ## One-time local migration
@@ -13,10 +13,10 @@ This guide is for developers who already worked on the Yarn-based version of thi
 From the repo root, run:
 
 ```bash
-nvm install 22.13.1
-nvm use 22.13.1
+nvm install 24.13.0
+nvm use 24.13.0
 corepack enable
-corepack prepare pnpm@10.33.4 --activate
+corepack prepare pnpm@11.3.0 --activate
 pnpm --version
 rm -rf node_modules
 pnpm install --frozen-lockfile
@@ -25,7 +25,7 @@ pnpm install --frozen-lockfile
 If `pnpm` is not available after setup, run:
 
 ```bash
-corepack prepare pnpm@10.33.4 --activate
+corepack prepare pnpm@11.3.0 --activate
 ```
 
 ## Daily commands (Yarn -> pnpm)
@@ -39,10 +39,10 @@ corepack prepare pnpm@10.33.4 --activate
 
 ## Important notes for this repo
 
-- Use Node `22.13.1` (see `.nvmrc`).
+- Use Node `24.13.0` (see `.nvmrc`).
 - Do not run `yarn` in this repository after migration.
 - `pnpm-lock.yaml` is the source of truth for dependency resolution.
-- If install-script behavior was previously controlled by Yarn config, check `.npmrc` in this repo for the current script policy.
+- pnpm settings (including `ignoreScripts`) live in `pnpm-workspace.yaml`.
 
 ## Validation checklist after switching
 
@@ -59,12 +59,11 @@ pnpm test
 ## Troubleshooting
 
 - Wrong Node version:
-  - `node -v` should report `v22.13.1`.
-  - Run `nvm use 22.13.1`.
+  - `node -v` should report `v24.13.0`.
+  - Run `nvm use 24.13.0`.
 - Lockfile mismatch errors:
   - Make sure you are not using Yarn.
   - Re-run `pnpm install --frozen-lockfile`.
 - Strange module/link behavior after migration:
   - Remove `node_modules` and reinstall with pnpm.
   - Re-check local linking workflow, since pnpm linking behavior differs from Yarn in some cases.
-
