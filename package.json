@@ -1,6 +1,6 @@
 {
   "name": "@cratedb/crate-gc-admin",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "author": "cratedb",
   "private": false,
   "type": "module",
@@ -15,7 +15,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "engines": {
-    "node": "22.x"
+    "node": "24.x"
   },
   "exports": {
     ".": {
@@ -121,7 +121,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^22.19.17",
+    "@types/node": "^24.0.0",
     "@types/papaparse": "^5.5.2",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
@@ -164,11 +164,5 @@
     "react-dom": "^18.2.0 || ^19.0.0",
     "react-router-dom": "^6.28.0 || ^7.0.0"
   },
-  "pnpm": {
-    "overrides": {
-      "@types/react@*": "19.0.0",
-      "@types/react-dom@*": "19.0.0"
-    }
-  },
-  "packageManager": "pnpm@10.33.4"
+  "packageManager": "pnpm@11.3.0"
 }
