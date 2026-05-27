@@ -2,18 +2,23 @@
 
 ## Unreleased
 
+## 2026-05-27 - 0.25.2
+
+- Fix issue with table policy warning firing to eagerly.
+- Add minimum release age to pnpm config.
+
 ## 2026-05-26 - 0.25.1
 
 - Update node and pnpm versions.
 
 ## 2026-05-22 - 0.25.0
 
-- Migrate from yarn to pnpms
-- Dependabot: Bump react-intl from 7.1.11 to 7.1.14
-- Dependabot: Bump flatted from 3.3.1 to 3.4.2
-- Dependabot: Bump ws from 8.18.0 to 8.20.1
-- Dependabot: Bump fast-uri from 3.0.3 to 3.1.2
-- Dependabot: Bump nginx from 1.29.7 to 1.29.8
+- Migrate from yarn to pnpm.
+- Dependabot: Bump react-intl from 7.1.11 to 7.1.14.
+- Dependabot: Bump flatted from 3.3.1 to 3.4.2.
+- Dependabot: Bump ws from 8.18.0 to 8.20.1.
+- Dependabot: Bump fast-uri from 3.0.3 to 3.1.2.
+- Dependabot: Bump nginx from 1.29.7 to 1.29.8.
 
 ## 2026-05-19 - 0.24.2
 
