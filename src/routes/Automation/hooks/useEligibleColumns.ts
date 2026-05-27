@@ -64,9 +64,13 @@ export default function useEligibleColumns({
     // Update eligible columns if targets changes
     if (targets.length === 0) {
       setEligibleColumns([]);
-    } else {
-      setLoadingColumns(true);
-      getEligibleColumns(gcApi, targets).then(columns => {
+      setLoadingColumns(false);
+      return;
+    }
+
+    setLoadingColumns(true);
+    getEligibleColumns(gcApi, targets)
+      .then(columns => {
         if (columns !== null) {
           const eligibleColumns = Object.keys(columns.eligible_columns).map(
             columnName => {
@@ -81,9 +85,10 @@ export default function useEligibleColumns({
         } else {
           setEligibleColumns([]);
         }
+      })
+      .finally(() => {
+        setLoadingColumns(false);
       });
-    }
-    setLoadingColumns(false);
   }, [targets]);
 
   useEffect(() => {
@@ -133,7 +138,7 @@ export default function useEligibleColumns({
       });
 
     setShowColumnsWarning(!isValid);
-  }, [tables, targets, columnName, loadingColumns]);
+  }, [tables, targets, columnName, loadingColumns, eligibleColumns]);
 
   return {
     eligibleColumns,
