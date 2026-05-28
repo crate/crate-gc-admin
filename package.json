@@ -1,6 +1,6 @@
 {
   "name": "@cratedb/crate-gc-admin",
-  "version": "0.25.2",
+  "version": "0.25.3",
   "author": "cratedb",
   "private": false,
   "type": "module",
@@ -29,7 +29,8 @@
     "./styles/theme.css": "./dist/styles/theme.css"
   },
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "**/mode-cratedb.js"
   ],
   "files": [
     "./dist"
