@@ -1,6 +1,7 @@
 // sort-imports-ignore
 import 'ace-builds/src-min-noconflict/ace';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/src-min-noconflict/mode-sql';
 import 'ace-builds/src-min-noconflict/theme-github';
 
 import {
@@ -23,7 +24,9 @@ import { useSchemaTree } from 'src/swr/jwt';
 import { QueryStatus } from 'types/query';
 import { Button } from 'components';
 import { crateDbCompleter } from './cratedbCompleter';
-import './mode-cratedb';
+import { getCrateDbMode, registerCrateDbMode } from './mode-cratedb';
+
+registerCrateDbMode();
 
 export type SQLEditorProps = {
   value?: string | undefined | null;
@@ -357,8 +360,12 @@ function SQLEditor({
               height="100%"
               highlightActiveLine
               onChange={onValueChange}
-              mode="cratedb"
+              mode="sql"
               onLoad={editor => {
+                const CrateDbMode = getCrateDbMode();
+                if (CrateDbMode) {
+                  editor.getSession().setMode(new CrateDbMode());
+                }
                 editor.completers = [crateDbCompleter];
                 setAce(editor);
               }}
