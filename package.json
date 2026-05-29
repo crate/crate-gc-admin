@@ -50,7 +50,7 @@
     "@tanstack/react-table": "^8.21.3",
     "ace-builds": "^1.43.6",
     "antd": "^5.29.3",
-    "axios": "^1.15.2",
+    "axios": "^1.16.0",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
