@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 2026-06-01 - 0.25.4
+
+- Dependabot updates.
+
+## 2026-05-28 - 0.25.3
+
+- Fix issue with Ace editor attempting to load external files already bundled.
+
 ## 2026-05-27 - 0.25.2
 
 - Fix issue with table policy warning firing to eagerly.
