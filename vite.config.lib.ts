@@ -1,17 +1,17 @@
 import preserveDirectives from 'rollup-preserve-directives';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig, type Plugin } from 'vite';
-import react from '@vitejs/plugin-react-swc';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import packageJson from './package.json';
+import { sharedReactPlugin } from './vite.config.base';
 
 export default defineConfig(() => {
   return {
     // depending on your application, base can also be "/"
     base: '',
     plugins: [
-      react(),
+      sharedReactPlugin,
       viteTsconfigPaths(),
       dts({
         tsconfigPath: 'tsconfig.build.json',

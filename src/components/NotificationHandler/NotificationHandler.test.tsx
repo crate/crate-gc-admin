@@ -1,18 +1,16 @@
-import { disableConsole, flushAntdPortals, render, screen, waitFor } from 'test/testUtils';
+import { disableConsole, render, screen, waitFor, withAntdPortalCleanup } from 'test/testUtils';
 import NotificationHandler from './NotificationHandler';
 import useSessionStore from 'state/session';
 
 const setup = () => render(<NotificationHandler />);
 
 describe('The NotificationHandler component', () => {
+  withAntdPortalCleanup();
+
   beforeAll(() => {
     // disabled the console here as the notifications code will be
     // refactored entirely in the near future
     disableConsole('error');
-  });
-
-  afterEach(async () => {
-    await flushAntdPortals();
   });
 
   it('renders nothing if there is no notification to show', () => {
