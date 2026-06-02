@@ -1,7 +1,11 @@
 const actWithFakeTimers = (action: () => void) => {
   vi.useFakeTimers();
-  action();
-  vi.runAllTimers();
+  try {
+    action();
+    vi.runAllTimers();
+  } finally {
+    vi.useRealTimers();
+  }
 };
 
 export default actWithFakeTimers;

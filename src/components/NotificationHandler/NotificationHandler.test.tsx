@@ -1,6 +1,4 @@
-import { notification } from 'antd';
-import { act } from 'react';
-import { disableConsole, render, screen, waitFor } from 'test/testUtils';
+import { disableConsole, flushAntdPortals, render, screen, waitFor } from 'test/testUtils';
 import NotificationHandler from './NotificationHandler';
 import useSessionStore from 'state/session';
 
@@ -14,16 +12,7 @@ describe('The NotificationHandler component', () => {
   });
 
   afterEach(async () => {
-    // Flush rc-motion's leave animation so the notification is fully gone
-    // before the next test starts, preventing stale elements from interfering.
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    await act(async () => {
-      notification.destroy();
-    });
-    await act(async () => { vi.runAllTimers(); });
-    await act(async () => { vi.runAllTimers(); });
-    await act(async () => { vi.runAllTimers(); });
-    vi.useRealTimers();
+    await flushAntdPortals();
   });
 
   it('renders nothing if there is no notification to show', () => {

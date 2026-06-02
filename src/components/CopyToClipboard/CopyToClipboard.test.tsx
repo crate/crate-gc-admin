@@ -1,5 +1,5 @@
 import CopyToClipboard, { CopyToClipboardProps } from './CopyToClipboard';
-import { render, screen } from 'test/testUtils';
+import { expectAntdMessage, flushAntdPortals, render, screen } from 'test/testUtils';
 
 const defaultProps: CopyToClipboardProps = {
   textToCopy: 'example-string',
@@ -15,6 +15,10 @@ const setup = (props: Partial<CopyToClipboardProps> = {}) => {
 };
 
 describe('the CopyToClipboard component', () => {
+  afterEach(async () => {
+    await flushAntdPortals();
+  });
+
   it('displays the child contents', () => {
     setup();
 
@@ -44,7 +48,7 @@ describe('the CopyToClipboard component', () => {
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));
 
-      expect((await screen.findAllByText('Copied')).length).toBeGreaterThan(0);
+      await expectAntdMessage('Copied');
     });
 
     it('calls the additionalClickHandler callback', async () => {
@@ -53,9 +57,7 @@ describe('the CopyToClipboard component', () => {
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));
 
-      // findAllByText handles the case where the previous test's "Copied"
-      // message is still animating out alongside the new one.
-      expect((await screen.findAllByText('Copied')).length).toBeGreaterThan(0);
+      await expectAntdMessage('Copied');
       expect(additionalClickHandlerSpy).toHaveBeenCalled();
     });
   });
