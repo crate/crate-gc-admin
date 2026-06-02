@@ -4,6 +4,7 @@ import actWithFakeTimers from './actWithFakeTimers';
 import disableConsole from './disableConsole';
 import { flushAntdPortals } from './flushAntdPortals';
 import { expectAntdMessage } from './expectAntdMessage';
+import { withAntdPortalCleanup } from './withAntdPortalCleanup';
 
 export * from './renderWithTestWrapper';
 export * from './treeUtils';
@@ -15,4 +16,5 @@ export {
   expectAntdMessage,
   flushAntdPortals,
   getRequestSpy,
+  withAntdPortalCleanup,
 };
