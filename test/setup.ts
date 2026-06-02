@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/vitest';
 import 'whatwg-fetch';
 import { type Mock } from 'vitest';
 import { configure, cleanup, act } from '@testing-library/react';
-import { message, notification } from 'antd';
 
 // React 19 test mode: treat all state updates (incl. timer callbacks) as inside act().
 // Without this, rc-motion's setTimeout-based animation updates are deferred and
@@ -12,22 +11,6 @@ import { message, notification } from 'antd';
 (global as any).IS_REACT_ACT_ENVIRONMENT = true;
 
 configure({ asyncUtilTimeout: 5000 });
-beforeEach(async () => {
-  // Destroy lingering Ant Design messages/notifications from previous tests.
-  // rc-motion's leave animations use setTimeout; flush them with fake timers so
-  // the old elements are fully removed before the next test starts.
-  vi.useFakeTimers({ shouldAdvanceTime: true });
-  await act(async () => {
-    message.destroy();
-    notification.destroy();
-  });
-  // Three passes: each covers one rc-motion step (rAFs → STEP_ACTIVE → deadline
-  // → goMotionEnd → antd removes message → React unmounts element).
-  await act(async () => { vi.runAllTimers(); });
-  await act(async () => { vi.runAllTimers(); });
-  await act(async () => { vi.runAllTimers(); });
-  vi.useRealTimers();
-});
 afterEach(cleanup);
 import { createRoot } from 'react-dom/client';
 import { unstableSetRender } from 'antd';
