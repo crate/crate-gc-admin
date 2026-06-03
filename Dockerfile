@@ -1,4 +1,4 @@
-FROM node:24.13.0-slim AS build-deps
+FROM node:26.3.0-slim AS build-deps
 
 # The base node image sets a very verbose log level.
 ENV NPM_CONFIG_LOGLEVEL=warn
