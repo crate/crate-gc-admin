@@ -1,7 +1,7 @@
 import Checkbox, { CheckboxProps } from './Checkbox';
 import { render, screen } from 'test/testUtils';
 
-const onClickSpy = vi.fn();
+const onClickSpy = jest.fn();
 
 const defaultProps: CheckboxProps = {
   onChange: onClickSpy,

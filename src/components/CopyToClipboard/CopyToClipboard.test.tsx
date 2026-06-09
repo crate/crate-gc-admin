@@ -48,7 +48,7 @@ describe('the CopyToClipboard component', () => {
     });
 
     it('calls the additionalClickHandler callback', async () => {
-      const additionalClickHandlerSpy = vi.fn();
+      const additionalClickHandlerSpy = jest.fn();
       const { user } = setup({ additionalClickHandler: additionalClickHandlerSpy });
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));

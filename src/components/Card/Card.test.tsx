@@ -2,7 +2,7 @@ import { screen, render } from 'test/testUtils';
 import { CardProps } from './Card';
 import Card from '.';
 
-const onClickSpy = vi.fn();
+const onClickSpy = jest.fn();
 
 const defaultProps: CardProps = {
   title: 'Title',

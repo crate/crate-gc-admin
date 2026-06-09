@@ -85,7 +85,7 @@ describe('The CrateTabsShad component', () => {
 
   describe('when changing tabs', () => {
     it('calls the onChange prop with the new tab key', async () => {
-      const onChange = vi.fn();
+      const onChange = jest.fn();
       const { user } = setup({ onChange });
 
       const tab2 = screen.getByRole('tab', { name: 'Tab 2' });

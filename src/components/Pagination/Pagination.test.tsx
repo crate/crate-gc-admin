@@ -1,7 +1,7 @@
 import Pagination, { PaginationProps } from './Pagination';
 import { render, screen } from 'test/testUtils';
 
-const onPageChangeSpy = vi.fn();
+const onPageChangeSpy = jest.fn();
 
 const defaultProps: PaginationProps = {
   pageSize: 100,
@@ -10,7 +10,7 @@ const defaultProps: PaginationProps = {
   className: 'pagination',
   testId: 'pagination',
   onPageChange: onPageChangeSpy,
-  onPageSizeChange: vi.fn(),
+  onPageSizeChange: jest.fn(),
 };
 
 const setup = (props: Partial<PaginationProps> = {}) => {

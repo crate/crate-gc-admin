@@ -1,7 +1,7 @@
 import { render, screen } from 'test/testUtils';
 import Button, { ButtonProps } from './Button';
 
-const onClickSpy = vi.fn();
+const onClickSpy = jest.fn();
 
 const defaultProps: ButtonProps = {
   onClick: onClickSpy,

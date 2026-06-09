@@ -4,7 +4,7 @@ import QueryStackTraceModal, {
 } from './QueryStackTraceModal';
 import { render, screen } from 'test/testUtils';
 
-const onCloseSpy = vi.fn();
+const onCloseSpy = jest.fn();
 
 const defaultProps: QueryStackTraceModalProps = {
   modalTitle: 'Modal Title',

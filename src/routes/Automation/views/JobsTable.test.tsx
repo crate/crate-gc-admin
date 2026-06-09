@@ -12,7 +12,7 @@ import { customScheduledJobGetResponse } from 'test/msw';
 import { Job, JobLog } from 'types';
 import server from 'test/msw';
 
-const onDeleteSpy = vi.fn();
+const onDeleteSpy = jest.fn();
 
 const setup = (onDeleteJob?: () => void) => {
   return render(<JobsTable onDeleteJob={onDeleteJob} />);

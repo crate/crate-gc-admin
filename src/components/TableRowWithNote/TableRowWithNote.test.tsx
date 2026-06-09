@@ -2,7 +2,7 @@ import TableRowWithNote, { TableRowWithNoteProps } from './TableRowWithNote';
 import { render, screen, within, fireEvent } from 'test/testUtils';
 import Table from 'components/Table';
 
-const setHoveredRowGroupMock = vi.fn();
+const setHoveredRowGroupMock = jest.fn();
 
 const defaultProps: TableRowWithNoteProps = {
   rowId: '1',
