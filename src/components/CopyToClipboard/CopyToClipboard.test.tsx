@@ -1,5 +1,5 @@
 import CopyToClipboard, { CopyToClipboardProps } from './CopyToClipboard';
-import { expectAntdMessage, render, screen, withAntdPortalCleanup } from 'test/testUtils';
+import { expectAntdMessage, flushAntdPortals, render, screen } from 'test/testUtils';
 
 const defaultProps: CopyToClipboardProps = {
   textToCopy: 'example-string',
@@ -15,6 +15,10 @@ const setup = (props: Partial<CopyToClipboardProps> = {}) => {
 };
 
 describe('the CopyToClipboard component', () => {
+  afterEach(async () => {
+    await flushAntdPortals();
+  });
+
   it('displays the child contents', () => {
     setup();
 
@@ -28,8 +32,6 @@ describe('the CopyToClipboard component', () => {
   });
 
   describe('when the user clicks the button', () => {
-    withAntdPortalCleanup();
-
     it('copies the text to the clipboard', async () => {
       const { user } = setup();
       const writeTextMock = vi

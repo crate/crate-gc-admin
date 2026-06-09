@@ -97,6 +97,12 @@
     "test:ui": "vitest --ui",
     "lint": "eslint --cache --ext=.ts --ext=.tsx src/"
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",

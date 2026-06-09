@@ -2,9 +2,8 @@ import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
 import _ from 'lodash';
 import SQLResultsTable, { SQLResultsTableProps } from './SQLResultsTable';
 import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
-import { expectAntdMessage, render, screen, withAntdPortalCleanup } from 'test/testUtils';
+import { expectAntdMessage, flushAntdPortals, render, screen } from 'test/testUtils';
 import { QueryResult } from 'types/query';
-import type { Mock } from 'vitest';
 
 const cols = _.zip(useSchemaTreeMock.col_types, useSchemaTreeMock.cols).flatMap(
   arr => {
@@ -36,8 +35,9 @@ const setup = (props?: Partial<SQLResultsTableProps>) => {
 };
 
 describe('The SQLResultsTable component', () => {
-  afterEach(() => {
+  afterEach(async () => {
     onDownloadResultMock.mockReset();
+    await flushAntdPortals();
   });
 
   it('displays the numbers of rows', () => {
@@ -110,8 +110,6 @@ describe('The SQLResultsTable component', () => {
   });
 
   describe('the Copy button', () => {
-    withAntdPortalCleanup();
-
     it('copies the results to the clipboard', async () => {
       const { user } = setup();
       const writeTextMock = vi
@@ -160,7 +158,7 @@ describe('The SQLResultsTable component', () => {
         await user.click(screen.getByText('Download'));
         await user.click(screen.getByText('Export as .csv'));
 
-        const call = (URL.createObjectURL as Mock).mock.calls[0]?.[0] as Blob;
+        const call = (URL.createObjectURL as vi.Mock).mock.calls[0]?.[0] as Blob;
         expect(call).toBeDefined();
         expect(call.type).toBe('text/csv');
       });
@@ -193,7 +191,7 @@ describe('The SQLResultsTable component', () => {
         await user.click(screen.getByText('Download'));
         await user.click(screen.getByText('Export as .json'));
 
-        const call = (URL.createObjectURL as Mock).mock.calls[0]?.[0] as Blob;
+        const call = (URL.createObjectURL as vi.Mock).mock.calls[0]?.[0] as Blob;
         expect(call).toBeDefined();
         expect(call.type).toBe('application/json');
       });

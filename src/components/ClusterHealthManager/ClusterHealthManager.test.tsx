@@ -33,10 +33,19 @@ const mockNodeStatus = (rows: [][]) => {
 };
 
 describe('ClusterHealthManager', () => {
+  beforeAll(() => {
+    server.listen();
+  });
+
   afterEach(() => {
+    server.resetHandlers();
     act(() => {
       useClusterHealthStore.setState({ clusterHealth: {} });
     });
+  });
+
+  afterAll(() => {
+    server.close();
   });
 
   describe('load', () => {

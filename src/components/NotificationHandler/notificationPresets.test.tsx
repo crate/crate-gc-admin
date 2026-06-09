@@ -1,14 +1,18 @@
 import { notification } from 'antd';
-import { actWithFakeTimers } from 'test/testUtils';
+import { actWithFakeTimers, disableConsole } from 'test/testUtils';
 import { infoNotification } from './notificationPresets';
 
 describe('the notification presets', () => {
-  const notificationSpy = vi.spyOn(notification, 'open').mockImplementation(() => {
-    // Config-only tests — no portal render (avoids rc-motion act() warnings).
+  const notificationSpy = vi.spyOn(notification, 'open');
+
+  beforeAll(() => {
+    // disabled the console here as the notifications code will be
+    // refactored entirely in the near future
+    disableConsole('error');
   });
 
   afterEach(() => {
-    notificationSpy.mockClear();
+    notificationSpy.mockReset();
   });
 
   afterAll(() => {

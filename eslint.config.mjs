@@ -46,7 +46,8 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.vitest,
+        ...globals.jest,
+        expect: true,
         __DEV__: true,
       },
 

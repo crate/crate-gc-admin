@@ -7,7 +7,7 @@ import {
 } from 'test/__mocks__/query';
 import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
 import { act } from 'react';
-import { render, screen, waitFor, withAntdPortalCleanup, within } from 'test/testUtils';
+import { flushAntdPortals, render, screen, waitFor, within } from 'test/testUtils';
 import SQLEditorSchemaTree from './SQLEditorSchemaTree';
 import { postFetch } from 'src/swr/jwt/useSchemaTree';
 
@@ -52,8 +52,9 @@ const setup = async () => {
 
 describe('The SQLEditorSchemaTree component', () => {
   beforeEach(() => { vi.useFakeTimers({ shouldAdvanceTime: true }); });
-  afterEach(() => {
+  afterEach(async () => {
     vi.useRealTimers();
+    await flushAntdPortals();
   });
 
   describe('the schemas', () => {
@@ -137,8 +138,6 @@ describe('The SQLEditorSchemaTree component', () => {
     });
 
     describe('the context menu', () => {
-      withAntdPortalCleanup();
-
       describe('the Copy SELECT button', () => {
         it('copies the SELECT statement', async () => {
           const schema = schemaTableColumns.find(
