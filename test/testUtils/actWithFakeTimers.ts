@@ -1,7 +1,7 @@
 const actWithFakeTimers = (action: () => void) => {
-  vi.useFakeTimers();
+  jest.useFakeTimers();
   action();
-  vi.runAllTimers();
+  jest.runAllTimers();
 };
 
 export default actWithFakeTimers;
