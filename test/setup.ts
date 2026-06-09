@@ -105,33 +105,11 @@ global.window.scrollTo = vi.fn();
 
 // URL.createObjectURL / revokeObjectURL are not implemented in jsdom.
 // Used by triggerDownload in SQLResultsTable and similar programmatic downloads.
-global.URL.createObjectURL = vi.fn(() => 'blob:mock');
-global.URL.revokeObjectURL = vi.fn();
+global.URL.createObjectURL = jest.fn(() => 'blob:mock');
+global.URL.revokeObjectURL = jest.fn();
 
-// rc-motion (Ant Design animations) calls window.getComputedStyle(el, '::before')
-// to detect CSS animation durations. JSDOM doesn't support pseudo-elements and logs
-// "Not implemented" — return a no-animation stub to prevent the warning.
-const nativeGetComputedStyle = window.getComputedStyle.bind(window);
-window.getComputedStyle = (element: Element, pseudoElement?: string | null) => {
-  if (pseudoElement) {
-    return { getPropertyValue: () => '', animationName: 'none', animationDuration: '0s' } as unknown as CSSStyleDeclaration;
-  }
-  return nativeGetComputedStyle(element);
-};
-
-// Prevent "Not implemented: navigation to another Document" warnings when tests click
-// <a href="data:..."> download links (e.g. CSV/JSON exports in SQLResultsTable).
-// preventDefault stops JSDOM's navigation attempt; React onClick handlers still fire.
-document.addEventListener(
-  'click',
-  event => {
-    const el = event.target;
-    if (el instanceof Element && el.closest('a')?.getAttribute('href')?.startsWith('data:')) {
-      event.preventDefault();
-    }
-  },
-  { capture: true },
-);
+// Prevent programmatic a.click() calls from triggering jsdom navigation.
+HTMLAnchorElement.prototype.click = jest.fn();
 
 Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage,
@@ -139,7 +117,7 @@ Object.defineProperty(window, 'localStorage', {
 
 const originalConsoleError = console.error;
 beforeAll(() => {
-  vi.spyOn(console, 'error').mockImplementation((...args: unknown[]) => {
+  jest.spyOn(console, 'error').mockImplementation((...args) => {
     if (
       typeof args[0] === 'string' &&
       args[0].includes('trigger element and popup element should in same shadow root')
