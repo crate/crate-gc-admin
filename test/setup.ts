@@ -45,7 +45,6 @@ vi.mock('zustand', async () => {
 
 import mockLocalStorage from '__mocks__/localStorageMock';
 import { useLocation } from '__mocks__/react-router-dom';
-import { storeResetFns } from '../__mocks__/zustand';
 import server from './msw';
 
 class ResizeObserver {
@@ -109,10 +108,5 @@ beforeEach(() => {
 afterEach(() => {
   server.resetHandlers();
   vi.clearAllMocks();
-});
-afterEach(() => {
-  act(() => {
-    storeResetFns.forEach(resetFn => resetFn());
-  });
 });
 afterAll(() => server.close());
