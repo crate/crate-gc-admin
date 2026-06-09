@@ -12,7 +12,7 @@ import { policyErrorLog, policyLog } from 'test/__mocks__/policiesLogs';
 import server, { customAllLogsGetResponse } from 'test/msw';
 import { JobLogWithName, PolicyLogWithName } from 'types';
 import Logs, { JOBS_LOGS_TABLE_PAGE_SIZE } from './Logs';
-import { render, screen, within } from 'test/testUtils';
+import { render, screen, waitFor, within } from 'test/testUtils';
 
 const setup = () => {
   return render(<Logs />);
@@ -269,7 +269,16 @@ describe('The "Logs" component', () => {
 
             await user.click(within(screen.getByRole('dialog')).getByText('OK'));
 
-            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+            // In jsdom, rc-motion's transitionend never fires so the leave
+            // animation hangs in leave-active. Verify the close was triggered
+            // by checking the dialog entered its leave animation.
+            await waitFor(() => {
+              const dialog = screen.queryByRole('dialog');
+              if (dialog) {
+                expect(dialog.className).toMatch(/leave/);
+              }
+              // If dialog is already gone, the test also passes.
+            });
           });
         });
       });

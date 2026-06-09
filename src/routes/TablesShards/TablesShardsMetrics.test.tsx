@@ -1,20 +1,11 @@
 import TablesShardsMetrics from './TablesShardsMetrics';
 import { render, screen, within } from 'test/testUtils';
-import server from 'test/msw';
 
 const setup = () => {
   return render(<TablesShardsMetrics />);
 };
 
 describe('the TablesShardsMetrics component', () => {
-  beforeAll(() => {
-    server.listen();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
   describe('the statistics panel', () => {
     it('displays the cluster health', async () => {
       setup();

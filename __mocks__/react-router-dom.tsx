@@ -1,11 +1,12 @@
 import React, { PropsWithChildren } from 'react';
+import type { Mock } from 'vitest';
 
-export const navigateMock = jest.fn();
+export const navigateMock: Mock = vi.fn();
 
-export const useLocation = jest.fn();
-export const useRouteMatch = jest.fn();
-export const useNavigate = () => navigateMock;
-export const useParams = jest.fn();
+export const useLocation: Mock = vi.fn();
+export const useRouteMatch: Mock = vi.fn();
+export const useNavigate = (): Mock => navigateMock;
+export const useParams: Mock = vi.fn();
 export const withRouter = (children: React.ReactNode) => children;
 export const Route = ({
   path = 'index',

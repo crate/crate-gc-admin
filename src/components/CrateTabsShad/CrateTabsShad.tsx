@@ -27,7 +27,7 @@ function CrateTabsShad({
     if (initialActiveTab && items.map(item => item.key).includes(initialActiveTab)) {
       return initialActiveTab;
     }
-    return items[0].key;
+    return items[0]?.key ?? '';
   };
 
   const [activeTab, setActiveTab] = useState<string>(getDefaultTab);
@@ -40,15 +40,15 @@ function CrateTabsShad({
     setActiveTab(value);
   };
 
-  // ensure that the active tab is a valid option
+  // ensure that the active tab is a valid option when items change
   useEffect(() => {
     if (items) {
       const keys = items.map(item => item.key);
-      if (!keys.includes(activeTab!)) {
+      if (!keys.includes(activeTab)) {
         setActiveTab(getDefaultTab());
       }
     }
-  }, [activeTab, items]);
+  }, [items]);
 
   return (
     <Tabs

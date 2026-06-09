@@ -1,5 +1,5 @@
 import CopyToClipboard, { CopyToClipboardProps } from './CopyToClipboard';
-import { render, screen } from 'test/testUtils';
+import { expectAntdMessage, render, screen, withAntdPortalCleanup } from 'test/testUtils';
 
 const defaultProps: CopyToClipboardProps = {
   textToCopy: 'example-string',
@@ -28,9 +28,11 @@ describe('the CopyToClipboard component', () => {
   });
 
   describe('when the user clicks the button', () => {
+    withAntdPortalCleanup();
+
     it('copies the text to the clipboard', async () => {
       const { user } = setup();
-      const writeTextMock = jest
+      const writeTextMock = vi
         .spyOn(navigator.clipboard, 'writeText')
         .mockResolvedValue();
 
@@ -44,16 +46,16 @@ describe('the CopyToClipboard component', () => {
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));
 
-      expect(await screen.findByText('Copied')).toBeInTheDocument();
+      await expectAntdMessage('Copied');
     });
 
     it('calls the additionalClickHandler callback', async () => {
-      const additionalClickHandlerSpy = jest.fn();
+      const additionalClickHandlerSpy = vi.fn();
       const { user } = setup({ additionalClickHandler: additionalClickHandlerSpy });
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));
 
-      expect(await screen.findByText('Copied')).toBeInTheDocument();
+      await expectAntdMessage('Copied');
       expect(additionalClickHandlerSpy).toHaveBeenCalled();
     });
   });

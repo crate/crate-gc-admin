@@ -1,19 +1,16 @@
-import { notification } from 'antd';
-import { disableConsole, render, screen, waitFor } from 'test/testUtils';
+import { disableConsole, render, screen, waitFor, withAntdPortalCleanup } from 'test/testUtils';
 import NotificationHandler from './NotificationHandler';
 import useSessionStore from 'state/session';
 
 const setup = () => render(<NotificationHandler />);
 
 describe('The NotificationHandler component', () => {
+  withAntdPortalCleanup();
+
   beforeAll(() => {
     // disabled the console here as the notifications code will be
     // refactored entirely in the near future
     disableConsole('error');
-  });
-
-  afterEach(() => {
-    notification.destroy();
   });
 
   it('renders nothing if there is no notification to show', () => {
@@ -52,11 +49,13 @@ describe('The NotificationHandler component', () => {
         notification: { type: 'error', message: 'this is an error' },
       });
 
-      const { container } = setup();
+      setup();
 
       await waitFor(() => {
+        // Search document rather than container.nextElementSibling — a leftover
+        // warn notification animating out may shift sibling positions.
         expect(
-          container.nextElementSibling?.querySelector('.cui-notification-error'),
+          document.querySelector('.cui-notification-error'),
         ).toBeInTheDocument();
       });
 
@@ -70,11 +69,11 @@ describe('The NotificationHandler component', () => {
         notification: { message: 'a message without a type' },
       });
 
-      const { container } = setup();
+      setup();
 
       await waitFor(() => {
         expect(
-          container.nextElementSibling?.querySelector('.cui-notification-info'),
+          document.querySelector('.cui-notification-info'),
         ).toBeInTheDocument();
       });
 

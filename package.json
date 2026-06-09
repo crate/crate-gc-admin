@@ -82,8 +82,8 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
-    "build-lib": "tsc && vite build --config vite.config.lib.ts && pnpm run build-lib-css-entries",
+    "build": "tsc -p tsconfig.build.json && vite build",
+    "build-lib": "tsc -p tsconfig.build.json && vite build --config vite.config.lib.ts && pnpm run build-lib-css-entries",
     "build-lib-css-entries": "mkdir -p dist/styles && tailwindcss -i ./src/styles/components.css -o ./dist/styles/components.css --minify && pnpm run sync-theme-css",
     "sync-theme-css": "cp ./src/styles/theme.css ./dist/styles/theme.css && printf \"@import './styles/components.css';\\n@import './styles/theme.css';\\n\" > ./dist/style.css",
     "build-lib-css-components-watch": "mkdir -p dist/styles && tailwindcss -i ./src/styles/components.css -o ./dist/styles/components.css --watch --minify",
@@ -91,14 +91,11 @@
     "build-lib-watch": "pnpm run sync-theme-css && concurrently -k -n vite,css,theme \"vite build --config vite.config.lib.ts --watch\" \"pnpm run build-lib-css-components-watch\" \"pnpm run build-lib-theme-watch\"",
     "check-types": "tsc --noemit",
     "prepack": "pnpm run build-lib",
-    "test": "jest",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
     "lint": "eslint --cache --ext=.ts --ext=.tsx src/"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [

@@ -1,8 +1,8 @@
 import SubmitButtonGroup, { SubmitButtonGroupProps } from './SubmitButtonGroup';
 import { render, within, screen } from 'test/testUtils';
 
-const onCancelMock = jest.fn();
-const onSubmitMock = jest.fn();
+const onCancelMock = vi.fn();
+const onSubmitMock = vi.fn();
 
 const defaultProps: SubmitButtonGroupProps = {
   cancelLabel: 'Cancel',

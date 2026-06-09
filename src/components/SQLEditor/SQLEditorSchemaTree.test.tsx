@@ -6,12 +6,19 @@ import {
   getViewsDDLQueryResult,
 } from 'test/__mocks__/query';
 import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
-import { render, screen, waitFor, within } from 'test/testUtils';
+import { act } from 'react';
+import { render, screen, waitFor, withAntdPortalCleanup, within } from 'test/testUtils';
 import SQLEditorSchemaTree from './SQLEditorSchemaTree';
 import { postFetch } from 'src/swr/jwt/useSchemaTree';
 
 const schemaTableColumns = postFetch(useSchemaTreeMock);
 
+// rc-motion (Ant Design Tree) schedules animation state updates via setTimeout.
+// vi.runAllTimers() inside act() fires the motionDeadline synchronously,
+// committing onMotionEnd (which updates prevData) before the next expansion click.
+// shouldAdvanceTime: true keeps real-time polling in waitFor/SWR working normally.
+// A second runAllTimers() after waitFor flushes onMotionEnd's setPrevData so it
+// is committed before the next click (needed for 3-level expansion).
 const triggerTreeItem = async (
   user: UserEvent,
   text: string,
@@ -22,11 +29,12 @@ const triggerTreeItem = async (
     .closest('.ant-tree-treenode')
     ?.getElementsByClassName('ant-tree-switcher')[0];
   await user.click(triggerIcon!);
+  await act(async () => { vi.runAllTimers(); });
   if (textToWait) {
-    // wait for first element
     await waitFor(() => {
       expect(screen.getByText(textToWait)).toBeInTheDocument();
     });
+    await act(async () => { vi.runAllTimers(); });
   }
 };
 
@@ -43,6 +51,11 @@ const setup = async () => {
 };
 
 describe('The SQLEditorSchemaTree component', () => {
+  beforeEach(() => { vi.useFakeTimers({ shouldAdvanceTime: true }); });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('the schemas', () => {
     it('displays schema name with system tag if table is a system table', async () => {
       await setup();
@@ -85,7 +98,7 @@ describe('The SQLEditorSchemaTree component', () => {
 
     it('clicking on names copies the qualified table name', async () => {
       const { user } = await setup();
-      const writeTextMock = jest
+      const writeTextMock = vi
         .spyOn(navigator.clipboard, 'writeText')
         .mockResolvedValue();
 
@@ -124,6 +137,8 @@ describe('The SQLEditorSchemaTree component', () => {
     });
 
     describe('the context menu', () => {
+      withAntdPortalCleanup();
+
       describe('the Copy SELECT button', () => {
         it('copies the SELECT statement', async () => {
           const schema = schemaTableColumns.find(
@@ -132,7 +147,7 @@ describe('The SQLEditorSchemaTree component', () => {
           const table = schema.tables[0];
 
           const { user } = await setup();
-          const writeTextMock = jest
+          const writeTextMock = vi
             .spyOn(navigator.clipboard, 'writeText')
             .mockResolvedValue();
 
@@ -170,7 +185,7 @@ describe('The SQLEditorSchemaTree component', () => {
           )!;
 
           const { user } = await setup();
-          const writeTextMock = jest
+          const writeTextMock = vi
             .spyOn(navigator.clipboard, 'writeText')
             .mockResolvedValue();
 
@@ -206,7 +221,7 @@ describe('The SQLEditorSchemaTree component', () => {
           )!;
 
           const { user } = await setup();
-          const writeTextMock = jest
+          const writeTextMock = vi
             .spyOn(navigator.clipboard, 'writeText')
             .mockResolvedValue();
 
@@ -309,7 +324,7 @@ describe('The SQLEditorSchemaTree component', () => {
 
     it('clicking on column names copies the name', async () => {
       const { user } = await setup();
-      const writeTextMock = jest
+      const writeTextMock = vi
         .spyOn(navigator.clipboard, 'writeText')
         .mockResolvedValue();
 
@@ -331,7 +346,7 @@ describe('The SQLEditorSchemaTree component', () => {
 
     it('clicking on subcolumn names copies the name', async () => {
       const { user } = await setup();
-      const writeTextMock = jest
+      const writeTextMock = vi
         .spyOn(navigator.clipboard, 'writeText')
         .mockResolvedValue();
 
