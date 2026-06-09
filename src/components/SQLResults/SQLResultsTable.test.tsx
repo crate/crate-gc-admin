@@ -111,7 +111,7 @@ describe('The SQLResultsTable component', () => {
   describe('the Copy button', () => {
     it('copies the results to the clipboard', async () => {
       const { user } = setup();
-      const writeTextMock = vi
+      const writeTextMock = jest
         .spyOn(navigator.clipboard, 'writeText')
         .mockResolvedValue();
 

@@ -12,7 +12,7 @@ import { policyErrorLog, policyLog } from 'test/__mocks__/policiesLogs';
 import server, { customAllLogsGetResponse } from 'test/msw';
 import { JobLogWithName, PolicyLogWithName } from 'types';
 import Logs, { JOBS_LOGS_TABLE_PAGE_SIZE } from './Logs';
-import { render, screen, waitFor, within } from 'test/testUtils';
+import { render, screen, within } from 'test/testUtils';
 
 const setup = () => {
   return render(<Logs />);
@@ -269,9 +269,7 @@ describe('The "Logs" component', () => {
 
             await user.click(within(screen.getByRole('dialog')).getByText('OK'));
 
-            await waitFor(() => {
-              expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-            });
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
           });
         });
       });
