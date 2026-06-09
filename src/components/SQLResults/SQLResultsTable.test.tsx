@@ -2,7 +2,7 @@ import { CRATEDB_ERROR_CODES_DOCS } from 'constants/defaults';
 import _ from 'lodash';
 import SQLResultsTable, { SQLResultsTableProps } from './SQLResultsTable';
 import { useSchemaTreeMock } from 'test/__mocks__/useSchemaTreeMock';
-import { expectAntdMessage, flushAntdPortals, render, screen } from 'test/testUtils';
+import { render, screen } from 'test/testUtils';
 import { QueryResult } from 'types/query';
 
 const cols = _.zip(useSchemaTreeMock.col_types, useSchemaTreeMock.cols).flatMap(
@@ -35,9 +35,8 @@ const setup = (props?: Partial<SQLResultsTableProps>) => {
 };
 
 describe('The SQLResultsTable component', () => {
-  afterEach(async () => {
+  afterEach(() => {
     onDownloadResultMock.mockReset();
-    await flushAntdPortals();
   });
 
   it('displays the numbers of rows', () => {
@@ -126,7 +125,8 @@ describe('The SQLResultsTable component', () => {
 
       await user.click(screen.getByText('Copy'));
 
-      await expectAntdMessage('Copied');
+      // getAllByText handles the case where a previous "Copied" message is still animating out.
+      expect(screen.getAllByText('Copied').length).toBeGreaterThan(0);
     });
   });
 
