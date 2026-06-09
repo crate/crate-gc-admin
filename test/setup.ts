@@ -119,17 +119,6 @@ window.getComputedStyle = (element: Element, pseudoElement?: string | null) => {
   return nativeGetComputedStyle(element);
 };
 
-// Suppress React 19 "not wrapped in act()" warnings that come from Ant Design's
-// message/notification leave animations. rc-motion waits for CSS `animationend`
-// events that JSDOM never fires (no motionDeadline set on antd message), so state
-// updates from the stalled animation occasionally fire after a test ends. The same
-// suppression is applied per-file in NotificationHandler.test.tsx.
-const nativeConsoleError = console.error.bind(console);
-console.error = (...args: unknown[]) => {
-  if (typeof args[0] === 'string' && args[0].includes('was not wrapped in act(')) return;
-  nativeConsoleError(...args);
-};
-
 // Prevent "Not implemented: navigation to another Document" warnings when tests click
 // <a href="data:..."> download links (e.g. CSV/JSON exports in SQLResultsTable).
 // preventDefault stops JSDOM's navigation attempt; React onClick handlers still fire.
