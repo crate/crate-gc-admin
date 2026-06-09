@@ -125,8 +125,7 @@ describe('The SQLResultsTable component', () => {
 
       await user.click(screen.getByText('Copy'));
 
-      // getAllByText handles the case where a previous "Copied" message is still animating out.
-      expect(screen.getAllByText('Copied').length).toBeGreaterThan(0);
+      expect(screen.getByText('Copied')).toBeInTheDocument();
     });
   });
 

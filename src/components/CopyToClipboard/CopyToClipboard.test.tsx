@@ -53,9 +53,7 @@ describe('the CopyToClipboard component', () => {
 
       await user.click(screen.getByTestId('copy-to-clipboard-button'));
 
-      // findAllByText handles the case where the previous test's "Copied"
-      // message is still animating out alongside the new one.
-      expect((await screen.findAllByText('Copied')).length).toBeGreaterThan(0);
+      expect(await screen.findByText('Copied')).toBeInTheDocument();
       expect(additionalClickHandlerSpy).toHaveBeenCalled();
     });
   });
