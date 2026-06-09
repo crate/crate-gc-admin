@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Migrated from Jest to Vitest.
+- Dependabot updates.
+
 ## 2026-06-01 - 0.25.4
 
 - Dependabot updates.

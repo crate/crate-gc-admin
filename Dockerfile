@@ -1,4 +1,4 @@
-FROM node:24.13.0-slim AS build-deps
+FROM node:26.3.0-slim AS build-deps
 
 # The base node image sets a very verbose log level.
 ENV NPM_CONFIG_LOGLEVEL=warn
@@ -25,7 +25,7 @@ ENV PATH=$PATH:/home/nodeuser/app/node_modules/.bin
 RUN pnpm install --frozen-lockfile && pnpm run build && rm -r /home/nodeuser/app/node_modules
 
 # Serve the gc-admin build.
-FROM nginx:1.29.8
+FROM nginx:1.31.1
 
 # pick up any security updates
 RUN apt-get update && apt-get upgrade -y
